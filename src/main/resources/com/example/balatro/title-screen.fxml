@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.TitleScreen">
+   <children>
+      <Button fx:id="btnStart" layoutX="234.0" layoutY="149.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Start" AnchorPane.bottomAnchor="227.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="149.0">
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin></Button>
+      <Button fx:id="btnOptions" layoutX="234.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Options" AnchorPane.bottomAnchor="187.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="188.0" />
+      <Button fx:id="btnExit" layoutX="234.0" layoutY="228.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Exit" AnchorPane.bottomAnchor="147.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="228.0">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Button>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>

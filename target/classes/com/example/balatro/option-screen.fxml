@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.OptionScreen">
+   <top>
+      <Button fx:id="btnClose" contentDisplay="CENTER" layoutX="546.0" layoutY="14.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" styleClass="btnClose" BorderPane.alignment="CENTER_RIGHT">
+         <BorderPane.margin>
+            <Insets right="20.0" top="10.0" />
+         </BorderPane.margin></Button>
+   </top>
+   <center>
+      <GridPane alignment="CENTER">
+         <Label fx:id="labelVolume" layoutX="273.0" layoutY="95.0" text="Lautstärke" GridPane.columnIndex="1" />
+
+         <Label fx:id="labelMusik" layoutX="179.0" layoutY="121.0" text="Musik" GridPane.rowIndex="1" />
+         <Slider fx:id="sliderMusic" layoutX="232.0" layoutY="123.0" prefHeight="14.0" prefWidth="236.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="10.0" right="10.0" />
+            </GridPane.margin></Slider>
+         <CheckBox fx:id="cbMusic" layoutX="390.0" layoutY="121.0" mnemonicParsing="false" selected="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+         <Label fx:id="labelEffects" layoutX="180.0" layoutY="158.0" text="Effekt" GridPane.rowIndex="2" />
+         <Slider fx:id="sliderEffects" layoutX="232.0" layoutY="159.0" prefHeight="0.0" prefWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+               <Insets left="10.0" right="10.0" />
+            </GridPane.margin></Slider>
+         <CheckBox fx:id="cbEffects" layoutX="390.0" layoutY="157.0" mnemonicParsing="false" selected="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+         <Label fx:id="labelLanguage" layoutX="279.0" layoutY="215.0" text="Sprache" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <Label fx:id="labelSelectLanguage" layoutX="181.0" layoutY="255.0" text="Wähle eine Sprache" GridPane.rowIndex="4">
+            <GridPane.margin>
+               <Insets top="5.0" />
+            </GridPane.margin></Label>
+         <ChoiceBox fx:id="selectLannguage" layoutX="227.0" layoutY="251.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <GridPane.margin>
+               <Insets top="5.0" />
+            </GridPane.margin>
+            <items>
+               <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Deutsch" />
+                  <String fx:value="English" />
+               </FXCollections>
+            </items>
+         </ChoiceBox>
+
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" maxWidth="196.0" minWidth="50.0" prefWidth="188.0" />
+            <ColumnConstraints halignment="CENTER" maxWidth="493.0" minWidth="50.0" prefWidth="254.0" />
+            <ColumnConstraints maxWidth="214.0" minWidth="50.0" prefWidth="158.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="114.0" minHeight="10.0" prefHeight="83.0" valignment="BOTTOM" />
+            <RowConstraints maxHeight="281.0" minHeight="0.0" prefHeight="35.0" />
+            <RowConstraints maxHeight="303.0" minHeight="20.0" prefHeight="31.0" />
+            <RowConstraints maxHeight="246.0" minHeight="20.0" prefHeight="89.0" valignment="BOTTOM" />
+            <RowConstraints maxHeight="184.0" minHeight="20.0" prefHeight="122.0" valignment="TOP" />
+         </rowConstraints>
+      </GridPane>
+   </center>
+</BorderPane>
