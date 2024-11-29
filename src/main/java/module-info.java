@@ -7,6 +7,7 @@ module com.example.balatro {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires org.jsoup;
+    requires java.desktop;
 
     opens com.example.balatro to javafx.fxml;
     exports com.example.balatro;
