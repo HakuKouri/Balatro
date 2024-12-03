@@ -1,13 +1,13 @@
 package com.example.balatro.classes;
 
-import javafx.scene.image.Image;
-
 public class Card
 {
     protected int id;
     protected String name;
     protected String type;
-    protected Image cardFrontCover;
+    protected String cardFrontCoverUrl;
+    protected String description;
+    protected int cost;
 
     public int getId()
     {
@@ -39,15 +39,33 @@ public class Card
         this.type = type;
     }
 
-    public Image getCardFrontCover()
+    public String getCardFrontCoverUrl()
     {
-        return cardFrontCover;
+        return cardFrontCoverUrl;
     }
 
-    public void setCardFrontCover(Image cardFrontCover)
+    public void setCardFrontCoverUrl(String cardFrontCover)
     {
-        this.cardFrontCover = cardFrontCover;
+        this.cardFrontCoverUrl = cardFrontCover;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
 
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public int getCost()
+    {
+        return cost;
+    }
+
+    public void setCost(int cost)
+    {
+        this.cost = cost;
+    }
 }

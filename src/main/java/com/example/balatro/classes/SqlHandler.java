@@ -1,13 +1,28 @@
 package com.example.balatro.classes;
 
 import java.sql.*;
-
+import java.util.ArrayList;
 
 public class SqlHandler
 {
     private static final SqlHandler sqlHandler = new SqlHandler();
     private static Connection connection;
+
     private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatrodb.db";
+    private static final String DecksTableColumns = " (id, deckCover, deckName, deckDesription, unlockRequirement)";
+    private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
+    private static final String StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
+    private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)";
+    private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
+    private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore)";
+    private static final String SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
+    private static final String VoucherCardsTableColumns = " (id, baseVoucherImage, baseVoucherName, baseVoucherEffect, upgradeVoucherImage, upgradeVoucherName, upgradeVoucherEffect, upgradeVoucherUnlocked, note)";
+    private static final String TagsTableColumns = " (id, tagIcon, tagName, tagBenefit, tagNote, minAnte)";
+    private static final String EnhancementsTableColumns = " (id, appearance, enhancement, effect)";
+    private static final String EditionsTableColumns = " (id, appearance, edition, effect)";
+    private static final String SealsTableColumns = " (id, appearance, seal, effect)";
+    private static final String LanguagesTableColumns = " (id, languageName, text, notes)";
+    private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
 
     static {
         try {
@@ -112,7 +127,7 @@ public class SqlHandler
                 System.out.println("Preis = " + rs.getDouble("price"));
             }
             rs.close();*/
-            connection.close();
+
         } catch (SQLException e) {
             System.err.println("Couldn't handle DB-Query");
             e.printStackTrace();
@@ -125,7 +140,57 @@ public class SqlHandler
         dbc.handleDB();
     }
 
-    private void WebTableToSql() {
+    public static <T> void ListToSql(ArrayList<T> list, String tableName) {
+        System.out.println("Im Sql Handler!");
+        try{
+            Statement stmt = connection.createStatement();
+            for (T listItem : list)
+            {
+                String query = "INSERT OR REPLACE INTO " + tableName + " ";
 
+                if(listItem.getClass() == Joker.class) {
+                    //(id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)
+                    query += JokerCardsTableColumns + " VALUES (?,?,?,?,?,?,?,?,?);";
+                    PreparedStatement ps = connection.prepareStatement(query);
+                    ps.setInt(1, ((Joker) listItem).getId());
+                    ps.setString(2, ((Joker) listItem).getCardFrontCoverUrl());
+                    ps.setString(3, ((Joker) listItem).getName());
+                    ps.setString(4, ((Joker) listItem).getDescription());
+                    ps.setInt(5, ((Joker) listItem).getCost());
+                    ps.setString(6, ((Joker) listItem).getRarity());
+                    ps.setString(7, ((Joker) listItem).getUnlockRequirement());
+                    ps.setString(8, ((Joker) listItem).getType());
+                    ps.setString(9, ((Joker) listItem).getActTiming());
+                    ps.executeUpdate();
+                } else if (listItem.equals(Deck.class)) {
+                    //columnsString = DecksTableColumns;
+                } else if (listItem.equals(Blind.class)) {
+                    //columnsString = BlindsTableColumns;
+                } else if (listItem.equals(Stake.class)) {
+                    //columnsString = StakesTableColumns;
+                } else if (listItem.equals(Tarot.class)) {
+                    //columnsString = TarotCardsTableColumns;
+                } else if (listItem.equals(Planet.class)) {
+                    //columnsString = PlanetCardsTableColumns;
+                } else if (listItem.equals(Spectral.class)) {
+                    //columnsString = SpectralCardsTableColumns;
+                } else if (listItem.equals(Voucher.class)) {
+                   // columnsString = VoucherCardsTableColumns;
+                } else if (listItem.equals(Tag.class)) {
+                    //columnsString = TagsTableColumns;
+                } else if (listItem.equals(Enhancement.class)) {
+                    //columnsString = EnhancementsTableColumns;
+                } else if (listItem.equals(Edition.class)) {
+                    //columnsString = EditionsTableColumns;
+                } else if (listItem.equals(Seal.class)) {
+                    //columnsString = SealsTableColumns;
+                } else if (listItem.equals(Language.class)) {
+                    //columnsString = LanguagesTableColumns;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
     }
 }
