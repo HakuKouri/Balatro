@@ -11,18 +11,20 @@ import java.io.IOException;
 
 public class Balatro extends Application
 {
+
     @Override
     public void start(Stage primaryStage) throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 400);
+        FXMLLoader fxmlLoader = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         primaryStage.setTitle("Balatro");
         primaryStage.setScene(scene);
         //primaryStage.setFullScreen(true);
         primaryStage.show();
 
         SqlHandler.main();
-        WebHandler.getTable();
+        WebHandler.getJokerWithWebHanlder();
 
     }
 
@@ -30,4 +32,5 @@ public class Balatro extends Application
     {
         launch(args);
     }
+
 }

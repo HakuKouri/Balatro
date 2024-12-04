@@ -1,5 +1,5 @@
 .btnClose{
-    -fx-background-image: url("../images/close-button.png");
+    -fx-background-image: url("../images/menuIcons/close-button.png");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
@@ -10,4 +10,37 @@
     -fx-border-radius: 5;
     -fx-border-color: #444;
     -fx-border-width: 1;
+}
+
+#mainButtonBox {
+    -fx-background-color: #333;
+    -fx-background-radius: 5px;
+}
+
+#btnTitlePlay {
+    -fx-background-color: #55f;
+
+}
+
+#btnTitleCollection {
+    -fx-background-color: #080;
+}
+
+#btnTitleOption {
+    -fx-background-color: #d70;
+}
+
+#btnTitleQuit {
+    -fx-background-color: #f00;
+}
+
+.shadow-b {
+    -fx-effect: dropshadow(gaussian, #000, 0.0, 0.0, 0.0, 5.0);
+}
+
+.shadow-b-l {
+    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, -5.0, 5.0);
+}
+.shadow-b-r {
+    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, 5.0, 5.0);
 }

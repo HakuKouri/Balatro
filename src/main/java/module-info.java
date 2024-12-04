@@ -8,6 +8,7 @@ module com.example.balatro {
     requires java.sql;
     requires org.jsoup;
     requires java.desktop;
+    requires javafx.media;
 
     opens com.example.balatro to javafx.fxml;
     exports com.example.balatro;
