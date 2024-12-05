@@ -193,4 +193,21 @@ public class SqlHandler
             e.printStackTrace(System.err);
         }
     }
+
+    public static String getDeckName(int id) {
+        try
+        {
+            Statement stmt = connection.createStatement();
+            String statement = "SELECT deckName FROM Decks where id = " + id;
+            ResultSet rs = stmt.executeQuery(statement);
+            while (rs.next()) {
+                return rs.getString("deckName");
+            }
+        } catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
+
 }

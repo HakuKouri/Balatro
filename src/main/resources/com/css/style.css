@@ -1,3 +1,6 @@
+/*--background-color: #444;*/
+
+
 .btnClose{
     -fx-background-image: url("../images/menuIcons/close-button.png");
     -fx-background-size: cover;
@@ -43,4 +46,17 @@
 }
 .shadow-b-r {
     -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, 5.0, 5.0);
+}
+
+.maxHeigth {
+
+}
+
+#gridMenu {
+    -fx-background-radius: 10px;
+    -fx-background-color: #444;
+}
+
+.deck {
+
 }
