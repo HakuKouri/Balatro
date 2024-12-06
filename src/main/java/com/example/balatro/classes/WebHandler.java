@@ -12,7 +12,7 @@ public class WebHandler
 
     public static void WebHandlerMain() {
     }
-    public static void getJokerWithWebHanlder() {
+    public static void getJokerWithWebHandler() {
         ArrayList<Joker> arrayList = new ArrayList<Joker>();
         try
         {
@@ -53,7 +53,7 @@ public class WebHandler
             throw new RuntimeException(e);
         }
     }
-    public static void getDeckWithWebHanlder() {
+    public static void getDeckWithWebHandler() {
         ArrayList<Deck> arrayList = new ArrayList<Deck>();
         try
         {
@@ -78,14 +78,13 @@ public class WebHandler
                 }
                 arrayList.add(deck);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "Decks");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
     }
-
-    public static void getEditionWithWebHanlder() {
+    public static void getEditionWithWebHandler() {
         ArrayList<Edition> arrayList = new ArrayList<>();
         try
         {
@@ -99,9 +98,272 @@ public class WebHandler
                 try
                 {
                     edition.setId(arrayList.size()+1);
-                    edition.setCardImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
-                    edition.setName(cells.get(1).childNode(0).attr("title"));
-                    edition.setEffect(cells.get(2).text());
+                    edition.setEditionImageUrl("");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "Editions");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void getBlindWithWebHandler() {
+        ArrayList<Blind> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Blinds_and_Antes").get().select("table").get(0).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Blind blind = new Blind();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    blind.setId(arrayList.size()+1);
+                    blind.setBlindImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    blind.setBlindName(cells.get(1).childNode(0).attr("title"));
+                    blind.setBlindDescription(cells.get(2).text());
+                    blind.setBlineMinimumAnte(cells.get(3).text());
+                    blind.setBlindScoreMultiplier(cells.get(4).text());
+                    blind.setBlindEarn(cells.get(5).text());
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getStakeWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getTarotWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getPlanetWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getSpectralWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getVoucherWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getTagWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
+
+                }
+                catch (Exception e) {
+                    System.out.println("Fehleraufgetreten!!");
+                    System.out.println(e);
+                }
+                arrayList.add(edition);
+            }
+            SqlHandler.ListToSql(arrayList, "JokerCards");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void getEnhancementWithWebHandler() {
+        ArrayList<Edition> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Edition edition = new Edition();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    edition.setId(arrayList.size()+1);
+                    edition.setEditionImageUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + edition.getId() + ".png");
+                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionEffect(cells.get(2).text());
 
                 }
                 catch (Exception e) {

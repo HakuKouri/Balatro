@@ -3,9 +3,9 @@ package com.example.balatro.classes;
 public class Edition
 {
     private int id;
-    private String cardImageUrl;
-    private String name;
-    private String effect;
+    private String editionImageUrl;
+    private String editionName;
+    private String editionEffect;
 
     public int getId()
     {
@@ -17,33 +17,33 @@ public class Edition
         this.id = id;
     }
 
-    public String getCardImageUrl()
+    public String getEditionImageUrl()
     {
-        return cardImageUrl;
+        return editionImageUrl;
     }
 
-    public void setCardImageUrl(String cardImageUrl)
+    public void setEditionImageUrl(String editionImageUrl)
     {
-        this.cardImageUrl = cardImageUrl;
+        this.editionImageUrl = editionImageUrl;
     }
 
-    public String getName()
+    public String getEditionName()
     {
-        return name;
+        return editionName;
     }
 
-    public void setName(String name)
+    public void setEditionName(String editionName)
     {
-        this.name = name;
+        this.editionName = editionName;
     }
 
-    public String getEffect()
+    public String getEditionEffect()
     {
-        return effect;
+        return editionEffect;
     }
 
-    public void setEffect(String effect)
+    public void setEditionEffect(String editionEffect)
     {
-        this.effect = effect;
+        this.editionEffect = editionEffect;
     }
 }

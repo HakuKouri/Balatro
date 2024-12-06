@@ -24,7 +24,9 @@ public class Balatro extends Application
         primaryStage.show();
 
         SqlHandler.main();
-        WebHandler.getJokerWithWebHanlder();
+        WebHandler.getJokerWithWebHandler();
+        WebHandler.getDeckWithWebHandler();
+        WebHandler.getEditionWithWebHandler();
 
     }
 
