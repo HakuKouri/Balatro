@@ -12,7 +12,21 @@ public class WebHandler
 
     public static void WebHandlerMain() {
     }
-    public static void getJokerWithWebHandler() {
+    public static void setupDb() {
+        getBlindWithWebHandler();
+        getDeckWithWebHandler();
+        getEditionWithWebHandler();
+        getEnhancementWithWebHandler();
+        getJokerWithWebHandler();
+        getPlanetWithWebHandler();
+        getSpectralWithWebHandler();
+        getStakeWithWebHandler();
+        getTagWithWebHandler();
+        getTarotWithWebHandler();
+        getVoucherWithWebHandler();
+        getSealWithWebHandler();
+    }
+    private static void getJokerWithWebHandler() {
         ArrayList<Joker> arrayList = new ArrayList<Joker>();
         try
         {
@@ -42,7 +56,7 @@ public class WebHandler
                     joker.setActTiming(cells.get(7).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Joker: ");
                     System.out.println(e);
                 }
                 arrayList.add(joker);
@@ -53,7 +67,7 @@ public class WebHandler
             throw new RuntimeException(e);
         }
     }
-    public static void getDeckWithWebHandler() {
+    private static void getDeckWithWebHandler() {
         ArrayList<Deck> arrayList = new ArrayList<Deck>();
         try
         {
@@ -68,7 +82,7 @@ public class WebHandler
                 {
                     deck.setId(arrayList.size()+1);
                     deck.setDeckCoverUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + deck.getId() + ".png");
-                    deck.setName(cells.get(1).childNode(0).attr("title"));
+                    deck.setName(cells.get(1).text());
                     deck.setDescription(cells.get(2).text());
                     deck.setUnlockCondition(cells.get(3).text());
                 }
@@ -84,7 +98,7 @@ public class WebHandler
             throw new RuntimeException(e);
         }
     }
-    public static void getEditionWithWebHandler() {
+    private static void getEditionWithWebHandler() {
         ArrayList<Edition> arrayList = new ArrayList<>();
         try
         {
@@ -99,11 +113,11 @@ public class WebHandler
                 {
                     edition.setId(arrayList.size()+1);
                     edition.setEditionImageUrl("");
-                    edition.setEditionName(cells.get(1).childNode(0).attr("title"));
+                    edition.setEditionName(cells.get(1).text());
                     edition.setEditionEffect(cells.get(2).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Editions: ");
                     System.out.println(e);
                 }
                 arrayList.add(edition);
@@ -114,7 +128,7 @@ public class WebHandler
             throw new RuntimeException(e);
         }
     }
-    public static void getBlindWithWebHandler() {
+    private static void getBlindWithWebHandler() {
         ArrayList<Blind> arrayList = new ArrayList<>();
         try
         {
@@ -129,27 +143,26 @@ public class WebHandler
                 {
                     blind.setId(arrayList.size()+1);
                     blind.setBlindImageUrl("src\\main\\resources\\com\\images\\Blinds\\blind_" + blind.getId() + ".gif");
-                    blind.setBlindName(cells.get(1).childNode(0).attr("title"));
+                    blind.setBlindName(cells.get(1).text());
                     blind.setBlindDescription(cells.get(2).text());
                     blind.setBlineMinimumAnte(cells.get(3).text());
                     blind.setBlindScoreMultiplier(cells.get(4).text());
                     blind.setBlindEarn(cells.get(5).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Blinds: ");
                     System.out.println(e);
                 }
                 arrayList.add(blind);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "Blinds");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getStakeWithWebHandler() {
+    private static void getStakeWithWebHandler() {
         ArrayList<Stake> arrayList = new ArrayList<>();
         try
         {
@@ -164,25 +177,24 @@ public class WebHandler
                 {
                     stake.setId(arrayList.size()+1);
                     stake.setStakeImageUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getId() + ".png");
-                    stake.setStakeName(cells.get(1).childNode(0).attr("title"));
-                    stake.setStakeEffect(cells.get(2).text());
-                    stake.setStakeUnlockCondition(cells.get(3).text());
+                    stake.setStakeName(cells.get(2).text());
+                    stake.setStakeEffect(cells.get(3).text());
+                    stake.setStakeUnlockCondition(cells.get(4).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Stakes: ");
                     System.out.println(e);
                 }
                 arrayList.add(stake);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "Stakes");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getTarotWithWebHandler() {
+    private static void getTarotWithWebHandler() {
         ArrayList<Tarot> arrayList = new ArrayList<>();
         try
         {
@@ -197,25 +209,24 @@ public class WebHandler
                 {
                     tarot.setId(arrayList.size()+1);
                     tarot.setTarotImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\tarot_" + tarot.getId() + ".png");
-                    tarot.setTarotName(cells.get(1).childNode(0).attr("title"));
+                    tarot.setTarotName(cells.get(1).text());
                     tarot.setTarotDescription(cells.get(2).text());
 
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Tarots: ");
                     System.out.println(e);
                 }
                 arrayList.add(tarot);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "TarotCards");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getPlanetWithWebHandler() {
+    private static void getPlanetWithWebHandler() {
         ArrayList<Planet> arrayList = new ArrayList<>();
         try
         {
@@ -230,27 +241,26 @@ public class WebHandler
                 {
                     planet.setId(arrayList.size()+1);
                     planet.setPlanetImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\planet_" + planet.getId() + ".png");
-                    planet.setPlanetName(cells.get(1).childNode(0).attr("title"));
+                    planet.setPlanetName(cells.get(1).text());
                     planet.setPlanetAddition(cells.get(2).text());
                     planet.setPlanetPokerHand(cells.get(3).text());
-                    planet.setPlanetAddition(cells.get(4).text());
+                    planet.setPlanetHandBaseScore(cells.get(4).text());
 
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Planets: ");
                     System.out.println(e);
                 }
                 arrayList.add(planet);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "PlanetCards");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getSpectralWithWebHandler() {
+    private static void getSpectralWithWebHandler() {
         ArrayList<Spectral> arrayList = new ArrayList<>();
         try
         {
@@ -265,28 +275,27 @@ public class WebHandler
                 {
                     spectral.setId(arrayList.size()+1);
                     spectral.setSpectralImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\spectral_" + spectral.getId() + ".png");
-                    spectral.setSpectralName(cells.get(1).childNode(0).attr("title"));
+                    spectral.setSpectralName(cells.get(1).text());
                     spectral.setSpectralEffect(cells.get(2).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Spectrals: ");
                     System.out.println(e);
                 }
                 arrayList.add(spectral);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "SpectralCards");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getVoucherWithWebHandler() {
+    private static void getVoucherWithWebHandler() {
         ArrayList<Voucher> arrayList = new ArrayList<>();
         try
         {
-            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            Elements rows = Jsoup.connect(urlMain + "Vouchers").get().select("table").get(0).select("tbody > tr");
             for (Element row : rows)
             {
                 Voucher voucher = new Voucher();
@@ -297,67 +306,76 @@ public class WebHandler
                 {
                     voucher.setId(arrayList.size()+1);
                     voucher.setVoucherBaseImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_" + voucher.getId() + ".png");
-                    voucher.setVoucherBaseName(cells.get(1).childNode(0).attr("title"));
+                    voucher.setVoucherBaseName(cells.get(0).text());
                     voucher.setVoucherUpgradeImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_upgrade_" + voucher.getId() + ".png");
-                    voucher.setVoucherUpgradeName(cells.get(3).childNode(0).attr("title"));
-                    voucher.setVoucherBaseEffect(cells.get(2).text());
-                    voucher.setVoucherUpgradeEffect(cells.get(4).text());
-                    voucher.setVoucherUpgradeUnlockCondition(cells.get(5).text());
-                    voucher.setVoucherNotes(cells.get(6).text());
+                    voucher.setVoucherUpgradeName(cells.get(2).text());
+                    voucher.setVoucherBaseEffect(cells.get(1).text());
+                    voucher.setVoucherUpgradeEffect(cells.get(3).text());
+                    voucher.setVoucherUpgradeUnlockCondition(cells.get(4).text());
+                    voucher.setVoucherNotes(cells.get(5).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Vouchers: ");
                     System.out.println(e);
                 }
                 arrayList.add(voucher);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "VoucherCards");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getTagWithWebHandler() {
+    private static void getTagWithWebHandler() {
         ArrayList<Tag> arrayList = new ArrayList<>();
         try
         {
-            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            String prevRow = "";
+            Elements rows = Jsoup.connect(urlMain + "Tags").get().select("table").get(0).select("tbody > tr");
             for (Element row : rows)
             {
                 Tag tag = new Tag();
 
                 Elements cells = row.select("td");
                 if(cells.size() == 0) continue;
+
+                if(cells.size() == 5)
+                   prevRow = cells.get(3).text();
                 try
                 {
                     tag.setId(arrayList.size()+1);
                     tag.setTagImageUrl("src\\main\\resources\\com\\images\\tags\\tag_" + tag.getId() + ".png");
-                    tag.setTagName(cells.get(1).childNode(0).attr("title"));
+                    tag.setTagName(cells.get(1).text());
                     tag.setTagBenefit(cells.get(2).text());
-                    tag.setTagNotes(cells.get(3).text());
-                    tag.setMinAnte(cells.get(4).text());
+                    if(cells.size() == 4)
+                    {
+                        tag.setTagNotes(prevRow);
+                        tag.setMinAnte(cells.get(3).text());
+                    }
+                    else {
+                        tag.setTagNotes(cells.get(3).text());
+                        tag.setMinAnte(cells.get(4).text());
+                    }
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Tags: ");
                     System.out.println(e);
                 }
                 arrayList.add(tag);
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "Tags");
         } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
     }
-
-    public static void getEnhancementWithWebHandler() {
+    private static void getEnhancementWithWebHandler() {
         ArrayList<Enhancement> arrayList = new ArrayList<>();
         try
         {
-            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(1).select("tbody > tr");
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(0).select("tbody > tr");
             for (Element row : rows)
             {
                 Enhancement enhancement = new Enhancement();
@@ -368,16 +386,46 @@ public class WebHandler
                 {
                     enhancement.setId(arrayList.size()+1);
                     enhancement.setEnhancementImageUrl("src\\main\\resources\\com\\images\\Enhancers\\Enhancers" + enhancement.getId() + ".png");
-                    enhancement.setEnhancementName(cells.get(1).childNode(0).attr("title"));
+                    enhancement.setEnhancementName(cells.get(1).text());
                     enhancement.setEnhancementEffect(cells.get(2).text());
                 }
                 catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!!");
+                    System.out.println("Fehler aufgetreten!! Enhancements:");
                     System.out.println(e);
                 }
                 arrayList.add(enhancement );
             }
-            SqlHandler.ListToSql(arrayList, "JokerCards");
+            SqlHandler.ListToSql(arrayList, "Enhancements");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+    private static void getSealWithWebHandler() {
+        ArrayList<Seal> arrayList = new ArrayList<>();
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Card_Modifiers").get().select("table").get(0).select("tbody > tr");
+            for (Element row : rows)
+            {
+                Seal seal = new Seal();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    seal.setId(arrayList.size()+1);
+                    seal.setSealImageUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\stamp_" + seal.getId() + ".png");
+                    seal.setSealName(cells.get(1).text());
+                    seal.setSealEffect(cells.get(2).text());
+                }
+                catch (Exception e) {
+                    System.out.println("Fehler aufgetreten!! Seals:");
+                    System.out.println(e);
+                }
+                arrayList.add(seal);
+            }
+            SqlHandler.ListToSql(arrayList, "Seals");
         } catch (Exception e)
         {
             throw new RuntimeException(e);

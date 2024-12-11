@@ -1,7 +1,6 @@
 package com.example.balatro;
 
 import com.example.balatro.classes.SqlHandler;
-import com.example.balatro.classes.WebHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,9 +23,7 @@ public class Balatro extends Application
         primaryStage.show();
 
         SqlHandler.main();
-        WebHandler.getJokerWithWebHandler();
-        WebHandler.getDeckWithWebHandler();
-        WebHandler.getEditionWithWebHandler();
+        //WebHandler.setupDb();
 
     }
 

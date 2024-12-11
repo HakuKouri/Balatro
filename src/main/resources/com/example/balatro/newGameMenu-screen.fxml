@@ -28,7 +28,7 @@
             <StackPane fx:id="stackPaneDeck" prefHeight="144.0" prefWidth="103.0" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" />
             <VBox prefHeight="144.0" prefWidth="169.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="labelDeckName" prefHeight="55.0" prefWidth="167.0" textFill="WHITE">
+                  <Label fx:id="labelDeckName" prefHeight="55.0" prefWidth="167.0" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>

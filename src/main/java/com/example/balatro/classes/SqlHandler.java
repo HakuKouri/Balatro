@@ -2,19 +2,20 @@ package com.example.balatro.classes;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SqlHandler
 {
     private static final SqlHandler sqlHandler = new SqlHandler();
     private static Connection connection;
 
-    private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatrodb.db";
-    private static final String DecksTableColumns = " (id, deckCover, deckName, deckDesription, unlockRequirement)";
+    private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatroDb.db";
+    private static final String DecksTableColumns = " (id, deckCover, deckName, deckDescription, unlockRequirement, stageCleared)";
     private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
     private static final String StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
     private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)";
     private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
-    private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore)";
+    private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
     private static final String SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
     private static final String VoucherCardsTableColumns = " (id, baseVoucherImage, baseVoucherName, baseVoucherEffect, upgradeVoucherImage, upgradeVoucherName, upgradeVoucherEffect, upgradeVoucherUnlocked, note)";
     private static final String TagsTableColumns = " (id, tagIcon, tagName, tagBenefit, tagNote, minAnte)";
@@ -36,11 +37,9 @@ public class SqlHandler
 
     private SqlHandler(){
     }
-
     public static SqlHandler getInstance(){
         return sqlHandler;
     }
-
     private void initDBConnection() {
         try {
             if (connection != null)
@@ -72,61 +71,24 @@ public class SqlHandler
             }
         });
     }
-
     private void handleDB() {
         try {
             Statement stmt = connection.createStatement();
 
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Decks (id, deckCover, deckName, deckDesription, unlockRequirement);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Blinds (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Stakes (id, stakeIcon, stakeName, stakeEffect, unlocks);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JokerCards (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS TarotCards (id, tarotImage, tarotName, tarotDescription);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS PlanetCards (id, planetImage, planetName, additions, pokerHand, handBaseScore);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS SpectralCards (id, spectralImage, spectralName, spectralEffect);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS VoucherCards (id, baseVoucherImage, baseVoucherName, baseVoucherEffect, upgradeVoucherImage, upgradeVoucherName, upgradeVoucherEffect, upgradeVoucherUnlocked, note);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Tags (id, tagIcon, tagName, tagBenefit, tagNote, minAnte);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Enhancements (id, appearance, enhancement, effect);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Editions (id, appearance, edition, effect);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Seals(id, appearance, seal, effect);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Languages(id, languageName, text, notes);");
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS LangNameDetails(idLanguage, targetTable, targetId);");
-
-            /*stmt.executeUpdate("DROP TABLE IF EXISTS books;");
-            stmt.executeUpdate("CREATE TABLE books (author, title, publication, pages, price);");
-            stmt.execute("INSERT INTO books (author, title, publication, pages, price) VALUES ('Paulchen Paule', 'Paul der Penner', " + Date.valueOf("2001-05-06") + ", '1234', '5.67')");
-
-            PreparedStatement ps = connection
-                    .prepareStatement("INSERT INTO books VALUES (?, ?, ?, ?, ?);");
-
-            ps.setString(1, "Willi Winzig");
-            ps.setString(2, "Willi's Wille");
-            ps.setDate(3, Date.valueOf("2011-05-16"));
-            ps.setInt(4, 432);
-            ps.setDouble(5, 32.95);
-            ps.addBatch();
-
-            ps.setString(1, "Anton Antonius");
-            ps.setString(2, "Anton's Alarm");
-            ps.setDate(3, Date.valueOf("2009-10-01"));
-            ps.setInt(4, 123);
-            ps.setDouble(5, 98.76);
-            ps.addBatch();
-
-            connection.setAutoCommit(false);
-            ps.executeBatch();
-            connection.setAutoCommit(true);
-
-            ResultSet rs = stmt.executeQuery("SELECT * FROM books;");
-            while (rs.next()) {
-                System.out.println("Autor = " + rs.getString("author"));
-                System.out.println("Titel = " + rs.getString("title"));
-                System.out.println("Erscheinungsdatum = "
-                        + rs.getDate("publication"));
-                System.out.println("Seiten = " + rs.getInt("pages"));
-                System.out.println("Preis = " + rs.getDouble("price"));
-            }
-            rs.close();*/
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Decks " + DecksTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Blinds " + BlindsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Stakes " + StakesTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JokerCards " + JokerCardsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS TarotCards " + TarotCardsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS PlanetCards " + PlanetCardsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS SpectralCards " + SpectralCardsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS VoucherCards " + VoucherCardsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Tags " + TagsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Enhancements " + EnhancementsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Editions " + EditionsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Seals " + SealsTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Languages " + LanguagesTableColumns + ";");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS LangNameDetails " + LangNameDetailsTableColumns + ";");
 
         } catch (SQLException e) {
             System.err.println("Couldn't handle DB-Query");
@@ -164,13 +126,14 @@ public class SqlHandler
                     ps.executeUpdate();
                 }
                 else if (listItem.getClass() == Deck.class) {
-                    query += DecksTableColumns + " VALUES (?,?,?,?,?);";
+                    query += DecksTableColumns + " VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1, ((Deck) listItem).getId());
                     ps.setString(2, ((Deck) listItem).getDeckCoverUrl());
                     ps.setString(3, ((Deck) listItem).getName());
                     ps.setString(4, ((Deck) listItem).getDescription());
                     ps.setString(5, ((Deck) listItem).getUnlockCondition());
+                    ps.setInt(6, 0);
                     ps.executeUpdate();
                 }
                 else if (listItem.getClass() == Blind.class) {
@@ -203,8 +166,8 @@ public class SqlHandler
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1,((Tarot) listItem).getId());
                     ps.setString(2,((Tarot) listItem).getTarotImageUrl());
-                    ps.setString(2,((Tarot) listItem).getTarotName());
-                    ps.setString(2,((Tarot) listItem).getTarotDescription());
+                    ps.setString(3,((Tarot) listItem).getTarotName());
+                    ps.setString(4,((Tarot) listItem).getTarotDescription());
                     ps.executeUpdate();
                 }
                 else if (listItem.getClass() == Planet.class) {
@@ -217,10 +180,10 @@ public class SqlHandler
                     ps.setString(4,((Planet) listItem).getPlanetAddition());
                     ps.setString(5,((Planet) listItem).getPlanetPokerHand());
                     ps.setString(6,((Planet) listItem).getPlanetHandBaseScore());
-                    if(((Planet) listItem).getId() >=10) {
-                        ps.setBoolean(7, true);
-                    } else ps.setBoolean(7, false);
+                    ps.setBoolean(7, ((Planet) listItem).getId() >= 10);
                     ps.executeUpdate();
+
+
                 }
                 else if (listItem.getClass() == Spectral.class) {
                     //SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
@@ -294,6 +257,8 @@ public class SqlHandler
                 }
             }
         } catch (SQLException e) {
+            System.out.println(tableName);
+            System.out.println(e.getMessage());
             e.printStackTrace(System.err);
         }
     }
@@ -314,4 +279,79 @@ public class SqlHandler
         return "";
     }
 
+    public static Deck getDeck(int id)
+    {
+        return new Deck();
+    }
+
+    public static List<Deck> getAllDecks()
+    {
+        List<Deck> deckList = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Decks";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+               Deck deck = new Deck();
+               deck.setId(rs.getInt(1));
+               deck.setDeckCoverUrl(rs.getString(2));
+               deck.setName(rs.getString(3));
+               deck.setDescription(rs.getString(4));
+               deck.setUnlockCondition(rs.getString(5));
+               deck.setStageCleared(rs.getInt(6));
+               deckList.add(deck);
+            }
+
+        } catch (SQLException e)
+        {
+            System.out.println("GetAllDecks");
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+
+        return deckList;
+    }
 }
+
+//region Example
+            /*stmt.executeUpdate("DROP TABLE IF EXISTS books;");
+            stmt.executeUpdate("CREATE TABLE books (author, title, publication, pages, price);");
+            stmt.execute("INSERT INTO books (author, title, publication, pages, price) VALUES ('Paulchen Paule', 'Paul der Penner', " + Date.valueOf("2001-05-06") + ", '1234', '5.67')");
+
+            PreparedStatement ps = connection
+                    .prepareStatement("INSERT INTO books VALUES (?, ?, ?, ?, ?);");
+
+            ps.setString(1, "Willi Winzig");
+            ps.setString(2, "Willi's Wille");
+            ps.setDate(3, Date.valueOf("2011-05-16"));
+            ps.setInt(4, 432);
+            ps.setDouble(5, 32.95);
+            ps.addBatch();
+
+            ps.setString(1, "Anton Antonius");
+            ps.setString(2, "Anton's Alarm");
+            ps.setDate(3, Date.valueOf("2009-10-01"));
+            ps.setInt(4, 123);
+            ps.setDouble(5, 98.76);
+            ps.addBatch();
+
+            connection.setAutoCommit(false);
+            ps.executeBatch();
+            connection.setAutoCommit(true);
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM books;");
+            while (rs.next()) {
+                System.out.println("Autor = " + rs.getString("author"));
+                System.out.println("Titel = " + rs.getString("title"));
+                System.out.println("Erscheinungsdatum = "
+                        + rs.getDate("publication"));
+                System.out.println("Seiten = " + rs.getInt("pages"));
+                System.out.println("Preis = " + rs.getDouble("price"));
+            }
+            rs.close();*/
+
+//endregion

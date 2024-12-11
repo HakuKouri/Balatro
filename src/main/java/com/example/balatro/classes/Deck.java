@@ -7,6 +7,7 @@ public class Deck
     private String name;
     private String description;
     private String unlockCondition;
+    private int stageCleared;
 
     public String getDeckCoverUrl()
     {
@@ -56,5 +57,15 @@ public class Deck
     public void setUnlockCondition(String unlockCondition)
     {
         this.unlockCondition = unlockCondition;
+    }
+
+    public int getStageCleared()
+    {
+        return stageCleared;
+    }
+
+    public void setStageCleared(int stageCleared)
+    {
+        this.stageCleared = stageCleared;
     }
 }

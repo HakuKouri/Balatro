@@ -17,15 +17,17 @@ public class TitleScreen
     @FXML
     private Button btnTitlePlay;
     @FXML
-    private Pane paneMenu;
+    private Pane panePlayMenu;
 
     public void initialize() {
+
 
         btnTitlePlay.getStyleClass().add("shadow-b");
 
         String s = "file:///C:/Users/IT/Java/Balatro/src/main/resources/com/video/balatro%20background%20animation.mp4";
         Media media = new Media(s);
         MediaPlayer player = new MediaPlayer(media);
+        player.setCycleCount(Integer.MAX_VALUE);
         mediaTitleBackground.setMediaPlayer(player);
         mediaTitleBackground.getMediaPlayer().play();
 
@@ -36,7 +38,7 @@ public class TitleScreen
     {
         System.out.println("Play button pressed");
         Pane pane = FXMLLoader.load(getClass().getResource("newGameMenu-screen.fxml"));
-        paneMenu.getChildren().add(pane);
+        panePlayMenu.getChildren().add(pane);
     }
 
 }
