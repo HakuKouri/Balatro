@@ -9,7 +9,7 @@ public class SqlHandler
     private static final SqlHandler sqlHandler = new SqlHandler();
     private static Connection connection;
 
-    private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatroDb.db";
+    private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatrodb.db";
     private static final String DecksTableColumns = " (id, deckCover, deckName, deckDescription, unlockRequirement, stageCleared)";
     private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
     private static final String StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
@@ -40,7 +40,7 @@ public class SqlHandler
     public static SqlHandler getInstance(){
         return sqlHandler;
     }
-    private void initDBConnection() {
+    private static void initDBConnection() {
         try {
             if (connection != null)
                 return;
@@ -290,6 +290,14 @@ public class SqlHandler
 
         try
         {
+            System.out.println(connection.isValid(2));
+
+        } catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
+        try
+        {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM Decks";
             ResultSet rs = statement.executeQuery(statementString);
@@ -309,9 +317,11 @@ public class SqlHandler
         {
             System.out.println("GetAllDecks");
             System.out.println(e.getMessage());
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
             throw new RuntimeException(e);
         }
-
 
         return deckList;
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="balatroDb.db" uuid="6f804de0-ebc0-48f7-bbf8-0739e1755ef7">
+    <data-source source="LOCAL" name="balatrodb.db" uuid="1b224b5d-d65b-4c3d-ba32-36438a30d904">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
