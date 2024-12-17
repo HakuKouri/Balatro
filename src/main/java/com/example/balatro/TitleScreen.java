@@ -24,7 +24,7 @@ public class TitleScreen
 
         btnTitlePlay.getStyleClass().add("shadow-b");
 
-        String s = "file:///C:/Users/IT/Java/Balatro/src/main/resources/com/video/balatro%20background%20animation.mp4";
+        String s = "file:///C:/JAVA/Balatro/Balatro/src/main/resources/com/video/balatro_background_animation.mp4";
         Media media = new Media(s);
         MediaPlayer player = new MediaPlayer(media);
         player.setCycleCount(Integer.MAX_VALUE);

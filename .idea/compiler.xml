@@ -9,8 +9,5 @@
         <module name="Balatro" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Balatro" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>

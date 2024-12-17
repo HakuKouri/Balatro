@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/6f804de0-ebc0-48f7-bbf8-0739e1755ef7/console.sql" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/balatro/classes/SqlHandler.java" dialect="SQLite" />
   </component>
 </project>

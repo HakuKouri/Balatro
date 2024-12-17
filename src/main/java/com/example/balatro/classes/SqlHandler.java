@@ -4,15 +4,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SqlHandler
-{
+public class SqlHandler {
     private static final SqlHandler sqlHandler = new SqlHandler();
     private static Connection connection;
 
-    private static final String DB_PATH = System.getProperty("user.dir")+"/database/balatrodb.db";
+    private static final String DB_PATH = System.getProperty("user.dir") + "/database/balatrodb.db";
     private static final String DecksTableColumns = " (id, deckCover, deckName, deckDescription, unlockRequirement, stageCleared)";
     private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
-    private static final String StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
+    private static final String StakesTableColumns = " (id, stakeStickerUrl, stakeChipUrl, stakeName, stakeEffect, unlocks)";
     private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)";
     private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
     private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
@@ -28,18 +27,19 @@ public class SqlHandler
     static {
         try {
             Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             System.err.println("Fehler beim Laden des JDBC-Treibers");
             e.printStackTrace();
         }
     }
 
-    private SqlHandler(){
+    private SqlHandler() {
     }
-    public static SqlHandler getInstance(){
+
+    public static SqlHandler getInstance() {
         return sqlHandler;
     }
+
     private static void initDBConnection() {
         try {
             if (connection != null)
@@ -71,6 +71,7 @@ public class SqlHandler
             }
         });
     }
+
     private void handleDB() {
         try {
             Statement stmt = connection.createStatement();
@@ -104,13 +105,12 @@ public class SqlHandler
 
     public static <T> void ListToSql(ArrayList<T> list, String tableName) {
         System.out.println("Im Sql Handler!");
-        try{
+        try {
             Statement stmt = connection.createStatement();
-            for (T listItem : list)
-            {
+            for (T listItem : list) {
                 String query = "INSERT OR REPLACE INTO " + tableName + " ";
 
-                if(listItem.getClass() == Joker.class) {
+                if (listItem.getClass() == Joker.class) {
                     //(id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)
                     query += JokerCardsTableColumns + " VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
@@ -124,8 +124,7 @@ public class SqlHandler
                     ps.setString(8, ((Joker) listItem).getType());
                     ps.setString(9, ((Joker) listItem).getActTiming());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Deck.class) {
+                } else if (listItem.getClass() == Deck.class) {
                     query += DecksTableColumns + " VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1, ((Deck) listItem).getId());
@@ -135,124 +134,114 @@ public class SqlHandler
                     ps.setString(5, ((Deck) listItem).getUnlockCondition());
                     ps.setInt(6, 0);
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Blind.class) {
+                } else if (listItem.getClass() == Blind.class) {
                     //BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
                     query += BlindsTableColumns + "VALUES (?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Blind) listItem).getId());
-                    ps.setString(2,((Blind) listItem).getBlindImageUrl());
-                    ps.setString(3,((Blind) listItem).getBlindName());
-                    ps.setString(4,((Blind) listItem).getBlindDescription());
-                    ps.setString(5,((Blind) listItem).getBlineMinimumAnte());
-                    ps.setString(6,((Blind) listItem).getBlindScoreMultiplier());
-                    ps.setString(7,((Blind) listItem).getBlindEarn());
+                    ps.setInt(1, ((Blind) listItem).getId());
+                    ps.setString(2, ((Blind) listItem).getBlindImageUrl());
+                    ps.setString(3, ((Blind) listItem).getBlindName());
+                    ps.setString(4, ((Blind) listItem).getBlindDescription());
+                    ps.setString(5, ((Blind) listItem).getBlineMinimumAnte());
+                    ps.setString(6, ((Blind) listItem).getBlindScoreMultiplier());
+                    ps.setString(7, ((Blind) listItem).getBlindEarn());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Stake.class) {
+                } else if (listItem.getClass() == Stake.class) {
                     //StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
-                    query += StakesTableColumns + "VALUES (?,?,?,?,?);";
+                    query += StakesTableColumns + "VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Stake) listItem).getId());
-                    ps.setString(2,((Stake) listItem).getStakeImageUrl());
-                    ps.setString(3,((Stake) listItem).getStakeName());
-                    ps.setString(4,((Stake) listItem).getStakeEffect());
-                    ps.setString(5,((Stake) listItem).getStakeUnlockCondition());
+                    ps.setInt(1, ((Stake) listItem).getId());
+                    ps.setString(2, ((Stake) listItem).getStakeImageStickerUrl());
+                    ps.setString(3, ((Stake) listItem).getStakeImageChipUrl());
+                    ps.setString(4, ((Stake) listItem).getStakeName());
+                    ps.setString(5, ((Stake) listItem).getStakeEffect());
+                    ps.setString(6, ((Stake) listItem).getStakeUnlockCondition());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Tarot.class) {
+                } else if (listItem.getClass() == Tarot.class) {
                     //TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
                     query += TarotCardsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Tarot) listItem).getId());
-                    ps.setString(2,((Tarot) listItem).getTarotImageUrl());
-                    ps.setString(3,((Tarot) listItem).getTarotName());
-                    ps.setString(4,((Tarot) listItem).getTarotDescription());
+                    ps.setInt(1, ((Tarot) listItem).getId());
+                    ps.setString(2, ((Tarot) listItem).getTarotImageUrl());
+                    ps.setString(3, ((Tarot) listItem).getTarotName());
+                    ps.setString(4, ((Tarot) listItem).getTarotDescription());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Planet.class) {
+                } else if (listItem.getClass() == Planet.class) {
                     //PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
                     query += PlanetCardsTableColumns + "VALUES (?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Planet) listItem).getId());
-                    ps.setString(2,((Planet) listItem).getPlanetImageUrl());
-                    ps.setString(3,((Planet) listItem).getPlanetName());
-                    ps.setString(4,((Planet) listItem).getPlanetAddition());
-                    ps.setString(5,((Planet) listItem).getPlanetPokerHand());
-                    ps.setString(6,((Planet) listItem).getPlanetHandBaseScore());
+                    ps.setInt(1, ((Planet) listItem).getId());
+                    ps.setString(2, ((Planet) listItem).getPlanetImageUrl());
+                    ps.setString(3, ((Planet) listItem).getPlanetName());
+                    ps.setString(4, ((Planet) listItem).getPlanetAddition());
+                    ps.setString(5, ((Planet) listItem).getPlanetPokerHand());
+                    ps.setString(6, ((Planet) listItem).getPlanetHandBaseScore());
                     ps.setBoolean(7, ((Planet) listItem).getId() >= 10);
                     ps.executeUpdate();
 
 
-                }
-                else if (listItem.getClass() == Spectral.class) {
+                } else if (listItem.getClass() == Spectral.class) {
                     //SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
                     query += SpectralCardsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Spectral) listItem).getId());
-                    ps.setString(2,((Spectral) listItem).getSpectralImageUrl());
-                    ps.setString(3,((Spectral) listItem).getSpectralName());
-                    ps.setString(4,((Spectral) listItem).getSpectralEffect());
+                    ps.setInt(1, ((Spectral) listItem).getId());
+                    ps.setString(2, ((Spectral) listItem).getSpectralImageUrl());
+                    ps.setString(3, ((Spectral) listItem).getSpectralName());
+                    ps.setString(4, ((Spectral) listItem).getSpectralEffect());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Voucher.class) {
+                } else if (listItem.getClass() == Voucher.class) {
                     //VoucherCardsTableColumns = " (id, baseVoucherImage, baseVoucherName, baseVoucherEffect, upgradeVoucherImage, upgradeVoucherName, upgradeVoucherEffect, upgradeVoucherUnlocked, note)";
                     query += VoucherCardsTableColumns + "VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Voucher) listItem).getId());
-                    ps.setString(2,((Voucher) listItem).getVoucherBaseImageUrl());
-                    ps.setString(3,((Voucher) listItem).getVoucherBaseName());
-                    ps.setString(4,((Voucher) listItem).getVoucherBaseEffect());
-                    ps.setString(5,((Voucher) listItem).getVoucherUpgradeImageUrl());
-                    ps.setString(6,((Voucher) listItem).getVoucherUpgradeName());
-                    ps.setString(7,((Voucher) listItem).getVoucherUpgradeEffect());
-                    ps.setString(8,((Voucher) listItem).getVoucherUpgradeUnlockCondition());
-                    ps.setString(9,((Voucher) listItem).getVoucherNotes());
+                    ps.setInt(1, ((Voucher) listItem).getId());
+                    ps.setString(2, ((Voucher) listItem).getVoucherBaseImageUrl());
+                    ps.setString(3, ((Voucher) listItem).getVoucherBaseName());
+                    ps.setString(4, ((Voucher) listItem).getVoucherBaseEffect());
+                    ps.setString(5, ((Voucher) listItem).getVoucherUpgradeImageUrl());
+                    ps.setString(6, ((Voucher) listItem).getVoucherUpgradeName());
+                    ps.setString(7, ((Voucher) listItem).getVoucherUpgradeEffect());
+                    ps.setString(8, ((Voucher) listItem).getVoucherUpgradeUnlockCondition());
+                    ps.setString(9, ((Voucher) listItem).getVoucherNotes());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Tag.class) {
+                } else if (listItem.getClass() == Tag.class) {
                     //TagsTableColumns = " (id, tagIcon, tagName, tagBenefit, tagNote, minAnte)";
                     query += TagsTableColumns + "VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Tag) listItem).getId());
-                    ps.setString(2,((Tag) listItem).getTagImageUrl());
-                    ps.setString(3,((Tag) listItem).getTagName());
-                    ps.setString(4,((Tag) listItem).getTagBenefit());
-                    ps.setString(5,((Tag) listItem).getTagNotes());
-                    ps.setString(6,((Tag) listItem).getMinAnte());
+                    ps.setInt(1, ((Tag) listItem).getId());
+                    ps.setString(2, ((Tag) listItem).getTagImageUrl());
+                    ps.setString(3, ((Tag) listItem).getTagName());
+                    ps.setString(4, ((Tag) listItem).getTagBenefit());
+                    ps.setString(5, ((Tag) listItem).getTagNotes());
+                    ps.setString(6, ((Tag) listItem).getMinAnte());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Enhancement.class) {
+                } else if (listItem.getClass() == Enhancement.class) {
                     //EnhancementsTableColumns = " (id, appearance, enhancement, effect)";
                     query += EnhancementsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Enhancement) listItem).getId());
-                    ps.setString(2,((Enhancement) listItem).getEnhancementImageUrl());
-                    ps.setString(3,((Enhancement) listItem).getEnhancementName());
-                    ps.setString(4,((Enhancement) listItem).getEnhancementEffect());
+                    ps.setInt(1, ((Enhancement) listItem).getId());
+                    ps.setString(2, ((Enhancement) listItem).getEnhancementImageUrl());
+                    ps.setString(3, ((Enhancement) listItem).getEnhancementName());
+                    ps.setString(4, ((Enhancement) listItem).getEnhancementEffect());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Edition.class) {
+                } else if (listItem.getClass() == Edition.class) {
                     //EditionsTableColumns = " (id, appearance, edition, effect)";
                     query += EditionsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Edition) listItem).getId());
-                    ps.setString(2,((Edition) listItem).getEditionImageUrl());
-                    ps.setString(3,((Edition) listItem).getEditionName());
-                    ps.setString(4,((Edition) listItem).getEditionEffect());
+                    ps.setInt(1, ((Edition) listItem).getId());
+                    ps.setString(2, ((Edition) listItem).getEditionImageUrl());
+                    ps.setString(3, ((Edition) listItem).getEditionName());
+                    ps.setString(4, ((Edition) listItem).getEditionEffect());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Seal.class) {
+                } else if (listItem.getClass() == Seal.class) {
                     //SealsTableColumns = " (id, appearance, seal, effect)";
                     query += SealsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1,((Seal) listItem).getId());
-                    ps.setString(2,((Seal) listItem).getSealImageUrl());
-                    ps.setString(3,((Seal) listItem).getSealName());
-                    ps.setString(4,((Seal) listItem).getSealEffect());
+                    ps.setInt(1, ((Seal) listItem).getId());
+                    ps.setString(2, ((Seal) listItem).getSealImageUrl());
+                    ps.setString(3, ((Seal) listItem).getSealName());
+                    ps.setString(4, ((Seal) listItem).getSealEffect());
                     ps.executeUpdate();
-                }
-                else if (listItem.getClass() == Language.class) {
+                } else if (listItem.getClass() == Language.class) {
                     //LanguagesTableColumns = " (id, languageName, text, notes)";
                 }
             }
@@ -264,57 +253,49 @@ public class SqlHandler
     }
 
     public static String getDeckName(int id) {
-        try
-        {
+        try {
             Statement stmt = connection.createStatement();
             String statement = "SELECT deckName FROM Decks where id = " + id;
             ResultSet rs = stmt.executeQuery(statement);
             while (rs.next()) {
                 return rs.getString("deckName");
             }
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return "";
     }
 
-    public static Deck getDeck(int id)
-    {
+    public static Deck getDeck(int id) {
         return new Deck();
     }
 
-    public static List<Deck> getAllDecks()
-    {
+    public static List<Deck> getAllDecks() {
         List<Deck> deckList = new ArrayList<>();
 
-        try
-        {
+        try {
             System.out.println(connection.isValid(2));
 
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM Decks";
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {
-               Deck deck = new Deck();
-               deck.setId(rs.getInt(1));
-               deck.setDeckCoverUrl(rs.getString(2));
-               deck.setName(rs.getString(3));
-               deck.setDescription(rs.getString(4));
-               deck.setUnlockCondition(rs.getString(5));
-               deck.setStageCleared(rs.getInt(6));
-               deckList.add(deck);
+                Deck deck = new Deck();
+                deck.setId(rs.getInt(1));
+                deck.setDeckCoverUrl(rs.getString(2));
+                deck.setName(rs.getString(3));
+                deck.setDescription(rs.getString(4));
+                deck.setUnlockCondition(rs.getString(5));
+                deck.setStageCleared(rs.getInt(6));
+                deckList.add(deck);
             }
 
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             System.out.println("GetAllDecks");
             System.out.println(e.getMessage());
             System.out.println("SQLException: " + e.getMessage());
@@ -324,6 +305,32 @@ public class SqlHandler
         }
 
         return deckList;
+    }
+
+    public static List<Stake> getAllStakes() {
+        List<Stake> stakeList = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            String statementString = "SELECT * FROM Stakes";
+            ResultSet rs = stmt.executeQuery(statementString);
+
+            while (rs.next()) {
+                Stake stake = new Stake();
+                stake.setId(rs.getInt(1));
+                stake.setStakeImageStickerUrl(rs.getString(2));
+                stake.setStakeImageChipUrl(rs.getString(3));
+                stake.setStakeName(rs.getString(4));
+                stake.setStakeEffect(rs.getString(5));
+                stake.setStakeUnlockCondition(rs.getString(6));
+
+                stakeList.add(stake);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return stakeList;
     }
 }
 

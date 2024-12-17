@@ -1,6 +1,7 @@
 package com.example.balatro.classes;
 
-public class Deck
+public class
+Deck
 {
     private int id;
     private String deckCoverUrl;

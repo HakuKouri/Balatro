@@ -3,7 +3,8 @@ package com.example.balatro.classes;
 public class Stake
 {
     private int id;
-    private String stakeImageUrl;
+    private String stakeImageStickerUrl;
+    private String stakeImageChipUrl;
     private String stakeName;
     private String stakeEffect;
     private String stakeUnlockCondition;
@@ -18,14 +19,20 @@ public class Stake
         this.id = id;
     }
 
-    public String getStakeImageUrl()
-    {
-        return stakeImageUrl;
+    public String getStakeImageStickerUrl() {
+        return stakeImageStickerUrl;
     }
 
-    public void setStakeImageUrl(String stakeImageUrl)
-    {
-        this.stakeImageUrl = stakeImageUrl;
+    public void setStakeImageStickerUrl(String stakeImageStickerUrl) {
+        this.stakeImageStickerUrl = stakeImageStickerUrl;
+    }
+
+    public String getStakeImageChipUrl() {
+        return stakeImageChipUrl;
+    }
+
+    public void setStakeImageChipUrl(String stakeImageChipUrl) {
+        this.stakeImageChipUrl = stakeImageChipUrl;
     }
 
     public String getStakeName()

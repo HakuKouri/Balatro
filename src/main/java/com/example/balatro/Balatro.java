@@ -1,6 +1,7 @@
 package com.example.balatro;
 
 import com.example.balatro.classes.SqlHandler;
+import com.example.balatro.classes.WebHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

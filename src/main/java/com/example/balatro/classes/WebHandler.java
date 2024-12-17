@@ -81,7 +81,7 @@ public class WebHandler
                 try
                 {
                     deck.setId(arrayList.size()+1);
-                    deck.setDeckCoverUrl("src\\main\\resources\\com\\images\\Deck Backs\\deckBack_" + deck.getId() + ".png");
+                    deck.setDeckCoverUrl("src\\main\\resources\\com\\images\\DeckBacks\\deckBack_" + deck.getId() + ".png");
                     deck.setName(cells.get(1).text());
                     deck.setDescription(cells.get(2).text());
                     deck.setUnlockCondition(cells.get(3).text());
@@ -176,7 +176,8 @@ public class WebHandler
                 try
                 {
                     stake.setId(arrayList.size()+1);
-                    stake.setStakeImageUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getId() + ".png");
+                    stake.setStakeImageStickerUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getId() + ".png");
+                    stake.setStakeImageChipUrl("src\\main\\resources\\com\\images\\Stakechips\\stake_chip_" + stake.getId() + ".png");
                     stake.setStakeName(cells.get(2).text());
                     stake.setStakeEffect(cells.get(3).text());
                     stake.setStakeUnlockCondition(cells.get(4).text());
