@@ -25,7 +25,21 @@ public class GuiController
 
     public void openTitleGui() {
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("title-screen.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(GuiController.class.getResource("title-screen.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1280,720);
+
+            primaryStage.setTitle("Balatro");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void startNewGame() {
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(GuiController.class.getResource("title-screen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1280,720);
 
             primaryStage.setTitle("Balatro");
