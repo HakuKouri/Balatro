@@ -9,6 +9,7 @@ import javafx.scene.media.MediaView;
 
 import javafx.scene.layout.Pane;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class TitleScreen
 {
@@ -20,18 +21,15 @@ public class TitleScreen
     private Pane panePlayMenu;
 
     public void initialize() {
-
-
         btnTitlePlay.getStyleClass().add("shadow-b");
 
-        String s = "file:///C:/JAVA/Balatro/Balatro/src/main/resources/com/video/balatro_background_animation.mp4";
+        String s = getClass().getResource("/com/video/balatro_background_animation.mp4").toExternalForm();
         Media media = new Media(s);
+
         MediaPlayer player = new MediaPlayer(media);
         player.setCycleCount(Integer.MAX_VALUE);
         mediaTitleBackground.setMediaPlayer(player);
         mediaTitleBackground.getMediaPlayer().play();
-
-
     }
 
     public void openNewGameMenu() throws IOException

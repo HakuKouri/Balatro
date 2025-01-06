@@ -1,11 +1,13 @@
 package com.example.balatro;
 
 import com.example.balatro.classes.Deck;
+import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
 import com.example.balatro.classes.Stake;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +46,8 @@ public class NewGameMenuController
     public HBox selectedDeckDisplay;
     @FXML
     private VBox boxStakeLevel;
+    @FXML
+    private Button btnNewGame;
 
     private List<Deck> deckList;
     private List<Stake> stakeList;
@@ -189,6 +194,14 @@ public class NewGameMenuController
     }
 
     public void startNewGame(ActionEvent actionEvent) {
-        //GuiController.getInstance().
+        GameSetup gameSetup = new GameSetup();
+        gameSetup.setChosenDeck(deckList.get(activeDeck));
+        gameSetup.setChosenStake(stakeList.get(activeStake));
+
+        try {
+            Balatro.newGame(gameSetup);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

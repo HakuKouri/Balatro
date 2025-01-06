@@ -1,5 +1,6 @@
 package com.example.balatro;
 
+import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
 import com.example.balatro.classes.WebHandler;
 import javafx.application.Application;
@@ -11,10 +12,12 @@ import java.io.IOException;
 
 public class Balatro extends Application
 {
+    static private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws IOException
     {
+        Balatro.primaryStage = primaryStage;
         FXMLLoader fxmlLoader = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
@@ -26,6 +29,16 @@ public class Balatro extends Application
         SqlHandler.main();
         //WebHandler.setupDb();
 
+    }
+
+
+    public static void newGame(GameSetup gameSetup) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
+
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
+        primaryStage.setScene(scene);
+
+        GameScreenController.startNewGame(gameSetup);
     }
 
     public static void main(String[] args)
