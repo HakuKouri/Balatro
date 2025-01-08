@@ -5,7 +5,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -16,11 +20,13 @@
       <TilePane layoutX="306.0" layoutY="521.0" prefHeight="139.0" prefWidth="711.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
-      <TilePane layoutX="1121.0" layoutY="521.0" prefHeight="139.0" prefWidth="106.0" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
 
          <children>
-            <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+            <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin></Label>
             <Pane prefHeight="242.0" prefWidth="230.0">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
@@ -30,7 +36,7 @@
                   <VBox layoutX="57.0" layoutY="3.0" prefHeight="105.0" prefWidth="170.0" />
                </children>
             </Pane>
-            <Pane prefHeight="69.0" prefWidth="172.0" style="-fx-background-color: #333; -fx-background-radius: 10;">
+            <Pane prefHeight="69.0" prefWidth="172.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
@@ -46,7 +52,7 @@
                   <Pane layoutX="54.0" layoutY="8.0" prefHeight="56.0" prefWidth="170.0" style="-fx-background-color: #555; -fx-background-radius: 10;">
                      <children>
                         <ImageView fx:id="roundScoreStakeImage" fitHeight="44.0" fitWidth="44.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label alignment="CENTER" layoutX="30.0" layoutY="4.0" prefHeight="44.0" prefWidth="142.0" text="1,234,000" textFill="WHITE">
+                        <Label alignment="CENTER" layoutX="30.0" layoutY="4.0" prefHeight="44.0" prefWidth="142.0" text="0" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="27.0" />
                            </font>
@@ -55,21 +61,76 @@
                   </Pane>
                </children>
             </Pane>
-            <Pane prefHeight="155.0" prefWidth="230.0">
+            <Pane prefHeight="116.0" prefWidth="230.0">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
+               <children>
+                  <HBox alignment="CENTER" layoutX="3.0" layoutY="8.0" prefHeight="37.0" prefWidth="219.0">
+                     <children>
+                        <Label prefHeight="31.0" prefWidth="117.0" text="High Card" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="22.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="20.0" prefWidth="27.0" text="lvl. 1" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <GridPane layoutX="3.0" layoutY="45.0" prefHeight="66.0" prefWidth="219.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #57f; -fx-background-radius: 10;" text="Label" textAlignment="RIGHT" textFill="WHITE">
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <font>
+                              <Font name="balatro Regular" size="29.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="15.0" text="X" textFill="#e85959" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="balatro Regular" size="28.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #f55; -fx-background-radius: 10;" text="Label" textFill="WHITE" GridPane.columnIndex="2">
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <font>
+                              <Font name="balatro Regular" size="29.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+               </children>
             </Pane>
             <Pane prefHeight="246.0" prefWidth="233.0">
                <children>
-                  <Pane layoutX="92.0" layoutY="15.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
+                  <Pane layoutX="90.0" layoutY="15.0" prefHeight="60.0" prefWidth="70.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
                      <children>
-                        <Label layoutX="5.0" layoutY="1.0" prefHeight="20.0" prefWidth="50.0" text="Hands" textFill="WHITE">
+                        <Label alignment="CENTER" layoutY="1.0" prefHeight="20.0" prefWidth="70.0" text="Hands" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="-5.0" layoutY="21.0" prefHeight="34.0" prefWidth="64.0" style="-fx-background-color: #555;" text="0" textFill="#3d5eff">
+                        <Label alignment="CENTER" layoutX="5.0" layoutY="21.0" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="4" textAlignment="CENTER" textFill="#3d5eff">
                            <font>
                               <Font name="balatro Regular" size="25.0" />
                            </font>
@@ -77,44 +138,90 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                     </children></Pane>
-                  <Pane layoutX="172.0" layoutY="15.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Pane>
+                  <Pane layoutX="165.0" layoutY="15.0" prefHeight="60.0" prefWidth="70.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
                      <children>
-                        <Label alignment="CENTER" layoutY="1.0" text="Discards" textFill="WHITE">
+                        <Label alignment="CENTER" layoutY="1.0" prefHeight="20.0" prefWidth="70.0" text="Discards" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="2.0" layoutY="22.0" prefHeight="31.0" prefWidth="50.0" style="-fx-background-color: #555;" text="0" textFill="#eb1818">
+                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="3" textAlignment="CENTER" textFill="#eb1818">
                            <font>
                               <Font name="balatro Regular" size="24.0" />
                            </font>
                         </Label>
-                     </children></Pane>
-                  <Pane layoutX="109.0" layoutY="72.0" prefHeight="56.0" prefWidth="106.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
+                     </children>
+                  </Pane>
+                  <Pane layoutX="90.0" layoutY="90.0" prefHeight="65.0" prefWidth="145.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
                      <children>
-                        <Label layoutX="-4.0" layoutY="3.0" prefHeight="56.0" prefWidth="106.0" text="Label">
+                        <Label alignment="CENTER" layoutX="5.0" layoutY="5.0" prefHeight="56.0" prefWidth="135.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="\$0" textFill="#d0cd37">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <font>
+                              <Font name="balatro Regular" size="29.0" />
+                           </font>
                         </Label>
-                     </children></Pane>
-                  <Pane layoutX="92.0" layoutY="130.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Pane>
+                  <Pane layoutX="90.0" layoutY="170.0" prefHeight="60.0" prefWidth="70.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
                      <children>
-                        <Label layoutX="15.0" layoutY="6.0" text="Ante" />
-                     </children></Pane>
-                  <Pane layoutX="172.0" layoutY="130.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" />
-                  <Button alignment="CENTER" layoutX="3.0" layoutY="11.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="75.0" style="-fx-background-color: #f55;" text="Run Info" textFill="WHITE" wrapText="true">
+                        <Label alignment="CENTER" layoutY="1.0" prefHeight="20.0" prefWidth="70.0" text="Ante" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1/8" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="165.0" layoutY="170.0" prefHeight="60.0" prefWidth="70.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
+                     <children>
+                        <Label alignment="CENTER" layoutY="1.0" prefHeight="20.0" prefWidth="70.0" text="Round" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="balatro Regular" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Button alignment="CENTER" layoutX="3.0" layoutY="11.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="75.0" style="-fx-background-color: #f55;" text="Run Info" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="balatro Regular" size="15.0" />
-                     </font></Button>
-                  <Button layoutX="3.0" layoutY="110.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="75.0" style="-fx-background-color: #fa0;" text="Options" textFill="WHITE">
+                     </font>
+                  </Button>
+                  <Button alignment="CENTER" layoutX="3.0" layoutY="118.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="75.0" style="-fx-background-color: #fa0;" text="Options" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="balatro Regular" size="12.0" />
-                     </font></Button>
+                     </font>
+                  </Button>
                </children>
             </Pane>
          </children></VBox>
       <VBox layoutX="332.0" layoutY="305.0" prefHeight="200.0" prefWidth="100.0" />
+      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1066.0" layoutY="491.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
+      <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
+      <AnchorPane fx:id="smallBlindAnchor" layoutX="306.0" layoutY="165.0" prefHeight="647.0" prefWidth="200.0" />
+      <AnchorPane fx:id="bigBlindAnchor" layoutX="568.0" layoutY="201.0" prefHeight="611.0" prefWidth="200.0" />
+      <AnchorPane fx:id="bossAnchor" layoutX="817.0" layoutY="201.0" prefHeight="611.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

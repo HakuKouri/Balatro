@@ -1,5 +1,12 @@
 /*--background-color: #444;*/
+@font-face {
+    font-family: Balatro;
+    src: url("../font/balatro.ttf");
+}
 
+* {
+    -fx-font-family: Balatro;
+}
 
 .btnClose{
     -fx-background-image: url("../images/menuIcons/close-button.png");
