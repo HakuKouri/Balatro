@@ -25,6 +25,7 @@ public class GameScreenController
     @FXML
     private AnchorPane bossAnchor;
 
+
     static Deck deck;
     static Stake stake;
     static int hands;
@@ -109,6 +110,10 @@ public class GameScreenController
     private void nextPhase() {
         phase++;
         if(phase > 2){ phase = 0; }
+    }
+
+    public static void OnButtonClicked(){
+
     }
 
 

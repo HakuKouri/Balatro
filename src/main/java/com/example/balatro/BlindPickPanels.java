@@ -2,6 +2,7 @@ package com.example.balatro;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -12,8 +13,7 @@ public class BlindPickPanels {
     private Button btnSelectBlind;
     @FXML
     private Pane skipPane;
-    @FXML
-    private Pane bossPane;
+
     @FXML
     private AnchorPane blindPanel;
 
@@ -22,11 +22,14 @@ public class BlindPickPanels {
     }
 
     public void setBossPanel(boolean isBoss) {
-        if (isBoss) {
-            skipPane.setStyle("visibility: hidden;");
-        }
-        else {
-            bossPane.setVisible(false);
+        try {
+            if (isBoss) {
+                skipPane.getChildren().add(FXMLLoader.load(getClass().getResource("bossPane.fxml")));
+            } else {
+                skipPane.getChildren().add(FXMLLoader.load(getClass().getResource("blindSkipPane.fxml")));
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -48,29 +48,6 @@
             <Insets top="5.0" />
          </padding>
       </VBox>
-      <Pane fx:id="skipPane" layoutX="20.0" layoutY="388.0" prefHeight="116.0" prefWidth="200.0">
-         <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="176.0" text="OR" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Button layoutX="74.0" layoutY="46.0" mnemonicParsing="false" text="Button" />
-         </children>
-      </Pane>
-      <Pane fx:id="bossPane" layoutX="20.0" layoutY="488.0" prefHeight="116.0" prefWidth="200.0">
-         <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="3.0" prefHeight="43.0" prefWidth="176.0" text="Up the Ante" textAlignment="CENTER" textFill="#dac932">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Label>
-            <Label layoutX="18.0" layoutY="39.0" prefHeight="71.0" prefWidth="168.0" text="Raise all Blinds Refresh all Blind" textFill="WHITE" wrapText="true">
-               <font>
-                  <Font size="21.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
+      <Pane fx:id="skipPane" layoutX="20.0" layoutY="388.0" prefHeight="120.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
