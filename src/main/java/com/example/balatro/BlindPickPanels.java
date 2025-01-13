@@ -1,11 +1,15 @@
 package com.example.balatro;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+
+import java.math.BigInteger;
 
 public class BlindPickPanels {
 
@@ -13,9 +17,22 @@ public class BlindPickPanels {
     private Button btnSelectBlind;
     @FXML
     private Pane skipPane;
-
     @FXML
     private AnchorPane blindPanel;
+    @FXML
+    private Label lblBlindName;
+    @FXML
+    private ImageView imageViewBlindChip;
+    @FXML
+    private ImageView stakeImage;
+    @FXML
+    private Label lblMinScore;
+    @FXML
+    private Label lblEarn;
+
+    public void initialize() {
+        System.out.printf(blindPanel.layoutYProperty().toString());
+    }
 
     public void setButtonText(String text) {
         btnSelectBlind.setText(text);
@@ -35,6 +52,30 @@ public class BlindPickPanels {
 
     public void setActivity(boolean isActivity) {
         blindPanel.setDisable(isActivity);
+    }
+
+    public void setBlindName(String name) {
+        lblBlindName.setText(name);
+    }
+
+    public void setBlindImage(Image image) {
+        imageViewBlindChip.setImage(image);
+    }
+
+    public void setStakeImage(Image image) {
+        stakeImage.setImage(image);
+    }
+
+    public void setMinScore(BigInteger score) {
+        lblMinScore.setText(score.toString());
+    }
+
+    public void setEarn(int score) {
+        String text = "";
+        for (int i = 0; i < score; i++) {
+            text +="$";
+        }
+        lblEarn.setText(text+"+");
     }
 
 
