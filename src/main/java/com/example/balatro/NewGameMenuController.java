@@ -29,6 +29,7 @@ public class NewGameMenuController
     private Color dark = new Color(.2,.2,.2,1);
     private Color grey =  new Color(.3,.3,.3,1);
     private Color black = new Color(0,0,0,1);
+    private Color stakeGrey = new Color(.4,.4,.4,1);
 
     @FXML
     private StackPane stackPaneDeck;
@@ -54,51 +55,33 @@ public class NewGameMenuController
     private int activeDeck = 0;
     private int activeStake = 0;
 
+    //SET FIRST DECK AND FIRST STAKE IN SELECTION
     public void initialize() {
         deckList = SqlHandler.getAllDecks();
         stakeList = SqlHandler.getAllStakes();
 
-        setDeck(activeDeck);
+        activeStake = deckList.get(activeDeck).getStageCleared();
+        setDeck();
 
-        ((Rectangle)(boxStakeLevel.getChildren().get(8))).setStroke(white);
     }
 
-    private void setDeck(int deckIndex) {
-        labelDeckName.setText(deckList.get(deckIndex).getName());
-        ImageView deckCover = new ImageView(new Image("file:"+deckList.get(deckIndex).getDeckCoverUrl()));
-        deckCover.setFitHeight(120);
-        deckCover.setPreserveRatio(true);
-        stackPaneDeck.getChildren().add(deckCover);
-        if(deckList.get(deckIndex).getStageCleared() > 0) {
-            ImageView stakeChip = new ImageView(new Image("file:/com/images/Stickers_Seals/difficult_"+ deckList.get(deckIndex).getStageCleared() +".png"));
-            stakeChip.setFitHeight(120);
-            stakeChip.setPreserveRatio(true);
-            stackPaneDeck.getChildren().add(stakeChip);
-        }
-
-        labelDeckEffect.setText(deckList.get(deckIndex).getDescription());
+    private void setDeck() {
+        setDeckName();
+        loadDeckImage();
+        setDeckDescription();
         changeAviableStakeLevel();
-        setStake(deckList.get(deckIndex).getStageCleared());
 
-        setSelectedDeck(activeDeck);
+        setStake();
+        highlightActiveDeck();
+
     }
 
-    private void setSelectedDeck(int index) {
-        ((Circle)selectedDeckDisplay.getChildren().get(index)).setStroke(white);
-    }
+    private void setStake() {
+        highlightActiveStake();
+        setStakeName();
+        setStakeEffect();
+        setStakeChipImage();
 
-    private void setStake(int stakeIndex) {
-        activeStake = stakeIndex;
-
-        imageStakeChip.setImage(new Image("file:"+ stakeList.get(activeStake).getStakeImageChipUrl()));
-        labelStakeEffect.setText(stakeList.get(activeStake).getStakeEffect());
-        labelStakeName.setText(stakeList.get(activeStake).getStakeName());
-
-        setSelectedStake(deckList.get(activeDeck).getStageCleared());
-    }
-
-    private void setSelectedStake(int index) {
-        ((Circle)selectedStakeDisplay.getChildren().get(index)).setStroke(white);
     }
 
     private void changeDeck(boolean up) {
@@ -111,19 +94,8 @@ public class NewGameMenuController
             activeDeck = deckList.size()-1;
         }
 
-        changeIndexDisplay(selectedDeckDisplay, up);
-
-        resetSelection(selectedDeckDisplay);
-        setDeck(activeDeck);
-    }
-
-    private void changeAviableStakeLevel() {
-        for(int i = 0; i < 8; i++) {
-            if(i <= deckList.get(activeDeck).getStageCleared())
-                ((Rectangle)boxStakeLevel.getChildren().get(8-i)).setWidth(20);
-            else
-                ((Rectangle)boxStakeLevel.getChildren().get(8-i)).setWidth(10);
-        }
+        activeStake = deckList.get(activeDeck).getStageCleared();
+        setDeck();
     }
 
     private void changeStake(boolean up) {
@@ -136,44 +108,66 @@ public class NewGameMenuController
             activeStake = deckList.get(activeDeck).getStageCleared();
         }
 
-        changeIndexDisplay(selectedStakeDisplay, up);
-
-        resetSelection(selectedStakeDisplay);
-        setStake(activeStake);
+        setStake();
     }
 
-    private void changeIndexDisplay(HBox box, boolean up) {
-        int lastIndex = 0;
-        int index = 0;
-        int modifier;
 
-        if(up) modifier = -1;
-        else modifier = 1;
-
-        if(Objects.equals(box.getId(), "selectedDeckDisplay")) {
-            index = activeDeck;
-            lastIndex = activeDeck + modifier;
-            if(lastIndex < 0) lastIndex = deckList.size()-1;
-            else if (lastIndex >= deckList.size()) lastIndex = 0;
-
-        } else {
-            index = activeStake;
-            lastIndex = activeStake + modifier;
-            if(lastIndex < 0) lastIndex = deckList.get(activeDeck).getStageCleared();
-            else if(lastIndex > deckList.get(activeDeck).getStageCleared()) lastIndex = 0;
+    //UI FUNCTIONS
+    //DECK
+    private void setDeckName() {
+        labelDeckName.setText(deckList.get(activeDeck).getName());
+    }
+    private void loadDeckImage() {
+        ImageView deckCover = new ImageView(new Image("file:"+deckList.get(activeDeck).getDeckCoverUrl()));
+        deckCover.setFitHeight(120);
+        deckCover.setPreserveRatio(true);
+        stackPaneDeck.getChildren().add(deckCover);
+        if(deckList.get(activeDeck).getStageCleared() > 0) {
+            ImageView stakeChip = new ImageView(new Image("file:"+ stakeList.get(activeStake).getStakeImageStickerUrl()));
+            stakeChip.setFitHeight(120);
+            stakeChip.setPreserveRatio(true);
+            stackPaneDeck.getChildren().add(stakeChip);
         }
-
-        ((Circle)box.getChildren().get(lastIndex)).setStroke(black);
-        ((Circle)box.getChildren().get(index)).setStroke(white);
-
     }
+    private void setDeckDescription() {
+        labelDeckEffect.setText(deckList.get(activeDeck).getDescription());
+    }
+    private void changeAviableStakeLevel() {
+        for(int i = 0; i < 7; i++) {
+            if(i <= deckList.get(activeDeck).getStageCleared())
+                ((Rectangle)boxStakeLevel.getChildren().get(7-i)).setWidth(20);
+            else
+                ((Rectangle)boxStakeLevel.getChildren().get(7-i)).setWidth(10);
+        }
+    }
+    private void highlightActiveDeck() {
+        resetSelection(selectedDeckDisplay);
+        ((Circle)selectedDeckDisplay.getChildren().get(activeDeck)).setStroke(white);
+    }
+
+
+    //STAKE
+    private void setStakeName() { labelStakeName.setText(stakeList.get(activeStake).getStakeName()); }
+    private void setStakeEffect() { labelStakeEffect.setText(stakeList.get(activeStake).getStakeEffect()); }
+    private void setStakeChipImage() {imageStakeChip.setImage(new Image("file:"+ stakeList.get(activeStake).getStakeImageChipUrl()));}
+    private void highlightActiveStake() {
+        resetSelection(selectedStakeDisplay);
+        resetSelection();
+        ((Circle)selectedStakeDisplay.getChildren().get(activeStake)).setStroke(white);
+        ((Rectangle)boxStakeLevel.getChildren().get(7 - activeStake)).setStroke(white);
+    }
+
 
     private void resetSelection(HBox box) {
         for (Node circle: box.getChildren()) {
             ((Circle)circle).setStroke(black);
         }
     }
-
+    private void resetSelection() {
+        for(Node rectangle: boxStakeLevel.getChildren()) {
+            ((Rectangle)rectangle).setStroke(stakeGrey);
+        }
+    }
 
     //FXML FUNCTIONS
     public void nextDeck() { changeDeck(true); }
@@ -192,7 +186,6 @@ public class NewGameMenuController
                 ((Rectangle)rec).setStroke(grey);
         }
     }
-
     public void startNewGame(ActionEvent actionEvent) {
         GameSetup gameSetup = new GameSetup();
         gameSetup.setChosenDeck(deckList.get(activeDeck));
