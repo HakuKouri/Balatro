@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="120.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.BossPane">
+   <children>
+      <Pane fx:id="bossPane" prefHeight="120.0" prefWidth="200.0">
+         <children>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="3.0" prefHeight="43.0" prefWidth="176.0" text="Up the Ante" textAlignment="CENTER" textFill="#dac932">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label layoutX="18.0" layoutY="39.0" prefHeight="71.0" prefWidth="168.0" text="Raise all Blinds Refresh all Blind" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

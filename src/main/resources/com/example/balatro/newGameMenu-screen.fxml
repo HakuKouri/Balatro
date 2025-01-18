@@ -33,12 +33,12 @@
             </opaqueInsets></Button>
       </HBox>
       <Button fx:id="btnPrevDeck" mnemonicParsing="false" onAction="#prevDeck" style="-fx-background-color: #f55; -fx-min-height: 140; -fx-effect: dropshadow(three-pass-box,black,0,0,5,5);" styleClass="maxHeigth" text="&lt;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <VBox prefHeight="144.0" prefWidth="314.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
-            <HBox alignment="CENTER" prefHeight="131.0" prefWidth="300.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #333; -fx-background-radius: 10px;">
+            <HBox alignment="CENTER" prefHeight="131.0" prefWidth="200.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #333; -fx-background-radius: 10px;">
                <children>
-                  <StackPane fx:id="stackPaneDeck" prefHeight="144.0" prefWidth="103.0" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" />
-                  <VBox prefHeight="144.0" prefWidth="169.0" HBox.hgrow="ALWAYS">
+                  <StackPane fx:id="stackPaneDeck" prefHeight="120.0" prefWidth="116.0" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" />
+                  <VBox prefHeight="120.0" prefWidth="182.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label fx:id="labelDeckName" prefHeight="48.0" prefWidth="167.0" textAlignment="CENTER" textFill="WHITE">
                            <font>
@@ -48,9 +48,8 @@
                         <Label fx:id="labelDeckEffect" alignment="CENTER" prefHeight="66.0" prefWidth="167.0" style="-fx-background-color: #ddd; -fx-background-radius: 5;" text="Label" textAlignment="CENTER" />
                      </children>
                   </VBox>
-                  <VBox fx:id="boxStakeLevel" alignment="CENTER" prefHeight="144.0" prefWidth="34.0" spacing="5.0">
+                  <VBox fx:id="boxStakeLevel" alignment="CENTER" prefHeight="120.0" prefWidth="25.0" spacing="5.0">
                      <children>
-                        <Rectangle fx:id="stake_8" arcHeight="5.0" arcWidth="5.0" fill="#666666" height="8.0" onMouseClicked="#stakeLevel_onclick" stroke="#666666" strokeType="INSIDE" style="-fx-arc-height: 10;" width="10.0" />
                         <Rectangle fx:id="stake_7" arcHeight="5.0" arcWidth="5.0" fill="#666666" height="8.0" onMouseClicked="#stakeLevel_onclick" stroke="#666666" strokeType="INSIDE" style="-fx-arc-height: 10;" width="10.0" />
                         <Rectangle fx:id="stake_6" arcHeight="5.0" arcWidth="5.0" fill="#666666" height="8.0" onMouseClicked="#stakeLevel_onclick" stroke="#666666" strokeType="INSIDE" style="-fx-arc-height: 10;" width="10.0" />
                         <Rectangle fx:id="stake_5" arcHeight="5.0" arcWidth="5.0" fill="#666666" height="8.0" onMouseClicked="#stakeLevel_onclick" stroke="#666666" strokeType="INSIDE" style="-fx-arc-height: 10;" width="10.0" />
@@ -67,6 +66,9 @@
                         <Insets bottom="5.0" top="5.0" />
                      </padding></VBox>
                </children>
+               <VBox.margin>
+                  <Insets left="12.0" right="12.0" top="12.0" />
+               </VBox.margin>
             </HBox>
             <HBox fx:id="selectedDeckDisplay" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
                <children>

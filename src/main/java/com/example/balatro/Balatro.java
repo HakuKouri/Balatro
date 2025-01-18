@@ -13,6 +13,7 @@ import java.io.IOException;
 public class Balatro extends Application
 {
     static private Stage primaryStage;
+    static public GameScreenController gameScreenController = new GameScreenController();
 
     @Override
     public void start(Stage primaryStage) throws IOException
@@ -38,7 +39,7 @@ public class Balatro extends Application
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         primaryStage.setScene(scene);
 
-        GameScreenController.startNewGame(gameSetup);
+        gameScreenController.startNewGame(gameSetup);
     }
 
     public static void main(String[] args)

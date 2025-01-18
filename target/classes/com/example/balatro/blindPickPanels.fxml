@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="blindPanel" prefHeight="630.0" prefWidth="240.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.BlindPickPanels">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="15.0" layoutY="15.0" prefHeight="358.0" prefWidth="210.0" spacing="10.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #777; -fx-border-radius: 10; -fx-border-width: 3;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <Button fx:id="btnSelectBlind" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" style="-fx-background-color: #f80;" text="Upcoming" textFill="WHITE" VBox.vgrow="ALWAYS" />
+            <Label fx:id="lblBlindName" alignment="CENTER" prefHeight="35.0" prefWidth="190.0" style="-fx-background-color: #00f; -fx-background-radius: 10; -fx-border-color: #00d; -fx-border-radius: 10; -fx-border-width: 3;" text="Label" textFill="WHITE" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <ImageView fx:id="imageViewBlindChip" fitHeight="86.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="CENTER" prefHeight="46.0" prefWidth="193.0" textFill="WHITE" />
+            <VBox prefHeight="116.0" prefWidth="204.0" spacing="10.0" style="-fx-background-color: #333; -fx-background-radius: 10;">
+               <children>
+                  <Label alignment="CENTER" prefHeight="31.0" prefWidth="202.0" text="Score at least" textFill="WHITE" />
+                  <HBox alignment="CENTER_RIGHT" prefWidth="250.0">
+                     <children>
+                        <ImageView fx:id="stakeImage" fitHeight="30.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label fx:id="lblMinScore" prefHeight="43.0" prefWidth="118.0" text="800" textAlignment="CENTER" textFill="#cd2b2b">
+                           <font>
+                              <Font size="29.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="Reward:" textFill="WHITE" />
+                        <Label fx:id="lblEarn" text="\$$$+" textFill="#d0c417" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </VBox>
+      <Pane fx:id="skipPane" layoutX="20.0" layoutY="388.0" prefHeight="120.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>

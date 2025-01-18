@@ -332,6 +332,65 @@ public class SqlHandler {
 
         return stakeList;
     }
+
+    public static List<Blind> getAllBlinds() {
+        List<Blind> blinds = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Blinds";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Blind blind = new Blind();
+
+                blind.setId(rs.getInt(1));
+                blind.setBlindImageUrl(rs.getString(2));
+                blind.setBlindName(rs.getString(3));
+                blind.setBlindDescription(rs.getString(4));
+                blind.setBlineMinimumAnte(rs.getString(5));
+                blind.setBlindScoreMultiplier(rs.getString(6));
+                blind.setBlindEarn(rs.getString(7));
+
+                blinds.add(blind);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return blinds;
+    }
+
+
+    public static List<Tag> getAllTags() {
+        List<Tag> tags = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Tags";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Tag tag = new Tag();
+
+                tag.setId(rs.getInt(1));
+                tag.setTagImageUrl(rs.getString(2));
+                tag.setTagName(rs.getString(3));
+                tag.setTagBenefit(rs.getString(4));
+                tag.setTagNotes(rs.getString(5));
+                tag.setMinAnte(rs.getString(6));
+
+                tags.add(tag);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return tags;
+    }
+
 }
 
 //region Example

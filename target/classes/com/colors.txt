@@ -1,0 +1,39 @@
+Small Blind: 58,85,171 #3a55ab
+Big Blind: 224,162,58 #e0a23a
+The Hook: 168,64,36 #a84024
+The Ox: 185,91,8 #b95b08
+The House: 81,134,168 #5186a8
+The Wall: 138,89,165 #8a59a5
+The Wheel: 80,191,124 #50bf7c
+The Arm: 104,101,243 #6865f3
+The Club: 185,203,146 #b9cb92
+The Fish: 62,133,189 #3E85BD
+The Psychic: 239,192,60 #EFC03C
+The Goad: 185,92,150 #B95C96
+The Water: 198,224,235 #C6E0EB
+The Window: 169,162,149 #A9A295
+The Manacle: 87,87,87 #575757
+The Eye: 75,113,228 #4B71E4
+The Mouth: 174,113,142 #AE718E
+The Plant: 112,146,132 #709284
+The Serpent: 67,154,79 #439A4F
+The Pillar: 126,103,82 #7E6752
+The Needle: 92,110,49 #5C6E31
+The Head: 172,157,180 #AC9DB4
+The Tooth: 181,45,45 #B52D2D
+The Flint: 229,106,47 #E56A2F
+The Mark: 106,56,71 #6A3847
+Amber Acorn: 253,162,0 #FDA200
+Verdant Leaf: 86,167,134 #56A786
+Violet Vessel: 138,113,225 #8A71E1
+Crimson Heart: 172,50,50 #AC3232
+Cerulean Bell: 0,156,253 #009CFD
+
+Background: 21,32,35 #152023
+Background light: 43,54,57 #2B3639
+shop bg light: 54,76,80 #364C50
+shop Color: 207,75,63 #CF4B3F
+shadow: 0,9,10 #00090A
+green: 50,184,129 #32B881
+red: 250,71,61 #FA473D
+Money yellow: 221,164,80 #DDA450
