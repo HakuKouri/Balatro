@@ -26,8 +26,6 @@
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
 >>>>>>> game-code
          <children>
-            <Label fx:id="labelBlind" text="Label" />
-            <Pane prefHeight="111.0" prefWidth="172.0">
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
             <Pane prefHeight="242.0" prefWidth="230.0">
                <VBox.margin>
@@ -35,11 +33,9 @@
                </VBox.margin>
                <children>
                   <ImageView fitHeight="56.0" fitWidth="52.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
-                  <VBox layoutX="57.0" layoutY="3.0" prefHeight="105.0" prefWidth="100.0" />
                   <VBox layoutX="57.0" layoutY="3.0" prefHeight="105.0" prefWidth="170.0" />
                </children>
             </Pane>
-            <Pane prefHeight="69.0" prefWidth="172.0">
             <Pane prefHeight="69.0" prefWidth="172.0" style="-fx-background-color: #333; -fx-background-radius: 10;">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
@@ -65,7 +61,6 @@
                   </Pane>
                </children>
             </Pane>
-            <Pane prefHeight="119.0" prefWidth="172.0">
             <Pane prefHeight="155.0" prefWidth="230.0">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
