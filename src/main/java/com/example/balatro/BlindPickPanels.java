@@ -1,5 +1,6 @@
 package com.example.balatro;
 
+import com.example.balatro.classes.Blind;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -30,8 +31,14 @@ public class BlindPickPanels {
     @FXML
     private Label lblEarn;
 
+    private Blind blind;
+
     public void initialize() {
         System.out.printf(blindPanel.layoutYProperty().toString());
+    }
+
+    public void getBlind(Blind blind) {
+        this.blind = blind;
     }
 
     public void setButtonText(String text) {
@@ -78,5 +85,11 @@ public class BlindPickPanels {
         lblEarn.setText(text+"+");
     }
 
+    public void play() {
+        GameScreenController.startRound(blind,new BigInteger(lblMinScore.getText()));
+    }
 
+    public void skip() {
+        GameScreenController.skip();
+    }
 }

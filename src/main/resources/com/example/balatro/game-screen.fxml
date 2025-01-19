@@ -16,28 +16,10 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;.../images/src/main/resources/com/images/backgroundImage/pokerBackground.jpg&quot;);" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <TilePane layoutX="314.0" layoutY="472.0" prefHeight="182.0" prefWidth="648.0" styleClass="spot" />
-      <TilePane layoutX="262.0" layoutY="14.0" prefHeight="182.0" prefWidth="711.0" styleClass="spot" />
-      <TilePane layoutX="1006.0" layoutY="14.0" prefHeight="182.0" prefWidth="260.0" styleClass="spot" />
-      <TilePane layoutX="1058.0" layoutY="472.0" prefHeight="182.0" prefWidth="139.0" />
-      <VBox alignment="TOP_CENTER" layoutX="-3.0" layoutY="-2.0" prefHeight="720.0" prefWidth="233.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-=======
-      <TilePane layoutX="306.0" layoutY="521.0" prefHeight="139.0" prefWidth="711.0" styleClass="spot" />
-      <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
-      <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
-      <TilePane layoutX="1121.0" layoutY="521.0" prefHeight="139.0" prefWidth="106.0" />
-      <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
->>>>>>> game-code
-=======
-
-      <TilePane layoutX="306.0" layoutY="521.0" prefHeight="139.0" prefWidth="711.0" styleClass="spot" />
+      <TilePane layoutX="306.0" layoutY="531.0" prefHeight="200.0" prefWidth="711.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
-
->>>>>>> 7003cb2527a7daf0ec1b4e7b1498fda0ca950cce
          <children>
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <VBox.margin>
@@ -139,23 +121,8 @@
             </Pane>
             <Pane prefHeight="246.0" prefWidth="233.0">
                <children>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <Pane layoutX="99.0" layoutY="15.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" />
-                  <Pane layoutX="162.0" layoutY="15.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" />
-                  <Pane layoutX="91.0" layoutY="82.0" prefHeight="56.0" prefWidth="106.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" />
-                  <Pane layoutX="88.0" layoutY="151.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
-                     <children>
-                        <Label layoutX="15.0" layoutY="6.0" text="Ante" />
-                     </children></Pane>
-                  <Pane layoutX="156.0" layoutY="151.0" prefHeight="56.0" prefWidth="57.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" />
-                  <Button layoutX="14.0" layoutY="23.0" mnemonicParsing="false" prefHeight="69.0" prefWidth="52.0" text="Button" />
-                  <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" prefHeight="69.0" prefWidth="52.0" text="Button" />
-=======
-                  <Pane layoutX="92.0" layoutY="15.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
-=======
                   <Pane layoutX="90.0" layoutY="15.0" prefHeight="60.0" prefWidth="70.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
->>>>>>> 7003cb2527a7daf0ec1b4e7b1498fda0ca950cce
+
                      <children>
                         <Label alignment="CENTER" layoutY="1.0" prefHeight="20.0" prefWidth="70.0" text="Hands" textFill="WHITE">
                            <font>
@@ -243,18 +210,14 @@
                   <Button alignment="CENTER" layoutX="3.0" layoutY="118.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="75.0" style="-fx-background-color: #fa0;" text="Options" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="balatro Regular" size="12.0" />
-<<<<<<< HEAD
-                     </font></Button>
->>>>>>> game-code
-=======
                      </font>
                   </Button>
->>>>>>> 7003cb2527a7daf0ec1b4e7b1498fda0ca950cce
+
                </children>
             </Pane>
          </children></VBox>
       <VBox layoutX="332.0" layoutY="305.0" prefHeight="200.0" prefWidth="100.0" />
-      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1066.0" layoutY="491.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1071.0" layoutY="531.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
       <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
       <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />

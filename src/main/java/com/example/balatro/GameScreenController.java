@@ -1,32 +1,17 @@
 package com.example.balatro;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-import com.example.balatro.classes.GameSetup;
 
-public class GameScreenController
-{
-    public static void startNewGame(GameSetup gameSetup) {
-
-    }
-=======
-import com.example.balatro.classes.Deck;
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.Stake;
-import com.example.balatro.classes.StandartDeck;
-
-=======
 import com.example.balatro.classes.*;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.math.BigInteger;
->>>>>>> 7003cb2527a7daf0ec1b4e7b1498fda0ca950cce
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +26,8 @@ public class GameScreenController
     private AnchorPane bigBlindAnchor;
     @FXML
     private AnchorPane bossAnchor;
+    @FXML
+    private Label labelBlind;
 
 
     static List<Blind> blindList;
@@ -61,15 +48,16 @@ public class GameScreenController
     static int money = 0;
     static BigInteger[] chipRequirement = new BigInteger[]{BigInteger.valueOf(100), BigInteger.valueOf(300), BigInteger.valueOf(800), BigInteger.valueOf(2000), BigInteger.valueOf(5000), BigInteger.valueOf(11000), BigInteger.valueOf(20000), BigInteger.valueOf(35000), BigInteger.valueOf(50000)};
     static boolean blindsToggled = false;
-    private FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private BlindPickPanels smallController = null;
-    private BlindPickPanels bigController = null;
-    private BlindPickPanels bossController = null;
+    private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
+    private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
+    private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
+    private BlindPickPanels smallController;
+    private BlindPickPanels bigController;
+    private BlindPickPanels bossController;
 
 
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();
+
 
     public void initialize(){
         Balatro.gameScreenController = this;
@@ -89,14 +77,14 @@ public class GameScreenController
             bigBlindAnchor.getChildren().add(bigBlind);
             bigController.setButtonText("Upcoming");
             bigController.setBossPanel(false);
-            bigController.setActivity(false);
+            bigController.setActivity(true);
 
             boss = loaderBoss.load();
             bossController = loaderBoss.getController();
             bossAnchor.getChildren().add(boss);
             bossController.setButtonText("Upcoming");
             bossController.setBossPanel(true);
-            bossController.setActivity(false);
+            bossController.setActivity(true);
 
             blindList = SqlHandler.getAllBlinds();
             tagList = SqlHandler.getAllTags();
@@ -196,10 +184,6 @@ public class GameScreenController
     }
 
 
-
-<<<<<<< HEAD
->>>>>>> game-code
-=======
     private void nextPhase() {
         phase++;
         if(phase > 2){ phase = 0; }
@@ -211,10 +195,10 @@ public class GameScreenController
 
     public void toggleBlinds() {
         blindsToggled = !blindsToggled;
-        toggleBlind(blindsToggled, 2);
+        toggleBlind(blindsToggled);
     }
 
-    public void toggleBlind(boolean toggle, int round) {
+    public void toggleBlind(boolean toggle) {
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
         TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
         TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossAnchor);
@@ -239,5 +223,13 @@ public class GameScreenController
     }
 
 
->>>>>>> 7003cb2527a7daf0ec1b4e7b1498fda0ca950cce
+    public void startRound(Blind blind, BigInteger score) {
+        toggleBlind(true);
+        labelBlind.setText(blind.getBlindName());
+    }
+
+    public static void skip() {
+
+    }
+
 }
