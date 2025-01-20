@@ -14,7 +14,7 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="15.0" layoutY="15.0" prefHeight="358.0" prefWidth="210.0" spacing="10.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #777; -fx-border-radius: 10; -fx-border-width: 3;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
          <children>
-            <Button fx:id="btnSelectBlind" mnemonicParsing="false" prefHeight="25.0" prefWidth="118.0" style="-fx-background-color: #f80;" text="Upcoming" textFill="WHITE" VBox.vgrow="ALWAYS" />
+            <Button fx:id="btnSelectBlind" mnemonicParsing="false" onAction="#play" prefHeight="25.0" prefWidth="118.0" style="-fx-background-color: #f80;" text="Upcoming" textFill="WHITE" VBox.vgrow="ALWAYS" />
             <Label fx:id="lblBlindName" alignment="CENTER" prefHeight="35.0" prefWidth="190.0" style="-fx-background-color: #00f; -fx-background-radius: 10; -fx-border-color: #00d; -fx-border-radius: 10; -fx-border-width: 3;" text="Label" textFill="WHITE" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
