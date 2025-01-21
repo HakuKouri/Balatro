@@ -11,8 +11,8 @@ public class StandartDeck {
 
     public StandartDeck() {
         for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 14; j++)
-                playingCards.add(new PlayingCard(j,suits[i]));
+            for (int j = 0; j < 13; j++)
+                playingCards.add(new PlayingCard(j,i));
     }
 
     public List<PlayingCard> getPlayingCards() {

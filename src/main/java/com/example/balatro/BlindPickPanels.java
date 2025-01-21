@@ -31,15 +31,19 @@ public class BlindPickPanels {
     @FXML
     private Label lblEarn;
 
+    private GameScreenController gameScreenController;
     private Blind blind;
 
     public void initialize() {
         System.out.printf(blindPanel.layoutYProperty().toString());
     }
 
-    public void getBlind(Blind blind) {
+    public void setGameScreenController(GameScreenController gameScreenController) {this.gameScreenController = gameScreenController;}
+
+    public void setBlind(Blind blind) {
         this.blind = blind;
     }
+
 
     public void setButtonText(String text) {
         btnSelectBlind.setText(text);
@@ -50,7 +54,10 @@ public class BlindPickPanels {
             if (isBoss) {
                 skipPane.getChildren().add(FXMLLoader.load(getClass().getResource("bossPane.fxml")));
             } else {
-                skipPane.getChildren().add(FXMLLoader.load(getClass().getResource("blindSkipPane.fxml")));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("blindSkipPane.fxml"));
+                BlindSkipPane pane = loader.getController();
+                skipPane.getChildren().add(loader.load());
+
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -86,10 +93,10 @@ public class BlindPickPanels {
     }
 
     public void play() {
-        GameScreenController.startRound(blind,new BigInteger(lblMinScore.getText()));
+        gameScreenController.startRound(blind,new BigInteger(lblMinScore.getText()));
     }
 
     public void skip() {
-        GameScreenController.skip();
+        gameScreenController.skip();
     }
 }

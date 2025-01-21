@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -10,13 +11,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;.../images/src/main/resources/com/images/backgroundImage/pokerBackground.jpg&quot;);" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-      <TilePane layoutX="306.0" layoutY="531.0" prefHeight="200.0" prefWidth="711.0" styleClass="spot" />
+      <StackPane fx:id="HoldingHand" layoutX="306.0" layoutY="531.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
@@ -223,6 +225,11 @@
       <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bossAnchor" layoutX="820.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
-      <Button layoutX="1175.0" layoutY="207.0" mnemonicParsing="false" onAction="#toggleBlinds" text="Button" />
+      <Button layoutX="1175.0" layoutY="207.0" mnemonicParsing="false" onAction="#drawCard" text="Button" />
+      <ImageView fx:id="testImageView" fitHeight="190.0" fitWidth="142.0" layoutX="1124.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

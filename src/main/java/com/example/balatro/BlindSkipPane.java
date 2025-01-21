@@ -13,12 +13,13 @@ public class BlindSkipPane {
     @FXML
     private ImageView ivSkipReward;
 
+    private BlindPickPanels blindPickPanels;
+
     public void setIvSkipReward(String imageUrl) {
         ivSkipReward.setImage(new Image(imageUrl));
     }
 
-    public void onButtonClicked() {
-
+    public void setBlindPickPanels(BlindPickPanels blindPickPanels) {
+        this.blindPickPanels = blindPickPanels;
     }
-
 }

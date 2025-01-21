@@ -9,6 +9,7 @@ public class Blind
     private String blineMinimumAnte;
     private String blindScoreMultiplier;
     private String blindEarn;
+    private boolean blindSkipped;
 
     public int getId()
     {
@@ -78,5 +79,13 @@ public class Blind
     public void setBlindEarn(String blindEarn)
     {
         this.blindEarn = blindEarn;
+    }
+
+    public boolean getBlindSkipped() {
+        return blindSkipped;
+    }
+
+    public void setBlindSkipped(boolean blindSkipped) {
+        this.blindSkipped = blindSkipped;
     }
 }
