@@ -18,7 +18,7 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;.../images/src/main/resources/com/images/backgroundImage/pokerBackground.jpg&quot;);" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-      <StackPane fx:id="HoldingHand" layoutX="306.0" layoutY="531.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
+      <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="468.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
@@ -231,5 +231,28 @@
             <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
          </image>
       </ImageView>
+      <GridPane fx:id="handButtonBox" layoutX="450.0" layoutY="669.0" prefHeight="120.0" prefWidth="450.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" maxWidth="168.0" minWidth="10.0" percentWidth="40.0" prefWidth="161.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" percentWidth="20.0" prefWidth="134.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="164.0" minWidth="10.0" percentWidth="40.0" prefWidth="155.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#playSelectetCards" text="Play Hand" GridPane.rowSpan="2147483647" />
+            <Button mnemonicParsing="false" onAction="#discardSelectedCards" text="Discard" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Button mnemonicParsing="false" text="Rank" />
+                  <Button mnemonicParsing="false" text="Suit" />
+               </children>
+            </HBox>
+            <Label text="Sort: Hand" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+      <HBox fx:id="hbPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
    </children>
 </AnchorPane>
