@@ -114,7 +114,7 @@ public class SqlHandler {
                     //(id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)
                     query += JokerCardsTableColumns + " VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Joker) listItem).getId());
+                    ps.setInt(1, ((Joker) listItem).getCardId());
                     ps.setString(2, ((Joker) listItem).getCardFrontCoverUrl());
                     ps.setString(3, ((Joker) listItem).getName());
                     ps.setString(4, ((Joker) listItem).getDescription());
@@ -161,7 +161,7 @@ public class SqlHandler {
                     //TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
                     query += TarotCardsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Tarot) listItem).getId());
+                    ps.setInt(1, ((Tarot) listItem).getCardId());
                     ps.setString(2, ((Tarot) listItem).getTarotImageUrl());
                     ps.setString(3, ((Tarot) listItem).getTarotName());
                     ps.setString(4, ((Tarot) listItem).getTarotDescription());
@@ -170,13 +170,13 @@ public class SqlHandler {
                     //PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
                     query += PlanetCardsTableColumns + "VALUES (?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Planet) listItem).getId());
+                    ps.setInt(1, ((Planet) listItem).getCardId());
                     ps.setString(2, ((Planet) listItem).getPlanetImageUrl());
                     ps.setString(3, ((Planet) listItem).getPlanetName());
                     ps.setString(4, ((Planet) listItem).getPlanetAddition());
                     ps.setString(5, ((Planet) listItem).getPlanetPokerHand());
                     ps.setString(6, ((Planet) listItem).getPlanetHandBaseScore());
-                    ps.setBoolean(7, ((Planet) listItem).getId() >= 10);
+                    ps.setBoolean(7, ((Planet) listItem).getCardId() >= 10);
                     ps.executeUpdate();
 
 
@@ -184,7 +184,7 @@ public class SqlHandler {
                     //SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
                     query += SpectralCardsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Spectral) listItem).getId());
+                    ps.setInt(1, ((Spectral) listItem).getCardId());
                     ps.setString(2, ((Spectral) listItem).getSpectralImageUrl());
                     ps.setString(3, ((Spectral) listItem).getSpectralName());
                     ps.setString(4, ((Spectral) listItem).getSpectralEffect());
@@ -193,7 +193,7 @@ public class SqlHandler {
                     //VoucherCardsTableColumns = " (id, baseVoucherImage, baseVoucherName, baseVoucherEffect, upgradeVoucherImage, upgradeVoucherName, upgradeVoucherEffect, upgradeVoucherUnlocked, note)";
                     query += VoucherCardsTableColumns + "VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Voucher) listItem).getId());
+                    ps.setInt(1, ((Voucher) listItem).getCardId());
                     ps.setString(2, ((Voucher) listItem).getVoucherBaseImageUrl());
                     ps.setString(3, ((Voucher) listItem).getVoucherBaseName());
                     ps.setString(4, ((Voucher) listItem).getVoucherBaseEffect());

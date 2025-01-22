@@ -1,10 +1,6 @@
 package com.example.balatro.classes;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayingCard extends Card
 {
@@ -17,7 +13,6 @@ public class PlayingCard extends Card
     Seal seal;
     Enhancement enhancement;
     Edition edition;
-    Image image;
 
     public PlayingCard(int rank, int suit) {
         this.rank = rankArray[rank];
@@ -29,7 +24,10 @@ public class PlayingCard extends Card
         enhancement.setId(0);
         edition = new Edition();
         edition.setId(0);
-        image = new Image(getClass().getResource("/com/images/DEFAULT/BASIC/8BitDeck"+(rank+1+suit*13)+".png").toExternalForm());
+        Image image = new Image(getClass().getResource("/com/images/DEFAULT/BASIC/8BitDeck"+(rank+1+suit*13)+".png").toExternalForm());
+        this.setImage(image);
+        this.setFitHeight(200);
+        this.setPreserveRatio(true);
     }
 
     public String getRank() {
@@ -72,5 +70,35 @@ public class PlayingCard extends Card
         this.edition = edition;
     }
 
-    public Image getImage() { return image; }
+    public String[] getRankArray() {
+        return rankArray;
+    }
+
+    public void setRankArray(String[] rankArray) {
+        this.rankArray = rankArray;
+    }
+
+    public String[] getSuitArray() {
+        return suitArray;
+    }
+
+    public void setSuitArray(String[] suitArray) {
+        this.suitArray = suitArray;
+    }
+
+    public int[] getValueArray() {
+        return valueArray;
+    }
+
+    public void setValueArray(int[] valueArray) {
+        this.valueArray = valueArray;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

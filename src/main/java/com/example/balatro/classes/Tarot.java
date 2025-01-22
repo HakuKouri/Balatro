@@ -1,21 +1,10 @@
 package com.example.balatro.classes;
 
-public class Tarot
+public class Tarot extends Card
 {
-    private int id;
     private String tarotImageUrl;
     private String tarotName;
     private String tarotDescription;
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
-    }
 
     public String getTarotImageUrl()
     {

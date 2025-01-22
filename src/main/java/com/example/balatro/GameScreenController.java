@@ -1,20 +1,16 @@
 package com.example.balatro;
 
-
 import com.example.balatro.classes.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -63,6 +59,7 @@ public class GameScreenController
     static int discards;
     static Deck deck;
     static Stake stake;
+    static int selectedCardCounter = 0;
 
     static List<Blind> blindList;
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();
@@ -75,6 +72,7 @@ public class GameScreenController
     private List<PlayingCard> deckList = new ArrayList<>();
     static List<PlayingCard> playingCardList = new ArrayList<PlayingCard>();
     private List<PlayingCard> selectedCards = new ArrayList<>();
+    private List<PlayingCard> handCards = new ArrayList<>();
 
     public void initialize(){
         Balatro.gameScreenController = this;
@@ -259,7 +257,6 @@ public class GameScreenController
         transitionBoss.play();
     }
 
-
     public void startRound(Blind blind, BigInteger score) {
         toggleBlind(false);
         labelBlind.setText(blind.getBlindName());
@@ -272,29 +269,34 @@ public class GameScreenController
     public void drawCard() {
         System.out.println("drawCard");
         testImageView.setImage(playingCardList.get(0).getImage());
-        ImageView imageView = new ImageView(playingCardList.get(0).getImage());
-        imageView.setFitHeight(200);
-        imageView.setPreserveRatio(true);
-        imageView.setOnMouseClicked(mouseEvent -> {
-            playingCardClicked((ImageView) mouseEvent.getSource());
-
+        playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
+            playingCardClicked((PlayingCard) mouseEvent.getSource());
         });
 
-        HoldingHand.getChildren().add(imageView);
-        selectedCards.add(playingCardList.get(0));
+        HoldingHand.getChildren().add(playingCardList.get(0));
+        handCards.add(playingCardList.get(0));
         playingCardList.remove(0);
         moveCards();
     }
 
-    private void playingCardClicked(ImageView iv) {
-        if(iv.getTranslateY() == 0) {
-            selectedCards.add();
-            iv.setTranslateY(-20);
-        }
-        else {
+    private void playingCardClicked(PlayingCard card) {
+        if(card.getTranslateY() == 0 && selectedCardCounter < 5) {
+            selectedCards.add(card);
+            card.setTranslateY(-20);
 
-            iv.setTranslateY(0);
+            selectedCardCounter++;
+            checkHand();
         }
+        else if(card.getTranslateY() == -20) {
+            selectedCards.remove(card);
+            card.setTranslateY(0);
+            selectedCardCounter--;
+            checkHand();
+        }
+    }
+
+    private void checkHand() {
+        System.out.println(checkHand.evaluateHands(selectedCards));
     }
 
     public void drawCards(int num) {

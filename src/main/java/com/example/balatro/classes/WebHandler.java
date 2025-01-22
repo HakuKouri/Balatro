@@ -39,10 +39,10 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    joker.setId(Integer.parseInt(cells.get(0).text()));
+                    joker.setCardId(Integer.parseInt(cells.get(0).text()));
                     joker.setName(cells.get(1).childNode(0).attr("title"));
-                    joker.setCardFrontCoverUrl("src\\main\\resources\\com\\images\\Jokers\\joker_" + joker.getId() + ".png");
-                    if(joker.getId()== 70) joker.setCardFrontCoverUrl(joker.getCardFrontCoverUrl().replace(".png", ".gif"));
+                    joker.setCardFrontCoverUrl("src\\main\\resources\\com\\images\\Jokers\\joker_" + joker.getCardId() + ".png");
+                    if(joker.getCardId()== 70) joker.setCardFrontCoverUrl(joker.getCardFrontCoverUrl().replace(".png", ".gif"));
                     joker.setDescription(cells.get(2).text());
                     try {
                         joker.setCost(Integer.parseInt(cells.get(3).text().substring(1)));
@@ -208,8 +208,8 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    tarot.setId(arrayList.size()+1);
-                    tarot.setTarotImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\tarot_" + tarot.getId() + ".png");
+                    tarot.setCardId(arrayList.size()+1);
+                    tarot.setTarotImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\tarot_" + tarot.getCardId() + ".png");
                     tarot.setTarotName(cells.get(1).text());
                     tarot.setTarotDescription(cells.get(2).text());
 
@@ -240,8 +240,8 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    planet.setId(arrayList.size()+1);
-                    planet.setPlanetImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\planet_" + planet.getId() + ".png");
+                    planet.setCardId(arrayList.size()+1);
+                    planet.setPlanetImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\planet_" + planet.getCardId() + ".png");
                     planet.setPlanetName(cells.get(1).text());
                     planet.setPlanetAddition(cells.get(2).text());
                     planet.setPlanetPokerHand(cells.get(3).text());
@@ -274,8 +274,8 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    spectral.setId(arrayList.size()+1);
-                    spectral.setSpectralImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\spectral_" + spectral.getId() + ".png");
+                    spectral.setCardId(arrayList.size()+1);
+                    spectral.setSpectralImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\spectral_" + spectral.getCardId() + ".png");
                     spectral.setSpectralName(cells.get(1).text());
                     spectral.setSpectralEffect(cells.get(2).text());
                 }
@@ -305,10 +305,10 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    voucher.setId(arrayList.size()+1);
-                    voucher.setVoucherBaseImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_" + voucher.getId() + ".png");
+                    voucher.setCardId(arrayList.size()+1);
+                    voucher.setVoucherBaseImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_" + voucher.getCardId() + ".png");
                     voucher.setVoucherBaseName(cells.get(0).text());
-                    voucher.setVoucherUpgradeImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_upgrade_" + voucher.getId() + ".png");
+                    voucher.setVoucherUpgradeImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_upgrade_" + voucher.getCardId() + ".png");
                     voucher.setVoucherUpgradeName(cells.get(2).text());
                     voucher.setVoucherBaseEffect(cells.get(1).text());
                     voucher.setVoucherUpgradeEffect(cells.get(3).text());

@@ -2,7 +2,7 @@ package com.example.balatro.classes;
 
 public class Planet extends Card
 {
-    private int id;
+
     private String planetImageUrl;
     private String planetName;
     private String planetAddition;
@@ -12,17 +12,6 @@ public class Planet extends Card
 
     public Planet() {
         secret = false;
-    }
-    @Override
-    public int getId()
-    {
-        return id;
-    }
-
-    @Override
-    public void setId(int id)
-    {
-        this.id = id;
     }
 
     public String getPlanetImageUrl()
