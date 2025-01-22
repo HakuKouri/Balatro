@@ -1,8 +1,8 @@
 package com.example.balatro;
 
-
 import com.example.balatro.classes.*;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -36,29 +35,11 @@ public class GameScreenController
     private StackPane HoldingHand;
     @FXML
     private ImageView testImageView;
+    @FXML
+    private HBox hbPlayedCards;
 
     public ImageView imageViewDeckField;
 
-    static List<Blind> blindList;
-    static List<Tag> tagList;
-
-    static List<Hand> handList;
-    static List<PlayingCard> playingCardList = new ArrayList<PlayingCard>();
-
-    static Random rand;
-    static Deck deck;
-    static Stake stake;
-
-    static int hands;
-    static int discards;
-
-
-    static int ante = 1;
-    static int phase = 1;
-    static int round = 1;
-    static int money = 0;
-    static BigInteger[] chipRequirement = new BigInteger[]{BigInteger.valueOf(100), BigInteger.valueOf(300), BigInteger.valueOf(800), BigInteger.valueOf(2000), BigInteger.valueOf(5000), BigInteger.valueOf(11000), BigInteger.valueOf(20000), BigInteger.valueOf(35000), BigInteger.valueOf(50000)};
-    static boolean blindsToggled = false;
     private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
@@ -66,7 +47,32 @@ public class GameScreenController
     private BlindPickPanels bigController;
     private BlindPickPanels bossController;
 
+    static boolean blindsToggled = false;
+
+    static Random rand;
+    static int ante = 1;
+    static int phase = 1;
+    static int round = 1;
+    static int money = 0;
+    static int hands;
+    static int handsize = 8;
+    static int discards;
+    static Deck deck;
+    static Stake stake;
+    static int selectedCardCounter = 0;
+
+    static List<Blind> blindList;
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();
+
+    static List<Tag> tagList;
+    static List<Hand> handList;
+
+    static BigInteger[] chipRequirement = new BigInteger[]{BigInteger.valueOf(100), BigInteger.valueOf(300), BigInteger.valueOf(800), BigInteger.valueOf(2000), BigInteger.valueOf(5000), BigInteger.valueOf(11000), BigInteger.valueOf(20000), BigInteger.valueOf(35000), BigInteger.valueOf(50000)};
+
+    private List<PlayingCard> deckList = new ArrayList<>();
+    static List<PlayingCard> playingCardList = new ArrayList<PlayingCard>();
+    private List<PlayingCard> selectedCards = new ArrayList<>();
+    private List<PlayingCard> handCards = new ArrayList<>();
 
     public void initialize(){
         Balatro.gameScreenController = this;
@@ -112,9 +118,10 @@ public class GameScreenController
     private void setPlayingDeck() {
         for(int i = 0; i < 4; i++ ){
             for(int j = 0; j < 13; j++){
-                playingCardList.add(new PlayingCard(j,i));
+                deckList.add(new PlayingCard(j,i));
             }
         }
+        playingCardList.addAll(deckList);
         Collections.shuffle(playingCardList);
     }
 
@@ -150,7 +157,6 @@ public class GameScreenController
 
         createBlindList();
         setBlindPanels();
-
 
 
         try {
@@ -227,11 +233,6 @@ public class GameScreenController
         nextPhase();
     }
 
-    public void toggleBlinds() {
-        blindsToggled = !blindsToggled;
-        toggleBlind(blindsToggled);
-    }
-
     public void toggleBlind(boolean toggle) {
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
         TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
@@ -256,7 +257,6 @@ public class GameScreenController
         transitionBoss.play();
     }
 
-
     public void startRound(Blind blind, BigInteger score) {
         toggleBlind(false);
         labelBlind.setText(blind.getBlindName());
@@ -269,12 +269,34 @@ public class GameScreenController
     public void drawCard() {
         System.out.println("drawCard");
         testImageView.setImage(playingCardList.get(0).getImage());
-        ImageView imageView = new ImageView(playingCardList.get(0).getImage());
-        imageView.setFitHeight(200);
-        imageView.setPreserveRatio(true);
-        HoldingHand.getChildren().add(imageView);
+        playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
+            playingCardClicked((PlayingCard) mouseEvent.getSource());
+        });
+
+        HoldingHand.getChildren().add(playingCardList.get(0));
+        handCards.add(playingCardList.get(0));
         playingCardList.remove(0);
         moveCards();
+    }
+
+    private void playingCardClicked(PlayingCard card) {
+        if(card.getTranslateY() == 0 && selectedCardCounter < 5) {
+            selectedCards.add(card);
+            card.setTranslateY(-20);
+
+            selectedCardCounter++;
+            checkHand();
+        }
+        else if(card.getTranslateY() == -20) {
+            selectedCards.remove(card);
+            card.setTranslateY(0);
+            selectedCardCounter--;
+            checkHand();
+        }
+    }
+
+    private void checkHand() {
+        System.out.println(checkHand.evaluateHands(selectedCards));
     }
 
     public void drawCards(int num) {
@@ -282,17 +304,26 @@ public class GameScreenController
     }
 
     public void moveCards() {
-        System.out.println(HoldingHand.getChildren());
+        int cardsize = 140;
+        System.out.println(HoldingHand.getChildren().get(0));
         int cards = HoldingHand.getChildren().size();
         int pos = 0;
         for(int i = 0; i < cards; i++) {
             if(cards%2==0) {
-                    pos = 70 + i * 140 - cards/2*140;
+                    pos = cardsize/2 + i * cardsize - cards/2*cardsize;
             } else {
-                pos = i * 140 - cards/2*140;
+                pos = i * cardsize - cards/2*cardsize;
             }
 
             HoldingHand.getChildren().get(i).setTranslateX(pos);
         }
+    }
+
+    public void playSelectetCards(ActionEvent actionEvent) {
+
+    }
+
+    public void discardSelectedCards(ActionEvent actionEvent) {
+
     }
 }

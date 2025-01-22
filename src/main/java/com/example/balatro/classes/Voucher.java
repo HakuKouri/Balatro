@@ -12,18 +12,6 @@ public class Voucher extends Card
     private String voucherUpgradeUnlockCondition;
     private String voucherNotes;
 
-    @Override
-    public int getId()
-    {
-        return id;
-    }
-
-    @Override
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
     public String getVoucherBaseImageUrl()
     {
         return voucherBaseImageUrl;
@@ -39,8 +27,7 @@ public class Voucher extends Card
         return voucherUpgradeImageUrl;
     }
 
-    public void setVoucherUpgradeImageUrl(String voucherUpgradeImageUrl)
-    {
+    public void setVoucherUpgradeImageUrl(String voucherUpgradeImageUrl) {
         this.voucherUpgradeImageUrl = voucherUpgradeImageUrl;
     }
 
@@ -79,8 +66,7 @@ public class Voucher extends Card
         return voucherUpgradeEffect;
     }
 
-    public void setVoucherUpgradeEffect(String voucherUpgradeEffect)
-    {
+    public void setVoucherUpgradeEffect(String voucherUpgradeEffect) {
         this.voucherUpgradeEffect = voucherUpgradeEffect;
     }
 
@@ -89,8 +75,7 @@ public class Voucher extends Card
         return voucherUpgradeUnlockCondition;
     }
 
-    public void setVoucherUpgradeUnlockCondition(String voucherUpgradeUnlockCondition)
-    {
+    public void setVoucherUpgradeUnlockCondition(String voucherUpgradeUnlockCondition) {
         this.voucherUpgradeUnlockCondition = voucherUpgradeUnlockCondition;
     }
 

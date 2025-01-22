@@ -1,21 +1,10 @@
 package com.example.balatro.classes;
 
-public class Spectral
+public class Spectral extends Card
 {
-    private int id;
     private String spectralImageUrl;
     private String spectralName;
     private String spectralEffect;
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
-    }
 
     public String getSpectralImageUrl()
     {

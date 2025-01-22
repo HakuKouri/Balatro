@@ -1,6 +1,8 @@
 package com.example.balatro.classes;
 
-public class Card
+import javafx.scene.image.ImageView;
+
+public class Card extends ImageView
 {
     protected int id;
     protected String name;
@@ -9,12 +11,12 @@ public class Card
     protected String description;
     protected int cost;
 
-    public int getId()
+    public int getCardId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setCardId(int id)
     {
         this.id = id;
     }
