@@ -8,6 +8,11 @@
     -fx-font-family: Balatro;
 }
 
+#gameScreenAnchor {
+    -fx-background-image: url("../images/backgroundImage/pokerBackground.jpg");
+    -fx-background-size: cover;
+}
+
 .btnClose{
     -fx-background-image: url("../images/menuIcons/close-button.png");
     -fx-background-size: cover;

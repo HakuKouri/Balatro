@@ -13,6 +13,7 @@ public class PlayingCard extends Card
     Seal seal;
     Enhancement enhancement;
     Edition edition;
+    boolean clickAble = true;
 
     public PlayingCard(int rank, int suit) {
         this.rank = rankArray[rank];
@@ -100,5 +101,13 @@ public class PlayingCard extends Card
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public boolean isClickAble() {
+        return clickAble;
+    }
+
+    public void setClickAble(boolean clickAble) {
+        this.clickAble = clickAble;
     }
 }

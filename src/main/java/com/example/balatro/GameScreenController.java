@@ -2,22 +2,22 @@ package com.example.balatro;
 
 import com.example.balatro.classes.*;
 import javafx.animation.TranslateTransition;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class GameScreenController
 {
@@ -37,6 +37,30 @@ public class GameScreenController
     private ImageView testImageView;
     @FXML
     private HBox hbPlayedCards;
+    @FXML
+    private GridPane handButtonBox;
+    @FXML
+    private Label infoHand;
+    @FXML
+    private Label infoHandLevel;
+    @FXML
+    private Label infoHandChips;
+    @FXML
+    private Label infoHandMulti;
+    //to beat elements
+    @FXML
+    private ImageView toBeatImage;
+    @FXML
+    private ImageView toBeatStake;
+    @FXML
+    private Label toBeatScore;
+    @FXML
+    private Label toBeatReward;
+    @FXML
+    private Label pointsScored;
+    @FXML
+    private AnchorPane gameScreenAnchor;
+
 
     public ImageView imageViewDeckField;
 
@@ -57,9 +81,14 @@ public class GameScreenController
     static int hands;
     static int handsize = 8;
     static int discards;
+    static int baseChips = 0;
+    static int baseMulti = 0;
+    static BigDecimal scoreToReach = new BigDecimal(0);
+    static int scored = 0;
     static Deck deck;
     static Stake stake;
     static int selectedCardCounter = 0;
+    static boolean handButtonHidden = false;
 
     static List<Blind> blindList;
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();
@@ -67,7 +96,7 @@ public class GameScreenController
     static List<Tag> tagList;
     static List<Hand> handList;
 
-    static BigInteger[] chipRequirement = new BigInteger[]{BigInteger.valueOf(100), BigInteger.valueOf(300), BigInteger.valueOf(800), BigInteger.valueOf(2000), BigInteger.valueOf(5000), BigInteger.valueOf(11000), BigInteger.valueOf(20000), BigInteger.valueOf(35000), BigInteger.valueOf(50000)};
+    static BigDecimal[] chipRequirement = new BigDecimal[]{BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800), BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000), BigDecimal.valueOf(20000), BigDecimal.valueOf(35000), BigDecimal.valueOf(50000)};
 
     private List<PlayingCard> deckList = new ArrayList<>();
     static List<PlayingCard> playingCardList = new ArrayList<PlayingCard>();
@@ -80,29 +109,22 @@ public class GameScreenController
         AnchorPane bigBlind = null;
         AnchorPane boss = null;
 
+
         try {
             smallBlind = loaderSmall.load();
             smallController = loaderSmall.getController();
             smallBlindAnchor.getChildren().add(smallBlind);
             smallController.setGameScreenController(this);
-            /*smallController.setButtonText("Select");
-            smallController.setBossPanel(false);*/
 
             bigBlind = loaderBig.load();
             bigController = loaderBig.getController();
             bigBlindAnchor.getChildren().add(bigBlind);
             bigController.setGameScreenController(this);
-            /*bigController.setButtonText("Upcoming");
-            bigController.setBossPanel(false);
-            bigController.setActivity(true);*/
 
             boss = loaderBoss.load();
             bossController = loaderBoss.getController();
             bossAnchor.getChildren().add(boss);
             bossController.setGameScreenController(this);
-            /*bossController.setButtonText("Upcoming");
-            bossController.setBossPanel(true);
-            bossController.setActivity(true);*/
 
             blindList = SqlHandler.getAllBlinds();
             tagList = SqlHandler.getAllTags();
@@ -113,6 +135,8 @@ public class GameScreenController
 
         setHandList();
         setPlayingDeck();
+        rand = new Random();
+        hideHandButtons();
     }
 
     private void setPlayingDeck() {
@@ -122,7 +146,11 @@ public class GameScreenController
             }
         }
         playingCardList.addAll(deckList);
-        Collections.shuffle(playingCardList);
+
+        Collections.shuffle(playingCardList, new Random());
+        for(int i = 0; i < 52; i++) {
+            System.out.println(deckList.get(i).getRank() + " "+ deckList.get(i).getSuit() + " | " + playingCardList.get(i).getRank() + " " + playingCardList.get(i).getSuit());
+        }
     }
 
     private void setHandList() {
@@ -138,7 +166,7 @@ public class GameScreenController
         handList.add(new Hand("Straight",       30, 4));
         handList.add(new Hand("Three of a Kind",30, 3));
         handList.add(new Hand("Two Pair",       20, 2));
-        handList.add(new Hand("Pair",           10, 2));
+        handList.add(new Hand("One Pair",       10, 2));
         handList.add(new Hand("High Card",      5, 1));
     }
 
@@ -148,8 +176,6 @@ public class GameScreenController
         stake = gameSetup.getChosenStake();
         hands = 3;
         discards = 3;
-        playingCardList.clear();
-        playingCardList = new StandartDeck().getPlayingCards();
         ante = 1;
         phase = 1;
         round = 1;
@@ -157,7 +183,6 @@ public class GameScreenController
 
         createBlindList();
         setBlindPanels();
-
 
         try {
             setDeckImage();
@@ -181,13 +206,12 @@ public class GameScreenController
     }
 
     private void setBlindPanels() {
-
         smallBlindAnchor.setTranslateY(590);
         smallController.setButtonText("Select");
         smallController.setBossPanel(false);
         smallController.setActivity(false);
         smallController.setEarn(3);
-        smallController.setMinScore(chipRequirement[0]);
+        smallController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3).getBlindScoreMultiplier().replace("x base",""))));
         smallController.setStakeImage(new Image("file:"+stake.getStakeImageChipUrl()));
         smallController.setBlindImage(new Image("file:"+gameBlindsList.get((ante-1)*3).getBlindImageUrl()));
         smallController.setBlind(gameBlindsList.get((ante-1)*3));
@@ -197,7 +221,7 @@ public class GameScreenController
         bigController.setBossPanel(false);
         bigController.setActivity(false);
         bigController.setEarn(4);
-        bigController.setMinScore(chipRequirement[0]);
+        bigController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3 +1).getBlindScoreMultiplier().replace("x base",""))));
         bigController.setStakeImage(new Image("file:"+stake.getStakeImageChipUrl()));
         bigController.setBlindImage(new Image("file:"+gameBlindsList.get((ante-1)*3+1).getBlindImageUrl()));
         bigController.setBlind(gameBlindsList.get((ante-1)*3+1));
@@ -207,7 +231,7 @@ public class GameScreenController
         bossController.setBossPanel(true);
         bossController.setActivity(false);
         bossController.setEarn(5);
-        bossController.setMinScore(chipRequirement[0]);
+        bossController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3+2).getBlindScoreMultiplier().replace("x base",""))));
         bossController.setStakeImage(new Image("file:"+stake.getStakeImageChipUrl()));
         bossController.setBlindImage(new Image("file:"+gameBlindsList.get((ante-1)*3+2).getBlindImageUrl()));
         bossController.setBlind(gameBlindsList.get((ante-1)*3+2));
@@ -257,9 +281,16 @@ public class GameScreenController
         transitionBoss.play();
     }
 
-    public void startRound(Blind blind, BigInteger score) {
+    public void startRound(Blind blind, BigDecimal score) {
+        hideHandButtons();
+        scoreToReach = score;
         toggleBlind(false);
         labelBlind.setText(blind.getBlindName());
+        drawCards(8);
+        toBeatScore.setText(String.valueOf(scoreToReach));
+        toBeatImage.setImage(new Image("file:"+blind.getBlindImageUrl()));
+        toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
+        toBeatReward.setText("$$$");
     }
 
     public static void skip() {
@@ -267,7 +298,6 @@ public class GameScreenController
     }
 
     public void drawCard() {
-        System.out.println("drawCard");
         testImageView.setImage(playingCardList.get(0).getImage());
         playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
             playingCardClicked((PlayingCard) mouseEvent.getSource());
@@ -280,23 +310,23 @@ public class GameScreenController
     }
 
     private void playingCardClicked(PlayingCard card) {
+
+        if(!card.isClickAble()) return;
+
         if(card.getTranslateY() == 0 && selectedCardCounter < 5) {
             selectedCards.add(card);
             card.setTranslateY(-20);
 
             selectedCardCounter++;
-            checkHand();
+            setHandInfo(checkHand.evaluateHands(selectedCards));
         }
         else if(card.getTranslateY() == -20) {
             selectedCards.remove(card);
             card.setTranslateY(0);
             selectedCardCounter--;
-            checkHand();
+            if(selectedCardCounter > 0)
+                setHandInfo(checkHand.evaluateHands(selectedCards));
         }
-    }
-
-    private void checkHand() {
-        System.out.println(checkHand.evaluateHands(selectedCards));
     }
 
     public void drawCards(int num) {
@@ -305,25 +335,134 @@ public class GameScreenController
 
     public void moveCards() {
         int cardsize = 140;
-        System.out.println(HoldingHand.getChildren().get(0));
+        int lastPos = 570;
+
         int cards = HoldingHand.getChildren().size();
         int pos = 0;
         for(int i = 0; i < cards; i++) {
-            if(cards%2==0) {
-                    pos = cardsize/2 + i * cardsize - cards/2*cardsize;
+            if(cards > 5) {
+                HoldingHand.setAlignment(Pos.CENTER_LEFT);
+                pos = i * lastPos / (cards - 1);
             } else {
-                pos = i * cardsize - cards/2*cardsize;
+                HoldingHand.setAlignment(Pos.CENTER);
+                if(cards%2==0) {
+                    pos = cardsize/2 + i * cardsize - cards/2*cardsize;
+                } else {
+                    pos = i * cardsize - cards/2*cardsize;
+                }
             }
-
             HoldingHand.getChildren().get(i).setTranslateX(pos);
         }
     }
 
     public void playSelectetCards(ActionEvent actionEvent) {
 
+        hideHandButtons();
+        if(selectedCardCounter != 0) {
+            hbPlayedCards.getChildren().addAll(selectedCards);
+
+            List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(selectedCards , infoHand.getText());
+            for(int i = 0; i < hbPlayedCards.getChildren().size(); i++) {
+                hbPlayedCards.getChildren().get(i).setTranslateX(0);
+                if(countedCards.contains(hbPlayedCards.getChildren().get(i))) {
+                    hbPlayedCards.getChildren().get(i).setTranslateY(-20);
+                } else
+                    hbPlayedCards.getChildren().get(i).setTranslateY(0);
+            }
+
+            baseChips = handList.stream().filter(name -> name.getName() == infoHand.getText()).collect(Collectors.toList()).get(0).getChips();
+            baseMulti = handList.stream().filter(name -> name.getName() == infoHand.getText()).collect(Collectors.toList()).get(0).getMulti();
+
+            selectedCards.clear();
+            moveCards();
+        }
+
+        countPoints();
+
+        delay(2000,() ->hbPlayedCards.getChildren().clear());
+
+        drawCards(8 - HoldingHand.getChildren().size());
+        selectedCardCounter = 0;
+    }
+
+    public static void delay(long millis, Runnable continuation) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try { Thread.sleep(millis); }
+                catch (InterruptedException e) { }
+                return null;
+            }
+        };
+        sleeper.setOnSucceeded(event -> continuation.run());
+        new Thread(sleeper).start();
+    }
+
+    private void countPoints() {
+        for(int i = 0; i < hbPlayedCards.getChildren().size(); i++) {
+            System.out.println(hbPlayedCards.getChildren().get(i).getTranslateY());
+            if(hbPlayedCards.getChildren().get(i).getTranslateY() == -20) {
+                System.out.println(((PlayingCard)hbPlayedCards.getChildren().get(i)).getValue());
+                baseChips += ((PlayingCard)hbPlayedCards.getChildren().get(i)).getValue();
+            }
+        }
+
+        scored += baseChips * baseMulti;
+        pointsScored.setText(String.valueOf(scored));
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
+        if(selectedCardCounter != 0) {
+            for(int i = 0; i < selectedCardCounter; i++) {
+                HoldingHand.getChildren().remove(selectedCards.get(i));
+                handCards.remove(selectedCards.get(i));
+            }
+        }
+        selectedCardCounter = 0;
+        selectedCards.clear();
+
+        drawCards(8 - handCards.size());
+        setHandInfo(new ArrayList<>());
+    }
+
+    public void hideHandButtons() {
+        handButtonHidden = !handButtonHidden;
+        if(handButtonHidden) {
+            HoldingHand.setTranslateY(100);
+            handButtonBox.setTranslateY(100);
+        } else {
+            HoldingHand.setTranslateY(0);
+            handButtonBox.setTranslateY(0);
+        }
+    }
+
+    private void setHandInfo(List<String> hands) {
+        int maxPoints = 0;
+        int bestHandIndex = -1;
+        for (Hand hand : handList) {
+            if(hands.contains(hand.getName())) {
+                System.out.println(hand.getName());
+                int points = hand.getChips() * hand.getMulti();
+                System.out.println("Possible Points: " + points);
+                if(maxPoints < points) {
+                    maxPoints = points;
+                    bestHandIndex = handList.indexOf(hand);
+                }
+            }
+        }
+        if(bestHandIndex != -1) {
+            infoHand.setText(handList.get(bestHandIndex).getName());
+            infoHandLevel.setText("lvl. " + handList.get(bestHandIndex).getLevel());
+            infoHandChips.setText(""+handList.get(bestHandIndex).getChips());
+            infoHandMulti.setText(""+handList.get(bestHandIndex).getMulti());
+        } else {
+            infoHand.setText("");
+            infoHandLevel.setText("");
+            infoHandChips.setText("0");
+            infoHandMulti.setText("0");
+        }
 
     }
+
+
 }
