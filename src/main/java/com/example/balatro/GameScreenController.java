@@ -5,19 +5,18 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameScreenController
 {
@@ -37,6 +36,17 @@ public class GameScreenController
     private ImageView testImageView;
     @FXML
     private HBox hbPlayedCards;
+    @FXML
+    private GridPane handButtonBox;
+    @FXML
+    private Label infoHand;
+    @FXML
+    private Label infoHandLevel;
+    @FXML
+    private Label infoHandChips;
+    @FXML
+    private Label infoHandMulti;
+
 
     public ImageView imageViewDeckField;
 
@@ -60,6 +70,7 @@ public class GameScreenController
     static Deck deck;
     static Stake stake;
     static int selectedCardCounter = 0;
+    static boolean handButtonHidden = false;
 
     static List<Blind> blindList;
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();
@@ -85,24 +96,16 @@ public class GameScreenController
             smallController = loaderSmall.getController();
             smallBlindAnchor.getChildren().add(smallBlind);
             smallController.setGameScreenController(this);
-            /*smallController.setButtonText("Select");
-            smallController.setBossPanel(false);*/
 
             bigBlind = loaderBig.load();
             bigController = loaderBig.getController();
             bigBlindAnchor.getChildren().add(bigBlind);
             bigController.setGameScreenController(this);
-            /*bigController.setButtonText("Upcoming");
-            bigController.setBossPanel(false);
-            bigController.setActivity(true);*/
 
             boss = loaderBoss.load();
             bossController = loaderBoss.getController();
             bossAnchor.getChildren().add(boss);
             bossController.setGameScreenController(this);
-            /*bossController.setButtonText("Upcoming");
-            bossController.setBossPanel(true);
-            bossController.setActivity(true);*/
 
             blindList = SqlHandler.getAllBlinds();
             tagList = SqlHandler.getAllTags();
@@ -113,6 +116,8 @@ public class GameScreenController
 
         setHandList();
         setPlayingDeck();
+        rand = new Random();
+        hideHandButtons();
     }
 
     private void setPlayingDeck() {
@@ -122,7 +127,11 @@ public class GameScreenController
             }
         }
         playingCardList.addAll(deckList);
-        Collections.shuffle(playingCardList);
+
+        Collections.shuffle(playingCardList, new Random());
+        for(int i = 0; i < 52; i++) {
+            System.out.println(deckList.get(i).getRank() + " "+ deckList.get(i).getSuit() + " | " + playingCardList.get(i).getRank() + " " + playingCardList.get(i).getSuit());
+        }
     }
 
     private void setHandList() {
@@ -138,7 +147,7 @@ public class GameScreenController
         handList.add(new Hand("Straight",       30, 4));
         handList.add(new Hand("Three of a Kind",30, 3));
         handList.add(new Hand("Two Pair",       20, 2));
-        handList.add(new Hand("Pair",           10, 2));
+        handList.add(new Hand("One Pair",           10, 2));
         handList.add(new Hand("High Card",      5, 1));
     }
 
@@ -148,8 +157,6 @@ public class GameScreenController
         stake = gameSetup.getChosenStake();
         hands = 3;
         discards = 3;
-        playingCardList.clear();
-        playingCardList = new StandartDeck().getPlayingCards();
         ante = 1;
         phase = 1;
         round = 1;
@@ -157,7 +164,6 @@ public class GameScreenController
 
         createBlindList();
         setBlindPanels();
-
 
         try {
             setDeckImage();
@@ -181,7 +187,6 @@ public class GameScreenController
     }
 
     private void setBlindPanels() {
-
         smallBlindAnchor.setTranslateY(590);
         smallController.setButtonText("Select");
         smallController.setBossPanel(false);
@@ -258,8 +263,10 @@ public class GameScreenController
     }
 
     public void startRound(Blind blind, BigInteger score) {
+        hideHandButtons();
         toggleBlind(false);
         labelBlind.setText(blind.getBlindName());
+        drawCards(8);
     }
 
     public static void skip() {
@@ -267,7 +274,6 @@ public class GameScreenController
     }
 
     public void drawCard() {
-        System.out.println("drawCard");
         testImageView.setImage(playingCardList.get(0).getImage());
         playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
             playingCardClicked((PlayingCard) mouseEvent.getSource());
@@ -280,23 +286,21 @@ public class GameScreenController
     }
 
     private void playingCardClicked(PlayingCard card) {
+        System.out.println(card.getTranslateX());
         if(card.getTranslateY() == 0 && selectedCardCounter < 5) {
             selectedCards.add(card);
             card.setTranslateY(-20);
 
             selectedCardCounter++;
-            checkHand();
+            setHandInfo(checkHand.evaluateHands(selectedCards));
         }
         else if(card.getTranslateY() == -20) {
             selectedCards.remove(card);
             card.setTranslateY(0);
             selectedCardCounter--;
-            checkHand();
+            if(selectedCardCounter > 0)
+                setHandInfo(checkHand.evaluateHands(selectedCards));
         }
-    }
-
-    private void checkHand() {
-        System.out.println(checkHand.evaluateHands(selectedCards));
     }
 
     public void drawCards(int num) {
@@ -305,25 +309,90 @@ public class GameScreenController
 
     public void moveCards() {
         int cardsize = 140;
+        int lastPos = 570;
         System.out.println(HoldingHand.getChildren().get(0));
         int cards = HoldingHand.getChildren().size();
         int pos = 0;
         for(int i = 0; i < cards; i++) {
-            if(cards%2==0) {
-                    pos = cardsize/2 + i * cardsize - cards/2*cardsize;
+            if(cards > 5) {
+                HoldingHand.setAlignment(Pos.CENTER_LEFT);
+                System.out.println("cards over 5");
+                pos = i * lastPos / (cards - 1);
+
             } else {
-                pos = i * cardsize - cards/2*cardsize;
+                HoldingHand.setAlignment(Pos.CENTER);
+                if(cards%2==0) {
+                    pos = cardsize/2 + i * cardsize - cards/2*cardsize;
+                } else {
+                    pos = i * cardsize - cards/2*cardsize;
+                }
             }
+
 
             HoldingHand.getChildren().get(i).setTranslateX(pos);
         }
     }
 
     public void playSelectetCards(ActionEvent actionEvent) {
-
+        hideHandButtons();
+        if(selectedCardCounter != 0) {
+            for(int i = 0; i < selectedCardCounter; i++) {
+                hbPlayedCards.getChildren().add(selectedCards.get(i));
+                selectedCards.remove(i);
+            }
+        }
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
+        if(selectedCardCounter != 0) {
+            for(int i = 0; i < selectedCardCounter; i++) {
+                HoldingHand.getChildren().remove(selectedCards.get(i));
+                handCards.remove(selectedCards.get(i));
+            }
+        }
+        selectedCardCounter -= selectedCards.size();
+        selectedCards.clear();
+
+        drawCards(8 - handCards.size());
+        setHandInfo(new ArrayList<>());
+    }
+
+    public void hideHandButtons() {
+        handButtonHidden = !handButtonHidden;
+        if(handButtonHidden) {
+            HoldingHand.setTranslateY(100);
+            handButtonBox.setTranslateY(100);
+        } else {
+            HoldingHand.setTranslateY(0);
+            handButtonBox.setTranslateY(0);
+        }
+    }
+
+    private void setHandInfo(List<String> hands) {
+        int maxPoints = 0;
+        int bestHandIndex = -1;
+        for (Hand hand : handList) {
+            if(hands.contains(hand.getName())) {
+                System.out.println(hand.getName());
+                int points = hand.getChips() * hand.getMulti();
+                System.out.println("Possible Points: " + points);
+                if(maxPoints < points) {
+                    maxPoints = points;
+                    bestHandIndex = handList.indexOf(hand);
+                }
+            }
+        }
+        if(bestHandIndex != -1) {
+            infoHand.setText(handList.get(bestHandIndex).getName());
+            infoHandLevel.setText("lvl. " + handList.get(bestHandIndex).getLevel());
+            infoHandChips.setText(""+handList.get(bestHandIndex).getChips());
+            infoHandMulti.setText(""+handList.get(bestHandIndex).getMulti());
+        } else {
+            infoHand.setText("");
+            infoHandLevel.setText("");
+            infoHandChips.setText("0");
+            infoHandMulti.setText("0");
+        }
 
     }
 }

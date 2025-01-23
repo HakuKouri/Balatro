@@ -18,7 +18,7 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;.../images/src/main/resources/com/images/backgroundImage/pokerBackground.jpg&quot;);" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-      <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="468.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
+      <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
@@ -68,12 +68,12 @@
                <children>
                   <HBox alignment="CENTER" layoutX="3.0" layoutY="8.0" prefHeight="37.0" prefWidth="219.0">
                      <children>
-                        <Label prefHeight="31.0" prefWidth="117.0" text="High Card" textFill="WHITE">
+                        <Label fx:id="infoHand" prefHeight="31.0" prefWidth="117.0" text="High Card" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="22.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="20.0" prefWidth="27.0" text="lvl. 1" textFill="WHITE">
+                        <Label fx:id="infoHandLevel" prefHeight="20.0" prefWidth="27.0" text="lvl. 1" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="12.0" />
                            </font>
@@ -90,7 +90,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #57f; -fx-background-radius: 10;" text="Label" textAlignment="RIGHT" textFill="WHITE">
+                        <Label fx:id="infoHandChips" alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #57f; -fx-background-radius: 10;" text="Label" textAlignment="RIGHT" textFill="WHITE">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -106,7 +106,7 @@
                               <Font name="balatro Regular" size="28.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #f55; -fx-background-radius: 10;" text="Label" textFill="WHITE" GridPane.columnIndex="2">
+                        <Label fx:id="infoHandMulti" prefHeight="60.0" prefWidth="100.0" style="-fx-background-color: #f55; -fx-background-radius: 10;" text="Label" textFill="WHITE" GridPane.columnIndex="2">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -231,7 +231,7 @@
             <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
          </image>
       </ImageView>
-      <GridPane fx:id="handButtonBox" layoutX="450.0" layoutY="669.0" prefHeight="120.0" prefWidth="450.0">
+      <GridPane fx:id="handButtonBox" layoutX="450.0" layoutY="600.0" prefHeight="120.0" prefWidth="450.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" maxWidth="168.0" minWidth="10.0" percentWidth="40.0" prefWidth="161.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" percentWidth="20.0" prefWidth="134.0" />
