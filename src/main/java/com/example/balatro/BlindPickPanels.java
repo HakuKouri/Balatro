@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class BlindPickPanels {
@@ -80,7 +81,7 @@ public class BlindPickPanels {
         stakeImage.setImage(image);
     }
 
-    public void setMinScore(BigInteger score) {
+    public void setMinScore(BigDecimal score) {
         lblMinScore.setText(score.toString());
     }
 
@@ -93,7 +94,7 @@ public class BlindPickPanels {
     }
 
     public void play() {
-        gameScreenController.startRound(blind,new BigInteger(lblMinScore.getText()));
+        gameScreenController.startRound(blind,new BigDecimal(lblMinScore.getText()));
     }
 
     public void skip() {

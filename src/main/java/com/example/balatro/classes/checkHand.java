@@ -30,7 +30,6 @@ public class checkHand {
 
         if(cards.size() == 5) {
 
-
             // Überprüfen der verschiedenen Handtypen und Hinzufügen der möglichen Hände
             if (isRoyal) {
                 possibleHands.add("Royal Flush");

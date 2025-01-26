@@ -16,26 +16,56 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;.../images/src/main/resources/com/images/backgroundImage/pokerBackground.jpg&quot;);" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
+<AnchorPane fx:id="gameScreenAnchor" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-      <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
+      <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
-      <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
+      <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
+      <HBox fx:id="hbPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
+      <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
+      <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" spacing="10.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin></Label>
-            <Pane prefHeight="242.0" prefWidth="230.0">
+            <GridPane fx:id="toBeat" prefHeight="119.0" prefWidth="230.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #444; -fx-background-radius: 10;">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
                <children>
-                  <ImageView fitHeight="56.0" fitWidth="52.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" />
-                  <VBox layoutX="57.0" layoutY="3.0" prefHeight="105.0" prefWidth="170.0" />
+                  <Label fx:id="toBeatEffect" alignment="CENTER" layoutX="31.0" layoutY="6.0" prefHeight="21.0" prefWidth="155.0" text="Effect" GridPane.columnSpan="2147483647" />
+                  <ImageView fx:id="toBeatImage" fitHeight="80.0" fitWidth="80.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin></ImageView>
+                  <Label alignment="CENTER" prefHeight="13.0" prefWidth="164.0" text="Score at least" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Label fx:id="toBeatScore" alignment="CENTER" prefHeight="47.0" prefWidth="123.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="164.0" text="to earn" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ImageView fx:id="toBeatStake" fitHeight="43.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="toBeatReward" prefHeight="13.0" prefWidth="61.0" text="\$$$" textFill="#c9be21" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
-            </Pane>
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" maxWidth="86.0" minWidth="58.0" prefWidth="83.0" />
+                  <ColumnConstraints maxWidth="83.0" minWidth="10.0" prefWidth="50.0" />
+                  <ColumnConstraints maxWidth="101.0" minWidth="10.0" prefWidth="99.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="64.0" minHeight="27.0" prefHeight="27.0" valignment="CENTER" />
+                  <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="25.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="44.0" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+               </rowConstraints>
+            </GridPane>
             <Pane prefHeight="69.0" prefWidth="172.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
@@ -52,7 +82,7 @@
                   <Pane layoutX="54.0" layoutY="8.0" prefHeight="56.0" prefWidth="170.0" style="-fx-background-color: #555; -fx-background-radius: 10;">
                      <children>
                         <ImageView fx:id="roundScoreStakeImage" fitHeight="44.0" fitWidth="44.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label alignment="CENTER" layoutX="30.0" layoutY="4.0" prefHeight="44.0" prefWidth="142.0" text="0" textFill="WHITE">
+                        <Label fx:id="pointsScored" alignment="CENTER" layoutX="30.0" layoutY="4.0" prefHeight="44.0" prefWidth="142.0" text="0" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="27.0" />
                            </font>
@@ -217,11 +247,11 @@
 
                </children>
             </Pane>
-         </children></VBox>
-      <VBox layoutX="332.0" layoutY="305.0" prefHeight="200.0" prefWidth="100.0" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></VBox>
       <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1071.0" layoutY="531.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
-      <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
       <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bossAnchor" layoutX="820.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
@@ -253,6 +283,5 @@
             <Label text="Sort: Hand" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <HBox fx:id="hbPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
    </children>
 </AnchorPane>
