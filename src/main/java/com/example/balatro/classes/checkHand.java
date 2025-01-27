@@ -76,7 +76,6 @@ public class checkHand {
         int[] values = cards.stream().mapToInt(PlayingCard::getOrderPosition).toArray();
         for (int i = 0; i < values.length - 1; i++) {
             if (values[i] + 1 != values[i + 1]) {
-                if(values[0] != 0 || values[4] != 12)
                     return false;
             }
         }

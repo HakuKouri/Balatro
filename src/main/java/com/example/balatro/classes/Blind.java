@@ -66,8 +66,7 @@ public class Blind
         return blindScoreMultiplier;
     }
 
-    public void setBlindScoreMultiplier(String blindScoreMultiplier)
-    {
+    public void setBlindScoreMultiplier(String blindScoreMultiplier) {
         this.blindScoreMultiplier = blindScoreMultiplier;
     }
 
@@ -88,4 +87,6 @@ public class Blind
     public void setBlindSkipped(boolean blindSkipped) {
         this.blindSkipped = blindSkipped;
     }
+
+
 }

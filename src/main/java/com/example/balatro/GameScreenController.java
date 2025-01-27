@@ -1,5 +1,6 @@
 package com.example.balatro;
 
+import com.almasb.fxgl.trade.Shop;
 import com.example.balatro.classes.*;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -61,29 +62,46 @@ public class GameScreenController
     private Label pointsScored;
     @FXML
     private AnchorPane gameScreenAnchor;
+    @FXML
+    private Label handCount;
+    @FXML
+    private Label discardCount;
+    @FXML
+    private ImageView imageViewDeckField;
+    @FXML
+    private VBox spaceTag;
+    @FXML
+    private StackPane spaceJoker;
+    @FXML
+    private StackPane spaceConsumable;
+    @FXML
+    private AnchorPane Shop;
 
+
+    //TEST
     @FXML
     private ImageView testImageView;
-
-    public ImageView imageViewDeckField;
 
     private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
+    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("shop-part.fxml"));
     private BlindPickPanels smallController;
     private BlindPickPanels bigController;
     private BlindPickPanels bossController;
+    private ShopPart shopController;
 
     static boolean blindsToggled = false;
 
     static Random rand;
+
     static int ante = 1;
     static int phase = 1;
     static int round = 1;
     static int money = 0;
-    static int hands;
+    static int hands = 3;
+    static int discards = 3;
     static int handsize = 8;
-    static int discards;
     static int baseChips = 0;
     static int baseMulti = 0;
     static BigDecimal scoreToReach = new BigDecimal(0);
@@ -115,6 +133,7 @@ public class GameScreenController
         AnchorPane smallBlind = null;
         AnchorPane bigBlind = null;
         AnchorPane boss = null;
+        AnchorPane shop = null;
 
 
         try {
@@ -132,6 +151,12 @@ public class GameScreenController
             bossController = loaderBoss.getController();
             bossAnchor.getChildren().add(boss);
             bossController.setGameScreenController(this);
+
+            shop = loaderShop.load();
+            shopController = loaderShop.getController();
+            Shop.getChildren().add(shop);
+            shopController.setGameScreenController(this);
+            Shop.setTranslateY(500);
 
             blindList = SqlHandler.getAllBlinds();
             tagList = SqlHandler.getAllTags();
@@ -257,6 +282,15 @@ public class GameScreenController
         infoHandMulti.setText("0");
     }
 
+    private void setHandCounter() {
+        handCount.setText(String.valueOf(hands));
+    }
+
+    private void setDiscardCounter() {
+        discardCount.setText(String.valueOf(discards));
+    }
+
+
     private void openShop() {
 
     }
@@ -344,8 +378,8 @@ public class GameScreenController
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        hideHandButtons();
         if(selectedCardCounter != 0) {
+            hideHandButtons();
             for(PlayingCard card : selectedCards) {
                 card.setTranslateX(0);
                 card.setClickAble(false);
@@ -367,14 +401,14 @@ public class GameScreenController
 
             selectedCards.clear();
             moveCards(spPlayedCards);
+
+            countPoints();
+
+            delay(2000,() -> {spPlayedCards.getChildren().clear(); drawCards(8 - HoldingHand.getChildren().size());});
+
+            moveCards(HoldingHand);
+            selectedCardCounter = 0;
         }
-
-        countPoints();
-
-        delay(2000,() -> {spPlayedCards.getChildren().clear(); drawCards(8 - HoldingHand.getChildren().size());});
-
-        moveCards(HoldingHand);
-        selectedCardCounter = 0;
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
@@ -485,9 +519,11 @@ public class GameScreenController
         toBeatImage.setImage(new Image("file:"+blind.getBlindImageUrl()));
         toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
         toBeatReward.setText("$$$");
+        clearHandInfo();
     }
 
     public static void skip() {
+        round++;
 
     }
 
@@ -523,6 +559,13 @@ public class GameScreenController
         return BigDecimal.valueOf(scored).compareTo(scoreToReach) != -1;
     }
 
+    private void setHandsAndDiscards() {
+        hands = 3;
+        discards = 3;
+
+        setHandCounter();
+        setDiscardCounter();
+    }
 
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {
@@ -530,7 +573,7 @@ public class GameScreenController
             @Override
             protected Void call() throws Exception {
                 try { Thread.sleep(millis); }
-                catch (InterruptedException e) { }
+                catch (InterruptedException ignored) { }
                 return null;
             }
         };

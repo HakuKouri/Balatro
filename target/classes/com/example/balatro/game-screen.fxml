@@ -12,16 +12,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="gameScreenAnchor" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameScreenController">
    <children>
-      <TilePane layoutX="317.0" layoutY="14.0" prefHeight="139.0" prefWidth="518.0" styleClass="spot" />
-      <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
-      <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
-      <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
+      <StackPane fx:id="spaceJoker" layoutX="290.0" layoutY="14.0" prefHeight="139.0" prefWidth="545.0" styleClass="spot" />
+      <Label layoutX="292.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" textFill="WHITE" />
+      <StackPane fx:id="spaceConsumable" layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
+      <Label layoutX="1216.0" layoutY="163.0" text="0/2" textFill="WHITE" />
       <StackPane fx:id="spPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
       <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" spacing="10.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
@@ -161,7 +160,7 @@
                               <Font name="balatro Regular" size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="5.0" layoutY="21.0" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="4" textAlignment="CENTER" textFill="#3d5eff">
+                        <Label fx:id="handCount" alignment="CENTER" layoutX="5.0" layoutY="21.0" prefHeight="30.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="4" textAlignment="CENTER" textFill="#3d5eff">
                            <font>
                               <Font name="balatro Regular" size="25.0" />
                            </font>
@@ -181,7 +180,7 @@
                               <Font name="balatro Regular" size="14.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="3" textAlignment="CENTER" textFill="#eb1818">
+                        <Label fx:id="discardCount" alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="3" textAlignment="CENTER" textFill="#eb1818">
                            <font>
                               <Font name="balatro Regular" size="24.0" />
                            </font>
@@ -251,7 +250,7 @@
          <opaqueInsets>
             <Insets />
          </opaqueInsets></VBox>
-      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1071.0" layoutY="531.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1036.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true" />
       <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bossAnchor" layoutX="820.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
@@ -283,5 +282,7 @@
             <Label text="Sort: Hand" GridPane.columnIndex="1" />
          </children>
       </GridPane>
+      <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" layoutX="1198.0" layoutY="557.0" prefHeight="200.0" prefWidth="70.0" />
+      <AnchorPane fx:id="Shop" layoutX="310.0" layoutY="240.0" prefHeight="560.0" prefWidth="720.0" />
    </children>
 </AnchorPane>
