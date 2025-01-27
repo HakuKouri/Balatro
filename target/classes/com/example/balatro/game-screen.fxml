@@ -22,7 +22,7 @@
       <Label layoutX="318.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" />
       <TilePane layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <Label layoutX="1216.0" layoutY="163.0" text="0/2" />
-      <HBox fx:id="hbPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
+      <StackPane fx:id="spPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
       <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" spacing="10.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -272,12 +272,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#playSelectetCards" text="Play Hand" GridPane.rowSpan="2147483647" />
+            <Button mnemonicParsing="false" onAction="#playSelectedCards" text="Play Hand" GridPane.rowSpan="2147483647" />
             <Button mnemonicParsing="false" onAction="#discardSelectedCards" text="Discard" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" text="Rank" />
-                  <Button mnemonicParsing="false" text="Suit" />
+                  <Button mnemonicParsing="false" onAction="#sortRank" text="Rank" />
+                  <Button mnemonicParsing="false" onAction="#sortSuit" text="Suit" />
                </children>
             </HBox>
             <Label text="Sort: Hand" GridPane.columnIndex="1" />

@@ -8,6 +8,15 @@ public class PokerHandChecker {
     // Methode, die eine Liste von Karten und eine Pokerhand überprüft und passende Karten zurückgibt
     public static List<PlayingCard> getCardsForHand(List<PlayingCard> cards, String handType) {
         switch (handType) {
+            case "Flush Five":
+            case "Flush House":
+            case "Five of a Kind":
+            case "Straight Flush":
+            case "Royal Flush":
+            case "Full House":
+            case "Flush":
+            case "Straight":
+                return cards;
             case "Four of a Kind":
                 return getFourOfAKind(cards);
             case "Three of a Kind":
@@ -74,7 +83,7 @@ public class PokerHandChecker {
     // Findet die höchste Karte (High Card)
     private static List<PlayingCard> getHighCard(List<PlayingCard> cards) {
         return cards.stream()
-                .sorted((card1, card2) -> Integer.compare(card2.getValue(), card1.getValue()))
+                .sorted((card1, card2) -> Integer.compare(card2.getOrderPosition(), card1.getOrderPosition()))
                 .limit(1)
                 .collect(Collectors.toList());
     }
@@ -83,8 +92,8 @@ public class PokerHandChecker {
     private static Map<Integer, List<PlayingCard>> groupCardsByValue(List<PlayingCard> cards) {
         Map<Integer, List<PlayingCard>> valueMap = new HashMap<>();
         for (PlayingCard card : cards) {
-            valueMap.putIfAbsent(card.getValue(), new ArrayList<>());
-            valueMap.get(card.getValue()).add(card);
+            valueMap.putIfAbsent(card.getOrderPosition(), new ArrayList<>());
+            valueMap.get(card.getOrderPosition()).add(card);
         }
         return valueMap;
     }

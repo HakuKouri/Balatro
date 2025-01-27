@@ -7,14 +7,14 @@ public class checkHand {
     public static List<String> evaluateHands(List<PlayingCard> cards) {
         List<String> possibleHands = new ArrayList<>();
 
-        if (cards == null) {
+        if (cards == null || cards.isEmpty()) {
             return possibleHands; // Keine gültige Hand
         }
 
         possibleHands.add("High Card");
 
         // Karten nach Rang sortieren
-        cards.sort(Comparator.comparingInt(card -> card.getValue()));
+        cards.sort(Comparator.comparingInt(card -> card.getOrderPosition()));
 
         // Häufigkeit der Kartenränge zählen
         Map<String, Integer> rankCount = new HashMap<>();
@@ -73,12 +73,14 @@ public class checkHand {
     }
 
     private static boolean isStraight(List<PlayingCard> cards) {
-        int[] values = cards.stream().mapToInt(PlayingCard::getValue).toArray();
+        int[] values = cards.stream().mapToInt(PlayingCard::getOrderPosition).toArray();
         for (int i = 0; i < values.length - 1; i++) {
             if (values[i] + 1 != values[i + 1]) {
-                return false;
+                if(values[0] != 0 || values[4] != 12)
+                    return false;
             }
         }
+
         return true;
     }
 

@@ -2,22 +2,31 @@ package com.example.balatro.classes;
 
 import javafx.scene.image.Image;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PlayingCard extends Card
 {
-    String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","As"};
-    String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
+    String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
     int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
+    String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
+    int orderPosition;
     String rank;
     String suit;
     int value;
     Seal seal;
     Enhancement enhancement;
     Edition edition;
-    boolean clickAble = true;
+    boolean clickAble = false;
+
+    public void initialize() {
+        System.out.println("Klasse geladen");
+    }
 
     public PlayingCard(int rank, int suit) {
         this.rank = rankArray[rank];
         this.suit = suitArray[suit];
+        orderPosition = rank;
         value = valueArray[rank];
         seal = new Seal();
         seal.setId(0);
@@ -45,6 +54,14 @@ public class PlayingCard extends Card
 
     public void setSuit(String suit) {
         this.suit = suit;
+    }
+
+    public int getOrderPosition() {
+        return orderPosition;
+    }
+
+    public void setOrderPosition(int orderPosition) {
+        this.orderPosition = orderPosition;
     }
 
     public Seal getSeal() {
@@ -109,5 +126,14 @@ public class PlayingCard extends Card
 
     public void setClickAble(boolean clickAble) {
         this.clickAble = clickAble;
+    }
+
+    public int getSuitOrder() {
+        for (int i = 0; i < suitArray.length; i++) {
+            if (suitArray[i].equals(suit)) {
+                return i;
+            }
+        }
+        return -1; // Wenn Suit nicht gefunden wird
     }
 }
