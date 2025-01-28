@@ -290,9 +290,8 @@ public class GameScreenController
         discardCount.setText(String.valueOf(discards));
     }
 
-
     private void openShop() {
-
+        Shop.setTranslateY(0);
     }
 
     //SETTING UP GAME
@@ -581,6 +580,9 @@ public class GameScreenController
         new Thread(sleeper).start();
     }
 
+    public int getRound() {
+        return round;
+    }
 
     //TEST AREA
 

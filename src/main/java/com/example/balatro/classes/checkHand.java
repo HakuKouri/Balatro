@@ -11,8 +11,6 @@ public class checkHand {
             return possibleHands; // Keine gültige Hand
         }
 
-        possibleHands.add("High Card");
-
         // Karten nach Rang sortieren
         cards.sort(Comparator.comparingInt(card -> card.getOrderPosition()));
 
@@ -68,6 +66,8 @@ public class checkHand {
             if(!possibleHands.contains("One Pair"))
                 possibleHands.add("One Pair");
         }
+
+        possibleHands.add("High Card");
 
         return possibleHands;
     }

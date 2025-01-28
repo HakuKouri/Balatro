@@ -8,9 +8,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.ShopPart">
+<AnchorPane fx:id="shopAnchorPane" prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.ShopPart">
    <children>
       <GridPane hgap="10.0" layoutX="32.0" layoutY="32.0" vgap="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <columnConstraints>
@@ -20,12 +21,13 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" percentHeight="25.0" valignment="CENTER" vgrow="ALWAYS" />
-            <RowConstraints minHeight="10.0" percentHeight="25.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="10.0" percentHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" percentHeight="50.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="140.0" style="-fx-background-color: #FA473D; -fx-background-radius: 10;" text="Next Round" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#nextRound" prefHeight="154.0" prefWidth="161.0" style="-fx-background-color: #FA473D; -fx-background-radius: 10;" text="Next Round" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
                   <Font name="balatro Regular" size="17.0" />
                </font>
@@ -33,7 +35,7 @@
                   <Insets left="25.0" right="25.0" />
                </padding>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="140.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#rerollShop" prefHeight="309.0" prefWidth="161.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
                   <Font name="balatro Regular" size="17.0" />
                </font>
@@ -41,21 +43,30 @@
                   <Insets left="40.0" right="40.0" />
                </padding>
             </Button>
-            <Pane prefHeight="146.0" prefWidth="418.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2" />
-            <Pane prefHeight="163.0" prefWidth="271.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <Pane prefHeight="146.0" prefWidth="418.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2">
                <children>
-                  <Pane layoutX="6.0" layoutY="10.0" prefHeight="146.0" prefWidth="258.0" style="-fx-background-color: #152023; -fx-background-radius: 10;">
+                  <StackPane fx:id="Shop" layoutX="14.0" layoutY="11.0" prefHeight="184.0" prefWidth="478.0" />
+               </children>
+            </Pane>
+            <Pane style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <children>
+                  <Pane layoutX="9.0" layoutY="10.0" prefHeight="223.0" prefWidth="314.0" style="-fx-background-color: #152023; -fx-background-radius: 10;">
                      <children>
-                        <Label layoutX="-39.0" layoutY="65.0" rotate="-90.0" text="Ante 0 Voucher" textFill="#364c50">
+                        <Label alignment="TOP_CENTER" layoutX="-64.0" layoutY="79.0" prefHeight="65.0" prefWidth="221.0" rotate="-90.0" text="Ante 0 Voucher" textFill="#364c50">
                            <font>
                               <Font name="balatro Regular" size="16.0" />
                            </font>
                         </Label>
+                        <StackPane fx:id="Voucher" layoutX="51.0" layoutY="14.0" prefHeight="198.0" prefWidth="253.0" />
                      </children>
                   </Pane>
                </children>
             </Pane>
-            <Pane prefHeight="163.0" prefWidth="282.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <Pane prefHeight="163.0" prefWidth="282.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <children>
+                  <StackPane fx:id="Booster" layoutX="14.0" layoutY="14.0" prefHeight="214.0" prefWidth="306.0" />
+               </children>
+            </Pane>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

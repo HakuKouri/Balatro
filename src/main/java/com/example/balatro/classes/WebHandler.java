@@ -26,6 +26,7 @@ public class WebHandler
         getVoucherWithWebHandler();
         getSealWithWebHandler();
     }
+
     private static void getJokerWithWebHandler() {
         ArrayList<Joker> arrayList = new ArrayList<Joker>();
         try
@@ -427,6 +428,43 @@ public class WebHandler
                 arrayList.add(seal);
             }
             SqlHandler.ListToSql(arrayList, "Seals");
+        } catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public static void getBoosterWithWebHandler() {
+        ArrayList<Booster> arrayList = new ArrayList<>();
+        String boosterName = "";
+        try
+        {
+            Elements rows = Jsoup.connect(urlMain + "Booster_Packs").get().select("table").get(0).select("tbody > tr");
+
+            for (Element row : rows)
+            {
+                if(!row.select("th").text().isEmpty()) {
+                    boosterName = row.select("th").text();
+                }
+                Booster booster = new Booster();
+
+                Elements cells = row.select("td");
+                if(cells.size() == 0) continue;
+                try
+                {
+                    booster.setBoosterId(arrayList.size()+1);
+                    booster.setboosterImageUrl("src\\main\\resources\\com\\images\\BoosterPacks\\booster_" + booster.getId() + ".png");
+                    booster.setBoosterCost(cells.get(1).text());
+                    booster.setBoosterSize(cells.get(2).text());
+                    booster.setBoosterEffect(cells.get(3).text());
+                }
+                catch (Exception e) {
+                    System.out.println("Fehler aufgetreten!! Booster:");
+                    System.out.println(e);
+                }
+                arrayList.add(booster);
+            }
+            SqlHandler.ListToSql(arrayList, "Boosters");
         } catch (Exception e)
         {
             throw new RuntimeException(e);

@@ -2,9 +2,12 @@ package com.example.balatro.classes;
 
 public class Joker extends Card
 {
+    private String jokerImageUrl;
+    private String jokerEffect;
     private String rarity;
     private String unlockRequirement;
     private String actTiming;
+
 
     public String getRarity() { return rarity; }
     public void setRarity(String rarity) {
@@ -29,5 +32,21 @@ public class Joker extends Card
     public static String SqlString(Joker joker) {
         //          (id,                jokerImage,                             jokerName,                  jokerEffect,                        cost,                       rarity,                     unlockRequirement,                   jokerType,                       act)
         return joker.getId() + ", '" + joker.getCardFrontCoverUrl() + "', '" + joker.getName() + "', '" + joker.getDescription()  + "', " + joker.getCost() + ", '" + joker.getRarity() + "', '" + joker.getUnlockRequirement() + "', '" + joker.getType()  + "', '" + joker.getActTiming() + "'";
+    }
+
+    public String getJokerImageUrl() {
+        return jokerImageUrl;
+    }
+
+    public void setJokerImageUrl(String jokerImageUrl) {
+        this.jokerImageUrl = jokerImageUrl;
+    }
+
+    public String getJokerEffect() {
+        return jokerEffect;
+    }
+
+    public void setJokerEffect(String jokerEffect) {
+        this.jokerEffect = jokerEffect;
     }
 }

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.ShopPart">
+<AnchorPane fx:id="shopAnchorPane" prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.ShopPart">
    <children>
       <GridPane hgap="10.0" layoutX="32.0" layoutY="32.0" vgap="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <columnConstraints>
@@ -27,7 +27,7 @@
             <RowConstraints minHeight="10.0" percentHeight="50.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="154.0" prefWidth="161.0" style="-fx-background-color: #FA473D; -fx-background-radius: 10;" text="Next Round" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#nextRound" prefHeight="154.0" prefWidth="161.0" style="-fx-background-color: #FA473D; -fx-background-radius: 10;" text="Next Round" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
                   <Font name="balatro Regular" size="17.0" />
                </font>
@@ -35,7 +35,7 @@
                   <Insets left="25.0" right="25.0" />
                </padding>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="309.0" prefWidth="161.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#rerollShop" prefHeight="309.0" prefWidth="161.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
                   <Font name="balatro Regular" size="17.0" />
                </font>
@@ -45,7 +45,7 @@
             </Button>
             <Pane prefHeight="146.0" prefWidth="418.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2">
                <children>
-                  <StackPane layoutX="14.0" layoutY="11.0" prefHeight="184.0" prefWidth="478.0" />
+                  <StackPane fx:id="Shop" layoutX="14.0" layoutY="11.0" prefHeight="184.0" prefWidth="478.0" />
                </children>
             </Pane>
             <Pane style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnSpan="2" GridPane.rowIndex="3">

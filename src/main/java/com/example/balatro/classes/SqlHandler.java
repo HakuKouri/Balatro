@@ -23,6 +23,7 @@ public class SqlHandler {
     private static final String SealsTableColumns = " (id, appearance, seal, effect)";
     private static final String LanguagesTableColumns = " (id, languageName, text, notes)";
     private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
+    private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect)";
 
     static {
         try {
@@ -90,7 +91,7 @@ public class SqlHandler {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Seals " + SealsTableColumns + ";");
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Languages " + LanguagesTableColumns + ";");
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS LangNameDetails " + LangNameDetailsTableColumns + ";");
-
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Boosters " + BoostersTableColumns + ";");
         } catch (SQLException e) {
             System.err.println("Couldn't handle DB-Query");
             e.printStackTrace();
@@ -241,7 +242,19 @@ public class SqlHandler {
                     ps.setString(3, ((Seal) listItem).getSealName());
                     ps.setString(4, ((Seal) listItem).getSealEffect());
                     ps.executeUpdate();
-                } else if (listItem.getClass() == Language.class) {
+                }
+                if (listItem.getClass() == Booster.class) {
+                    //(id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect)
+                    query += BoostersTableColumns + " VALUES (?,?,?,?,?,?);";
+                    PreparedStatement ps = connection.prepareStatement(query);
+                    ps.setInt(1, ((Booster) listItem).getBoosterId());
+                    ps.setString(2, ((Booster) listItem).getboosterImageUrl());
+                    ps.setString(3, ((Booster) listItem).getBoosterName());
+                    ps.setString(4, ((Booster) listItem).getBoosterEffect());
+                    ps.setString(5, ((Booster) listItem).getBoosterSize());
+                    ps.setString(6, ((Booster) listItem).getBoosterEffect());
+                    ps.executeUpdate();
+                }else if (listItem.getClass() == Language.class) {
                     //LanguagesTableColumns = " (id, languageName, text, notes)";
                 }
             }
@@ -362,6 +375,64 @@ public class SqlHandler {
         return blinds;
     }
 
+    public static List<Booster> getAllBooster() {
+        List<Booster> boosters = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Boosters";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Booster booster = new Booster();
+
+                booster.setBoosterId (rs.getInt(1));
+                booster.setboosterImageUrl(rs.getString(2));
+                booster.setBoosterName(rs.getString(3));
+                booster.setBoosterSize(rs.getString(4));
+                booster.setBoosterCost(rs.getString(5));
+                booster.setBoosterEffect(rs.getString(6));
+
+                boosters.add(booster);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return boosters;
+    }
+
+    public static List<Joker> getAllJokers() {
+        List<Joker> jokers = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM JokerCards";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Joker joker = new Joker();
+
+                joker.setCardId(rs.getInt(1));
+                joker.setJokerImageUrl(rs.getString(2));
+                joker.setName(rs.getString(3));
+                joker.setJokerEffect(rs.getString(4));
+                joker.setCost(rs.getInt(5));
+                joker.setRarity(rs.getString(6));
+                joker.setUnlockRequirement(rs.getString(7));
+                joker.setType(rs.getString(8));
+                joker.setActTiming(rs.getString(9));
+
+                jokers.add(joker);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jokers;
+    }
 
     public static List<Tag> getAllTags() {
         List<Tag> tags = new ArrayList<>();
