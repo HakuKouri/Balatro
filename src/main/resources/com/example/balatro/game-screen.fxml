@@ -23,7 +23,7 @@
       <Label layoutX="1216.0" layoutY="163.0" text="0/2" textFill="WHITE" />
       <StackPane fx:id="spPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
       <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
-      <VBox alignment="TOP_CENTER" layoutX="31.0" prefHeight="720.0" prefWidth="240.0" spacing="10.0" style="-fx-background-color: #555;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="16.0" prefHeight="800.0" prefWidth="255.0" spacing="10.0" style="-fx-background-color: #555; -fx-border-color: #333; -fx-border-width: 3;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <VBox.margin>
@@ -249,7 +249,10 @@
          </children>
          <opaqueInsets>
             <Insets />
-         </opaqueInsets></VBox>
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding></VBox>
       <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1036.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true" />
       <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />

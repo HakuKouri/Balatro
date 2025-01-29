@@ -1,20 +1,15 @@
 package com.example.balatro;
 
-import com.almasb.fxgl.trade.Shop;
 import com.example.balatro.classes.*;
-import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.print.PageLayout;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 import java.io.IOException;
@@ -513,7 +508,7 @@ public class GameScreenController
         scoreToReach = score;
         toggleBlind(false);
         labelBlind.setText(blind.getBlindName());
-        drawCards(8);
+        drawCards(handsize);
         toBeatScore.setText(String.valueOf(scoreToReach));
         toBeatImage.setImage(new Image("file:"+blind.getBlindImageUrl()));
         toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));

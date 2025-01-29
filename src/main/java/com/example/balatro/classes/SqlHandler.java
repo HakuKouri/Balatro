@@ -34,9 +34,6 @@ public class SqlHandler {
         }
     }
 
-    private SqlHandler() {
-    }
-
     public static SqlHandler getInstance() {
         return sqlHandler;
     }
