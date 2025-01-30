@@ -6,6 +6,19 @@
 
 * {
     -fx-font-family: Balatro;
+    -fx-common-color: #0093ff;
+    -fx-uncommon-color: #35bd86;
+    -fx-rare-color: #ff4c40;
+    -fx-legendary-color: #ab5bb5;
+    -fx-background-color-dark: #152023;
+    -fx-background-color-ligth: #2B3639;
+    -fx-shop-color: #CF4B3F;
+    -fx-chips-color: #0093ff;
+    -fx-mult-color: #ff4c40;
+    -fx-tarot-color: #7B559C;
+    -fx-planet-color: #00A8CA;
+    -fx-spectral-color: #2E76FD;
+    -fx-money-color: #f5b244;
 }
 
 #gameScreenAnchor {
@@ -47,6 +60,11 @@
 
 #btnTitleQuit {
     -fx-background-color: #f00;
+}
+
+.money{
+    -fx-background-color: -fx-money-color;
+
 }
 
 .shadow-b {

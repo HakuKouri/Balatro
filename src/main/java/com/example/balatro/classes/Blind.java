@@ -1,5 +1,7 @@
 package com.example.balatro.classes;
 
+import javafx.scene.paint.Color;
+
 public class Blind
 {
     private int id;
@@ -10,6 +12,7 @@ public class Blind
     private String blindScoreMultiplier;
     private String blindEarn;
     private boolean blindSkipped;
+    private Color colorScheme;
 
     public int getId()
     {
@@ -88,5 +91,11 @@ public class Blind
         this.blindSkipped = blindSkipped;
     }
 
+    public Color getColorScheme() {
+        return colorScheme;
+    }
 
+    public void setColorScheme(String string) {
+        this.colorScheme = Color.web(string);
+    }
 }

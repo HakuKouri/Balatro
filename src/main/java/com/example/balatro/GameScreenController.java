@@ -81,10 +81,12 @@ public class GameScreenController
     private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("shop-part.fxml"));
+    private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("reward-summary.fxml"));
     private BlindPickPanels smallController;
     private BlindPickPanels bigController;
     private BlindPickPanels bossController;
     private ShopPart shopController;
+    private RewardSummarController rewardSummarController;
 
     static boolean blindsToggled = false;
 
@@ -106,7 +108,6 @@ public class GameScreenController
     static int selectedCardCounter = 0;
     static boolean handButtonHidden = false;
     static String sortedBy = "rank";
-
 
     static List<Blind> blindList;
     private ArrayList<Blind> gameBlindsList = new ArrayList<>();

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="73.0" prefWidth="107.0" style="-fx-background-color: #35bd86; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.SellTagController">
+   <children>
+      <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="69.0" text="SELL" textFill="WHITE" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+         <font>
+            <Font name="balatro Regular" size="22.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER_RIGHT" layoutX="6.0" prefHeight="34.0" prefWidth="69.0" text="\$10" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0">
+         <font>
+            <Font name="balatro Regular" size="29.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

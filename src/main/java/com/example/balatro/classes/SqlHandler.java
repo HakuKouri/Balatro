@@ -362,6 +362,7 @@ public class SqlHandler {
                 blind.setBlineMinimumAnte(rs.getString(5));
                 blind.setBlindScoreMultiplier(rs.getString(6));
                 blind.setBlindEarn(rs.getString(7));
+                blind.setColorScheme(rs.getString(8));
 
                 blinds.add(blind);
             }
