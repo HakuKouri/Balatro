@@ -2,7 +2,7 @@ package com.example.balatro.classes;
 
 public class Voucher extends Card
 {
-    private int id;
+    private int voucherId;
     private String voucherBaseImageUrl;
     private String voucherUpgradeImageUrl;
     private String voucherBaseName;
@@ -11,6 +11,14 @@ public class Voucher extends Card
     private String voucherUpgradeEffect;
     private String voucherUpgradeUnlockCondition;
     private String voucherNotes;
+
+    public int getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(int voucherId) {
+        this.voucherId = voucherId;
+    }
 
     public String getVoucherBaseImageUrl()
     {

@@ -3,6 +3,7 @@ package com.example.balatro.classes;
 public class Planet extends Card
 {
 
+    private int planetId;
     private String planetImageUrl;
     private String planetName;
     private String planetAddition;
@@ -12,6 +13,14 @@ public class Planet extends Card
 
     public Planet() {
         secret = false;
+    }
+
+    public int getPlanetId() {
+        return planetId;
+    }
+
+    public void setPlanetId(int planetId) {
+        this.planetId = planetId;
     }
 
     public String getPlanetImageUrl()

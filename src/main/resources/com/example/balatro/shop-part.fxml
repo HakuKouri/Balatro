@@ -57,7 +57,7 @@
                               <Font name="balatro Regular" size="16.0" />
                            </font>
                         </Label>
-                        <StackPane fx:id="Voucher" layoutX="51.0" layoutY="14.0" prefHeight="198.0" prefWidth="253.0" />
+                        <StackPane fx:id="VoucherArea" layoutX="51.0" layoutY="14.0" prefHeight="198.0" prefWidth="253.0" />
                      </children>
                   </Pane>
                </children>

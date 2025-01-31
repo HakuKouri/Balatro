@@ -3,6 +3,7 @@ package com.example.balatro.classes;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SqlHandler {
     private static final SqlHandler sqlHandler = new SqlHandler();
@@ -69,6 +70,7 @@ public class SqlHandler {
             }
         });
     }
+
 
     private void handleDB() {
         try {
@@ -458,6 +460,66 @@ public class SqlHandler {
         }
 
         return tags;
+    }
+
+    public static List<Voucher> getAllVoucher() {
+        List<Voucher> vouchers = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Tags";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Voucher voucher = new Voucher();
+
+                voucher.setVoucherId(rs.getInt(1));
+                voucher.setVoucherBaseImageUrl(rs.getString(2));
+                voucher.setVoucherBaseName(rs.getString(3));
+                voucher.setVoucherBaseEffect(rs.getString(4));
+                voucher.setVoucherUpgradeImageUrl(rs.getString(5));
+                voucher.setVoucherUpgradeName(rs.getString(6));
+                voucher.setVoucherUpgradeEffect(rs.getString(6));
+                voucher.setVoucherUpgradeUnlockCondition(rs.getString(7));
+                voucher.setVoucherNotes(rs.getString(8));
+
+                vouchers.add(voucher);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return vouchers;
+    }
+
+    public static List<Planet> getAllPlanets() {
+        List<Planet> planets = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Tags";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Planet planet = new Planet();
+
+                planet.setPlanetId(rs.getInt(1));
+                planet.setPlanetImageUrl(rs.getString(2));
+                planet.setPlanetName(rs.getString(3));
+                planet.setPlanetAddition(rs.getString(4));
+                planet.setPlanetPokerHand(rs.getString(5));
+                planet.setPlanetHandBaseScore(rs.getString(6));
+                planet.setSecret(!Objects.equals(rs.getString(6), "0"));
+
+                planets.add(planet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return planets;
     }
 
 }
