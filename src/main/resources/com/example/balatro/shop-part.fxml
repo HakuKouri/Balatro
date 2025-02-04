@@ -45,7 +45,7 @@
             </Button>
             <Pane prefHeight="146.0" prefWidth="418.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2">
                <children>
-                  <StackPane fx:id="Shop" layoutX="14.0" layoutY="11.0" prefHeight="184.0" prefWidth="478.0" />
+                  <StackPane fx:id="ShopArea" layoutX="14.0" layoutY="11.0" prefHeight="184.0" prefWidth="478.0" />
                </children>
             </Pane>
             <Pane style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnSpan="2" GridPane.rowIndex="3">
@@ -64,7 +64,7 @@
             </Pane>
             <Pane prefHeight="163.0" prefWidth="282.0" style="-fx-background-color: #364C50; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
                <children>
-                  <StackPane fx:id="Booster" layoutX="14.0" layoutY="14.0" prefHeight="214.0" prefWidth="306.0" />
+                  <StackPane fx:id="BoosterArea" layoutX="14.0" layoutY="14.0" prefHeight="214.0" prefWidth="306.0" />
                </children>
             </Pane>
          </children>

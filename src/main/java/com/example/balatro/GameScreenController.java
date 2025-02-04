@@ -90,7 +90,7 @@ public class GameScreenController
 
     static boolean blindsToggled = false;
 
-    static Random rand;
+    public static Random rand;
 
     static int ante = 1;
     static int phase = 1;
@@ -287,7 +287,33 @@ public class GameScreenController
     }
 
     private void openShop() {
-        Shop.setTranslateY(0);
+        try {
+            if(Shop.getTranslateY() != 0) {
+                Shop.setTranslateY(0);
+            }
+            Shop = loaderShop.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void closeShop() {
+        Shop.setTranslateY(560);
+    }
+
+    private void openSummary() {
+        try {
+            if(Shop.getTranslateY() != 0) {
+                Shop.setTranslateY(0);
+            }
+            Shop = loaderReward.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeSummary() {
+        Shop.setTranslateY(560);
     }
 
     //SETTING UP GAME
@@ -542,7 +568,7 @@ public class GameScreenController
         pointsScored.setText(String.valueOf(scored));
 
         if(scoreReached()) {
-            openShop();
+            openSummary();
         } else {
             hideHandButtons();
         }

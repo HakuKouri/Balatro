@@ -7,7 +7,7 @@ public class Joker extends Card
     private String rarity;
     private String unlockRequirement;
     private String actTiming;
-
+    private boolean isActive = false;
 
     public String getRarity() { return rarity; }
     public void setRarity(String rarity) {
@@ -29,10 +29,6 @@ public class Joker extends Card
     {
         this.actTiming = actTiming;
     }
-    public static String SqlString(Joker joker) {
-        //          (id,                jokerImage,                             jokerName,                  jokerEffect,                        cost,                       rarity,                     unlockRequirement,                   jokerType,                       act)
-        return joker.getId() + ", '" + joker.getCardFrontCoverUrl() + "', '" + joker.getName() + "', '" + joker.getDescription()  + "', " + joker.getCost() + ", '" + joker.getRarity() + "', '" + joker.getUnlockRequirement() + "', '" + joker.getType()  + "', '" + joker.getActTiming() + "'";
-    }
 
     public String getJokerImageUrl() {
         return jokerImageUrl;
@@ -48,5 +44,13 @@ public class Joker extends Card
 
     public void setJokerEffect(String jokerEffect) {
         this.jokerEffect = jokerEffect;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

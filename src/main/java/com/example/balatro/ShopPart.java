@@ -6,17 +6,18 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 import java.util.List;
+import java.util.Random;
 
 public class ShopPart {
 
     @FXML
     private AnchorPane shopAnchorPane;
     @FXML
-    private StackPane Shop;
+    private StackPane ShopArea;
     @FXML
     private StackPane VoucherArea;
     @FXML
-    private StackPane Booster;
+    private StackPane BoosterArea;
 
     private GameScreenController gameScreenController;
 
@@ -37,7 +38,7 @@ public class ShopPart {
     }
 
     private void rerollShop() {
-        Shop.getChildren().clear();
+        ShopArea.getChildren().clear();
         drawItems();
     }
 
@@ -46,14 +47,24 @@ public class ShopPart {
     }
 
     private void drawVoucher() {
+        VoucherArea.getChildren().add(voucherList.get(GameScreenController.rand.nextInt(voucherList.size())));
+    }
 
+    private void removeFromVoucher(Voucher voucher) {
+        VoucherArea.getChildren().remove(voucher);
     }
 
     private void drawBooster() {
 
+        BoosterArea.getChildren().add(boosterList.get(GameScreenController.rand.nextInt(boosterList.size())));
     }
 
-    private void nextRound() {
+    private void removeFromBooster(Booster booster) {
+        BoosterArea.getChildren().remove(booster);
+    }
+
+    public void nextRound() {
+        gameScreenController.closeShop();
         gameScreenController.toggleBlind(true);
     }
 }
