@@ -468,7 +468,7 @@ public class SqlHandler {
         try
         {
             Statement statement = connection.createStatement();
-            String statementString = "SELECT * FROM Tags";
+            String statementString = "SELECT * FROM VoucherCards";
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {
@@ -499,7 +499,7 @@ public class SqlHandler {
         try
         {
             Statement statement = connection.createStatement();
-            String statementString = "SELECT * FROM Tags";
+            String statementString = "SELECT * FROM PlanetCards";
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {

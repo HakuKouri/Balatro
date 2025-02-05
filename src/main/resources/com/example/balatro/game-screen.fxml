@@ -23,7 +23,7 @@
       <Label layoutX="1216.0" layoutY="163.0" text="0/2" textFill="WHITE" />
       <StackPane fx:id="spPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
       <StackPane fx:id="HoldingHand" layoutX="310.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
-      <VBox alignment="TOP_CENTER" layoutX="16.0" prefHeight="800.0" prefWidth="255.0" spacing="10.0" style="-fx-background-color: #555; -fx-border-color: #333; -fx-border-width: 3;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="16.0" layoutY="-1.0" prefHeight="720.0" prefWidth="255.0" spacing="10.0" style="-fx-background-color: #555; -fx-border-color: #333; -fx-border-width: 3;" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="-1.0">
          <children>
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <VBox.margin>
@@ -189,7 +189,7 @@
                   </Pane>
                   <Pane layoutX="90.0" layoutY="90.0" prefHeight="65.0" prefWidth="145.0" style="-fx-background-color: #333; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-radius: 10;">
                      <children>
-                        <Label alignment="CENTER" layoutX="5.0" layoutY="5.0" prefHeight="56.0" prefWidth="135.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="\$0" textFill="#d0cd37">
+                        <Label fx:id="displayMoney" alignment="CENTER" layoutX="5.0" layoutY="5.0" prefHeight="56.0" prefWidth="135.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="\$0" textFill="#d0cd37">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -212,7 +212,7 @@
                               <Font name="balatro Regular" size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1/8" textAlignment="CENTER" textFill="WHITE">
+                        <Label fx:id="displayAnte" alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1/8" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="18.0" />
                            </font>
@@ -226,7 +226,7 @@
                               <Font name="balatro Regular" size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1" textAlignment="CENTER" textFill="WHITE">
+                        <Label fx:id="displayRound" alignment="CENTER" layoutX="5.0" layoutY="22.0" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #555; -fx-background-radius: 10;" text="1" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font name="balatro Regular" size="18.0" />
                            </font>
@@ -253,17 +253,17 @@
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding></VBox>
-      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1036.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true" />
-      <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
-      <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
-      <AnchorPane fx:id="bossAnchor" layoutX="820.0" layoutY="200.0" prefHeight="600.0" prefWidth="200.0" />
+      <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" layoutX="1036.0" layoutY="488.0" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane fx:id="smallBlindAnchor" layoutX="300.0" layoutY="116.0" prefHeight="600.0" prefWidth="200.0" />
+      <AnchorPane fx:id="bigBlindAnchor" layoutX="570.0" layoutY="96.0" prefHeight="600.0" prefWidth="200.0" />
+      <AnchorPane fx:id="bossAnchor" layoutX="820.0" layoutY="92.0" prefHeight="600.0" prefWidth="200.0" />
       <Button layoutX="1175.0" layoutY="207.0" mnemonicParsing="false" onAction="#drawCard" text="Button" />
       <ImageView fx:id="testImageView" fitHeight="190.0" fitWidth="142.0" layoutX="1124.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
          </image>
       </ImageView>
-      <GridPane fx:id="handButtonBox" layoutX="450.0" layoutY="600.0" prefHeight="120.0" prefWidth="450.0">
+      <GridPane fx:id="handButtonBox" layoutX="450.0" layoutY="600.0" prefHeight="87.0" prefWidth="450.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" maxWidth="168.0" minWidth="10.0" percentWidth="40.0" prefWidth="161.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" percentWidth="20.0" prefWidth="134.0" />
@@ -276,7 +276,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#playSelectedCards" text="Play Hand" GridPane.rowSpan="2147483647" />
             <Button mnemonicParsing="false" onAction="#discardSelectedCards" text="Discard" GridPane.columnIndex="2" GridPane.rowSpan="2147483647" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox prefHeight="57.0" prefWidth="90.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Button mnemonicParsing="false" onAction="#sortRank" text="Rank" />
                   <Button mnemonicParsing="false" onAction="#sortSuit" text="Suit" />
@@ -285,7 +285,7 @@
             <Label text="Sort: Hand" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" layoutX="1198.0" layoutY="557.0" prefHeight="200.0" prefWidth="70.0" />
-      <AnchorPane fx:id="Shop" layoutX="310.0" layoutY="240.0" prefHeight="560.0" prefWidth="720.0" />
+      <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" layoutX="1198.0" layoutY="471.0" prefHeight="200.0" prefWidth="70.0" />
+      <AnchorPane fx:id="placeHolderShopReward" layoutX="310.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
    </children>
 </AnchorPane>

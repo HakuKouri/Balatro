@@ -1,5 +1,6 @@
 package com.example.balatro;
 
+import com.example.balatro.classes.Tag;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -13,13 +14,21 @@ public class BlindSkipPane {
     @FXML
     private ImageView ivSkipReward;
 
+    private Tag tag;
+
     private BlindPickPanels blindPickPanels;
 
-    public void setIvSkipReward(String imageUrl) {
+    public void setTag(Tag tag) {
+        this.tag = tag;
+        setIvSkipReward(tag.getTagImageUrl());
+    }
+
+    private void setIvSkipReward(String imageUrl) {
         ivSkipReward.setImage(new Image(imageUrl));
     }
 
     public void setBlindPickPanels(BlindPickPanels blindPickPanels) {
         this.blindPickPanels = blindPickPanels;
     }
+
 }

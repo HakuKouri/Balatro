@@ -70,7 +70,13 @@ public class GameScreenController
     @FXML
     private StackPane spaceConsumable;
     @FXML
-    private AnchorPane Shop;
+    private AnchorPane placeHolderShopReward;
+    @FXML
+    private Label displayRound;
+    @FXML
+    private Label displayAnte;
+    @FXML
+    private Label displayMoney;
 
 
     //TEST
@@ -87,6 +93,14 @@ public class GameScreenController
     private BlindPickPanels bossController;
     private ShopPart shopController;
     private RewardSummarController rewardSummarController;
+
+    private AnchorPane smallBlind = null;
+    private AnchorPane bigBlind = null;
+    private AnchorPane boss = null;
+    private AnchorPane shop = null;
+    private AnchorPane reward = null;
+
+
 
     static boolean blindsToggled = false;
 
@@ -126,11 +140,6 @@ public class GameScreenController
     //UI HANDLER
     public void initialize(){
         Balatro.gameScreenController = this;
-        AnchorPane smallBlind = null;
-        AnchorPane bigBlind = null;
-        AnchorPane boss = null;
-        AnchorPane shop = null;
-
 
         try {
             smallBlind = loaderSmall.load();
@@ -150,9 +159,13 @@ public class GameScreenController
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
-            Shop.getChildren().add(shop);
             shopController.setGameScreenController(this);
-            Shop.setTranslateY(500);
+
+            reward = loaderReward.load();
+            rewardSummarController = loaderReward.getController();
+            rewardSummarController.setGameScreenController(this);
+
+            placeHolderShopReward.setTranslateY(560);
 
             blindList = SqlHandler.getAllBlinds();
             tagList = SqlHandler.getAllTags();
@@ -287,33 +300,39 @@ public class GameScreenController
     }
 
     private void openShop() {
-        try {
-            if(Shop.getTranslateY() != 0) {
-                Shop.setTranslateY(0);
-            }
-            Shop = loaderShop.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(placeHolderShopReward.getTranslateY() != 0) {
+            placeHolderShopReward.setTranslateY(0);
         }
+        placeHolderShopReward.getChildren().clear();
+        placeHolderShopReward.getChildren().add(shop);
     }
 
     public void closeShop() {
-        Shop.setTranslateY(560);
+        placeHolderShopReward.setTranslateY(560);
     }
 
     private void openSummary() {
-        try {
-            if(Shop.getTranslateY() != 0) {
-                Shop.setTranslateY(0);
-            }
-            Shop = loaderReward.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(placeHolderShopReward.getTranslateY() != 0) {
+            placeHolderShopReward.setTranslateY(0);
         }
+        placeHolderShopReward.getChildren().clear();
+        placeHolderShopReward.getChildren().add(reward);
     }
 
     private void closeSummary() {
-        Shop.setTranslateY(560);
+        placeHolderShopReward.setTranslateY(560);
+    }
+
+    private void setDisplayRound() {
+        displayRound.setText(String.valueOf(round));
+    }
+
+    private void setDisplayAnte() {
+        displayAnte.setText(String.valueOf(ante) + "/8");
+    }
+
+    private void setDisplayMoney() {
+        displayMoney.setText(String.valueOf(money) + "$");
     }
 
     //SETTING UP GAME
@@ -569,6 +588,11 @@ public class GameScreenController
 
         if(scoreReached()) {
             openSummary();
+            clearHandInfo();
+            setRound(round++);
+            if(blindList.get(round-1).getId() > 1) {
+                setAnte(ante++);
+            }
         } else {
             hideHandButtons();
         }
@@ -576,8 +600,23 @@ public class GameScreenController
         clearHandInfo();
     }
 
+    private void setAnte(int i) {
+        ante = i;
+        setDisplayAnte();
+    }
+
+    private void setRound(int i) {
+        round = i;
+        setDisplayRound();
+    }
+
     private boolean scoreReached() {
         return BigDecimal.valueOf(scored).compareTo(scoreToReach) != -1;
+    }
+
+    public void addMoney(int reward) {
+        money += reward;
+        openShop();
     }
 
     private void setHandsAndDiscards() {
@@ -624,6 +663,7 @@ public class GameScreenController
 //        larger.play();
 //
     }
+
 
 //    private Runnable setImage() {
 //        testImageView.setImage(new Image("file:" + deck.getDeckCoverUrl()));

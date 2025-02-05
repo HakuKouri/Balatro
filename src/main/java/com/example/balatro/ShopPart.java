@@ -37,7 +37,7 @@ public class ShopPart {
         drawVoucher();
     }
 
-    private void rerollShop() {
+    public void rerollShop() {
         ShopArea.getChildren().clear();
         drawItems();
     }

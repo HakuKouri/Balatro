@@ -45,7 +45,6 @@ public class BlindPickPanels {
         this.blind = blind;
     }
 
-
     public void setButtonText(String text) {
         btnSelectBlind.setText(text);
     }
