@@ -1,6 +1,7 @@
 package com.example.balatro;
 
 import com.example.balatro.classes.Blind;
+import com.example.balatro.classes.Tag;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -8,17 +9,16 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class BlindPickPanels {
 
     @FXML
     private Button btnSelectBlind;
     @FXML
-    private Pane skipPane;
+    private AnchorPane skipAnchorPane;
     @FXML
     private AnchorPane blindPanel;
     @FXML
@@ -26,23 +26,81 @@ public class BlindPickPanels {
     @FXML
     private ImageView imageViewBlindChip;
     @FXML
-    private ImageView stakeImage;
+    private ImageView imageViewStakeImage;
     @FXML
     private Label lblMinScore;
     @FXML
     private Label lblEarn;
 
-    private GameScreenController gameScreenController;
     private Blind blind;
 
+    private GameScreenController gameScreenController;
+
+    private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("blindSkipPane.fxml"));
+    private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("bossPane.fxml"));
+
+    private BlindSkipPane blindSkipController;
+    private AnchorPane skipPane;
+    private AnchorPane bossPane;
+
+    private static Image stakeImage;
+
     public void initialize() {
-        System.out.printf(blindPanel.layoutYProperty().toString());
+        System.out.printf("guck mal");
+    }
+
+    public static void setStageImage(Image image) {
+        stakeImage = image;
     }
 
     public void setGameScreenController(GameScreenController gameScreenController) {this.gameScreenController = gameScreenController;}
 
-    public void setBlind(Blind blind) {
+    public void setBlind(Blind blind, Tag tag, int blindNumber) {
         this.blind = blind;
+        if(blindNumber == 1) {
+            setButtonText("Select");
+            setBlindName(blind.getBlindName());
+            setBlindImage(new Image("file:"+ blind.getBlindImageUrl()));
+            //setBossPanel(false);
+            setActivity(false);
+            setEarn(3);
+            try {
+                skipPane = loaderSkipPane.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            blindSkipController = loaderSkipPane.getController();
+            skipAnchorPane.getChildren().add(skipPane);
+            setTag(tag);
+        } else if(blindNumber == 2) {
+            setButtonText("Upcoming");
+            setBlindName(blind.getBlindName());
+            setBlindImage(new Image("file:" + blind.getBlindImageUrl()));
+            //setBossPanel(false);
+            setActivity(false);
+            setEarn(4);
+            try {
+                skipPane = loaderSkipPane.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            blindSkipController = loaderSkipPane.getController();
+            skipAnchorPane.getChildren().add(skipPane);
+            setTag(tag);
+        } else if(blindNumber == 3) {
+            setButtonText("Upcoming");
+            setBlindName(blind.getBlindName());
+            setBlindImage(new Image("file:" + blind.getBlindImageUrl()));
+            //setBossPanel(true);
+            setActivity(false);
+            setEarn(5);
+            try {
+                bossPane = loaderBossPane.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            skipAnchorPane.getChildren().add(bossPane);
+        }
     }
 
     public void setButtonText(String text) {
@@ -52,12 +110,9 @@ public class BlindPickPanels {
     public void setBossPanel(boolean isBoss) {
         try {
             if (isBoss) {
-                skipPane.getChildren().add(FXMLLoader.load(getClass().getResource("bossPane.fxml")));
+                skipPane.getChildren().add(loaderBossPane.load());
             } else {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("blindSkipPane.fxml"));
-                BlindSkipPane pane = loader.getController();
-                skipPane.getChildren().add(loader.load());
-
+                skipPane.getChildren().add(loaderSkipPane.load());
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -77,7 +132,7 @@ public class BlindPickPanels {
     }
 
     public void setStakeImage(Image image) {
-        stakeImage.setImage(image);
+        imageViewStakeImage.setImage(stakeImage);
     }
 
     public void setMinScore(BigDecimal score) {
@@ -85,10 +140,8 @@ public class BlindPickPanels {
     }
 
     public void setEarn(int score) {
-        String text = "";
-        for (int i = 0; i < score; i++) {
-            text +="$";
-        }
+        StringBuilder text = new StringBuilder();
+        text.append("$".repeat(Math.max(0, score)));
         lblEarn.setText(text+"+");
     }
 
@@ -97,6 +150,10 @@ public class BlindPickPanels {
     }
 
     public void skip() {
-        gameScreenController.skip();
+        gameScreenController.skip(blindSkipController.getTag());
+    }
+
+    public void setTag(Tag tag) {
+        blindSkipController.setTag(tag);
     }
 }
