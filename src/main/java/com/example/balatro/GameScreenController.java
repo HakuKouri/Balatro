@@ -26,7 +26,7 @@ public class GameScreenController
     @FXML
     private AnchorPane bigBlindAnchor;
     @FXML
-    private AnchorPane bossAnchor;
+    private AnchorPane bossBlindAnchor;
     @FXML
     private Label labelBlind;
     @FXML
@@ -77,12 +77,15 @@ public class GameScreenController
     private Label displayAnte;
     @FXML
     private Label displayMoney;
+    @FXML
+    private HBox blindBox;
 
 
     //TEST
     @FXML
     private ImageView testImageView;
 
+    //FXMLLOADER AND CONTROLLER
     private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
     private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
@@ -93,17 +96,23 @@ public class GameScreenController
     private BlindPickPanels bossController;
     private ShopPart shopController;
     private RewardSummarController rewardSummarController;
-
     private AnchorPane smallBlind = null;
     private AnchorPane bigBlind = null;
     private AnchorPane boss = null;
     private AnchorPane shop = null;
     private AnchorPane reward = null;
 
-    static boolean blindsToggled = false;
-
+    //GAME MECHANICS VARIABLES
+    static boolean blindsToggled = true;
     public static Random rand;
+    static int selectedCardCounter = 0;
+    static List<Blind> allBlindsList;
+    private final ArrayList<Blind> gameBlindsList = new ArrayList<>();
+    static List<Tag> allTagList;
+    static List<Hand> allHandList;
 
+
+    //GAME VARIABLES
     static final int maxAnte = 8;
     static int ante = 1;
     static int phase = 1;
@@ -118,16 +127,8 @@ public class GameScreenController
     static int scored = 0;
     static Deck deck;
     static Stake stake;
-    static int selectedCardCounter = 0;
     static boolean handButtonHidden = false;
     static String sortedBy = "rank";
-
-    static List<Blind> blindList;
-    private final ArrayList<Blind> gameBlindsList = new ArrayList<>();
-
-    static List<Tag> tagList;
-    static List<Hand> handList;
-
     static BigDecimal[] chipRequirement = new BigDecimal[]{BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800), BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000), BigDecimal.valueOf(20000), BigDecimal.valueOf(35000), BigDecimal.valueOf(50000)};
 
     private final List<PlayingCard> deckList = new ArrayList<>();
@@ -141,22 +142,28 @@ public class GameScreenController
     //UI HANDLER
     public void initialize(){
         Balatro.gameScreenController = this;
+        allTagList = Tag.setTagList();
+        allHandList = Hand.setHandList();
+        allBlindsList = Blind.setBlindList();
 
+        //LOAD / READY PLACEHOLDER
         try {
             smallBlind = loaderSmall.load();
             smallController = loaderSmall.getController();
-            smallBlindAnchor.getChildren().add(smallBlind);
             smallController.setGameScreenController(this);
+            smallBlindAnchor.getChildren().add(smallBlind);
 
             bigBlind = loaderBig.load();
             bigController = loaderBig.getController();
-            bigBlindAnchor.getChildren().add(bigBlind);
             bigController.setGameScreenController(this);
+            bigBlindAnchor.getChildren().add(bigBlind);
 
             boss = loaderBoss.load();
             bossController = loaderBoss.getController();
-            bossAnchor.getChildren().add(boss);
             bossController.setGameScreenController(this);
+            bossBlindAnchor.getChildren().add(boss);
+
+            blindBox.setTranslateY(600);
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
@@ -168,34 +175,27 @@ public class GameScreenController
 
             placeHolderShopReward.setTranslateY(560);
 
-            blindList = SqlHandler.getAllBlinds();
-            tagList = SqlHandler.getAllTags();
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        setHandList();
         setPlayingDeck();
         rand = new Random();
         hideHandButtons();
-        //expandBlindTagList();
+        clearHandInfo();
+        toggleBlind();
     }
 
     private void setBlindPanels() {
-        smallBlindAnchor.setTranslateY(590);
-        bigBlindAnchor.setTranslateY(590);
-        bossAnchor.setTranslateY(590);
+        smallController.setBlind(gameBlindsList.get((ante-1)*3), allTagList.get(round-ante), 1);
+        bigController.setBlind(gameBlindsList.get((ante-1)*3+1), allTagList.get(round-ante), 2);
+        bossController.setBlind(gameBlindsList.get((ante-1)*3+2), allTagList.get(round-ante), 3);
 
-        smallController.setBlind(gameBlindsList.get((ante-1)*3),tagList.get(round-ante), 1);
-        bigController.setBlind(gameBlindsList.get((ante-1)*3+1),tagList.get(round-ante), 2);
-        bossController.setBlind(gameBlindsList.get((ante-1)*3+2),tagList.get(round-ante), 3);
+        smallController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(allBlindsList.get((ante-1)* 3).getBlindScoreMultiplier().replace("x base",""))));
+        bigController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(allBlindsList.get((ante-1)* 3 +1).getBlindScoreMultiplier().replace("x base",""))));
+        bossController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(allBlindsList.get((ante-1)* 3+2).getBlindScoreMultiplier().replace("x base",""))));
 
-        smallController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3).getBlindScoreMultiplier().replace("x base",""))));
-        bigController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3 +1).getBlindScoreMultiplier().replace("x base",""))));
-        bossController.setMinScore(chipRequirement[ante].multiply(new BigDecimal(blindList.get((ante-1)* 3+2).getBlindScoreMultiplier().replace("x base",""))));
-
-        toggleBlind(true);
+        toggleBlind();
     }
 
     private void setDeckImage() throws IOException {
@@ -207,28 +207,35 @@ public class GameScreenController
         roundScoreStakeImage.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
     }
 
-    public void toggleBlind(boolean toggle) {
+    public void toggleBlind() {
+        blindsToggled = !blindsToggled;
+        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
         TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
-        TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossAnchor);
-        if (toggle) {
+        TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
+        if (blindsToggled) {
+            transitionBlindBox.setToY(0);
             if(round%3 == 1) transitionSmall.setToY(-50);
-            else transitionSmall.setToY(0);
-            if(round%3 == 2)
-            transitionBig.setToY(-50);
-            else transitionBig.setToY(0);
-            if(round%3 == 0)
-            transitionBoss.setToY(-50);
-            else transitionBoss.setToY(0);
+            if(round%3 == 2) transitionBig.setToY(-50);
+            if(round%3 == 0) transitionBoss.setToY(-50);
         } else {
-            transitionSmall.setToY(590);
-            transitionBig.setToY(590);
-            transitionBoss.setToY(590);
-
+            transitionBlindBox.setToY(600);
+            transitionSmall.setToY(0);
+            transitionBig.setToY(0);
+            transitionBoss.setToY(0);
         }
+        transitionBlindBox.play();
         transitionSmall.play();
         transitionBig.play();
         transitionBoss.play();
+    }
+
+    private void hideBlinds() {
+        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
+    }
+
+    private void showBlindds() {
+        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
     }
 
     public void hideHandButtons() {
@@ -246,22 +253,22 @@ public class GameScreenController
     private void setHandInfo(List<String> hands) {
         int maxPoints = 0;
         int bestHandIndex = -1;
-        for (Hand hand : handList) {
+        for (Hand hand : allHandList) {
             if(hands.contains(hand.getName())) {
                 System.out.println(hand.getName());
                 int points = hand.getChips() * hand.getMulti();
                 System.out.println("Possible Points: " + points);
                 if(maxPoints < points) {
                     maxPoints = points;
-                    bestHandIndex = handList.indexOf(hand);
+                    bestHandIndex = allHandList.indexOf(hand);
                 }
             }
         }
         if(!selectedCards.isEmpty()) {
-            infoHand.setText(handList.get(bestHandIndex).getName());
-            infoHandLevel.setText("lvl. " + handList.get(bestHandIndex).getLevel());
-            infoHandChips.setText(""+handList.get(bestHandIndex).getChips());
-            infoHandMulti.setText(""+handList.get(bestHandIndex).getMulti());
+            infoHand.setText(allHandList.get(bestHandIndex).getName());
+            infoHandLevel.setText("lvl. " + allHandList.get(bestHandIndex).getLevel());
+            infoHandChips.setText(""+ allHandList.get(bestHandIndex).getChips());
+            infoHandMulti.setText(""+ allHandList.get(bestHandIndex).getMulti());
         } else {
             clearHandInfo();
         }
@@ -335,44 +342,24 @@ public class GameScreenController
         playingCardList.addAll(deckList);
 
         Collections.shuffle(playingCardList, new Random());
-        for(int i = 0; i < 52; i++) {
-            System.out.println(deckList.get(i).getRank() + " "+ deckList.get(i).getSuit() + " | " + playingCardList.get(i).getRank() + " " + playingCardList.get(i).getSuit());
-        }
-    }
-
-    private void setHandList() {
-        handList = new ArrayList<>();
-        handList.add(new Hand("Flush Five",     160, 16));
-        handList.add(new Hand("Flush House",    140, 14));
-        handList.add(new Hand("Five of a Kind", 120, 12));
-        handList.add(new Hand("Royal Flush",    100, 8));
-        handList.add(new Hand("Straight Flush", 100, 8));
-        handList.add(new Hand("Four of a Kind", 60, 7));
-        handList.add(new Hand("Full House",     40, 4));
-        handList.add(new Hand("Flush",          35, 4));
-        handList.add(new Hand("Straight",       30, 4));
-        handList.add(new Hand("Three of a Kind",30, 3));
-        handList.add(new Hand("Two Pair",       20, 2));
-        handList.add(new Hand("One Pair",       10, 2));
-        handList.add(new Hand("High Card",      5, 1));
     }
 
     public void createBlindList() {
         for (int i = 0; i <= 8; i++) {
             for (int j = 0; j < 3; j++) {
                 if(j == 0)
-                    gameBlindsList.add(blindList.get(0));
+                    gameBlindsList.add(allBlindsList.get(0));
                 else if(j == 1)
-                    gameBlindsList.add(blindList.get(1));
+                    gameBlindsList.add(allBlindsList.get(1));
                 else
-                    gameBlindsList.add(blindList.get(rand.nextInt(blindList.size() - 2 + 1) + 1));
+                    gameBlindsList.add(allBlindsList.get(rand.nextInt(allBlindsList.size() - 2 + 1) + 1));
             }
         }
     }
 
     private void expandBlindTagList() {
         for (int i = 0; i < 2; i++) {
-            Tag tag = tagList.get(rand.nextInt(tagList.size()));
+            Tag tag = allTagList.get(rand.nextInt(allTagList.size()));
             if(Integer.parseInt((tag.getMinAnte())) <= ante)
                 blindTags.add(tag);
             else {
@@ -437,8 +424,8 @@ public class GameScreenController
                     spPlayedCards.getChildren().get(i).setTranslateY(0);
             }
 
-            baseChips = handList.stream().filter(name -> name.getName() == infoHand.getText()).collect(Collectors.toList()).get(0).getChips();
-            baseMulti = handList.stream().filter(name -> name.getName() == infoHand.getText()).collect(Collectors.toList()).get(0).getMulti();
+            baseChips = allHandList.stream().filter(name -> Objects.equals(name.getName(), infoHand.getText())).collect(Collectors.toList()).get(0).getChips();
+            baseMulti = allHandList.stream().filter(name -> Objects.equals(name.getName(), infoHand.getText())).collect(Collectors.toList()).get(0).getMulti();
 
             selectedCards.clear();
             moveCards(spPlayedCards);
@@ -554,7 +541,7 @@ public class GameScreenController
     public void startRound(Blind blind, BigDecimal score) {
         hideHandButtons();
         scoreToReach = score;
-        toggleBlind(false);
+        toggleBlind();
         labelBlind.setText(blind.getBlindName());
         drawCards(handsize);
         toBeatScore.setText(String.valueOf(scoreToReach));
@@ -562,6 +549,12 @@ public class GameScreenController
         toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
         toBeatReward.setText("$$$");
         clearHandInfo();
+    }
+
+    public void nextRound() {
+        closeShop();
+        round++;
+        toggleBlind();
     }
 
     public void skip(Tag tag) {
@@ -598,7 +591,7 @@ public class GameScreenController
             setRound(round++);
             clearScoredPoints();
 
-            if(blindList.get(round-1).getId() > 1) {
+            if(allBlindsList.get(round-1).getId() > 1) {
                 setAnte(ante++);
             }
         } else {
@@ -636,6 +629,9 @@ public class GameScreenController
         setDiscardCounter();
     }
 
+
+
+
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {
         Task<Void> sleeper = new Task<Void>() {
@@ -653,6 +649,10 @@ public class GameScreenController
     public int getRound() {
         return round;
     }
+
+
+
+
 
     //TEST AREA
 

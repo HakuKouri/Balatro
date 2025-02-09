@@ -2,9 +2,6 @@ package com.example.balatro.classes;
 
 import javafx.scene.image.Image;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class PlayingCard extends Card
 {
     String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
@@ -18,10 +15,6 @@ public class PlayingCard extends Card
     Enhancement enhancement;
     Edition edition;
     boolean clickAble = false;
-
-    public void initialize() {
-        System.out.println("Klasse geladen");
-    }
 
     public PlayingCard(int rank, int suit) {
         this.rank = rankArray[rank];
@@ -40,6 +33,7 @@ public class PlayingCard extends Card
         this.setPreserveRatio(true);
     }
 
+    //region GETTER SETTER
     public String getRank() {
         return rank;
     }
@@ -136,4 +130,7 @@ public class PlayingCard extends Card
         }
         return -1; // Wenn Suit nicht gefunden wird
     }
+    //endregion
+
+
 }

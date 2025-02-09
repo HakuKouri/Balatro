@@ -1,5 +1,7 @@
 package com.example.balatro.classes;
 
+import java.util.List;
+
 public class Tag
 {
     private int id;
@@ -9,6 +11,7 @@ public class Tag
     private String tagNotes;
     private String minAnte;
 
+    //region GETTER SETTER
     public int getId()
     {
         return id;
@@ -67,5 +70,10 @@ public class Tag
     public void setMinAnte(String minAnte)
     {
         this.minAnte = minAnte;
+    }
+    //endregion
+
+    public static List<Tag> setTagList() {
+        return SqlHandler.getAllTags();
     }
 }

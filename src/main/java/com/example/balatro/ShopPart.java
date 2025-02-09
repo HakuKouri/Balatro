@@ -64,7 +64,7 @@ public class ShopPart {
     }
 
     public void nextRound() {
-        gameScreenController.closeShop();
-        gameScreenController.toggleBlind(true);
+        gameScreenController.nextRound();
+
     }
 }

@@ -2,6 +2,8 @@ package com.example.balatro.classes;
 
 import javafx.scene.paint.Color;
 
+import java.util.List;
+
 public class Blind
 {
     private int id;
@@ -14,6 +16,7 @@ public class Blind
     private boolean blindSkipped;
     private Color colorScheme;
 
+    //region GETTER SETTER
     public int getId()
     {
         return id;
@@ -97,5 +100,10 @@ public class Blind
 
     public void setColorScheme(String string) {
         this.colorScheme = Color.web(string);
+    }
+    //endregion
+
+    public static List<Blind> setBlindList() {
+        return SqlHandler.getAllBlinds();
     }
 }
