@@ -371,7 +371,7 @@ public class GameScreenController
 
     //PLAYING CARD HANDLER
     public void drawCard() {
-        testImageView.setImage(playingCardList.get(0).getImage());
+        //testImageView.setImage(playingCardList.get(0).getImage());
         playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
             playingCardClicked((PlayingCard) mouseEvent.getSource());
         });
@@ -513,6 +513,10 @@ public class GameScreenController
         moveCards(HoldingHand);
     }
 
+    private void clearHandCards() {
+        handCards.clear();
+        HoldingHand.getChildren().clear();
+    }
 
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
@@ -590,6 +594,7 @@ public class GameScreenController
             openSummary();
             setRound(round++);
             clearScoredPoints();
+            clearHandCards();
 
             if(allBlindsList.get(round-1).getId() > 1) {
                 setAnte(ante++);
