@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 public class GameController
 {
     @FXML
-    private ImageView roundScoreStakeImage;
-    @FXML
     private AnchorPane smallBlindAnchor;
     @FXML
     private AnchorPane bigBlindAnchor;
@@ -49,8 +47,6 @@ public class GameController
     private Label toBeatScore;
     @FXML
     private Label toBeatReward;
-    @FXML
-    private Label pointsScored;
     @FXML
     private AnchorPane gameScreenAnchor;
     @FXML
@@ -100,13 +96,14 @@ public class GameController
 
     //MODELS
     GameModel gameModel = new GameModel();
-    RunInfoController runInfoController = new RunInfoController();
-    HandInfoController handInfoController = new HandInfoController();
+    private RunInfoController runInfoController = new RunInfoController();
+    private HandInfoController handInfoController = new HandInfoController();
+    private PointsScoredController pointsScoredController;
     //GAME VARIABLES
 
     static int handsize = 8;
-    static int baseChips = 0;
-    static int baseMulti = 0;
+    //static int baseChips = 0;
+    //static int baseMulti = 0;
     static BigDecimal scoreToReach = new BigDecimal(0);
     static int scored = 0;
     static Deck deck;
@@ -134,6 +131,9 @@ public class GameController
         allTagList = Tag.setTagList();
         allHandList = Hand.setHandList();
         allBlindsList = Blind.setBlindList();
+
+        pointsScoredController = new PointsScoredController();
+
 
         //LOAD / READY PLACEHOLDER
         try {
@@ -163,8 +163,6 @@ public class GameController
             rewardSummarController.setGameScreenController(this);
 
             placeHolderShopReward.setTranslateY(560);
-
-            pointsScored.textProperty().bind(pointsScoredProperty.asString());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -196,8 +194,8 @@ public class GameController
         imageViewDeckField.setImage(image);
     }
 
-    private void setStakeImage() throws IOException {
-        roundScoreStakeImage.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
+    public void setStakeImage(String imageUrl) throws IOException {
+        pointsScoredController.setStakeImageView(imageUrl);
     }
 
     public void toggleBlind() {
@@ -259,10 +257,10 @@ public class GameController
             }
         }
         if(!selectedCards.isEmpty()) {
-            infoHand.setText(allHandList.get(bestHandIndex).getName());
-            infoHandLevel.setText("lvl. " + allHandList.get(bestHandIndex).getLevel());
-            infoHandChips.setText(""+ allHandList.get(bestHandIndex).getChips());
-            infoHandMulti.setText(""+ allHandList.get(bestHandIndex).getMulti());
+            handInfoController.setHandName(allHandList.get(bestHandIndex).getName());
+            handInfoController.setHandLevel(allHandList.get(bestHandIndex).getLevel());
+            handInfoController.setHandChips(allHandList.get(bestHandIndex).getChips());
+            handInfoController.setHandMultiplier(allHandList.get(bestHandIndex).getMulti());
         } else {
             clearHandInfo();
         }
@@ -270,10 +268,10 @@ public class GameController
     }
 
     private void clearHandInfo() {
-        infoHand.setText("");
-        infoHandLevel.setText("");
-        infoHandChips.setText("0");
-        infoHandMulti.setText("0");
+        handInfoController.setHandName("");
+        handInfoController.setHandLevel(0);
+        handInfoController.setHandChips(0);
+        handInfoController.setHandMultiplier(0);
     }
 
     private void clearScoredPoints() {
@@ -387,7 +385,7 @@ public class GameController
 
             spPlayedCards.getChildren().addAll(selectedCards);
 
-            List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(selectedCards , infoHand.getText());
+            List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(selectedCards , handInfoController.getHandName());
             for(int i = 0; i < spPlayedCards.getChildren().size(); i++) {
 
                 if(countedCards.contains(spPlayedCards.getChildren().get(i))) {
@@ -396,8 +394,12 @@ public class GameController
                     spPlayedCards.getChildren().get(i).setTranslateY(0);
             }
 
-            baseChips = allHandList.stream().filter(name -> Objects.equals(name.getName(), infoHand.getText())).collect(Collectors.toList()).get(0).getChips();
-            baseMulti = allHandList.stream().filter(name -> Objects.equals(name.getName(), infoHand.getText())).collect(Collectors.toList()).get(0).getMulti();
+            handInfoController.setHandChips(allHandList.stream().filter(
+                    name -> Objects.equals(name.getName(), handInfoController.getHandName()))
+                    .collect(Collectors.toList()).get(0).getChips());
+            handInfoController.setHandMultiplier(allHandList.stream().filter(
+                    name -> Objects.equals(name.getName(), handInfoController.getHandName()))
+                    .collect(Collectors.toList()).get(0).getMulti());
 
             selectedCards.clear();
             moveCards(spPlayedCards);
@@ -501,13 +503,19 @@ public class GameController
         runInfoController.setRound(1);
         runInfoController.setMoney(0);
 
+        try {
+            System.out.println("Game Setup Url: " + gameSetup.getChosenStake().getStakeImageChipUrl());
+            setStakeImage(gameSetup.getChosenStake().getStakeImageStickerUrl());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         createBlindList();
         setBlindPanels();
         BlindPickPanels.setStageImage(new Image("file:" + stake.getStakeImageChipUrl()));
 
         try {
             setDeckImage();
-            setStakeImage();
+            //setStakeImage();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -545,13 +553,11 @@ public class GameController
     private void countPoints() {
         for(int i = 0; i < spPlayedCards.getChildren().size(); i++) {
             if(spPlayedCards.getChildren().get(i).getTranslateY() == -20) {
-                baseChips += ((PlayingCard)spPlayedCards.getChildren().get(i)).getValue();
+                handInfoController.addChips(((PlayingCard)spPlayedCards.getChildren().get(i)).getValue());
             }
         }
 
-        //scored += baseChips * baseMulti;
-        //pointsScored.setText(String.valueOf(scored));
-        pointsScoredProperty.set(pointsScoredProperty.get() + baseChips * baseMulti);
+        pointsScoredProperty.set((int) (pointsScoredProperty.get() + handInfoController.getHandChips() * handInfoController.getHandMultiplier()));
 
 
         if(scoreReached()) {

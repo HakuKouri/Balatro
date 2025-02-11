@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="gameScreenAnchor" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameController">
    <children>
@@ -65,33 +64,14 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" />
                </rowConstraints>
             </GridPane>
-            <Pane prefHeight="69.0" prefWidth="172.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
+            <Pane prefHeight="70.0" prefWidth="230.0">
+               <fx:include source="pointsScored_Pane.fxml"/>
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
-               <children>
-                  <Label layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="52.0" text="Round Score" textFill="WHITE" wrapText="true">
-                     <padding>
-                        <Insets left="5.0" />
-                     </padding>
-                     <font>
-                        <Font name="balatro Regular" size="11.0" />
-                     </font>
-                  </Label>
-                  <Pane layoutX="54.0" layoutY="8.0" prefHeight="56.0" prefWidth="170.0" style="-fx-background-color: #555; -fx-background-radius: 10;">
-                     <children>
-                        <ImageView fx:id="roundScoreStakeImage" fitHeight="44.0" fitWidth="44.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
-                        <Label fx:id="pointsScored" alignment="CENTER" layoutX="30.0" layoutY="4.0" prefHeight="44.0" prefWidth="142.0" text="0" textFill="WHITE">
-                           <font>
-                              <Font name="balatro Regular" size="27.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
-               </children>
             </Pane>
             <Pane prefHeight="116.0" prefWidth="230.0">
-               <fx:include source="handInfo_Pane.fxml"/>
+               <fx:include source="handInfo_Pane.fxml" />
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>

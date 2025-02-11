@@ -1,15 +1,13 @@
 package com.example.balatro.models;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class HandInfoModel {
     private StringProperty handName = new SimpleStringProperty();
     private IntegerProperty handLevel = new SimpleIntegerProperty();
     private IntegerProperty handChips = new SimpleIntegerProperty();
-    private IntegerProperty handMutliplier = new SimpleIntegerProperty();
+    private DoubleProperty handMultiplier = new SimpleDoubleProperty() {
+    };
 
     public String getHandName() {
         return handName.get();
@@ -47,15 +45,15 @@ public class HandInfoModel {
         this.handChips.set(handChips);
     }
 
-    public int getHandMutliplier() {
-        return handMutliplier.get();
+    public double getHandMultiplier() {
+        return handMultiplier.get();
     }
 
-    public IntegerProperty handMutliplierProperty() {
-        return handMutliplier;
+    public DoubleProperty handMultiplierProperty() {
+        return handMultiplier;
     }
 
-    public void setHandMutliplier(int handMutliplier) {
-        this.handMutliplier.set(handMutliplier);
+    public void setHandMultiplier(int handMultiplier) {
+        this.handMultiplier.set(handMultiplier);
     }
 }
