@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 
 public class BlindPickPanels {
 
+    public static BlindPickPanels smallPanel;
+
     @FXML
     private Button btnSelectBlind;
     @FXML
@@ -34,7 +36,7 @@ public class BlindPickPanels {
 
     private Blind blind;
 
-    private GameScreenController gameScreenController;
+    private GameController gameController;
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("bossPane.fxml"));
@@ -53,7 +55,7 @@ public class BlindPickPanels {
         stakeImage = image;
     }
 
-    public void setGameScreenController(GameScreenController gameScreenController) {this.gameScreenController = gameScreenController;}
+    public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
         this.blind = blind;
@@ -146,11 +148,11 @@ public class BlindPickPanels {
     }
 
     public void play() {
-        gameScreenController.startRound(blind,new BigDecimal(lblMinScore.getText()));
+        gameController.startRound(blind,new BigDecimal(lblMinScore.getText()));
     }
 
     public void skip() {
-        gameScreenController.skip(blindSkipController.getTag());
+        gameController.skip(blindSkipController.getTag());
     }
 
     public void setTag(Tag tag) {

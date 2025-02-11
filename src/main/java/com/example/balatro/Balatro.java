@@ -2,7 +2,6 @@ package com.example.balatro;
 
 import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
-import com.example.balatro.classes.WebHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +12,7 @@ import java.io.IOException;
 public class Balatro extends Application
 {
     static private Stage primaryStage;
-    static public GameScreenController gameScreenController = new GameScreenController();
+    static public GameController gameController = new GameController();
 
     @Override
     public void start(Stage primaryStage) throws IOException
@@ -39,7 +38,7 @@ public class Balatro extends Application
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
         primaryStage.setScene(scene);
 
-        gameScreenController.startNewGame(gameSetup);
+        gameController.startNewGame(gameSetup);
     }
 
     public static void main(String[] args)

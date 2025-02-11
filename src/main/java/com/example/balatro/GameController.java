@@ -1,7 +1,10 @@
 package com.example.balatro;
 
 import com.example.balatro.classes.*;
+import com.example.balatro.models.GameModel;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GameScreenController
+public class GameController
 {
     @FXML
     private ImageView roundScoreStakeImage;
@@ -36,14 +39,7 @@ public class GameScreenController
     private StackPane spPlayedCards;
     @FXML
     private GridPane handButtonBox;
-    @FXML
-    private Label infoHand;
-    @FXML
-    private Label infoHandLevel;
-    @FXML
-    private Label infoHandChips;
-    @FXML
-    private Label infoHandMulti;
+
     //to beat elements
     @FXML
     private ImageView toBeatImage;
@@ -58,10 +54,6 @@ public class GameScreenController
     @FXML
     private AnchorPane gameScreenAnchor;
     @FXML
-    private Label handCount;
-    @FXML
-    private Label discardCount;
-    @FXML
     private ImageView imageViewDeckField;
     @FXML
     private VBox spaceTag;
@@ -71,12 +63,7 @@ public class GameScreenController
     private StackPane spaceConsumable;
     @FXML
     private AnchorPane placeHolderShopReward;
-    @FXML
-    private Label displayRound;
-    @FXML
-    private Label displayAnte;
-    @FXML
-    private Label displayMoney;
+
     @FXML
     private HBox blindBox;
 
@@ -111,15 +98,12 @@ public class GameScreenController
     static List<Tag> allTagList;
     static List<Hand> allHandList;
 
-
+    //MODELS
+    GameModel gameModel = new GameModel();
+    RunInfoController runInfoController = new RunInfoController();
+    HandInfoController handInfoController = new HandInfoController();
     //GAME VARIABLES
-    static final int maxAnte = 8;
-    static int ante = 1;
-    static int phase = 1;
-    static int round = 1;
-    static int money = 0;
-    static int hands = 3;
-    static int discards = 3;
+
     static int handsize = 8;
     static int baseChips = 0;
     static int baseMulti = 0;
@@ -138,10 +122,15 @@ public class GameScreenController
     private final List<Tag> blindTags = new ArrayList<>();
     private final List<Tag> tagQueueList = new ArrayList<>();
 
+    public IntegerProperty pointsScoredProperty = new SimpleIntegerProperty();
+
+    public void setRunInfoController(RunInfoController runInfoController) {
+        this.runInfoController = runInfoController;
+    }
 
     //UI HANDLER
     public void initialize(){
-        Balatro.gameScreenController = this;
+        Balatro.gameController = this;
         allTagList = Tag.setTagList();
         allHandList = Hand.setHandList();
         allBlindsList = Blind.setBlindList();
@@ -175,6 +164,8 @@ public class GameScreenController
 
             placeHolderShopReward.setTranslateY(560);
 
+            pointsScored.textProperty().bind(pointsScoredProperty.asString());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -187,6 +178,8 @@ public class GameScreenController
     }
 
     private void setBlindPanels() {
+        int ante = runInfoController.getAnte();
+        int round = runInfoController.getRound();
         smallController.setBlind(gameBlindsList.get((ante-1)*3), allTagList.get(round-ante), 1);
         bigController.setBlind(gameBlindsList.get((ante-1)*3+1), allTagList.get(round-ante), 2);
         bossController.setBlind(gameBlindsList.get((ante-1)*3+2), allTagList.get(round-ante), 3);
@@ -208,6 +201,7 @@ public class GameScreenController
     }
 
     public void toggleBlind() {
+        int round = runInfoController.getRound();
         blindsToggled = !blindsToggled;
         TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
@@ -283,16 +277,7 @@ public class GameScreenController
     }
 
     private void clearScoredPoints() {
-        scored = 0;
-        pointsScored.setText("0");
-    }
-
-    private void setHandCounter() {
-        handCount.setText(String.valueOf(hands));
-    }
-
-    private void setDiscardCounter() {
-        discardCount.setText(String.valueOf(discards));
+        pointsScoredProperty.set(0);
     }
 
     private void openShop() {
@@ -318,19 +303,6 @@ public class GameScreenController
     private void closeSummary() {
         placeHolderShopReward.setTranslateY(560);
     }
-
-    private void setDisplayRound() {
-        displayRound.setText(String.valueOf(round));
-    }
-
-    private void setDisplayAnte() {
-        displayAnte.setText((ante) + "/8");
-    }
-
-    private void setDisplayMoney() {
-        displayMoney.setText((money) + "$");
-    }
-
 
     //SETTING UP GAME
     private void setPlayingDeck() {
@@ -360,7 +332,7 @@ public class GameScreenController
     private void expandBlindTagList() {
         for (int i = 0; i < 2; i++) {
             Tag tag = allTagList.get(rand.nextInt(allTagList.size()));
-            if(Integer.parseInt((tag.getMinAnte())) <= ante)
+            if(Integer.parseInt((tag.getMinAnte())) <= runInfoController.getAnte())
                 blindTags.add(tag);
             else {
                 i--;
@@ -523,12 +495,11 @@ public class GameScreenController
         rand = new Random();
         deck = gameSetup.getChosenDeck();
         stake = gameSetup.getChosenStake();
-        hands = 3;
-        discards = 3;
-        ante = 1;
-        phase = 1;
-        round = 1;
-        money = 0;
+        runInfoController.setHands(4);
+        runInfoController.setDiscards(3);
+        runInfoController.setAnte(1);
+        runInfoController.setRound(1);
+        runInfoController.setMoney(0);
 
         createBlindList();
         setBlindPanels();
@@ -557,27 +528,18 @@ public class GameScreenController
 
     public void nextRound() {
         closeShop();
-        round++;
+        runInfoController.setRound(runInfoController.getRound() + 1);
         toggleBlind();
     }
 
     public void skip(Tag tag) {
-        round++;
+        runInfoController.setRound(runInfoController.getRound() + 1);
         addTag(tag);
     }
 
     private void addTag(Tag tag) {
         tagQueueList.add(tag);
         spaceTag.getChildren().add(new ImageView(new Image(getClass().getResourceAsStream(tag.getTagImageUrl()))));
-    }
-
-    private void skipBlind(Tag tag) {
-        nextPhase();
-    }
-
-    private void nextPhase() {
-        phase++;
-        if(phase > 2){ phase = 0; }
     }
 
     private void countPoints() {
@@ -587,17 +549,19 @@ public class GameScreenController
             }
         }
 
-        scored += baseChips * baseMulti;
-        pointsScored.setText(String.valueOf(scored));
+        //scored += baseChips * baseMulti;
+        //pointsScored.setText(String.valueOf(scored));
+        pointsScoredProperty.set(pointsScoredProperty.get() + baseChips * baseMulti);
+
 
         if(scoreReached()) {
             openSummary();
-            setRound(round++);
+            runInfoController.setRound(runInfoController.getRound() + 1);
             clearScoredPoints();
             clearHandCards();
 
-            if(allBlindsList.get(round-1).getId() > 1) {
-                setAnte(ante++);
+            if(allBlindsList.get(runInfoController.getRound()-1).getId() > 1) {
+                runInfoController.setAnte((runInfoController.getAnte() + 1));
             }
         } else {
             hideHandButtons();
@@ -606,36 +570,15 @@ public class GameScreenController
         clearHandInfo();
     }
 
-    private void setAnte(int i) {
-        ante = i;
-        setDisplayAnte();
-    }
-
-    private void setRound(int i) {
-        round = i;
-        setDisplayRound();
-    }
-
     private boolean scoreReached() {
-        return BigDecimal.valueOf(scored).compareTo(scoreToReach) != -1;
+        return BigDecimal.valueOf(pointsScoredProperty.get()).compareTo(scoreToReach) != -1;
     }
 
     public void addMoney(int reward) {
-        money += reward;
-        setDisplayMoney();
+        runInfoController.setMoney(runInfoController.getMoney() + reward);
+
         openShop();
     }
-
-    private void setHandsAndDiscards() {
-        hands = 3;
-        discards = 3;
-
-        setHandCounter();
-        setDiscardCounter();
-    }
-
-
-
 
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {
@@ -650,12 +593,6 @@ public class GameScreenController
         sleeper.setOnSucceeded(event -> continuation.run());
         new Thread(sleeper).start();
     }
-
-    public int getRound() {
-        return round;
-    }
-
-
 
 
 

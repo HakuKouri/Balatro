@@ -4,14 +4,14 @@ import javafx.event.ActionEvent;
 
 public class RewardSummarController {
 
-    GameScreenController gameScreenController;
+    GameController gameController;
 
     public void cashout(ActionEvent actionEvent) {
         int reward= 0;
-        gameScreenController.addMoney(reward);
+        gameController.addMoney(reward);
     }
 
-    public void setGameScreenController(GameScreenController gameScreenController) {
-        this.gameScreenController = gameScreenController;
+    public void setGameScreenController(GameController gameController) {
+        this.gameController = gameController;
     }
 }

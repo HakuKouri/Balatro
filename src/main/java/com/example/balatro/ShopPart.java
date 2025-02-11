@@ -6,7 +6,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 import java.util.List;
-import java.util.Random;
 
 public class ShopPart {
 
@@ -19,7 +18,7 @@ public class ShopPart {
     @FXML
     private StackPane BoosterArea;
 
-    private GameScreenController gameScreenController;
+    private GameController gameController;
 
     private static List<Booster> boosterList = SqlHandler.getAllBooster();
     private static List<Voucher> voucherList = SqlHandler.getAllVoucher();
@@ -29,7 +28,7 @@ public class ShopPart {
 
     private static int maxItems = 2;
 
-    public void setGameScreenController(GameScreenController gameScreenController) {this.gameScreenController = gameScreenController;}
+    public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
 
     public void setupShop() {
         drawItems();
@@ -47,7 +46,7 @@ public class ShopPart {
     }
 
     private void drawVoucher() {
-        VoucherArea.getChildren().add(voucherList.get(GameScreenController.rand.nextInt(voucherList.size())));
+        VoucherArea.getChildren().add(voucherList.get(GameController.rand.nextInt(voucherList.size())));
     }
 
     private void removeFromVoucher(Voucher voucher) {
@@ -56,7 +55,7 @@ public class ShopPart {
 
     private void drawBooster() {
 
-        BoosterArea.getChildren().add(boosterList.get(GameScreenController.rand.nextInt(boosterList.size())));
+        BoosterArea.getChildren().add(boosterList.get(GameController.rand.nextInt(boosterList.size())));
     }
 
     private void removeFromBooster(Booster booster) {
@@ -64,7 +63,7 @@ public class ShopPart {
     }
 
     public void nextRound() {
-        gameScreenController.nextRound();
+        gameController.nextRound();
 
     }
 }
