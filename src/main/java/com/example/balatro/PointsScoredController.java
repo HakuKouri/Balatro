@@ -8,9 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.File;
+
 import static javafx.beans.binding.Bindings.createObjectBinding;
-
-
 
 public class PointsScoredController {
 
@@ -20,31 +20,49 @@ public class PointsScoredController {
     private ImageView stakeImageView;
 
     public PointsScoredModel model = new PointsScoredModel();
-    private StringProperty stakeChipImageUrl = new SimpleStringProperty("");
 
     public void initialize() {
-        System.out.println("Property value: " + stakeChipImageUrl.get());
-        stakeChipImageUrl.addListener((obs, oldVal, newVal) -> {
-            System.out.println("Image changed: " + newVal);
+        /*System.out.println("🚀 initialize() gestartet!");
+
+        if (stakeImageView == null) {
+            System.out.println("❌ FEHLER: stakeImageView ist NULL!");
+        } else {
+            System.out.println("✅ stakeImageView ist NICHT null!");
+        }
+
+        System.out.println("📷 Aktuelles Bild beim Start: " + stakeChipImageUrl.get());
+        */
+
+        // 🌟 Teste: Setze das Bild manuell und prüfe, ob sich etwas ändert
+        //stakeImageView.setImage(new Image(stakeChipImageUrl.get(), true));
+
+        // 🌟 Teste: Falls die URL sich ändert, setze das Bild erneut
+        model.stakeChipImageUrlProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("🔄 Image geändert auf: " + newVal);
+            stakeImageView.setImage(new Image(newVal, true));
         });
-        System.out.println("Property value: " + stakeChipImageUrl.get());
 
         pointsScoredLabel.textProperty().bind(model.scoredPointsProperty().asString());
-        stakeImageView.imageProperty().bind(createObjectBinding(
-                () -> new Image(stakeChipImageUrl.get().isEmpty() ?
-                        "file:src/main/resources/com/images/Stickers_Seals/difficult_1.png" :
-                        stakeChipImageUrl.get(),true),
-                stakeChipImageUrl
-                ));
-        stakeImageView.setPreserveRatio(true);
-        stakeImageView.setFitHeight(44);
+
+        /*
+        File file = new File(stakeChipImageUrl.get().replace("file:", ""));
+        System.out.println("📂 Datei existiert? " + file.exists() + " | Pfad: " + file.getAbsolutePath());
+        */
     }
 
     public void setStakeImageView(String imageUrl) {
-        System.out.println("Model saved Url: " + stakeChipImageUrl.get());
-        System.out.println("Argument url: " + imageUrl);
+        // Pfad normalisieren
+        model.setStakeChipImageUrl(imageUrl.replace("\\", "/"));
 
-        stakeChipImageUrl.set("file:" +imageUrl);
-        System.out.println("Model saved Url after set: " + stakeChipImageUrl.get());
+        // Direktes Setzen des Bildes zur Sicherheit
+        stakeImageView.setImage(new Image(model.getStakeChipImageUrl(), true));
+    }
+
+    public void addPoints(long v) {
+        model.setScoredPoints(model.getScoredPoints() + v );
+    }
+
+    public void clearPoints() {
+        model.setScoredPoints(0);
     }
 }

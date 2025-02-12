@@ -64,20 +64,17 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" />
                </rowConstraints>
             </GridPane>
-            <Pane prefHeight="70.0" prefWidth="230.0">
-               <fx:include source="pointsScored_Pane.fxml"/>
+            <Pane prefHeight="70.0" prefWidth="230.0" fx:id="pointsScoredPane">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
             </Pane>
-            <Pane prefHeight="116.0" prefWidth="230.0">
-               <fx:include source="handInfo_Pane.fxml" />
+            <Pane prefHeight="116.0" prefWidth="230.0" fx:id="handInfo_Pane">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
             </Pane>
-            <Pane prefHeight="246.0" prefWidth="233.0">
-               <fx:include source="runInfo_Pane.fxml" />
+            <Pane prefHeight="246.0" prefWidth="233.0" fx:id="runInfo_Pane">
             </Pane>
          </children>
          <opaqueInsets>

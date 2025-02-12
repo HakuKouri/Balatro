@@ -9,7 +9,7 @@ import javafx.beans.property.StringProperty;
 public class PointsScoredModel {
 
     private LongProperty scoredPoints = new SimpleLongProperty();
-    private StringProperty stakeChipImageUrl = new SimpleStringProperty("");
+    private StringProperty stakeChipImageUrl = new SimpleStringProperty("file:src/main/resources/com/images/Stakechips/stake_chip_1.png");
 
     public long getScoredPoints() {
         return scoredPoints.get();
