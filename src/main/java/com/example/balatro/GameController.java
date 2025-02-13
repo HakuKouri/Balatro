@@ -2,7 +2,6 @@ package com.example.balatro;
 
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
-import com.example.balatro.models.HoldingHandModel;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -10,7 +9,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +25,7 @@ public class GameController
     public Pane handInfo_Pane;
     public Pane runInfo_Pane;
     public StackPane holdingHand_StackPane;
+    public StackPane playedCards_StackPane;
     @FXML
     private AnchorPane smallBlindAnchor;
     @FXML
@@ -35,11 +34,6 @@ public class GameController
     private AnchorPane bossBlindAnchor;
     @FXML
     private Label labelBlind;
-    @FXML
-    private StackPane HoldingHand;
-
-    @FXML
-    private StackPane spPlayedCards;
     @FXML
     private GridPane handButtonBox;
 
@@ -64,7 +58,6 @@ public class GameController
     private StackPane spaceConsumable;
     @FXML
     private AnchorPane placeHolderShopReward;
-
     @FXML
     private HBox blindBox;
 
@@ -83,11 +76,8 @@ public class GameController
     private final FXMLLoader loaderHandInfo = new FXMLLoader(getClass().getResource("handInfo_Pane.fxml"));
     private final FXMLLoader loaderRunInfo = new FXMLLoader(getClass().getResource("runInfo_Pane.fxml"));
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("holdingHand_StackPane.fxml"));
-    private BlindPickPanels smallController;
-    private BlindPickPanels bigController;
-    private BlindPickPanels bossController;
-    private ShopPart shopController;
-    private RewardSummarController rewardSummarController;
+    private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("playedCards_StackPane.fxml"));
+
     private AnchorPane smallBlind = null;
     private AnchorPane bigBlind = null;
     private AnchorPane boss = null;
@@ -96,13 +86,12 @@ public class GameController
     private AnchorPane pointsScored = null;
     private AnchorPane handInfo = null;
     private AnchorPane runInfo = null;
-    @FXML
     private AnchorPane holdingHand = null;
+    private AnchorPane playedCards = null;
 
     //GAME MECHANICS VARIABLES
     static boolean blindsToggled = true;
     public static Random rand;
-    static int selectedCardCounter = 0;
     static List<Blind> allBlindsList;
     private final ArrayList<Blind> gameBlindsList = new ArrayList<>();
     static List<Tag> allTagList;
@@ -110,10 +99,17 @@ public class GameController
 
     //MODELS
     GameModel gameModel = new GameModel();
-    private RunInfoController runInfoController = new RunInfoController();
+    private BlindPickPanels smallController;
+    private BlindPickPanels bigController;
+    private BlindPickPanels bossController;
+    private ShopPart shopController;
+    private RewardSummarController rewardSummarController;
+    private RunInfoController runInfoController;
     private HandInfoController handInfoController;
     private PointsScoredController pointsScoredController;
     private HoldingHandController holdingHandController;
+    private PlayedCardsController playedCardsController;
+
     //GAME VARIABLES
 
     static int handsize = 8;
@@ -130,10 +126,6 @@ public class GameController
     private final List<Tag> tagQueueList = new ArrayList<>();
 
     public IntegerProperty pointsScoredProperty = new SimpleIntegerProperty();
-
-    public void setRunInfoController(RunInfoController runInfoController) {
-        this.runInfoController = runInfoController;
-    }
 
     //UI HANDLER
     public void initialize(){
@@ -159,6 +151,10 @@ public class GameController
             holdingHand = loaderHoldingHand.load();
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_StackPane.getChildren().add(holdingHand);
+
+            playedCards = loaderPlayedCards.load();
+            playedCardsController = loaderPlayedCards.getController();
+            playedCards_StackPane.getChildren().add(playedCards);
 
 
             smallBlind = loaderSmall.load();
@@ -255,10 +251,10 @@ public class GameController
         System.out.println("hide button");
         handButtonHidden = !handButtonHidden;
         if(handButtonHidden) {
-            HoldingHand.setTranslateY(100);
+            holdingHandController.moveHoldingHandDown();
             handButtonBox.setTranslateY(100);
         } else {
-            HoldingHand.setTranslateY(0);
+            holdingHandController.moveHoldingHandUp();
             handButtonBox.setTranslateY(0);
         }
     }
@@ -293,10 +289,6 @@ public class GameController
         handInfoController.setHandLevel(0);
         handInfoController.setHandChips(0);
         handInfoController.setHandMultiplier(0);
-    }
-
-    private void clearScoredPoints() {
-        pointsScoredProperty.set(0);
     }
 
     private void openShop() {
@@ -362,16 +354,15 @@ public class GameController
 
     //PLAYING CARD HANDLER
     public void drawCard() {
-        //testImageView.setImage(playingCardList.get(0).getImage());
         playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
             playingCardClicked((PlayingCard) mouseEvent.getSource());
         });
         playingCardList.get(0).setClickAble(true);
 
-        HoldingHand.getChildren().add(playingCardList.get(0));
-        holdingHandController.getHandCards().add(playingCardList.get(0));
+        holdingHandController.addCardToHoldingHand(playingCardList.get(0));
+        holdingHandController.addCardToHand(playingCardList.get(0));
         playingCardList.remove(0);
-        moveCards(HoldingHand);
+        holdingHandController.moveCards();
     }
 
     public void drawCards(int num) {
@@ -383,36 +374,36 @@ public class GameController
     private void playingCardClicked(PlayingCard card) {
         if(!card.isClickAble()) return;
 
-        if(card.getTranslateY() == 0 && selectedCardCounter < 5) {
-            holdingHandController.getSelectedCards().add(card);
+        if(card.getTranslateY() == 0 && holdingHandController.getSelectedCardCounter() < 5) {
+            holdingHandController.addCardToSelectedCard(card);
             card.setTranslateY(-20);
-            selectedCardCounter++;
+            holdingHandController.selectedCardCounterIncement();
         }
         else if(card.getTranslateY() == -20) {
-            selectedCards.remove(card);
+            holdingHandController.removeCardFromSelectedCard(card);
             card.setTranslateY(0);
-            selectedCardCounter--;
+            holdingHandController.selectedCardCounterDecrement();
         }
-        setHandInfo(checkHand.evaluateHands(selectedCards));
+        setHandInfo(checkHand.evaluateHands(holdingHandController.getSelectedCards()));
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        if(selectedCardCounter != 0) {
+        if(holdingHandController.getSelectedCardCounter() != 0) {
             hideHandButtons();
-            for(PlayingCard card : selectedCards) {
+            for(PlayingCard card : holdingHandController.getSelectedCards()) {
                 card.setTranslateX(0);
                 card.setClickAble(false);
             }
 
-            spPlayedCards.getChildren().addAll(selectedCards);
+            playedCardsController.addAllCards(holdingHandController.getSelectedCards());
 
-            List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(selectedCards , handInfoController.getHandName());
-            for(int i = 0; i < spPlayedCards.getChildren().size(); i++) {
+            List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(holdingHandController.getSelectedCards() , handInfoController.getHandName());
+            for(int i = 0; i < playedCardsController.count(); i++) {
 
-                if(countedCards.contains(spPlayedCards.getChildren().get(i))) {
-                    spPlayedCards.getChildren().get(i).setTranslateY(-20);
+                if(countedCards.contains(playedCardsController.getPlayedCards().get(i))) {
+                    playedCardsController.getPlayedCards().get(i).setTranslateY(-20);
                 } else
-                    spPlayedCards.getChildren().get(i).setTranslateY(0);
+                    playedCardsController.getPlayedCards().get(i).setTranslateY(0);
             }
 
             handInfoController.setHandChips(allHandList.stream().filter(
@@ -422,58 +413,36 @@ public class GameController
                     name -> Objects.equals(name.getName(), handInfoController.getHandName()))
                     .collect(Collectors.toList()).get(0).getMulti());
 
-            selectedCards.clear();
-            moveCards(spPlayedCards);
+            holdingHandController.clearSelectedCards();
 
             countPoints();
 
-            delay(2000,() -> {spPlayedCards.getChildren().clear(); drawCards(8 - HoldingHand.getChildren().size());});
+            delay(2000,() -> {playedCardsController.removeAllCards(); drawCards(8 - holdingHandController.getHoldingHandSize());});
 
-            moveCards(HoldingHand);
-            selectedCardCounter = 0;
+            holdingHandController.moveCards();
+            holdingHandController.setSelectedCardCounter(0);
         }
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        if(selectedCardCounter != 0) {
-            for(int i = 0; i < selectedCardCounter; i++) {
-                HoldingHand.getChildren().remove(selectedCards.get(i));
-                handCards.remove(selectedCards.get(i));
+        if(holdingHandController.getSelectedCardCounter() != 0) {
+            for(int i = 0; i < holdingHandController.getSelectedCardCounter(); i++) {
+                holdingHandController.removeCardFromHoldingHand(holdingHandController.getSelectedCards().get(i));
+                holdingHandController.removeCardFromHand(holdingHandController.getSelectedCards().get(i));
             }
         }
-        selectedCardCounter = 0;
-        selectedCards.clear();
+        holdingHandController.setSelectedCardCounter(0);
+        holdingHandController.clearSelectedCards();
 
-        drawCards(8 - handCards.size());
+        drawCards(8 - holdingHandController.getHandCards().size());
         setHandInfo(new ArrayList<>());
     }
 
-    public void moveCards(StackPane pane) {
-        int cardsize = 140;
-        int lastPos = 570;
-
-        int cards = pane.getChildren().size();
-        int pos = 0;
-        for(int i = 0; i < cards; i++) {
-            if(cards > 5) {
-                pane.setAlignment(Pos.CENTER_LEFT);
-                pos = i * lastPos / (cards - 1);
-            } else {
-                pane.setAlignment(Pos.CENTER);
-                if(cards%2==0) {
-                    pos = cardsize/2 + i * cardsize - cards/2*cardsize + i * 5;
-                } else {
-                    pos = i * cardsize - cards/2*cardsize + i * 5;
-                }
-            }
-            pane.getChildren().get(i).setTranslateX(pos);
-        }
-    }
 
     public void sortRank() {
         sortedBy = "rank";
         List<PlayingCard> cards = new ArrayList<>();
-        for(var card : HoldingHand.getChildren())
+        for(var card : holdingHandController.getHoldingHand())
             if(card instanceof PlayingCard)
                 cards.add((PlayingCard) card);
 
@@ -483,16 +452,16 @@ public class GameController
 
         Collections.reverse(cards);
 
-        HoldingHand.getChildren().clear();
-        HoldingHand.getChildren().addAll(cards);
+        holdingHandController.clearHoldingHand();
+        holdingHandController.addAllToHoldingHand(cards);
 
-        moveCards(HoldingHand);
+        holdingHandController.moveCards();
     }
 
     public void sortSuit() {
         sortedBy = "suit";
         List<PlayingCard> cards = new ArrayList<>();
-        for(var card : HoldingHand.getChildren())
+        for(var card : holdingHandController.getHoldingHand())
             if(card instanceof PlayingCard)
                 cards.add((PlayingCard) card);
 
@@ -502,15 +471,15 @@ public class GameController
 
         Collections.reverse(cards);
 
-        HoldingHand.getChildren().clear();
-        HoldingHand.getChildren().addAll(cards);
+        holdingHandController.clearHoldingHand();
+        holdingHandController.addAllToHoldingHand(cards);
 
-        moveCards(HoldingHand);
+        holdingHandController.moveCards();
     }
 
     private void clearHandCards() {
-        handCards.clear();
-        HoldingHand.getChildren().clear();
+        holdingHandController.clearHandCards();
+        holdingHandController.clearHoldingHand();
     }
 
     //GAME HANDLER
@@ -568,9 +537,9 @@ public class GameController
     }
 
     private void countPoints() {
-        for(int i = 0; i < spPlayedCards.getChildren().size(); i++) {
-            if(spPlayedCards.getChildren().get(i).getTranslateY() == -20) {
-                handInfoController.addChips(((PlayingCard)spPlayedCards.getChildren().get(i)).getValue());
+        for(int i = 0; i < playedCardsController.count(); i++) {
+            if(playedCardsController.getPlayedCards().get(i).getTranslateY() == -20) {
+                handInfoController.addChips(((PlayingCard)playedCardsController.getPlayedCards().get(i)).getValue());
             }
         }
 

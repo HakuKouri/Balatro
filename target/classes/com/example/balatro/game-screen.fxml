@@ -20,8 +20,8 @@
       <Label layoutX="292.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" textFill="WHITE" />
       <StackPane fx:id="spaceConsumable" layoutX="939.0" layoutY="14.0" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
       <Label layoutX="1216.0" layoutY="163.0" text="0/2" textFill="WHITE" />
-      <StackPane fx:id="spPlayedCards" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
-      <StackPane fx:id="HoldingHand" layoutX="290.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
+      <StackPane fx:id="playedCards_StackPane" layoutX="310.0" layoutY="200.0" prefHeight="231.0" prefWidth="726.0" />
+      <StackPane fx:id="holdingHand_StackPane" layoutX="290.0" layoutY="400.0" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
       <VBox alignment="TOP_CENTER" layoutX="16.0" layoutY="-1.0" prefHeight="720.0" prefWidth="255.0" spacing="10.0" style="-fx-background-color: #555; -fx-border-color: #333; -fx-border-width: 3;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">

@@ -9,6 +9,15 @@ public class HoldingHandModel {
 
     private final List<PlayingCard> handCards = new ArrayList<>();
     private final List<PlayingCard> selectedCards = new ArrayList<>();
+    int selectedCardCounter = 0;
+
+    public int getSelectedCardCounter() {
+        return selectedCardCounter;
+    }
+
+    public void setSelectedCardCounter(int selectedCardCounter) {
+        this.selectedCardCounter = selectedCardCounter;
+    }
 
     public List<PlayingCard> getHandCards() {
         return handCards;
@@ -17,4 +26,6 @@ public class HoldingHandModel {
     public List<PlayingCard> getSelectedCards() {
         return selectedCards;
     }
+
+
 }
