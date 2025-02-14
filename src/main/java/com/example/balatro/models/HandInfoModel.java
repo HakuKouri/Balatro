@@ -6,8 +6,7 @@ public class HandInfoModel {
     private StringProperty handName = new SimpleStringProperty();
     private IntegerProperty handLevel = new SimpleIntegerProperty();
     private IntegerProperty handChips = new SimpleIntegerProperty();
-    private DoubleProperty handMultiplier = new SimpleDoubleProperty() {
-    };
+    private DoubleProperty handMultiplier = new SimpleDoubleProperty();
 
     public String getHandName() {
         return handName.get();

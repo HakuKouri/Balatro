@@ -60,4 +60,11 @@ public class HandInfoController {
     public int getHandChips() {
         return model.getHandChips();
     }
+
+    public void clearHandInfo() {
+        infoHand.setText("");
+        infoHandLevel.setText("");
+        infoHandChips.setText("0");
+        infoHandMulti.setText("0");
+    }
 }

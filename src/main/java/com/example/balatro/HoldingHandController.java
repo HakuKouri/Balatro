@@ -8,6 +8,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class HoldingHandController {
@@ -48,12 +51,12 @@ public class HoldingHandController {
 
     public void clearHoldingHand() {
         HoldingHand.getChildren().clear();
+        model.clearHandCards();
     }
 
     public ObservableList<Node> getHoldingHand() {
         return HoldingHand.getChildren();
     }
-
 
     public void addCardToHand(PlayingCard card) {
         model.getHandCards().add(card);
@@ -120,4 +123,43 @@ public class HoldingHandController {
     public void setSelectedCardCounter(int i) {
         model.setSelectedCardCounter(i);
     }
+
+    public void sortRank() {
+        model.setSortedByrankd(true);
+        List<PlayingCard> cards = new ArrayList<>();
+        for(var card : getHoldingHand())
+            if(card instanceof PlayingCard)
+                cards.add((PlayingCard) card);
+
+        cards.sort(Comparator
+                .comparingInt(PlayingCard::getOrderPosition)
+                .thenComparingInt(PlayingCard::getSuitOrder));
+
+        Collections.reverse(cards);
+
+        clearHoldingHand();
+        addAllToHoldingHand(cards);
+
+        moveCards();
+    }
+
+    public void sortSuit() {
+        model.setSortedByrankd(false);
+        List<PlayingCard> cards = new ArrayList<>();
+        for(var card : getHoldingHand())
+            if(card instanceof PlayingCard)
+                cards.add((PlayingCard) card);
+
+        cards.sort(Comparator
+                .comparingInt(PlayingCard::getSuitOrder)
+                .thenComparingInt(PlayingCard::getOrderPosition));
+
+        Collections.reverse(cards);
+
+        clearHoldingHand();
+        addAllToHoldingHand(cards);
+
+        moveCards();
+    }
+
 }

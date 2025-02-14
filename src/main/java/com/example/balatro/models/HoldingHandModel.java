@@ -10,6 +10,7 @@ public class HoldingHandModel {
     private final List<PlayingCard> handCards = new ArrayList<>();
     private final List<PlayingCard> selectedCards = new ArrayList<>();
     int selectedCardCounter = 0;
+    boolean sortedByrankd = true;
 
     public int getSelectedCardCounter() {
         return selectedCardCounter;
@@ -27,5 +28,15 @@ public class HoldingHandModel {
         return selectedCards;
     }
 
+    public void clearHandCards() {
+        handCards.clear();
+    }
 
+    public boolean isSortedByrankd() {
+        return sortedByrankd;
+    }
+
+    public void setSortedByrankd(boolean sortedByrankd) {
+        this.sortedByrankd = sortedByrankd;
+    }
 }

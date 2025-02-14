@@ -192,7 +192,7 @@ public class GameController
         setPlayingDeck();
         rand = new Random();
         hideHandButtons();
-        clearHandInfo();
+        handInfoController.clearHandInfo();
         toggleBlind();
     }
 
@@ -243,7 +243,7 @@ public class GameController
         TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
     }
 
-    private void showBlindds() {
+    private void showBlinds() {
         TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
     }
 
@@ -279,16 +279,9 @@ public class GameController
             handInfoController.setHandChips(allHandList.get(bestHandIndex).getChips());
             handInfoController.setHandMultiplier(allHandList.get(bestHandIndex).getMulti());
         } else {
-            clearHandInfo();
+            handInfoController.clearHandInfo();
         }
 
-    }
-
-    private void clearHandInfo() {
-        handInfoController.setHandName("");
-        handInfoController.setHandLevel(0);
-        handInfoController.setHandChips(0);
-        handInfoController.setHandMultiplier(0);
     }
 
     private void openShop() {
@@ -367,8 +360,8 @@ public class GameController
 
     public void drawCards(int num) {
         for (int i = 0; i < num; i++) {drawCard();}
-        if(Objects.equals(sortedBy, "rank")) sortRank();
-        else sortSuit();
+        if(Objects.equals(sortedBy, "rank")) holdingHandController.sortRank();
+        else holdingHandController.sortSuit();
     }
 
     private void playingCardClicked(PlayingCard card) {
@@ -439,49 +432,6 @@ public class GameController
     }
 
 
-    public void sortRank() {
-        sortedBy = "rank";
-        List<PlayingCard> cards = new ArrayList<>();
-        for(var card : holdingHandController.getHoldingHand())
-            if(card instanceof PlayingCard)
-                cards.add((PlayingCard) card);
-
-        cards.sort(Comparator
-                .comparingInt(PlayingCard::getOrderPosition)
-                .thenComparingInt(PlayingCard::getSuitOrder));
-
-        Collections.reverse(cards);
-
-        holdingHandController.clearHoldingHand();
-        holdingHandController.addAllToHoldingHand(cards);
-
-        holdingHandController.moveCards();
-    }
-
-    public void sortSuit() {
-        sortedBy = "suit";
-        List<PlayingCard> cards = new ArrayList<>();
-        for(var card : holdingHandController.getHoldingHand())
-            if(card instanceof PlayingCard)
-                cards.add((PlayingCard) card);
-
-        cards.sort(Comparator
-                .comparingInt(PlayingCard::getSuitOrder)
-                .thenComparingInt(PlayingCard::getOrderPosition));
-
-        Collections.reverse(cards);
-
-        holdingHandController.clearHoldingHand();
-        holdingHandController.addAllToHoldingHand(cards);
-
-        holdingHandController.moveCards();
-    }
-
-    private void clearHandCards() {
-        holdingHandController.clearHandCards();
-        holdingHandController.clearHoldingHand();
-    }
-
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
         rand = new Random();
@@ -517,7 +467,7 @@ public class GameController
         toBeatImage.setImage(new Image("file:"+blind.getBlindImageUrl()));
         toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
         toBeatReward.setText("$$$");
-        clearHandInfo();
+        handInfoController.clearHandInfo();
     }
 
     public void nextRound() {
@@ -549,7 +499,7 @@ public class GameController
             openSummary();
             runInfoController.setRound(runInfoController.getRound() + 1);
             pointsScoredController.clearPoints();
-            clearHandCards();
+            holdingHandController.clearHandCards();
 
             if(allBlindsList.get(runInfoController.getRound()-1).getId() > 1) {
                 runInfoController.setAnte((runInfoController.getAnte() + 1));
@@ -558,7 +508,7 @@ public class GameController
             hideHandButtons();
         }
 
-        clearHandInfo();
+        handInfoController.clearHandInfo();
     }
 
     private boolean scoreReached() {
