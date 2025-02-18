@@ -3,9 +3,11 @@ package com.example.balatro;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.models.HoldingHandModel;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
@@ -17,9 +19,12 @@ public class HoldingHandController {
 
     @FXML
     private StackPane HoldingHand;
+    @FXML
+    private GridPane handButtonBox;
+
 
     HoldingHandModel model = new HoldingHandModel();
-
+    private boolean handButtonHidden = false;
 
     public List<PlayingCard> getSelectedCards() {
         return model.getSelectedCards();
@@ -162,4 +167,21 @@ public class HoldingHandController {
         moveCards();
     }
 
+    public void playSelectedCards(ActionEvent actionEvent) {
+    }
+
+    public void discardSelectedCards(ActionEvent actionEvent) {
+    }
+
+    public void hideHandButtons() {
+        System.out.println("hide button");
+        handButtonHidden = !handButtonHidden;
+        if(handButtonHidden) {
+            moveHoldingHandDown();
+            handButtonBox.setTranslateY(100);
+        } else {
+            moveHoldingHandUp();
+            handButtonBox.setTranslateY(0);
+        }
+    }
 }

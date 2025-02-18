@@ -1,16 +1,11 @@
 package com.example.balatro;
 
 import com.example.balatro.models.PointsScoredModel;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.File;
-
-import static javafx.beans.binding.Bindings.createObjectBinding;
 
 public class PointsScoredController {
 

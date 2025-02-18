@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +25,7 @@ public class GameController
     public Pane pointsScoredPane;
     public Pane handInfo_Pane;
     public Pane runInfo_Pane;
-    public StackPane holdingHand_StackPane;
+    public AnchorPane holdingHand_AnchorPane;
     public StackPane playedCards_StackPane;
     @FXML
     private AnchorPane smallBlindAnchor;
@@ -34,8 +35,7 @@ public class GameController
     private AnchorPane bossBlindAnchor;
     @FXML
     private Label labelBlind;
-    @FXML
-    private GridPane handButtonBox;
+
 
     //to beat elements
     @FXML
@@ -116,7 +116,6 @@ public class GameController
     static BigDecimal scoreToReach = new BigDecimal(0);
     static Deck deck;
     static Stake stake;
-    static boolean handButtonHidden = false;
     static String sortedBy = "rank";
     static BigDecimal[] chipRequirement = new BigDecimal[]{BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800), BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000), BigDecimal.valueOf(20000), BigDecimal.valueOf(35000), BigDecimal.valueOf(50000)};
 
@@ -150,7 +149,8 @@ public class GameController
 
             holdingHand = loaderHoldingHand.load();
             holdingHandController = loaderHoldingHand.getController();
-            holdingHand_StackPane.getChildren().add(holdingHand);
+            holdingHand_AnchorPane.getChildren().add(holdingHand);
+
 
             playedCards = loaderPlayedCards.load();
             playedCardsController = loaderPlayedCards.getController();
@@ -191,7 +191,7 @@ public class GameController
 
         setPlayingDeck();
         rand = new Random();
-        hideHandButtons();
+        holdingHandController.hideHandButtons();
         handInfoController.clearHandInfo();
         toggleBlind();
     }
@@ -247,18 +247,6 @@ public class GameController
         TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
     }
 
-    public void hideHandButtons() {
-        System.out.println("hide button");
-        handButtonHidden = !handButtonHidden;
-        if(handButtonHidden) {
-            holdingHandController.moveHoldingHandDown();
-            handButtonBox.setTranslateY(100);
-        } else {
-            holdingHandController.moveHoldingHandUp();
-            handButtonBox.setTranslateY(0);
-        }
-    }
-
     private void setHandInfo(List<String> hands) {
         int maxPoints = 0;
         int bestHandIndex = -1;
@@ -307,6 +295,7 @@ public class GameController
     private void closeSummary() {
         placeHolderShopReward.setTranslateY(560);
     }
+
 
     //SETTING UP GAME
     private void setPlayingDeck() {
@@ -382,7 +371,7 @@ public class GameController
 
     public void playSelectedCards(ActionEvent actionEvent) {
         if(holdingHandController.getSelectedCardCounter() != 0) {
-            hideHandButtons();
+            holdingHandController.hideHandButtons();
             for(PlayingCard card : holdingHandController.getSelectedCards()) {
                 card.setTranslateX(0);
                 card.setClickAble(false);
@@ -458,7 +447,7 @@ public class GameController
     }
 
     public void startRound(Blind blind, BigDecimal score) {
-        hideHandButtons();
+        holdingHandController.hideHandButtons();
         scoreToReach = score;
         toggleBlind();
         labelBlind.setText(blind.getBlindName());
@@ -505,7 +494,7 @@ public class GameController
                 runInfoController.setAnte((runInfoController.getAnte() + 1));
             }
         } else {
-            hideHandButtons();
+            holdingHandController.hideHandButtons();
         }
 
         handInfoController.clearHandInfo();

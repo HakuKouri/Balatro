@@ -62,9 +62,9 @@ public class HandInfoController {
     }
 
     public void clearHandInfo() {
-        infoHand.setText("");
-        infoHandLevel.setText("");
-        infoHandChips.setText("0");
-        infoHandMulti.setText("0");
+        model.setHandName("");
+        model.setHandLevel(0);
+        model.setHandChips(0);
+        model.setHandMultiplier(0);
     }
 }
