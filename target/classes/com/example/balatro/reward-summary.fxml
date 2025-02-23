@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #344; -fx-background-radius: 10; -fx-border-color: #233; -fx-border-radius: 10; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.RewardSummarController">
+<AnchorPane prefHeight="560.0" prefWidth="720.0" style="-fx-background-color: #344; -fx-background-radius: 10; -fx-border-color: #233; -fx-border-radius: 10; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.RewardSummarController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="14.0" prefHeight="530.0" prefWidth="690.0" spacing="10.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
          <children>

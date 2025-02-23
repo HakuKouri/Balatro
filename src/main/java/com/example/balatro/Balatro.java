@@ -2,6 +2,7 @@ package com.example.balatro;
 
 import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
+import com.example.balatro.controller.GameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

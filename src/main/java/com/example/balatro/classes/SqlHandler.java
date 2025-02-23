@@ -207,7 +207,7 @@ public class SqlHandler {
                     //TagsTableColumns = " (id, tagIcon, tagName, tagBenefit, tagNote, minAnte)";
                     query += TagsTableColumns + "VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Tag) listItem).getId());
+                    ps.setInt(1, ((Tag) listItem).getTagId());
                     ps.setString(2, ((Tag) listItem).getTagImageUrl());
                     ps.setString(3, ((Tag) listItem).getTagName());
                     ps.setString(4, ((Tag) listItem).getTagBenefit());
@@ -446,7 +446,7 @@ public class SqlHandler {
             while (rs.next()) {
                 Tag tag = new Tag();
 
-                tag.setId(rs.getInt(1));
+                tag.setTagId(rs.getInt(1));
                 tag.setTagImageUrl(rs.getString(2));
                 tag.setTagName(rs.getString(3));
                 tag.setTagBenefit(rs.getString(4));

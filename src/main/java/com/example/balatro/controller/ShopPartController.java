@@ -1,4 +1,4 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
 import com.example.balatro.classes.*;
 import javafx.fxml.FXML;
@@ -7,7 +7,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
-public class ShopPart {
+public class ShopPartController {
 
     @FXML
     private AnchorPane shopAnchorPane;

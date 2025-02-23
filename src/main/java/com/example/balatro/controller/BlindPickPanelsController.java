@@ -1,4 +1,4 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
 import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.Tag;
@@ -13,9 +13,9 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class BlindPickPanels {
+public class BlindPickPanelsController {
 
-    public static BlindPickPanels smallPanel;
+    public static BlindPickPanelsController smallPanel;
 
     @FXML
     private Button btnSelectBlind;
@@ -38,10 +38,10 @@ public class BlindPickPanels {
 
     private GameController gameController;
 
-    private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("blindSkipPane.fxml"));
-    private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("bossPane.fxml"));
+    private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
+    private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
 
-    private BlindSkipPane blindSkipController;
+    private BlindSkipPaneController blindSkipController;
     private AnchorPane skipPane;
     private AnchorPane bossPane;
 

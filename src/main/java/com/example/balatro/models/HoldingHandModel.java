@@ -1,16 +1,22 @@
 package com.example.balatro.models;
 
 import com.example.balatro.classes.PlayingCard;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HoldingHandModel {
 
-    private final List<PlayingCard> handCards = new ArrayList<>();
+    private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final List<PlayingCard> selectedCards = new ArrayList<>();
     int selectedCardCounter = 0;
     boolean sortedByrankd = true;
+
+    public ObservableList<PlayingCard> getList() {
+        return handCards;
+    }
 
     public int getSelectedCardCounter() {
         return selectedCardCounter;

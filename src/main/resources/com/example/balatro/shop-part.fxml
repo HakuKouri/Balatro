@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="shopAnchorPane" prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.ShopPart">
+<AnchorPane fx:id="shopAnchorPane" prefHeight="560.0" prefWidth="720.0" style="-fx-background-radius: 10; -fx-background-color: #2B3639; -fx-border-color: #FA473D; -fx-border-width: 3; -fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.ShopPartController">
    <children>
       <GridPane hgap="10.0" layoutX="32.0" layoutY="32.0" vgap="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <columnConstraints>

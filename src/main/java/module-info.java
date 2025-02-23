@@ -12,4 +12,6 @@ module com.example.balatro {
 
     opens com.example.balatro to javafx.fxml;
     exports com.example.balatro;
+    exports com.example.balatro.controller;
+    opens com.example.balatro.controller to javafx.fxml;
 }

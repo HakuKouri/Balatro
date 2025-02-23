@@ -1,4 +1,4 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
 import javafx.event.ActionEvent;
 

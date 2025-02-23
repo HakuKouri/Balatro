@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="120.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.BlindSkipPane">
+<AnchorPane prefHeight="120.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BlindSkipPaneController">
    <children>
       <Pane fx:id="skipPane" prefHeight="120.0" prefWidth="200.0">
          <children>
@@ -16,7 +16,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="btnSkipBlind" layoutX="74.0" layoutY="46.0" mnemonicParsing="false" text="Button" />
+            <Button fx:id="btnSkipBlind" layoutX="74.0" layoutY="46.0" mnemonicParsing="false" onAction="#onClickSkip" text="Button" />
             <ImageView fx:id="ivSkipReward" fitHeight="50.0" fitWidth="52.0" layoutX="14.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>

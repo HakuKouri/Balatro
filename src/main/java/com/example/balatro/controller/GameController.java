@@ -1,15 +1,17 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,8 +49,6 @@ public class GameController
     @FXML
     private Label toBeatReward;
     @FXML
-    private AnchorPane gameScreenAnchor;
-    @FXML
     private ImageView imageViewDeckField;
     @FXML
     private VBox spaceTag;
@@ -67,16 +67,16 @@ public class GameController
     private ImageView testImageView;
 
     //FXMLLOADER AND CONTROLLER
-    private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("blindPickPanels.fxml"));
-    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("shop-part.fxml"));
-    private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("reward-summary.fxml"));
-    private final FXMLLoader loaderPointsScored = new FXMLLoader(getClass().getResource("pointsScored_Pane.fxml"));
-    private final FXMLLoader loaderHandInfo = new FXMLLoader(getClass().getResource("handInfo_Pane.fxml"));
-    private final FXMLLoader loaderRunInfo = new FXMLLoader(getClass().getResource("runInfo_Pane.fxml"));
-    private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("holdingHand_StackPane.fxml"));
-    private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("playedCards_StackPane.fxml"));
+    private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
+    private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
+    private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
+    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
+    private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
+    private final FXMLLoader loaderPointsScored = new FXMLLoader(getClass().getResource("/com/example/balatro/pointsScored_Pane.fxml"));
+    private final FXMLLoader loaderHandInfo = new FXMLLoader(getClass().getResource("/com/example/balatro/handInfo_Pane.fxml"));
+    private final FXMLLoader loaderRunInfo = new FXMLLoader(getClass().getResource("/com/example/balatro/runInfo_Pane.fxml"));
+    private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand_StackPane.fxml"));
+    private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
 
     private AnchorPane smallBlind = null;
     private AnchorPane bigBlind = null;
@@ -99,10 +99,10 @@ public class GameController
 
     //MODELS
     GameModel gameModel = new GameModel();
-    private BlindPickPanels smallController;
-    private BlindPickPanels bigController;
-    private BlindPickPanels bossController;
-    private ShopPart shopController;
+    private BlindPickPanelsController smallController;
+    private BlindPickPanelsController bigController;
+    private BlindPickPanelsController bossController;
+    private ShopPartController shopController;
     private RewardSummarController rewardSummarController;
     private RunInfoController runInfoController;
     private HandInfoController handInfoController;
@@ -114,17 +114,21 @@ public class GameController
 
     static int handsize = 8;
     static BigDecimal scoreToReach = new BigDecimal(0);
-    static Deck deck;
-    static Stake stake;
+    static Deck chosenDeck;
+    static Stake chosenStake;
     static String sortedBy = "rank";
     static BigDecimal[] chipRequirement = new BigDecimal[]{BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800), BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000), BigDecimal.valueOf(20000), BigDecimal.valueOf(35000), BigDecimal.valueOf(50000)};
 
-    private final List<PlayingCard> deckList = new ArrayList<>();
-    private final List<PlayingCard> playingCardList = new ArrayList<>();
+    private final List<PlayingCard> deckFull = new ArrayList<>();
+    private final List<PlayingCard> deckToPlay = new ArrayList<>();
     private final List<Tag> blindTags = new ArrayList<>();
     private final List<Tag> tagQueueList = new ArrayList<>();
 
     public IntegerProperty pointsScoredProperty = new SimpleIntegerProperty();
+
+    public static GameController getInstance() {
+        return Balatro.gameController;
+    }
 
     //UI HANDLER
     public void initialize(){
@@ -194,6 +198,18 @@ public class GameController
         holdingHandController.hideHandButtons();
         handInfoController.clearHandInfo();
         toggleBlind();
+
+        gameModel.getTagStack().addListener((ListChangeListener<Tag>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    spaceTag.getChildren().addAll(change.getAddedSubList());
+                }
+                if(change.next()) {
+                    spaceTag.getChildren().addAll(change.getAddedSubList());
+                }
+            }
+        });
+
     }
 
     private void setBlindPanels() {
@@ -211,7 +227,7 @@ public class GameController
     }
 
     private void setDeckImage() throws IOException {
-        Image image = new Image("file:" + deck.getDeckCoverUrl());
+        Image image = new Image("file:" + chosenDeck.getDeckCoverUrl());
         imageViewDeckField.setImage(image);
     }
 
@@ -301,12 +317,12 @@ public class GameController
     private void setPlayingDeck() {
         for(int i = 0; i < 4; i++ ){
             for(int j = 0; j < 13; j++){
-                deckList.add(new PlayingCard(j,i));
+                deckFull.add(new PlayingCard(j,i));
             }
         }
-        playingCardList.addAll(deckList);
+        deckToPlay.addAll(deckFull);
 
-        Collections.shuffle(playingCardList, new Random());
+        Collections.shuffle(deckToPlay, new Random());
     }
 
     public void createBlindList() {
@@ -336,14 +352,13 @@ public class GameController
 
     //PLAYING CARD HANDLER
     public void drawCard() {
-        playingCardList.get(0).setOnMouseClicked(mouseEvent -> {
+        deckToPlay.get(0).setOnMouseClicked(mouseEvent -> {
             playingCardClicked((PlayingCard) mouseEvent.getSource());
         });
-        playingCardList.get(0).setClickAble(true);
+        deckToPlay.get(0).setClickAble(true);
 
-        holdingHandController.addCardToHoldingHand(playingCardList.get(0));
-        holdingHandController.addCardToHand(playingCardList.get(0));
-        playingCardList.remove(0);
+        holdingHandController.addCardToHand(deckToPlay.get(0));
+        deckToPlay.remove(0);
         holdingHandController.moveCards();
     }
 
@@ -369,6 +384,10 @@ public class GameController
         setHandInfo(checkHand.evaluateHands(holdingHandController.getSelectedCards()));
     }
 
+    public void playCards(List<PlayingCard> playedCards) {
+        playedCardsController.addAllCards(playedCards);
+    }
+
     public void playSelectedCards(ActionEvent actionEvent) {
         if(holdingHandController.getSelectedCardCounter() != 0) {
             holdingHandController.hideHandButtons();
@@ -382,10 +401,10 @@ public class GameController
             List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(holdingHandController.getSelectedCards() , handInfoController.getHandName());
             for(int i = 0; i < playedCardsController.count(); i++) {
 
-                if(countedCards.contains(playedCardsController.getPlayedCards().get(i))) {
-                    playedCardsController.getPlayedCards().get(i).setTranslateY(-20);
+                if(countedCards.contains(playedCardsController.getPlayedCards_StackPane().get(i))) {
+                    playedCardsController.getPlayedCards_StackPane().get(i).setTranslateY(-20);
                 } else
-                    playedCardsController.getPlayedCards().get(i).setTranslateY(0);
+                    playedCardsController.getPlayedCards_StackPane().get(i).setTranslateY(0);
             }
 
             handInfoController.setHandChips(allHandList.stream().filter(
@@ -424,8 +443,8 @@ public class GameController
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
         rand = new Random();
-        deck = gameSetup.getChosenDeck();
-        stake = gameSetup.getChosenStake();
+        chosenDeck = gameSetup.getChosenDeck();
+        chosenStake = gameSetup.getChosenStake();
         runInfoController.setHands(4);
         runInfoController.setDiscards(3);
         runInfoController.setAnte(1);
@@ -436,7 +455,7 @@ public class GameController
 
         createBlindList();
         setBlindPanels();
-        BlindPickPanels.setStageImage(new Image("file:" + stake.getStakeImageChipUrl()));
+        BlindPickPanelsController.setStageImage(new Image("file:" + chosenStake.getStakeImageChipUrl()));
 
         try {
             setDeckImage();
@@ -454,7 +473,7 @@ public class GameController
         drawCards(handsize);
         toBeatScore.setText(String.valueOf(scoreToReach));
         toBeatImage.setImage(new Image("file:"+blind.getBlindImageUrl()));
-        toBeatStake.setImage(new Image("file:"+stake.getStakeImageChipUrl()));
+        toBeatStake.setImage(new Image("file:"+ chosenStake.getStakeImageChipUrl()));
         toBeatReward.setText("$$$");
         handInfoController.clearHandInfo();
     }
@@ -466,19 +485,17 @@ public class GameController
     }
 
     public void skip(Tag tag) {
+        System.out.println(tag.getTagImageUrl());
+        gameModel.addTagToStack(tag);
+        System.out.println(tag);
+        System.out.println(spaceTag.getChildren().stream().findFirst());
         runInfoController.setRound(runInfoController.getRound() + 1);
-        addTag(tag);
-    }
-
-    private void addTag(Tag tag) {
-        tagQueueList.add(tag);
-        spaceTag.getChildren().add(new ImageView(new Image(getClass().getResourceAsStream(tag.getTagImageUrl()))));
     }
 
     private void countPoints() {
         for(int i = 0; i < playedCardsController.count(); i++) {
-            if(playedCardsController.getPlayedCards().get(i).getTranslateY() == -20) {
-                handInfoController.addChips(((PlayingCard)playedCardsController.getPlayedCards().get(i)).getValue());
+            if(playedCardsController.getPlayedCards_StackPane().get(i).getTranslateY() == -20) {
+                handInfoController.addChips(((PlayingCard)playedCardsController.getPlayedCards_StackPane().get(i)).getValue());
             }
         }
 
@@ -523,31 +540,4 @@ public class GameController
         sleeper.setOnSucceeded(event -> continuation.run());
         new Thread(sleeper).start();
     }
-
-
-
-    //TEST AREA
-
-    public void flip() {
-//        if(testImageView.getImage().getUrl() == "file:" + deck.getDeckCoverUrl()) {
-//            System.out.println("is flipped");
-//        }
-//        ScaleTransition smaller = new ScaleTransition(Duration.seconds(1), testImageView);
-//        smaller.setToX(0);
-//
-//        ScaleTransition larger = new ScaleTransition(Duration.seconds(10), testImageView);
-//        larger.setToX(1);
-//
-//        smaller.play();
-//        delay(2000, setImage());
-//        //testImageView.setImage(new Image("file:" + deck.getDeckCoverUrl()));
-//        larger.play();
-//
-    }
-
-
-//    private Runnable setImage() {
-//        testImageView.setImage(new Image("file:" + deck.getDeckCoverUrl()));
-//        return null;
-//    }
 }

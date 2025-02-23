@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="320.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.HoldingHandController" AnchorPane.bottomAnchor="0.0" >
+<AnchorPane prefHeight="320.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.HoldingHandController" AnchorPane.bottomAnchor="0.0" >
     <StackPane fx:id="HoldingHand" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
     <GridPane fx:id="handButtonBox" layoutX="120.0" layoutY="200.0" prefHeight="120.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="200.0">
         <columnConstraints>

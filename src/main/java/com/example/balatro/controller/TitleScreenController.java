@@ -1,4 +1,4 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,9 +9,9 @@ import javafx.scene.media.MediaView;
 
 import javafx.scene.layout.Pane;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.Objects;
 
-public class TitleScreen
+public class TitleScreenController
 {
     @FXML
     private MediaView mediaTitleBackground;
@@ -35,7 +35,7 @@ public class TitleScreen
     public void openNewGameMenu() throws IOException
     {
         System.out.println("Play button pressed");
-        Pane pane = FXMLLoader.load(getClass().getResource("newGameMenu-screen.fxml"));
+        Pane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/newGameMenu-screen.fxml"));
         panePlayMenu.getChildren().add(pane);
     }
 

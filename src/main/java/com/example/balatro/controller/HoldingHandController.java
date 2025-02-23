@@ -1,7 +1,10 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.classes.PokerHandChecker;
+import com.example.balatro.models.HandInfoModel;
 import com.example.balatro.models.HoldingHandModel;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,10 +13,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
@@ -25,6 +26,19 @@ public class HoldingHandController {
 
     HoldingHandModel model = new HoldingHandModel();
     private boolean handButtonHidden = false;
+
+    public void initialize() {
+        model.getList().addListener((ListChangeListener<? super PlayingCard>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    HoldingHand.getChildren().addAll(change.getAddedSubList());
+                }
+                if(change.wasRemoved()) {
+                    HoldingHand.getChildren().removeAll(change.getRemoved());
+                }
+            }
+        });
+    }
 
     public List<PlayingCard> getSelectedCards() {
         return model.getSelectedCards();
@@ -168,10 +182,31 @@ public class HoldingHandController {
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
+        HoldingHand.getChildren().removeAll(getSelectedCards());
+        model.getHandCards().removeAll(getSelectedCards());
+        GameController.getInstance().playCards(getSelectedCards());
+        moveCards();
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
+        HoldingHand.getChildren().removeAll(getSelectedCards());
+
+        GameController.getInstance().drawCards(HoldingHand.getChildren().size());
     }
+
+    /*public void discardSelectedCards(ActionEvent actionEvent) {
+        if(holdingHandController.getSelectedCardCounter() != 0) {
+            for(int i = 0; i < holdingHandController.getSelectedCardCounter(); i++) {
+                holdingHandController.removeCardFromHoldingHand(holdingHandController.getSelectedCards().get(i));
+                holdingHandController.removeCardFromHand(holdingHandController.getSelectedCards().get(i));
+            }
+        }
+        holdingHandController.setSelectedCardCounter(0);
+        holdingHandController.clearSelectedCards();
+
+        drawCards(8 - holdingHandController.getHandCards().size());
+        setHandInfo(new ArrayList<>());
+    }*/
 
     public void hideHandButtons() {
         System.out.println("hide button");
@@ -184,4 +219,6 @@ public class HoldingHandController {
             handButtonBox.setTranslateY(0);
         }
     }
+
+
 }

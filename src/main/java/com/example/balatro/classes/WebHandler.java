@@ -346,8 +346,8 @@ public class WebHandler
                    prevRow = cells.get(3).text();
                 try
                 {
-                    tag.setId(arrayList.size()+1);
-                    tag.setTagImageUrl("src\\main\\resources\\com\\images\\tags\\tag_" + tag.getId() + ".png");
+                    tag.setTagId(arrayList.size()+1);
+                    tag.setTagImageUrl("src\\main\\resources\\com\\images\\tags\\tag_" + tag.getTagId() + ".png");
                     tag.setTagName(cells.get(1).text());
                     tag.setTagBenefit(cells.get(2).text());
                     if(cells.size() == 4)

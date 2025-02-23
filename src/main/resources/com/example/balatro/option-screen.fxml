@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.OptionScreen">
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.OptionScreenController">
    <top>
       <Button fx:id="btnClose" contentDisplay="CENTER" layoutX="546.0" layoutY="14.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" styleClass="btnClose" BorderPane.alignment="CENTER_RIGHT">
          <BorderPane.margin>

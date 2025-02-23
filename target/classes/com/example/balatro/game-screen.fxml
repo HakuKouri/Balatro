@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="gameScreenAnchor" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.GameController">
+<AnchorPane fx:id="gameScreenAnchor" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.GameController">
    <children>
       <StackPane fx:id="spaceJoker" layoutX="290.0" layoutY="14.0" prefHeight="139.0" prefWidth="545.0" styleClass="spot" />
       <Label layoutX="292.0" layoutY="163.0" prefHeight="13.0" prefWidth="37.0" text="0/5" textFill="WHITE" />

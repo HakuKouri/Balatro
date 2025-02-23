@@ -1,35 +1,53 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
-public class Tag
+public class Tag extends ImageView
 {
-    private int id;
-    private String tagImageUrl;
+    private int tagId;
+    private StringProperty tagImageUrl = new SimpleStringProperty();
     private String tagName;
     private String tagBenefit;
     private String tagNotes;
     private String minAnte;
 
+    //Constructor
+    public Tag() {
+        tagImageUrl.addListener((obs, oldVal, newVal) -> {
+            System.out.println(oldVal);
+            System.out.println(newVal);
+            this.setImage(new Image(newVal,true));
+        });
+        this.setFitHeight(100);
+        this.setPreserveRatio(true);
+    }
+
     //region GETTER SETTER
-    public int getId()
+    public int getTagId()
     {
-        return id;
+        return tagId;
     }
 
-    public void setId(int id)
+    public void setTagId(int id)
     {
-        this.id = id;
+        this.tagId = id;
     }
 
-    public String getTagImageUrl()
-    {
+    public String getTagImageUrl() {
+        return tagImageUrl.get();
+    }
+
+    public StringProperty tagImageUrlProperty() {
         return tagImageUrl;
     }
 
-    public void setTagImageUrl(String tagImageUrl)
-    {
-        this.tagImageUrl = tagImageUrl;
+    public void setTagImageUrl(String tagImageUrl) {
+        this.tagImageUrl.set(tagImageUrl);
     }
 
     public String getTagName()

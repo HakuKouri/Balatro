@@ -1,12 +1,14 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.Tag;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class BlindSkipPane {
+public class BlindSkipPaneController {
 
     @FXML
     private Button btnSkipBlind;
@@ -15,7 +17,7 @@ public class BlindSkipPane {
 
     private Tag tag;
 
-    private BlindPickPanels blindPickPanels;
+    private BlindPickPanelsController blindPickPanelsController;
 
     public void setTag(Tag tag) {
         this.tag = tag;
@@ -30,10 +32,13 @@ public class BlindSkipPane {
         ivSkipReward.setImage(new Image("file:" + imageUrl));
     }
 
-    public void setBlindPickPanels(BlindPickPanels blindPickPanels) {
-        this.blindPickPanels = blindPickPanels;
+    public void setBlindPickPanels(BlindPickPanelsController blindPickPanelsController) {
+        this.blindPickPanelsController = blindPickPanelsController;
     }
 
 
-
+    public void onClickSkip(ActionEvent actionEvent) {
+        System.out.println("Skipped clicked");
+        Balatro.gameController.skip(tag);
+    }
 }

@@ -1,5 +1,6 @@
-package com.example.balatro;
+package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.Deck;
 import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
@@ -21,7 +22,6 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class NewGameMenuController
 {
