@@ -111,7 +111,6 @@ public class GameController
     private PlayedCardsController playedCardsController;
 
     //GAME VARIABLES
-
     static int handsize = 8;
     static BigDecimal scoreToReach = new BigDecimal(0);
     static Deck chosenDeck;
@@ -321,7 +320,6 @@ public class GameController
             }
         }
         deckToPlay.addAll(deckFull);
-
         Collections.shuffle(deckToPlay, new Random());
     }
 

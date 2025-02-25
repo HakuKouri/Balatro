@@ -39,7 +39,6 @@ public class Balatro extends Application
         primaryStage.setScene(scene);
 
         gameController.startNewGame(gameSetup);
-
     }
 
     public static void main(String[] args)
