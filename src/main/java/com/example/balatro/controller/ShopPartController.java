@@ -46,7 +46,7 @@ public class ShopPartController {
     }
 
     private void drawVoucher() {
-        VoucherArea.getChildren().add(voucherList.get(GameController.rand.nextInt(voucherList.size())));
+        VoucherArea.getChildren().add(voucherList.get(GameController.getInstance().getRand().nextInt(voucherList.size())));
     }
 
     private void removeFromVoucher(Voucher voucher) {
@@ -55,7 +55,7 @@ public class ShopPartController {
 
     private void drawBooster() {
 
-        BoosterArea.getChildren().add(boosterList.get(GameController.rand.nextInt(boosterList.size())));
+        BoosterArea.getChildren().add(boosterList.get(GameController.getInstance().getRand().nextInt(boosterList.size())));
     }
 
     private void removeFromBooster(Booster booster) {

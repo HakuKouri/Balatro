@@ -1,19 +1,18 @@
 package com.example.balatro.classes;
 
-public class
-Deck
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+public class Deck
 {
     private int id;
-    private String deckCoverUrl;
+    private StringProperty deckCoverUrl = new SimpleStringProperty();
     private String name;
     private String description;
     private String unlockCondition;
     private int stageCleared;
 
-    public String getDeckCoverUrl()
-    {
-        return deckCoverUrl;
-    }
+
 
     public int getId()
     {
@@ -25,9 +24,16 @@ Deck
         this.id = id;
     }
 
-    public void setDeckCoverUrl(String deckCover)
-    {
-        this.deckCoverUrl = deckCover;
+    public String getDeckCoverUrl() {
+        return deckCoverUrl.get();
+    }
+
+    public StringProperty deckCoverUrlProperty() {
+        return deckCoverUrl;
+    }
+
+    public void setDeckCoverUrl(String deckCoverUrl) {
+        this.deckCoverUrl.set(deckCoverUrl);
     }
 
     public String getName()

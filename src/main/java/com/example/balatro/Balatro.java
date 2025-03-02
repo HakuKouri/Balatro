@@ -13,7 +13,6 @@ import java.io.IOException;
 public class Balatro extends Application
 {
     static private Stage primaryStage;
-    static public GameController gameController = new GameController();
 
     private static FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
     private static FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
@@ -38,7 +37,7 @@ public class Balatro extends Application
         Scene scene = new Scene(fxmlLoaderGame.load(), 1280, 720);
         primaryStage.setScene(scene);
 
-        gameController.startNewGame(gameSetup);
+        GameController.getInstance().startNewGame(gameSetup);
     }
 
     public static void main(String[] args)

@@ -39,6 +39,6 @@ public class BlindSkipPaneController {
 
     public void onClickSkip(ActionEvent actionEvent) {
         System.out.println("Skipped clicked");
-        Balatro.gameController.skip(tag);
+        GameController.getInstance().skip(tag);
     }
 }
