@@ -1,7 +1,6 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.models.PlayedCardsModel;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

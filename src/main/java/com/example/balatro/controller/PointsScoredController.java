@@ -1,6 +1,6 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.models.PointsScoredModel;
+import com.example.balatro.models.GameModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,7 +14,7 @@ public class PointsScoredController {
     @FXML
     private ImageView stakeImageView;
 
-    public PointsScoredModel model = new PointsScoredModel();
+    private GameModel model = GameController.getInstance().gameModel;
 
     public void initialize() {
         /*System.out.println("🚀 initialize() gestartet!");

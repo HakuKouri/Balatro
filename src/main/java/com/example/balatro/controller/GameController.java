@@ -1,6 +1,5 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.TranslateTransition;
@@ -104,9 +103,7 @@ public class GameController
     //endregion
 
     //VIEW VAR
-    private String sortedBy = "rank";
-    private boolean blindsToggled = true;
-    private Random rand;
+
 
     private final ArrayList<Blind> gameBlindsList = new ArrayList<>();
 
@@ -180,7 +177,7 @@ public class GameController
         }
 
         setPlayingDeck();
-        rand = new Random();
+        gameModel.setRand(new Random());
         holdingHandController.hideHandButtons();
         handInfoController.clearHandInfo();
         toggleBlind();
@@ -201,8 +198,8 @@ public class GameController
     }
 
     private void setBlindPanels() {
-        int ante = runInfoController.getAnte();
-        int round = runInfoController.getRound();
+        int ante = gameModel.getAnte();
+        int round = gameModel.getRound();
         smallController.setBlind(gameBlindsList.get((ante-1)*3), gameModel.getAllTagList().get(round-ante), 1);
         bigController.setBlind(gameBlindsList.get((ante-1)*3+1), gameModel.getAllTagList().get(round-ante), 2);
         bossController.setBlind(gameBlindsList.get((ante-1)*3+2), gameModel.getAllTagList().get(round-ante), 3);
@@ -215,13 +212,13 @@ public class GameController
     }
 
     public void toggleBlind() {
-        int round = runInfoController.getRound();
-        blindsToggled = !blindsToggled;
+        int round = gameModel.getRound();
+        gameModel.toggleBlindVisibity();
         TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
         TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
         TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
-        if (blindsToggled) {
+        if (gameModel.isBlindsVisiblity()) {
             transitionBlindBox.setToY(0);
             if(round%3 == 1) transitionSmall.setToY(-50);
             if(round%3 == 2) transitionBig.setToY(-50);
@@ -295,15 +292,6 @@ public class GameController
         placeHolderShopReward.setTranslateY(560);
     }
 
-    //GETTER SETTER
-    public Random getRand() {
-        return rand;
-    }
-
-    public void setRand(Random rand) {
-        this.rand = rand;
-    }
-
     //SETTING UP GAME
     private void setPlayingDeck() {
         for(int i = 0; i < 4; i++ ){
@@ -323,22 +311,10 @@ public class GameController
                 else if(j == 1)
                     gameBlindsList.add(gameModel.getAllBlindsList().get(1));
                 else
-                    gameBlindsList.add(gameModel.getAllBlindsList().get(rand.nextInt(gameModel.getAllBlindsList().size() - 2 + 1) + 1));
+                    gameBlindsList.add(gameModel.getAllBlindsList().get(gameModel.getRand().nextInt(gameModel.getAllBlindsList().size() - 2 + 1) + 1));
             }
         }
     }
-
-//    private void expandBlindTagList() {
-//        for (int i = 0; i < 2; i++) {
-//            Tag tag = allTagList.get(rand.nextInt(allTagList.size()));
-//            if(Integer.parseInt((tag.getMinAnte())) <= runInfoController.getAnte())
-//                blindTags.add(tag);
-//            else {
-//                i--;
-//            }
-//        }
-//    }
-
 
     //PLAYING CARD HANDLER
     public void drawCard() {
@@ -354,7 +330,7 @@ public class GameController
 
     public void drawCards(int num) {
         for (int i = 0; i < num; i++) {drawCard();}
-        if(Objects.equals(sortedBy, "rank")) holdingHandController.sortRank();
+        if(gameModel.isSortedByRank()) holdingHandController.sortRank();
         else holdingHandController.sortSuit();
     }
 
@@ -431,14 +407,14 @@ public class GameController
 
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
-        rand = new Random();
+        gameModel.setRand(new Random());
         gameModel.setChosenDeck(gameSetup.getChosenDeck());
         gameModel.setChosenStake(gameSetup.getChosenStake());
-        runInfoController.setHands(4);
-        runInfoController.setDiscards(3);
-        runInfoController.setAnte(1);
-        runInfoController.setRound(1);
-        runInfoController.setMoney(0);
+        gameModel.setHands(4);
+        gameModel.setDiscards(3);
+        gameModel.setAnte(1);
+        gameModel.setRound(1);
+        gameModel.setMoney(0);
 
         pointsScoredController.setStakeImageView("file:" +gameSetup.getChosenStake().getStakeImageChipUrl());
 
@@ -462,7 +438,7 @@ public class GameController
 
     public void nextRound() {
         closeShop();
-        runInfoController.setRound(runInfoController.getRound() + 1);
+        gameModel.setRound(gameModel.getRound() + 1);
         toggleBlind();
     }
 
@@ -471,7 +447,7 @@ public class GameController
         gameModel.addTagToStack(tag);
         System.out.println(tag);
         System.out.println(spaceTag.getChildren().stream().findFirst());
-        runInfoController.setRound(runInfoController.getRound() + 1);
+        gameModel.setRound(gameModel.getRound() + 1);
     }
 
     private void countPoints() {
@@ -485,12 +461,12 @@ public class GameController
 
         if(gameModel.scoreReached()) {
             openSummary();
-            runInfoController.setRound(runInfoController.getRound() + 1);
+            gameModel.setRound(gameModel.getRound() + 1);
             pointsScoredController.clearPoints();
             holdingHandController.clearHandCards();
 
-            if(gameModel.getAllBlindsList().get(runInfoController.getRound()-1).getId() > 1) {
-                runInfoController.setAnte((runInfoController.getAnte() + 1));
+            if(gameModel.getAllBlindsList().get(gameModel.getRound()-1).getId() > 1) {
+                gameModel.setAnte((gameModel.getAnte() + 1));
             }
         } else {
             holdingHandController.hideHandButtons();
@@ -500,7 +476,7 @@ public class GameController
     }
 
     public void addMoney(int reward) {
-        runInfoController.setMoney(runInfoController.getMoney() + reward);
+        gameModel.setMoney(gameModel.getMoney() + reward);
 
         openShop();
     }

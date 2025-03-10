@@ -1,6 +1,6 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.models.HandInfoModel;
+import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -16,7 +16,8 @@ public class HandInfoController {
     @FXML
     private Label infoHandMulti;
 
-    private final HandInfoModel model = new HandInfoModel();
+    private GameModel model = GameController.getInstance().gameModel;
+
 
     public void initialize() {
         System.out.println("HandInfoController hier");
@@ -27,7 +28,6 @@ public class HandInfoController {
         infoHandChips.textProperty().bind(model.handChipsProperty().asString());
         infoHandMulti.textProperty().bind(model.handMultiplierProperty().asString());
     }
-
 
     public void setHandName(String name) {
         model.setHandName(name);

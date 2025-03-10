@@ -1,9 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.PokerHandChecker;
-import com.example.balatro.models.HandInfoModel;
-import com.example.balatro.models.HoldingHandModel;
+import com.example.balatro.models.GameModel;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,7 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
@@ -24,7 +21,7 @@ public class HoldingHandController {
     private GridPane handButtonBox;
 
 
-    HoldingHandModel model = new HoldingHandModel();
+    GameModel model = GameController.getInstance().gameModel;
     private boolean handButtonHidden = false;
 
     public void initialize() {
