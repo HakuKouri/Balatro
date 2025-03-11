@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="blindPanel" prefHeight="630.0" prefWidth="240.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BlindPickPanelsController">
+<AnchorPane fx:id="blindPanel" prefHeight="630.0" prefWidth="240.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BlindPickPanelsController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="15.0" layoutY="15.0" prefHeight="358.0" prefWidth="210.0" spacing="10.0" style="-fx-background-color: #364C50; -fx-background-radius: 10; -fx-border-color: #777; -fx-border-radius: 10; -fx-border-width: 3;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
          <children>

@@ -1,59 +1,93 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
-    private String name;
-    private int level;
-    private int chips;
-    private int multi;
-    private int played;
+    private StringProperty name = new SimpleStringProperty();
+    private IntegerProperty level = new SimpleIntegerProperty();
+    private IntegerProperty chips = new SimpleIntegerProperty();
+    private IntegerProperty multi = new SimpleIntegerProperty();
+    private IntegerProperty played = new SimpleIntegerProperty();
+
+    public Hand() {
+
+    }
 
     public Hand(String name, int chips, int multi) {
-        this.name = name;
-        this.level = 1;
-        this.chips = chips;
-        this.multi = multi;
-        this.played = 0;
+        this.name.set(name);
+        this.level.set(1);
+        this.chips.set(chips);
+        this.multi.set(multi);
+        this.played.set(0);
     }
 
     //region GETTER SETTER
     public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public int getLevel() {
+        return level.get();
+    }
+
+    public IntegerProperty levelProperty() {
         return level;
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.level.set(level);
     }
 
     public int getChips() {
+        return chips.get();
+    }
+
+    public IntegerProperty chipsProperty() {
         return chips;
     }
 
     public void setChips(int chips) {
-        this.chips = chips;
+        this.chips.set(chips);
     }
 
     public int getMulti() {
+        return multi.get();
+    }
+
+    public IntegerProperty multiProperty() {
         return multi;
     }
 
     public void setMulti(int multi) {
-        this.multi = multi;
+        this.multi.set(multi);
     }
 
     public int getPlayed() {
+        return played.get();
+    }
+
+    public IntegerProperty playedProperty() {
         return played;
     }
 
     public void setPlayed(int played) {
-        this.played = played;
+        this.played.set(played);
     }
+
     //endregion
 
     public static List<Hand> setHandList() {

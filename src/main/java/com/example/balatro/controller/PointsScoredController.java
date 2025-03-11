@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.math.BigDecimal;
+
 
 public class PointsScoredController {
 
@@ -54,10 +56,10 @@ public class PointsScoredController {
     }
 
     public void addPoints(long v) {
-        model.setScoredPoints(model.getScoredPoints() + v );
+        model.addToScoredPoints(BigDecimal.valueOf(v));
     }
 
     public void clearPoints() {
-        model.setScoredPoints(0);
+        model.setScoredPoints(BigDecimal.valueOf(0));
     }
 }

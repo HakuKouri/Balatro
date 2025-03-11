@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 public class Deck
 {
     private int id;
-    private StringProperty deckCoverUrl = new SimpleStringProperty();
+    private final StringProperty deckCoverUrl = new SimpleStringProperty();
     private String name;
     private String description;
     private String unlockCondition;

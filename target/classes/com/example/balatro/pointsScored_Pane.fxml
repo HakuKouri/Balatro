@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="70.0" prefWidth="230.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.PointsScoredController">
+<AnchorPane prefHeight="70.0" prefWidth="230.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.PointsScoredController">
    <Label prefHeight="58.0" prefWidth="52.0" text="Round Score" textFill="WHITE" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="0.0">
       <font>
          <Font name="balatro Regular" size="11.0" />

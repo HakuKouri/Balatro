@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.*;
+import com.example.balatro.models.GameModel;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -19,6 +20,7 @@ public class ShopPartController {
     private StackPane BoosterArea;
 
     private GameController gameController;
+    private GameModel model = GameController.instance.gameModel;
 
     private static List<Booster> boosterList = SqlHandler.getAllBooster();
     private static List<Voucher> voucherList = SqlHandler.getAllVoucher();
@@ -46,7 +48,7 @@ public class ShopPartController {
     }
 
     private void drawVoucher() {
-        VoucherArea.getChildren().add(voucherList.get(GameController.getInstance().getRand().nextInt(voucherList.size())));
+        VoucherArea.getChildren().add(voucherList.get(model.getRand().nextInt(voucherList.size())));
     }
 
     private void removeFromVoucher(Voucher voucher) {
@@ -55,7 +57,7 @@ public class ShopPartController {
 
     private void drawBooster() {
 
-        BoosterArea.getChildren().add(boosterList.get(GameController.getInstance().getRand().nextInt(boosterList.size())));
+        BoosterArea.getChildren().add(boosterList.get(model.getRand().nextInt(boosterList.size())));
     }
 
     private void removeFromBooster(Booster booster) {

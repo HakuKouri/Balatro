@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="96.0" prefWidth="138.0" style="-fx-background-color: #ff4c40; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BuyAndUseTagController">
+<AnchorPane prefHeight="96.0" prefWidth="138.0" style="-fx-background-color: #ff4c40; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BuyAndUseTagController">
    <children>
       <Label alignment="CENTER_RIGHT" layoutX="6.0" layoutY="5.0" prefHeight="55.0" prefWidth="64.0" text="Buy" textFill="WHITE" wrapText="true" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
          <font>

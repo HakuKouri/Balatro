@@ -2,6 +2,7 @@ package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -19,20 +20,21 @@ public class GameModel {
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
     private final List<PlayingCard> deckFull = new ArrayList<>();
     private final List<PlayingCard> deckToPlay = new ArrayList<>();
+    private final List<Blind> runBlinds = new ArrayList<>();
     private final List<Tag> blindTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
-    private final ObservableList<Tag> tagStack = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
     //endregion
 
     //region GAME SETTINGS VAR
-    private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>();
+    private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>(new Deck());
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>();
     private Random rand;
     //endregion
 
     //region HAND POINTS VAR
+    private final ObjectProperty<Hand> bestHand = new SimpleObjectProperty<>(new Hand());
     private final StringProperty handName = new SimpleStringProperty();
     private final IntegerProperty handLevel = new SimpleIntegerProperty();
     private final IntegerProperty handChips = new SimpleIntegerProperty();
@@ -65,8 +67,9 @@ public class GameModel {
     //endregion
 
     //region POINTS VAR
-    private final LongProperty scoredPoints = new SimpleLongProperty(0);
-    private final ObjectProperty<BigDecimal> scoreToReach = new SimpleObjectProperty<>();
+    private final BooleanProperty pointsReached = new SimpleBooleanProperty(false);
+    private final ObjectProperty<BigDecimal> scoredPoints = new SimpleObjectProperty<>(new BigDecimal(0));
+    private final ObjectProperty<BigDecimal> scoreToReach = new SimpleObjectProperty<>(new BigDecimal(0));
     private final BigDecimal[] chipRequirement = new BigDecimal[]{
             BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800),
             BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000),
@@ -129,6 +132,17 @@ public class GameModel {
 
     public void addCardToDeckToPlay(PlayingCard card, int index) {
         deckToPlay.add(index, card);
+    }
+    //endregion
+
+    //region Blinds
+    public List<Blind> getRunBlinds() {
+        return runBlinds;
+    }
+
+    public void setRunBlinds(List<Blind> blindList) {
+        runBlinds.clear();
+        runBlinds.addAll(blindList);
     }
     //endregion
 
@@ -212,6 +226,34 @@ public class GameModel {
     //endregion
 
     //region HAND POINTS VAR
+    //Best Hand
+    public Hand getBestHand() {
+        return bestHand.get();
+    }
+
+    public ObjectProperty<Hand> bestHandProperty() {
+        return bestHand;
+    }
+
+    public void setBestHand(Hand bestHand) {
+        this.bestHand.set(bestHand);
+    }
+
+    //region Hand Infos as String
+    public ObservableValue<String> getBestHandName() {
+        return new SimpleStringProperty(getBestHand().getName());
+    }
+    public ObservableValue<String> getBestHandLevel() {
+        return new SimpleStringProperty(String.format("lv. %d", getBestHand().getLevel()));
+    }
+    public ObservableValue<String> getBestHandChips() {
+        return new SimpleStringProperty(String.valueOf(getBestHand().getChips()));
+    }
+    public ObservableValue<String> getBestHandMult() {
+        return new SimpleStringProperty(String.valueOf(getBestHand().getMulti()));
+    }
+    //endregion
+
     //Poker Hand Name
     public String getHandName() {
         return handName.get();
@@ -493,22 +535,8 @@ public class GameModel {
         setHandsDiscarded(getHandsDiscarded() + 1);
     }
 
-    //Scored Points
-    public long getScoredPoints() {
-        return scoredPoints.get();
-    }
 
-    public LongProperty scoredPointsProperty() {
-        return scoredPoints;
-    }
 
-    public void setScoredPoints(long scoredPoints) {
-        this.scoredPoints.set(scoredPoints);
-    }
-
-    public void addToScoredPoints(long scoredPoints) {
-        setScoredPoints(getScoredPoints() + scoredPoints);
-    }
     //endregion
 
     //region UI VAR
@@ -578,6 +606,22 @@ public class GameModel {
 
 
     //endregion
+    //Scored Points
+    public BigDecimal getScoredPoints() {
+        return scoredPoints.get();
+    }
+
+    public ObjectProperty<BigDecimal> scoredPointsProperty() {
+        return scoredPoints;
+    }
+
+    public void setScoredPoints(BigDecimal points) {
+        scoredPoints.set(points);
+    }
+
+    public void addToScoredPoints(BigDecimal scoredPoints) {
+        setScoredPoints(getScoredPoints().add(scoredPoints));
+    }
 
 
     //Score To Reach
@@ -589,6 +633,15 @@ public class GameModel {
         this.scoreToReach.set(scoreToReach);
     }
 
+    //Points Reached
+    public boolean isPointsReached() {
+        return pointsReached.get();
+    }
+
+    public BooleanProperty pointsReachedProperty() {
+        return pointsReached;
+    }
+
     //Chip Requirement
     public BigDecimal[] getChipRequirement() {
     return chipRequirement;
@@ -598,37 +651,5 @@ public class GameModel {
         return getChipRequirement()[index];
     }
 
-    //Points Scored
-    public BigDecimal getPointsScoredProperty() {
-        return pointsScoredProperty.get();
-    }
-
-    public ObjectProperty<BigDecimal> pointsScoredPropertyProperty() {
-        return pointsScoredProperty;
-    }
-
-    public void setPointsScoredProperty(BigDecimal pointsScoredProperty) {
-        this.pointsScoredProperty.set(pointsScoredProperty);
-    }
-
-
-
-    //RANDOM STUFF
-
-    public ObservableList<Tag> getTagStack() {
-        return tagStack;
-    }
-
-    public void addTagToStack(Tag tag) {
-        tagStack.add(tag);
-    }
-
-    public void removeTagFromStack(Tag tag) {
-        tagStack.remove(tag);
-    }
-
-    public void setTagStack(ObservableList<Tag> tagStack) {
-        this.tagStack = tagStack;
-    }
 
 }

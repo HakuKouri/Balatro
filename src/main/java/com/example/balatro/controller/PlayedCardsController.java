@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.models.GameModel;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,7 +13,7 @@ public class PlayedCardsController {
 
     public StackPane playedCards_StackPane;
 
-    PlayedCardsModel model = new PlayedCardsModel();
+    GameModel model = GameController.instance.gameModel;
 
     public ObservableList<Node> getPlayedCards_StackPane() {
         return playedCards_StackPane.getChildren();

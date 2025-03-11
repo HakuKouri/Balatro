@@ -25,7 +25,7 @@ public class HoldingHandController {
     private boolean handButtonHidden = false;
 
     public void initialize() {
-        model.getList().addListener((ListChangeListener<? super PlayingCard>) change -> {
+        model.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
                     HoldingHand.getChildren().addAll(change.getAddedSubList());
@@ -128,7 +128,7 @@ public class HoldingHandController {
         return model.getSelectedCardCounter();
     }
 
-    public void selectedCardCounterIncement() {
+    public void selectedCardCounterIncrement() {
         model.setSelectedCardCounter(model.getSelectedCardCounter() + 1);
     }
 
@@ -141,7 +141,7 @@ public class HoldingHandController {
     }
 
     public void sortRank() {
-        model.setSortedByrankd(true);
+        model.setSortedByRank(true);
         List<PlayingCard> cards = new ArrayList<>();
         for(var card : getHoldingHand())
             if(card instanceof PlayingCard)
@@ -160,7 +160,7 @@ public class HoldingHandController {
     }
 
     public void sortSuit() {
-        model.setSortedByrankd(false);
+        model.setSortedByRank(false);
         List<PlayingCard> cards = new ArrayList<>();
         for(var card : getHoldingHand())
             if(card instanceof PlayingCard)

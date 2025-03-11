@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="130.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.PlayedCardsController">
+<AnchorPane prefHeight="130.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.PlayedCardsController">
    <StackPane fx:id="playedCards_StackPane" prefHeight="231.0" prefWidth="726.0" />
 
 </AnchorPane>
