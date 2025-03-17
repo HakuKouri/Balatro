@@ -2,7 +2,6 @@ package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,11 +24,13 @@ public class GameModel {
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
+    private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
+    private final ObservableList<Hand> possibleHand = FXCollections.observableArrayList();
     //endregion
 
     //region GAME SETTINGS VAR
     private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>(new Deck());
-    private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>();
+    private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
     private Random rand;
     //endregion
 
@@ -61,9 +62,10 @@ public class GameModel {
     //endregion
 
     //region UI VAR
-    private final BooleanProperty blindsVisiblity = new SimpleBooleanProperty(false);
+    private final BooleanProperty blindsVisibility = new SimpleBooleanProperty(false);
     private final BooleanProperty shopVisibility = new SimpleBooleanProperty(false);
     private final BooleanProperty rewardVisibility = new SimpleBooleanProperty(false);
+    private final BooleanProperty handButtonVisibility = new SimpleBooleanProperty(false);
     //endregion
 
     //region POINTS VAR
@@ -74,7 +76,7 @@ public class GameModel {
             BigDecimal.valueOf(100), BigDecimal.valueOf(300), BigDecimal.valueOf(800),
             BigDecimal.valueOf(2000), BigDecimal.valueOf(5000), BigDecimal.valueOf(11000),
             BigDecimal.valueOf(20000), BigDecimal.valueOf(35000), BigDecimal.valueOf(50000)};
-    public ObjectProperty<BigDecimal> pointsScoredProperty = new SimpleObjectProperty<>();
+    public ObjectProperty<BigDecimal> pointsScoredProperty = new SimpleObjectProperty<>(new BigDecimal(0));
     //endregion
 
 
@@ -184,6 +186,34 @@ public class GameModel {
     }
     //endregion
 
+    //Played Cards
+    public ObservableList<PlayingCard> getPlayedCards() {
+        return playedCards;
+    }
+
+    public void setPlayedCards(List<PlayingCard> playedCards) {
+        this.playedCards.clear();
+        this.playedCards.addAll(playedCards);
+    }
+
+    //Possible Hands
+    public ObservableList<Hand> getPossibleHand() {
+        return possibleHand;
+    }
+
+    public void setPossibleHand(List<Hand> handList) {
+        possibleHand.clear();
+        possibleHand.addAll(handList);
+    }
+
+    public void addHandToPossibleList(Hand hand) {
+        possibleHand.add(hand);
+    }
+
+    public void removeHandFromPossible(Hand hand) {
+        possibleHand.remove(hand);
+    }
+
 //    private final ObservableList<Tag> tagStack = FXCollections.observableArrayList();
     //TODO
 
@@ -199,7 +229,7 @@ public class GameModel {
     }
 
     public void setChosenDeck(Deck chosenDeck) {
-        this.chosenDeck.set(chosenDeck);
+        this.chosenDeck.get().setDeck(chosenDeck);
     }
 
     //Chosen Stake
@@ -212,7 +242,7 @@ public class GameModel {
     }
 
     public void setChosenStake(Stake chosenStake) {
-        this.chosenStake.set(chosenStake);
+        this.chosenStake.get().setStake(chosenStake);
     }
 
     //Random Seed
@@ -236,22 +266,10 @@ public class GameModel {
     }
 
     public void setBestHand(Hand bestHand) {
-        this.bestHand.set(bestHand);
+        this.bestHand.get().setName(bestHand.getName());
+        this.bestHand.get().setHand(bestHand);
     }
 
-    //region Hand Infos as String
-    public ObservableValue<String> getBestHandName() {
-        return new SimpleStringProperty(getBestHand().getName());
-    }
-    public ObservableValue<String> getBestHandLevel() {
-        return new SimpleStringProperty(String.format("lv. %d", getBestHand().getLevel()));
-    }
-    public ObservableValue<String> getBestHandChips() {
-        return new SimpleStringProperty(String.valueOf(getBestHand().getChips()));
-    }
-    public ObservableValue<String> getBestHandMult() {
-        return new SimpleStringProperty(String.valueOf(getBestHand().getMulti()));
-    }
     //endregion
 
     //Poker Hand Name
@@ -307,7 +325,7 @@ public class GameModel {
     }
     //endregion
 
-    //region HOLDING HAND VAR
+    //region HOLDING HAND GS
     //Handcards
     public ObservableList<PlayingCard> getHandCards() {
         return handCards;
@@ -320,6 +338,18 @@ public class GameModel {
 
     public void addCardToHandCards(PlayingCard card) {
         handCards.add(card);
+    }
+
+    public void addManyCardsToHandCards(List<PlayingCard> cards) {
+        handCards.addAll(cards);
+    }
+
+    public void removeCardFromHandCards(PlayingCard card) {
+        handCards.remove(card);
+    }
+
+    public void removeManyCardsFromHandCards(List<PlayingCard> cards) {
+        handCards.removeAll(cards);
     }
 
     public void clearHandCards() {
@@ -344,6 +374,10 @@ public class GameModel {
         selectedCards.remove(card);
     }
 
+    public void clearSelectedCards() {
+        selectedCards.clear();
+    }
+
     //Selected Cards Counter
     public int getSelectedCardCounter() {
         return selectedCardCounter.get();
@@ -355,6 +389,14 @@ public class GameModel {
 
     public void setSelectedCardCounter(int selectedCardCounter) {
         this.selectedCardCounter.set(selectedCardCounter);
+    }
+
+    public void incrementSelectedCardCounter() {
+        selectedCardCounter.set(selectedCardCounter.get()+1);
+    }
+
+    public void decrementSelectedCardCounter() {
+        selectedCardCounter.set(selectedCardCounter.get()-1);
     }
 
     //Sort Holding Hand Cards
@@ -534,27 +576,24 @@ public class GameModel {
     public void incrementHandsDiscarded() {
         setHandsDiscarded(getHandsDiscarded() + 1);
     }
-
-
-
     //endregion
 
     //region UI VAR
     //Blinds Visibility
-    public boolean isBlindsVisiblity() {
-        return blindsVisiblity.get();
+    public boolean getBlindsVisibility() {
+        return blindsVisibility.get();
     }
 
-    public BooleanProperty blindsVisiblityProperty() {
-        return blindsVisiblity;
+    public BooleanProperty blindsVisibilityProperty() {
+        return blindsVisibility;
     }
 
-    public void setBlindsVisiblity(boolean blindsVisiblity) {
-        this.blindsVisiblity.set(blindsVisiblity);
+    public void setBlindsVisibility(boolean blindsVisibility) {
+        this.blindsVisibility.set(blindsVisibility);
     }
 
     public void toggleBlindVisibity() {
-        setBlindsVisiblity(!isBlindsVisiblity());
+        setBlindsVisibility(!getBlindsVisibility());
     }
 
     //Shop Visibility
@@ -589,6 +628,19 @@ public class GameModel {
 
     public void toggleRewardVisibility() {
         setRewardVisibility(!isRewardVisibility());
+    }
+
+    //Hand Buttons Visibilty
+    public boolean isHandButtonVisibility() {
+        return handButtonVisibility.get();
+    }
+
+    public BooleanProperty handButtonVisibilityProperty() {
+        return handButtonVisibility;
+    }
+
+    public void toggleHandButtonVisibilty() {
+        handButtonVisibility.set(!handButtonVisibility.get());
     }
 
     //Difficulty Stake Image

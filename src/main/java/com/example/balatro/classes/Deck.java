@@ -1,28 +1,57 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class Deck
+public class Deck extends ImageView
 {
-    private int id;
+    private final IntegerProperty deckId = new SimpleIntegerProperty();
+    private final StringProperty deckName = new SimpleStringProperty();
     private final StringProperty deckCoverUrl = new SimpleStringProperty();
-    private String name;
-    private String description;
-    private String unlockCondition;
-    private int stageCleared;
+    private final StringProperty deckDescription = new SimpleStringProperty();
+    private final StringProperty unlockCondition = new SimpleStringProperty();
+    private final IntegerProperty stageCleared = new SimpleIntegerProperty();
 
 
-
-    public int getId()
-    {
-        return id;
+    public void setDeck(Deck deck) {
+        setDeckId(deck.getDeckId());
+        setDeckName(deck.getDeckName());
+        setDeckCoverUrl(deck.getDeckCoverUrl());
+        setDeckDescription(deck.getDeckDescription());
+        setUnlockCondition(deck.getUnlockCondition());
+        setStageCleared(deck.getStageCleared());
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
+
+    public int getDeckId() {
+        return deckId.get();
     }
+
+    public IntegerProperty deckIdProperty() {
+        return deckId;
+    }
+
+    public void setDeckId(int deckId) {
+        this.deckId.set(deckId);
+    }
+
+
+    public String getDeckName() {
+        return deckName.get();
+    }
+
+    public StringProperty deckNameProperty() {
+        return deckName;
+    }
+
+    public void setDeckName(String name) {
+        deckName.set(name);
+    }
+
 
     public String getDeckCoverUrl() {
         return deckCoverUrl.get();
@@ -32,47 +61,47 @@ public class Deck
         return deckCoverUrl;
     }
 
-    public void setDeckCoverUrl(String deckCoverUrl) {
-        this.deckCoverUrl.set(deckCoverUrl);
+    public void setDeckCoverUrl(String url) {
+        setImage(new Image("file:" + url));
+        deckCoverUrl.set(url);
     }
 
-    public String getName()
-    {
-        return name;
+
+    public String getDeckDescription() {
+        return deckDescription.get();
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public StringProperty deckDescriptionProperty() {
+        return deckDescription;
     }
 
-    public String getDescription()
-    {
-        return description;
+    public void setDeckDescription(String description) {
+        deckDescription.set(description);
     }
 
-    public void setDescription(String description)
-    {
-        this.description = description;
+
+    public String getUnlockCondition() {
+        return unlockCondition.get();
     }
 
-    public String getUnlockCondition()
-    {
+    public StringProperty unlockConditionProperty() {
         return unlockCondition;
     }
 
-    public void setUnlockCondition(String unlockCondition)
-    {
-        this.unlockCondition = unlockCondition;
+    public void setUnlockCondition(String condition) {
+        unlockCondition.set(condition);
     }
 
-    public int getStageCleared()
-    {
+
+    public int getStageCleared() {
+        return stageCleared.get();
+    }
+
+    public IntegerProperty stageClearedProperty() {
         return stageCleared;
     }
 
-    public void setStageCleared(int stageCleared)
-    {
-        this.stageCleared = stageCleared;
+    public void setStageCleared(int clearedStage) {
+        stageCleared.set(clearedStage);
     }
 }

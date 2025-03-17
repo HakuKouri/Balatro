@@ -115,7 +115,7 @@ public class NewGameMenuController
     //UI FUNCTIONS
     //DECK
     private void setDeckName() {
-        labelDeckName.setText(deckList.get(activeDeck).getName());
+        labelDeckName.setText(deckList.get(activeDeck).getDeckName());
     }
     private void loadDeckImage() {
         ImageView deckCover = new ImageView(new Image("file:"+deckList.get(activeDeck).getDeckCoverUrl()));
@@ -130,7 +130,7 @@ public class NewGameMenuController
         }
     }
     private void setDeckDescription() {
-        labelDeckEffect.setText(deckList.get(activeDeck).getDescription());
+        labelDeckEffect.setText(deckList.get(activeDeck).getDeckDescription());
     }
     private void changeAviableStakeLevel() {
         for(int i = 0; i < 7; i++) {
@@ -157,7 +157,6 @@ public class NewGameMenuController
         ((Rectangle)boxStakeLevel.getChildren().get(7 - activeStake)).setStroke(white);
     }
 
-
     private void resetSelection(HBox box) {
         for (Node circle: box.getChildren()) {
             ((Circle)circle).setStroke(black);
@@ -175,7 +174,6 @@ public class NewGameMenuController
 
     public void nextStake() { changeStake(true); }
     public void prevStake() { changeStake(false); }
-
 
     public void stakeLevel_onclick(MouseEvent mouseEvent) {
         Rectangle source = (Rectangle) mouseEvent.getSource();

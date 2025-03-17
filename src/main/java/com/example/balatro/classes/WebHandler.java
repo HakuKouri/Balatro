@@ -81,10 +81,10 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    deck.setId(arrayList.size()+1);
-                    deck.setDeckCoverUrl("src\\main\\resources\\com\\images\\DeckBacks\\deckBack_" + deck.getId() + ".png");
-                    deck.setName(cells.get(1).text());
-                    deck.setDescription(cells.get(2).text());
+                    deck.setDeckId(arrayList.size()+1);
+                    deck.setDeckCoverUrl("src\\main\\resources\\com\\images\\DeckBacks\\deckBack_" + deck.getDeckId() + ".png");
+                    deck.setDeckName(cells.get(1).text());
+                    deck.setDeckDescription(cells.get(2).text());
                     deck.setUnlockCondition(cells.get(3).text());
                 }
                 catch (Exception e) {
@@ -142,11 +142,11 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    blind.setId(arrayList.size()+1);
-                    blind.setBlindImageUrl("src\\main\\resources\\com\\images\\Blinds\\blind_" + blind.getId() + ".gif");
+                    blind.setBlindId(arrayList.size()+1);
+                    blind.setBlindImageUrl("src\\main\\resources\\com\\images\\Blinds\\blind_" + blind.getBlindId() + ".gif");
                     blind.setBlindName(cells.get(1).text());
                     blind.setBlindDescription(cells.get(2).text());
-                    blind.setBlineMinimumAnte(cells.get(3).text());
+                    blind.setBlindMinimumAnte(cells.get(3).text());
                     blind.setBlindScoreMultiplier(cells.get(4).text());
                     blind.setBlindEarn(cells.get(5).text());
                 }
@@ -176,9 +176,9 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    stake.setId(arrayList.size()+1);
-                    stake.setStakeImageStickerUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getId() + ".png");
-                    stake.setStakeImageChipUrl("src\\main\\resources\\com\\images\\Stakechips\\stake_chip_" + stake.getId() + ".png");
+                    stake.setStakeId(arrayList.size()+1);
+                    stake.setStakeImageStickerUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getStakeId() + ".png");
+                    stake.setStakeImageChipUrl("src\\main\\resources\\com\\images\\Stakechips\\stake_chip_" + stake.getStakeId() + ".png");
                     stake.setStakeName(cells.get(2).text());
                     stake.setStakeEffect(cells.get(3).text());
                     stake.setStakeUnlockCondition(cells.get(4).text());

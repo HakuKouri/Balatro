@@ -26,6 +26,13 @@ public class GameController
     public AnchorPane gameScreenAnchor;
     public ImageView stakeImageView;
     public Label pointsScoredLabel;
+    public Label roundLabel;
+    public Label anteLabel;
+    public Label moneyLabel;
+    public Label discardsLabel;
+    public Label handsLabel;
+    public Label toBeatEffect;
+    public GridPane toBeat;
     @FXML
     private AnchorPane smallBlindAnchor;
     @FXML
@@ -37,7 +44,7 @@ public class GameController
 
     //Handinfo
     @FXML
-    private Label infoHand;
+    private Label infoHandName;
     @FXML
     private Label infoHandLevel;
     @FXML
@@ -79,7 +86,6 @@ public class GameController
     private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
     private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
-    private final FXMLLoader loaderPointsScored = new FXMLLoader(getClass().getResource("/com/example/balatro/pointsScored_Pane.fxml"));
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand_StackPane.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
     //endregion
@@ -105,7 +111,6 @@ public class GameController
     //endregion
 
 
-
     //INSTANCE
     public static GameController instance;
     //MODELS
@@ -117,6 +122,7 @@ public class GameController
 
     //UI HANDLER
     public void initialize(){
+        System.out.println("INITIALIZE");
         instance = this;
 
         //LOAD / READY PLACEHOLDER
@@ -128,7 +134,6 @@ public class GameController
             playedCards = loaderPlayedCards.load();
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
-
 
             smallBlind = loaderSmall.load();
             smallController = loaderSmall.getController();
@@ -156,14 +161,11 @@ public class GameController
             rewardSummarController.setGameScreenController(this);
 
             placeHolderShopReward.setTranslateY(560);
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        setPlayingDeck();
-        gameModel.setRand(new Random());
+
         holdingHandController.hideHandButtons();
         toggleBlind();
 
@@ -177,23 +179,28 @@ public class GameController
                 }
             }
         });
-        gameModel.getChosenDeck().deckCoverUrlProperty().addListener((obs, oldVal, newVal) ->
-                imageViewDeckField.setImage(new Image("file:" + newVal)));
 
         //Bind HandInfo
-        infoHand.textProperty().bind(gameModel.getBestHandName());
-        infoHandLevel.textProperty().bind(gameModel.getBestHandLevel());
-        infoHandChips.textProperty().bind(gameModel.getBestHandChips());
-        infoHandMulti.textProperty().bind(gameModel.getBestHandMult());
+        infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
+        infoHandLevel.textProperty().bind(
+                Bindings.when(gameModel.getBestHand().levelProperty().greaterThan(0))
+                        .then(Bindings.concat("lv. ", gameModel.getBestHand().levelProperty().asString()))
+                        .otherwise("lv."));
+        infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
+        infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
 
         //Bind Points
         gameModel.pointsReachedProperty().bind(Bindings.createBooleanBinding(
                 () -> gameModel.getScoreToReach().compareTo(gameModel.getScoredPoints()) >= 0,
                 gameModel.pointsScoredProperty, gameModel.pointsReachedProperty()
         ));
-        stakeImageView.imageProperty().bind(Bindings.createObjectBinding(() -> new Image(gameModel.getStakeChipImageUrl(),true), gameModel.stakeChipImageUrlProperty()));
+
+        imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
+        stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+
         pointsScoredLabel.textProperty().bind(Bindings.createObjectBinding(
                 () -> gameModel.getScoredPoints().toString(), gameModel.pointsScoredProperty));
+
     }
 
     private void setBlindPanels() {
@@ -216,7 +223,7 @@ public class GameController
         TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
         TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
         TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
-        if (gameModel.isBlindsVisiblity()) {
+        if (gameModel.getBlindsVisibility()) {
             transitionBlindBox.setToY(0);
             if(round%3 == 1) transitionSmall.setToY(-50);
             if(round%3 == 2) transitionBig.setToY(-50);
@@ -234,8 +241,10 @@ public class GameController
     }
 
     private void setHandInfo(List<String> hands) {
-        /*int maxPoints = 0;
-        int bestHandIndex = -1;
+        int maxPoints = 0;
+
+        if(hands.isEmpty()) gameModel.setBestHand(new Hand());
+
         for (Hand hand : gameModel.getAllHandList()) {
             if(hands.contains(hand.getName())) {
                 System.out.println(hand.getName());
@@ -243,19 +252,10 @@ public class GameController
                 System.out.println("Possible Points: " + points);
                 if(maxPoints < points) {
                     maxPoints = points;
-                    bestHandIndex = gameModel.getAllHandList().indexOf(hand);
+                    gameModel.setBestHand(hand);
                 }
             }
         }
-        if(!holdingHandController.getSelectedCards().isEmpty()) {
-            handInfoController.setHandName(gameModel.getAllHandList().get(bestHandIndex).getName());
-            handInfoController.setHandLevel(gameModel.getAllHandList().get(bestHandIndex).getLevel());
-            handInfoController.setHandChips(gameModel.getAllHandList().get(bestHandIndex).getChips());
-            handInfoController.setHandMultiplier(gameModel.getAllHandList().get(bestHandIndex).getMulti());
-        } else {
-            handInfoController.clearHandInfo();
-        }*/
-
     }
 
     private void openShop() {
@@ -270,7 +270,7 @@ public class GameController
         placeHolderShopReward.setTranslateY(560);
     }
 
-    private void openSummary() {
+    public void openSummary() {
         if(placeHolderShopReward.getTranslateY() != 0) {
             placeHolderShopReward.setTranslateY(0);
         }
@@ -325,17 +325,19 @@ public class GameController
     private void playingCardClicked(PlayingCard card) {
         if(!card.isClickAble()) return;
 
-        if(card.getTranslateY() == 0 && holdingHandController.getSelectedCardCounter() < 5) {
-            holdingHandController.addCardToSelectedCard(card);
+        if(card.getTranslateY() == 0 && gameModel.getSelectedCardCounter() < 5) {
+            gameModel.addCardToSelectedCards(card);
             card.setTranslateY(-20);
-            holdingHandController.selectedCardCounterIncrement();
+            gameModel.incrementSelectedCardCounter();
         }
         else if(card.getTranslateY() == -20) {
-            holdingHandController.removeCardFromSelectedCard(card);
+            gameModel.removeCardFromSelectedCards(card);
             card.setTranslateY(0);
-            holdingHandController.selectedCardCounterDecrement();
+            gameModel.decrementSelectedCardCounter();
         }
-        setHandInfo(checkHand.evaluateHands(holdingHandController.getSelectedCards()));
+
+        //gameModel.bestHandProperty()
+        setHandInfo(checkHand.evaluateHands(gameModel.getSelectedCards()));
     }
 
     public void playCards(List<PlayingCard> playedCards) {
@@ -361,16 +363,7 @@ public class GameController
                     playedCardsController.getPlayedCards_StackPane().get(i).setTranslateY(0);
             }
 
-            /*handInfoController.setHandChips(gameModel.getAllHandList().stream().filter(
-                    name -> Objects.equals(name.getName(), handInfoController.getHandName()))
-                    .collect(Collectors.toList()).get(0).getChips());
-            handInfoController.setHandMultiplier(gameModel.getAllHandList().stream().filter(
-                    name -> Objects.equals(name.getName(), handInfoController.getHandName()))
-                    .collect(Collectors.toList()).get(0).getMulti());
-                    */
-            holdingHandController.clearSelectedCards();
-
-            countPoints();
+            gameModel.clearSelectedCards();
 
             delay(2000,() -> {playedCardsController.removeAllCards(); drawCards(8 - holdingHandController.getHoldingHandSize());});
 
@@ -395,6 +388,7 @@ public class GameController
 
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
+
         gameModel.setRand(new Random());
         gameModel.setChosenDeck(gameSetup.getChosenDeck());
         gameModel.setChosenStake(gameSetup.getChosenStake());
@@ -404,12 +398,11 @@ public class GameController
         gameModel.setRound(1);
         gameModel.setMoney(0);
 
+        gameModel.setRand(new Random());
 
-        //gameModel.setChosenStake().setStakeImageView("file:" +gameSetup.getChosenStake().getStakeImageChipUrl());
-
+        setPlayingDeck();
         createBlindList();
         setBlindPanels();
-        BlindPickPanelsController.setStageImage(new Image("file:" + gameModel.getChosenStake().getStakeImageChipUrl()));
     }
 
     public void startRound(Blind blind, BigDecimal score) {
@@ -436,29 +429,6 @@ public class GameController
         System.out.println(tag);
         System.out.println(spaceTag.getChildren().stream().findFirst());
         gameModel.setRound(gameModel.getRound() + 1);
-    }
-
-    private void countPoints() {
-        for(int i = 0; i < playedCardsController.count(); i++) {
-            if(playedCardsController.getPlayedCards_StackPane().get(i).getTranslateY() == -20) {
-                gameModel.addToScoredPoints(BigDecimal.valueOf(((PlayingCard)playedCardsController.getPlayedCards_StackPane().get(i)).getValue()));
-            }
-        }
-
-        gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getChips() * gameModel.getBestHand().getMulti()));
-
-        if(gameModel.isPointsReached()) {
-            openSummary();
-            gameModel.setRound(gameModel.getRound() + 1);
-            gameModel.setScoredPoints(BigDecimal.valueOf(0));
-            holdingHandController.clearHandCards();
-
-            if(gameModel.getAllBlindsList().get(gameModel.getRound()-1).getId() > 1) {
-                gameModel.setAnte((gameModel.getAnte() + 1));
-            }
-        } else {
-            holdingHandController.hideHandButtons();
-        }
     }
 
     public void addMoney(int reward) {

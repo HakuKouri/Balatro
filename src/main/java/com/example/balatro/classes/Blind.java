@@ -1,109 +1,147 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-import java.util.List;
-
-public class Blind
+public class Blind extends ImageView
 {
-    private int id;
-    private String blindImageUrl;
-    private String blindName;
-    private String blindDescription;
-    private String blineMinimumAnte;
-    private String blindScoreMultiplier;
-    private String blindEarn;
-    private boolean blindSkipped;
-    private Color colorScheme;
+    private final IntegerProperty blindId = new SimpleIntegerProperty();
+    private final StringProperty blindImageUrl = new SimpleStringProperty();
+    private final StringProperty blindName = new SimpleStringProperty();
+    private final StringProperty blindDescription = new SimpleStringProperty();
+    private final StringProperty blindMinimumAnte = new SimpleStringProperty();
+    private final StringProperty blindScoreMultiplier = new SimpleStringProperty();
+    private final StringProperty blindEarn = new SimpleStringProperty();
+    private final BooleanProperty blindSkipped = new SimpleBooleanProperty();
+    private final ObjectProperty<Color> colorScheme = new SimpleObjectProperty<>();
+
+    public Blind() {
+        blindImageUrl.addListener((obs, oldVal, newVal) -> {
+            this.setImage(new Image("file:" +newVal,true));
+        });
+    }
 
     //region GETTER SETTER
-    public int getId()
-    {
-        return id;
+    public void setBlind(Blind blind) {
+        blindId.set(blind.getBlindId());
+        blindImageUrl.set(blind.getBlindImageUrl());
+        blindName.set(blind.getBlindName());
+        blindDescription.set(blind.getBlindDescription());
+        blindMinimumAnte.set(blind.getBlindMinimumAnte());
+        blindScoreMultiplier.set(blind.getBlindScoreMultiplier());
+        blindEarn.set(blind.getBlindEarn());
+        blindSkipped.set(blind.isBlindSkipped());
+        colorScheme.set(blind.getColorScheme());
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
+    public int getBlindId() {
+        return blindId.get();
     }
 
-    public String getBlindImageUrl()
-    {
+    public IntegerProperty blindIdProperty() {
+        return blindId;
+    }
+
+    public void setBlindId(int blindId) {
+        this.blindId.set(blindId);
+    }
+
+    public String getBlindImageUrl() {
+        return blindImageUrl.get();
+    }
+
+    public StringProperty blindImageUrlProperty() {
         return blindImageUrl;
     }
 
-    public void setBlindImageUrl(String blindImageUrl)
-    {
-        this.blindImageUrl = blindImageUrl;
+    public void setBlindImageUrl(String blindImageUrl) {
+        this.blindImageUrl.set(blindImageUrl);
     }
 
-    public String getBlindName()
-    {
+    public String getBlindName() {
+        return blindName.get();
+    }
+
+    public StringProperty blindNameProperty() {
         return blindName;
     }
 
-    public void setBlindName(String blindName)
-    {
-        this.blindName = blindName;
+    public void setBlindName(String blindName) {
+        this.blindName.set(blindName);
     }
 
-    public String getBlindDescription()
-    {
+    public String getBlindDescription() {
+        return blindDescription.get();
+    }
+
+    public StringProperty blindDescriptionProperty() {
         return blindDescription;
     }
 
-    public void setBlindDescription(String blindDescription)
-    {
-        this.blindDescription = blindDescription;
+    public void setBlindDescription(String blindDescription) {
+        this.blindDescription.set(blindDescription);
     }
 
-    public String getBlineMinimumAnte()
-    {
-        return blineMinimumAnte;
+    public String getBlindMinimumAnte() {
+        return blindMinimumAnte.get();
     }
 
-    public void setBlineMinimumAnte(String blineMinimumAnte)
-    {
-        this.blineMinimumAnte = blineMinimumAnte;
+    public StringProperty blindMinimumAnteProperty() {
+        return blindMinimumAnte;
     }
 
-    public String getBlindScoreMultiplier()
-    {
+    public void setBlindMinimumAnte(String blindMinimumAnte) {
+        this.blindMinimumAnte.set(blindMinimumAnte);
+    }
+
+    public String getBlindScoreMultiplier() {
+        return blindScoreMultiplier.get();
+    }
+
+    public StringProperty blindScoreMultiplierProperty() {
         return blindScoreMultiplier;
     }
 
     public void setBlindScoreMultiplier(String blindScoreMultiplier) {
-        this.blindScoreMultiplier = blindScoreMultiplier;
+        this.blindScoreMultiplier.set(blindScoreMultiplier);
     }
 
-    public String getBlindEarn()
-    {
+    public String getBlindEarn() {
+        return blindEarn.get();
+    }
+
+    public StringProperty blindEarnProperty() {
         return blindEarn;
     }
 
-    public void setBlindEarn(String blindEarn)
-    {
-        this.blindEarn = blindEarn;
+    public void setBlindEarn(String blindEarn) {
+        this.blindEarn.set(blindEarn);
     }
 
-    public boolean getBlindSkipped() {
+    public boolean isBlindSkipped() {
+        return blindSkipped.get();
+    }
+
+    public BooleanProperty blindSkippedProperty() {
         return blindSkipped;
     }
 
     public void setBlindSkipped(boolean blindSkipped) {
-        this.blindSkipped = blindSkipped;
+        this.blindSkipped.set(blindSkipped);
     }
 
     public Color getColorScheme() {
+        return colorScheme.get();
+    }
+
+    public ObjectProperty<Color> colorSchemeProperty() {
         return colorScheme;
     }
 
-    public void setColorScheme(String string) {
-        this.colorScheme = Color.web(string);
+    public void setColorScheme(Color colorScheme) {
+        this.colorScheme.set(colorScheme);
     }
     //endregion
-
-    public static List<Blind> setBlindList() {
-        return SqlHandler.getAllBlinds();
-    }
 }

@@ -28,6 +28,14 @@ public class Hand {
     }
 
     //region GETTER SETTER
+    public void setHand(Hand hand) {
+        setName(hand.getName());
+        setLevel(hand.getLevel());
+        setChips(hand.getChips());
+        setMulti(hand.getMulti());
+        setPlayed(hand.getPlayed());
+    }
+
     public String getName() {
         return name.get();
     }

@@ -2,6 +2,10 @@ package com.example.balatro.controller;
 
 import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.Tag;
+import com.example.balatro.models.GameModel;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -16,6 +20,8 @@ import java.math.BigDecimal;
 public class BlindPickPanelsController {
 
     public static BlindPickPanelsController smallPanel;
+
+    public Label effectText_label;
 
     @FXML
     private Button btnSelectBlind;
@@ -34,9 +40,10 @@ public class BlindPickPanelsController {
     @FXML
     private Label lblEarn;
 
-    private Blind blind;
+    private ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
     private GameController gameController;
+    private GameModel model = GameController.getInstance().gameModel;
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
@@ -45,25 +52,21 @@ public class BlindPickPanelsController {
     private AnchorPane skipPane;
     private AnchorPane bossPane;
 
-    private static Image stakeImage;
-
     public void initialize() {
         System.out.printf("guck mal");
-    }
-
-    public static void setStageImage(Image image) {
-        stakeImage = image;
+        imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
+        imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
+        lblBlindName.textProperty().bind(blind.get().blindNameProperty());
+        effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
     }
 
     public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
-        this.blind = blind;
+        this.blind.get().setBlind(blind);
         if(blindNumber == 1) {
             setButtonText("Select");
-            setBlindName(blind.getBlindName());
-            setBlindImage(new Image("file:"+ blind.getBlindImageUrl()));
-            //setBossPanel(false);
+
             setActivity(false);
             setEarn(3);
             try {
@@ -76,9 +79,7 @@ public class BlindPickPanelsController {
             setTag(tag);
         } else if(blindNumber == 2) {
             setButtonText("Upcoming");
-            setBlindName(blind.getBlindName());
-            setBlindImage(new Image("file:" + blind.getBlindImageUrl()));
-            //setBossPanel(false);
+
             setActivity(false);
             setEarn(4);
             try {
@@ -91,9 +92,7 @@ public class BlindPickPanelsController {
             setTag(tag);
         } else if(blindNumber == 3) {
             setButtonText("Upcoming");
-            setBlindName(blind.getBlindName());
-            setBlindImage(new Image("file:" + blind.getBlindImageUrl()));
-            //setBossPanel(true);
+
             setActivity(false);
             setEarn(5);
             try {
@@ -125,16 +124,8 @@ public class BlindPickPanelsController {
         blindPanel.setDisable(isActivity);
     }
 
-    public void setBlindName(String name) {
-        lblBlindName.setText(name);
-    }
-
     public void setBlindImage(Image image) {
         imageViewBlindChip.setImage(image);
-    }
-
-    public void setStakeImage(Image image) {
-        imageViewStakeImage.setImage(stakeImage);
     }
 
     public void setMinScore(BigDecimal score) {
@@ -148,7 +139,7 @@ public class BlindPickPanelsController {
     }
 
     public void play() {
-        gameController.startRound(blind,new BigDecimal(lblMinScore.getText()));
+        gameController.startRound(blind.get(),new BigDecimal(lblMinScore.getText()));
     }
 
     public void skip() {

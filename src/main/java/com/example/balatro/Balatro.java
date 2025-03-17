@@ -15,7 +15,7 @@ public class Balatro extends Application
     static private Stage primaryStage;
 
     private static FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
-    private static FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
+
 
     @Override
     public void start(Stage primaryStage) throws IOException
@@ -28,16 +28,19 @@ public class Balatro extends Application
         //primaryStage.setFullScreen(true);
         primaryStage.show();
 
-        SqlHandler.main();
+        new Thread(() -> SqlHandler.main()).start();
         //WebHandler.setupDb();
     }
 
 
     public static void newGame(GameSetup gameSetup) throws IOException {
+        FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
         Scene scene = new Scene(fxmlLoaderGame.load(), 1280, 720);
         primaryStage.setScene(scene);
 
-        GameController.getInstance().startNewGame(gameSetup);
+        GameController controller = fxmlLoaderGame.getController();
+        System.out.println(controller);
+        controller.startNewGame(gameSetup);
     }
 
     public static void main(String[] args)

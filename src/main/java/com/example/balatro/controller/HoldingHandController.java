@@ -54,15 +54,15 @@ public class HoldingHandController {
     }
 
     public void addCardToHoldingHand(PlayingCard card) {
-        HoldingHand.getChildren().add(card);
+        model.addCardToHandCards(card);
     }
 
     public void removeCardFromHoldingHand(PlayingCard card) {
-        HoldingHand.getChildren().remove(card);
+        model.removeCardFromHandCards(card);
     }
 
     public void addAllToHoldingHand(List<PlayingCard> cards) {
-        HoldingHand.getChildren().addAll(cards);
+        model.addManyCardsToHandCards(cards);
     }
 
     public void clearHoldingHand() {
@@ -186,7 +186,7 @@ public class HoldingHandController {
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        HoldingHand.getChildren().removeAll(getSelectedCards());
+        model.removeManyCardsFromHandCards(getSelectedCards());
 
         GameController.getInstance().drawCards(HoldingHand.getChildren().size());
     }

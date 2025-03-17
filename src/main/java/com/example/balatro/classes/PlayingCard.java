@@ -4,17 +4,17 @@ import javafx.scene.image.Image;
 
 public class PlayingCard extends Card
 {
-    String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
-    int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
-    String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
-    int orderPosition;
-    String rank;
-    String suit;
-    int value;
-    Seal seal;
-    Enhancement enhancement;
-    Edition edition;
-    boolean clickAble = false;
+    private String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
+    private int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
+    private String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
+    private int orderPosition;
+    private String rank;
+    private String suit;
+    private int value;
+    private Seal seal;
+    private Enhancement enhancement;
+    private Edition edition;
+    private boolean clickAble = false;
 
     public PlayingCard(int rank, int suit) {
         this.rank = rankArray[rank];

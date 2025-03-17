@@ -1,5 +1,7 @@
 package com.example.balatro.classes;
 
+import javafx.scene.paint.Color;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,10 +129,10 @@ public class SqlHandler {
                 } else if (listItem.getClass() == Deck.class) {
                     query += DecksTableColumns + " VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Deck) listItem).getId());
+                    ps.setInt(1, ((Deck) listItem).getDeckId());
                     ps.setString(2, ((Deck) listItem).getDeckCoverUrl());
-                    ps.setString(3, ((Deck) listItem).getName());
-                    ps.setString(4, ((Deck) listItem).getDescription());
+                    ps.setString(3, ((Deck) listItem).getDeckName());
+                    ps.setString(4, ((Deck) listItem).getDeckDescription());
                     ps.setString(5, ((Deck) listItem).getUnlockCondition());
                     ps.setInt(6, 0);
                     ps.executeUpdate();
@@ -138,11 +140,11 @@ public class SqlHandler {
                     //BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
                     query += BlindsTableColumns + "VALUES (?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Blind) listItem).getId());
+                    ps.setInt(1, ((Blind) listItem).getBlindId());
                     ps.setString(2, ((Blind) listItem).getBlindImageUrl());
                     ps.setString(3, ((Blind) listItem).getBlindName());
                     ps.setString(4, ((Blind) listItem).getBlindDescription());
-                    ps.setString(5, ((Blind) listItem).getBlineMinimumAnte());
+                    ps.setString(5, ((Blind) listItem).getBlindMinimumAnte());
                     ps.setString(6, ((Blind) listItem).getBlindScoreMultiplier());
                     ps.setString(7, ((Blind) listItem).getBlindEarn());
                     ps.executeUpdate();
@@ -150,7 +152,7 @@ public class SqlHandler {
                     //StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
                     query += StakesTableColumns + "VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Stake) listItem).getId());
+                    ps.setInt(1, ((Stake) listItem).getStakeId());
                     ps.setString(2, ((Stake) listItem).getStakeImageStickerUrl());
                     ps.setString(3, ((Stake) listItem).getStakeImageChipUrl());
                     ps.setString(4, ((Stake) listItem).getStakeName());
@@ -298,10 +300,10 @@ public class SqlHandler {
 
             while (rs.next()) {
                 Deck deck = new Deck();
-                deck.setId(rs.getInt(1));
+                deck.setDeckId(rs.getInt(1));
                 deck.setDeckCoverUrl(rs.getString(2));
-                deck.setName(rs.getString(3));
-                deck.setDescription(rs.getString(4));
+                deck.setDeckName(rs.getString(3));
+                deck.setDeckDescription(rs.getString(4));
                 deck.setUnlockCondition(rs.getString(5));
                 deck.setStageCleared(rs.getInt(6));
                 deckList.add(deck);
@@ -329,7 +331,7 @@ public class SqlHandler {
 
             while (rs.next()) {
                 Stake stake = new Stake();
-                stake.setId(rs.getInt(1));
+                stake.setStakeId(rs.getInt(1));
                 stake.setStakeImageStickerUrl(rs.getString(2));
                 stake.setStakeImageChipUrl(rs.getString(3));
                 stake.setStakeName(rs.getString(4));
@@ -357,14 +359,14 @@ public class SqlHandler {
             while (rs.next()) {
                 Blind blind = new Blind();
 
-                blind.setId(rs.getInt(1));
+                blind.setBlindId(rs.getInt(1));
                 blind.setBlindImageUrl(rs.getString(2));
                 blind.setBlindName(rs.getString(3));
                 blind.setBlindDescription(rs.getString(4));
-                blind.setBlineMinimumAnte(rs.getString(5));
+                blind.setBlindMinimumAnte(rs.getString(5));
                 blind.setBlindScoreMultiplier(rs.getString(6));
                 blind.setBlindEarn(rs.getString(7));
-                blind.setColorScheme(rs.getString(8));
+                blind.setColorScheme(Color.valueOf(rs.getString(8)));
 
                 blinds.add(blind);
             }

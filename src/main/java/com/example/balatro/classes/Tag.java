@@ -19,8 +19,6 @@ public class Tag extends ImageView
     //Constructor
     public Tag() {
         tagImageUrl.addListener((obs, oldVal, newVal) -> {
-            System.out.println(oldVal);
-            System.out.println(newVal);
             this.setImage(new Image("file:" +newVal,true));
         });
         this.setFitHeight(100);
