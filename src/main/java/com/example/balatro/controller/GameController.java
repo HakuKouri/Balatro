@@ -21,18 +21,22 @@ import java.util.*;
 public class GameController
 {
     //region FXML IDs
-    public AnchorPane holdingHand_AnchorPane;
-    public StackPane playedCards_StackPane;
-    public AnchorPane gameScreenAnchor;
-    public ImageView stakeImageView;
-    public Label pointsScoredLabel;
-    public Label roundLabel;
-    public Label anteLabel;
-    public Label moneyLabel;
-    public Label discardsLabel;
-    public Label handsLabel;
-    public Label toBeatEffect;
-    public GridPane toBeat;
+    @FXML
+    private AnchorPane holdingHand_AnchorPane;
+    @FXML
+    private StackPane playedCards_StackPane;
+    @FXML
+    private AnchorPane gameScreenAnchor;
+
+
+
+
+
+
+    @FXML
+    private Label toBeatEffect;
+    @FXML
+    private GridPane toBeat;
     @FXML
     private AnchorPane smallBlindAnchor;
     @FXML
@@ -42,7 +46,14 @@ public class GameController
     @FXML
     private Label labelBlind;
 
-    //Handinfo
+    //region Score Display
+    @FXML
+    private ImageView stakeImageView;
+    @FXML
+    private Label pointsScoredLabel;
+    //endregion
+
+    //region Handinfo
     @FXML
     private Label infoHandName;
     @FXML
@@ -51,9 +62,22 @@ public class GameController
     private Label infoHandChips;
     @FXML
     private Label infoHandMulti;
+    //endregion
 
+    //region Run Info
+    @FXML
+    private Label handsLabel;
+    @FXML
+    private Label discardsLabel;
+    @FXML
+    private Label moneyLabel;
+    @FXML
+    private Label anteLabel;
+    @FXML
+    private Label roundLabel;
+    //endregion
 
-    //to beat elements
+    //region to beat elements
     @FXML
     private ImageView toBeatImage;
     @FXML
@@ -166,6 +190,9 @@ public class GameController
         }
 
 
+
+        //region
+
         holdingHandController.hideHandButtons();
         toggleBlind();
 
@@ -180,6 +207,15 @@ public class GameController
             }
         });
 
+        //Bind Deck Cover
+        imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
+
+        //Bind Points Scored
+        stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+
+        pointsScoredLabel.textProperty().bind(Bindings.createObjectBinding(
+                () -> gameModel.getScoredPoints().toString(), gameModel.pointsScoredProperty));
+
         //Bind HandInfo
         infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
         infoHandLevel.textProperty().bind(
@@ -189,17 +225,13 @@ public class GameController
         infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
         infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
 
-        //Bind Points
+        //Bind Points Reached
         gameModel.pointsReachedProperty().bind(Bindings.createBooleanBinding(
                 () -> gameModel.getScoreToReach().compareTo(gameModel.getScoredPoints()) >= 0,
                 gameModel.pointsScoredProperty, gameModel.pointsReachedProperty()
         ));
 
-        imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
-        stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
 
-        pointsScoredLabel.textProperty().bind(Bindings.createObjectBinding(
-                () -> gameModel.getScoredPoints().toString(), gameModel.pointsScoredProperty));
 
     }
 
@@ -314,6 +346,10 @@ public class GameController
         holdingHandController.addCardToHand(gameModel.getDeckToPlay().get(0));
         gameModel.getDeckToPlay().remove(0);
         holdingHandController.moveCards();
+    }
+
+    public void drawCards() {
+
     }
 
     public void drawCards(int num) {

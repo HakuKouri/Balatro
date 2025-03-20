@@ -22,7 +22,7 @@ public class HoldingHandController {
 
 
     GameModel model = GameController.getInstance().gameModel;
-    private boolean handButtonHidden = false;
+
 
     public void initialize() {
         model.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
@@ -191,24 +191,10 @@ public class HoldingHandController {
         GameController.getInstance().drawCards(HoldingHand.getChildren().size());
     }
 
-    /*public void discardSelectedCards(ActionEvent actionEvent) {
-        if(holdingHandController.getSelectedCardCounter() != 0) {
-            for(int i = 0; i < holdingHandController.getSelectedCardCounter(); i++) {
-                holdingHandController.removeCardFromHoldingHand(holdingHandController.getSelectedCards().get(i));
-                holdingHandController.removeCardFromHand(holdingHandController.getSelectedCards().get(i));
-            }
-        }
-        holdingHandController.setSelectedCardCounter(0);
-        holdingHandController.clearSelectedCards();
-
-        drawCards(8 - holdingHandController.getHandCards().size());
-        setHandInfo(new ArrayList<>());
-    }*/
-
     public void hideHandButtons() {
         System.out.println("hide button");
-        handButtonHidden = !handButtonHidden;
-        if(handButtonHidden) {
+        model.toggleHandButtonVisibilty();
+        if(model.isHandButtonVisibility()) {
             moveHoldingHandDown();
             handButtonBox.setTranslateY(100);
         } else {

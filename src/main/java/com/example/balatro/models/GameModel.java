@@ -658,6 +658,7 @@ public class GameModel {
 
 
     //endregion
+
     //Scored Points
     public BigDecimal getScoredPoints() {
         return scoredPoints.get();
