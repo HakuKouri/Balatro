@@ -191,9 +191,7 @@ public class GameController
 
 
 
-        //region
-
-        holdingHandController.hideHandButtons();
+        //holdingHandController.hideHandButtons();
         toggleBlind();
 
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
@@ -382,7 +380,7 @@ public class GameController
 
     public void playSelectedCards(ActionEvent actionEvent) {
         if(holdingHandController.getSelectedCardCounter() != 0) {
-            holdingHandController.hideHandButtons();
+            //holdingHandController.hideHandButtons();
             for(PlayingCard card : holdingHandController.getSelectedCards()) {
                 card.setTranslateX(0);
                 card.setClickAble(false);
@@ -442,7 +440,7 @@ public class GameController
     }
 
     public void startRound(Blind blind, BigDecimal score) {
-        holdingHandController.hideHandButtons();
+        //holdingHandController.hideHandButtons();
         gameModel.setScoreToReach(score);
         toggleBlind();
         labelBlind.setText(blind.getBlindName());

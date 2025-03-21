@@ -20,9 +20,7 @@ public class HoldingHandController {
     @FXML
     private GridPane handButtonBox;
 
-
     GameModel model = GameController.getInstance().gameModel;
-
 
     public void initialize() {
         model.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
@@ -35,6 +33,9 @@ public class HoldingHandController {
                 }
             }
         });
+
+        handButtonBox.visibleProperty().bind(model.handButtonVisibilityProperty());
+        model.toggleHandButtonVisibilty();
     }
 
     public List<PlayingCard> getSelectedCards() {
@@ -179,9 +180,8 @@ public class HoldingHandController {
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        HoldingHand.getChildren().removeAll(getSelectedCards());
-        model.getHandCards().removeAll(getSelectedCards());
         GameController.getInstance().playCards(getSelectedCards());
+        model.getHandCards().removeAll(getSelectedCards());
         moveCards();
     }
 
@@ -190,18 +190,5 @@ public class HoldingHandController {
 
         GameController.getInstance().drawCards(HoldingHand.getChildren().size());
     }
-
-    public void hideHandButtons() {
-        System.out.println("hide button");
-        model.toggleHandButtonVisibilty();
-        if(model.isHandButtonVisibility()) {
-            moveHoldingHandDown();
-            handButtonBox.setTranslateY(100);
-        } else {
-            moveHoldingHandUp();
-            handButtonBox.setTranslateY(0);
-        }
-    }
-
 
 }
