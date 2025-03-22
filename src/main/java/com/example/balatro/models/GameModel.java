@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class GameModel {
 
@@ -32,6 +29,7 @@ public class GameModel {
     private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>(new Deck());
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
     private Random rand;
+    private final ObjectProperty<Blind> activeBlind = new SimpleObjectProperty<>(new Blind());
     //endregion
 
     //region HAND POINTS VAR
@@ -138,6 +136,18 @@ public class GameModel {
     //endregion
 
     //region Blinds
+    public Blind getActiveBlind() {
+        return activeBlind.get();
+    }
+
+    public ObjectProperty<Blind> activeBlindProperty() {
+        return activeBlind;
+    }
+
+    public void setActiveBlind(Blind pickedBlind) {
+        activeBlind.get().setBlind(pickedBlind);
+    }
+
     public List<Blind> getRunBlinds() {
         return runBlinds;
     }
@@ -392,11 +402,11 @@ public class GameModel {
     }
 
     public void incrementSelectedCardCounter() {
-        selectedCardCounter.set(selectedCardCounter.get()+1);
+        selectedCardCounter.set(selectedCardCounter.get() + 1);
     }
 
     public void decrementSelectedCardCounter() {
-        selectedCardCounter.set(selectedCardCounter.get()-1);
+        selectedCardCounter.set(selectedCardCounter.get() - 1);
     }
 
     //Sort Holding Hand Cards
@@ -682,6 +692,10 @@ public class GameModel {
         return scoreToReach.get();
     }
 
+    public ObjectProperty<BigDecimal> scoreToReachProperty() {
+        return scoreToReach;
+    }
+
     public void setScoreToReach(BigDecimal scoreToReach) {
         this.scoreToReach.set(scoreToReach);
     }
@@ -697,8 +711,8 @@ public class GameModel {
 
     //Chip Requirement
     public BigDecimal[] getChipRequirement() {
-    return chipRequirement;
-}
+        return chipRequirement;
+    }
 
     public BigDecimal getChipRequirementByIndex(int index) {
         return getChipRequirement()[index];

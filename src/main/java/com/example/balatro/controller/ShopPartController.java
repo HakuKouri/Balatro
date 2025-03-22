@@ -20,7 +20,7 @@ public class ShopPartController {
     private StackPane BoosterArea;
 
     private GameController gameController;
-    private GameModel model = GameController.instance.gameModel;
+    private GameModel model = GameController.getGameModel();
 
     private static List<Booster> boosterList = SqlHandler.getAllBooster();
     private static List<Voucher> voucherList = SqlHandler.getAllVoucher();

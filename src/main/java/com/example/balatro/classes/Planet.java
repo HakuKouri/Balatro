@@ -1,7 +1,11 @@
 package com.example.balatro.classes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Planet extends Card
 {
+    private static final Map<String, Boolean> uniquePlanetPlayed = new HashMap<String, Boolean>();
 
     private int planetId;
     private String planetImageUrl;
@@ -11,10 +15,30 @@ public class Planet extends Card
     private String planetHandBaseScore;
     private boolean secret;
 
+    //Constructor
     public Planet() {
         secret = false;
     }
 
+    //Statics
+    public static void putUniquePlanet(String planetName) {
+        uniquePlanetPlayed.put(planetName,false);
+    }
+
+    public static int getUniquePlanetsPlayedCount() {
+        int counter = 0;
+        for (boolean value : uniquePlanetPlayed.values()) {
+            if(value)
+                counter++;
+        }
+        return counter;
+    }
+
+    public static void resetUniquePlanets() {
+        for (boolean value : uniquePlanetPlayed.values()) value = false;
+    }
+
+    //GETTER SETTER
     public int getPlanetId() {
         return planetId;
     }

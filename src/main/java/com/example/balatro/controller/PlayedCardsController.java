@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.classes.PokerHandChecker;
 import com.example.balatro.models.GameModel;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -15,7 +16,7 @@ public class PlayedCardsController {
 
     public StackPane playedCards_StackPane;
 
-    GameModel model = GameController.instance.gameModel;
+    GameModel model = GameController.getGameModel();
 
     public void initialize() {
         model.getPlayedCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
@@ -35,26 +36,27 @@ public class PlayedCardsController {
     }
 
 
-
     public void addCard(PlayingCard card) {
         playedCards_StackPane.getChildren().add(card);
         moveCards();
     }
 
-    public void addAllCards(List<PlayingCard> cards) {
-        playedCards_StackPane.getChildren().addAll(cards);
+    public void addSelectedCards() {
+        model.getPlayedCards().addAll(model.getSelectedCards());
+        model.getSelectedCards().clear();
         moveCards();
+        List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(model.getSelectedCards(), model.getBestHand().getName());
+        for(PlayingCard card : model.getPlayedCards()) {
+            if(countedCards.contains(card)) {
+                card.setTranslateY(-20);
+            } else
+                card.setTranslateY(0);
+        }
+
         countPoints();
     }
 
     private void countPoints() {
-        /*
-        for(int i = 0; i < model.getPlayedCards().size(); i++) {
-            PlayingCard card = model.getPlayedCards().get(i);
-            if(playedCards_StackPane.getChildren()..get(i).getTranslateY() == -20) {
-                model.addToScoredPoints(BigDecimal.valueOf(((PlayingCard)playedCardsController.getPlayedCards_StackPane().get(i)).getValue()));
-            }
-        }*/
         for(Node card : playedCards_StackPane.getChildren()) {
             if(card.getTranslateY() == -20) {
                 model.addToScoredPoints(BigDecimal.valueOf(((PlayingCard)card).getValue()));
@@ -63,18 +65,18 @@ public class PlayedCardsController {
 
         model.addToScoredPoints(BigDecimal.valueOf((long) model.getBestHand().getChips() * model.getBestHand().getMulti()));
 
-        if(model.isPointsReached()) {
-            GameController.getInstance().openSummary();
-            model.setRound(model.getRound() + 1);
-            model.setScoredPoints(BigDecimal.valueOf(0));
-            model.clearHandCards();
-
-            if(model.getAllBlindsList().get(model.getRound()-1).getBlindId() > 1) {
-                model.setAnte((model.getAnte() + 1));
-            }
-        } else {
+//        if(model.isPointsReached()) {
+//            GameController.getInstance().openSummary();
+//            model.setRound(model.getRound() + 1);
+//            model.setScoredPoints(BigDecimal.valueOf(0));
+//            model.clearHandCards();
+//
+//            if(model.getAllBlindsList().get(model.getRound()-1).getBlindId() > 1) {
+//                model.setAnte((model.getAnte() + 1));
+//            }
+//        } else {
             model.toggleHandButtonVisibilty();
-        }
+        //}
     }
 
     public void removeCard(PlayingCard card) {
@@ -89,7 +91,7 @@ public class PlayedCardsController {
         int cardsize = 140;
         int lastPos = 570;
 
-        int cards = playedCards_StackPane.getChildren().size();
+        int cards = model.getPlayedCards().size();
         int pos = 0;
         for(int i = 0; i < cards; i++) {
             if(cards > 5) {
@@ -103,8 +105,9 @@ public class PlayedCardsController {
                     pos = i * cardsize - cards/2*cardsize + i * 5;
                 }
             }
-            playedCards_StackPane.getChildren().get(i).setTranslateX(pos);
+            model.getPlayedCards().get(i).setTranslateX(pos);
         }
+
     }
 
     public int count() {

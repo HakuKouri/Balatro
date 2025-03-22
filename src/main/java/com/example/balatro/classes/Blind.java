@@ -16,6 +16,7 @@ public class Blind extends ImageView
     private final StringProperty blindEarn = new SimpleStringProperty();
     private final BooleanProperty blindSkipped = new SimpleBooleanProperty();
     private final ObjectProperty<Color> colorScheme = new SimpleObjectProperty<>();
+    private final IntegerProperty blindReward = new SimpleIntegerProperty();
 
     public Blind() {
         blindImageUrl.addListener((obs, oldVal, newVal) -> {
@@ -143,5 +144,14 @@ public class Blind extends ImageView
     public void setColorScheme(Color colorScheme) {
         this.colorScheme.set(colorScheme);
     }
+
+    public int getBlindReward() {
+        return blindReward.get();
+    }
+
+    public IntegerProperty blindRewardProperty() {
+        return blindReward;
+    }
+
     //endregion
 }

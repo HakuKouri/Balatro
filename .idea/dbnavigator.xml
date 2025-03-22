@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseAssistantManager">
@@ -39,6 +39,9 @@
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Tags" active-filter-id="8c522c54-b65b-45d8-8800-7fafb504ab50">
       <filter id="8c522c54-b65b-45d8-8800-7fafb504ab50" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Blinds" active-filter-id="739836ef-e749-4df9-b3b1-9e43f0a5cfe1">
+      <filter id="739836ef-e749-4df9-b3b1-9e43f0a5cfe1" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">

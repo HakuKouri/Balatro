@@ -43,7 +43,7 @@ public class BlindPickPanelsController {
     private ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
     private GameController gameController;
-    private GameModel model = GameController.getInstance().gameModel;
+    private GameModel model = GameController.getGameModel();
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
