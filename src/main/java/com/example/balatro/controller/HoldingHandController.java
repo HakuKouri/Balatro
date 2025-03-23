@@ -177,6 +177,8 @@ public class HoldingHandController {
         }
 
         setHandInfo(checkHand.evaluateHands(model.getSelectedCards()));
+
+
     }
 
     private void setHandInfo(List<String> hands) {
@@ -243,6 +245,7 @@ public class HoldingHandController {
             drawCards(3);
         else
             drawCards();
+        model.decrementHands();
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
@@ -252,6 +255,7 @@ public class HoldingHandController {
             drawCards(3);
         else
             drawCards();
+        model.decrementDiscards();
     }
 
 }

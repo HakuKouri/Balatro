@@ -471,6 +471,10 @@ public class GameModel {
         this.hands.set(hands);
     }
 
+    public void decrementHands() {
+        setHands(getHands() - 1);
+    }
+
     //Discard per Round
     public int getMaxDiscards() {
         return maxDiscards.get();
@@ -495,6 +499,10 @@ public class GameModel {
 
     public void setDiscards(int discards) {
         this.discards.set(discards);
+    }
+
+    public void decrementDiscards() {
+        setDiscards(getDiscards() + 1);
     }
 
     //Money

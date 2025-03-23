@@ -185,7 +185,7 @@
                <Font name="balatro Regular" size="12.0"/>
             </font>
          </Label>
-         <Label fx:id="rewardInterestCound" alignment="CENTER" layoutX="14.0" layoutY="11.0" prefHeight="30.0"
+         <Label fx:id="rewardInterestCount" alignment="CENTER" layoutX="14.0" layoutY="11.0" prefHeight="30.0"
                 prefWidth="32.0" text="0" textFill="#ffad00">
             <font>
                <Font name="balatro Regular" size="20.0"/>

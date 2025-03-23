@@ -2,6 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.classes.Planet;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.RewardModel;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,35 +54,61 @@ public class RewardSummarController {
     @FXML
     private Pane rewardInterest;
     @FXML
-    private Label rewardInterestCound;
+    private Label rewardInterestCount;
     @FXML
     private Label rewardInterestReward;
     //endregion
 
-    private final GameModel model = GameController.getGameModel();
+    private final GameModel gameModel = GameController.getGameModel();
+    private final RewardModel rewardModel = new RewardModel();
 
     public void initialize() {
-        rewardBlindStake.imageProperty().bind(model.getChosenStake().imageProperty());
-        rewardBlindChip.imageProperty().bind(model.getActiveBlind().imageProperty());
-        rewardBlindScore.textProperty().bind(model.scoreToReachProperty().asString());
+        rewardBlindStake.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+        rewardBlindChip.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
+        rewardBlindScore.textProperty().bind(gameModel.scoreToReachProperty().asString());
         rewardBlindReward.textProperty().bind(Bindings.createStringBinding(
-                () -> "$".repeat(Math.max(0, model.getActiveBlind().getBlindReward())),
-            model.getActiveBlind().blindRewardProperty()
+                () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),
+            gameModel.getActiveBlind().blindRewardProperty()
             ));
-        rewardHandCount.textProperty().bind(model.handsProperty().asString());
+        rewardHandCount.textProperty().bind(gameModel.handsProperty().asString());
         rewardHandReward.textProperty().bind(Bindings.createStringBinding(
-                () -> "$".repeat(model.getHands()),
-                model.handsProperty()
+                () -> "$".repeat(gameModel.getHands()),
+                gameModel.handsProperty()
         ));
         rewardSatelliteReward.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(Planet.getUniquePlanetsPlayedCount())
+        ));
+        //TODO REWARD ROCKET BIND
+
+        rewardDelayedGratificationReward.textProperty().bind(Bindings.createStringBinding(
+                () -> "$$".repeat(gameModel.getDiscards())
+        ));
+
+        //Cloud9 Binding
+        rewardModel.cloud9Property().bind(Bindings.createIntegerBinding(
+                () -> (int) gameModel.getDeckFull()
+                        .stream()
+                        .filter(card -> card.getRank() == "9")
+                        .count()
+        ));
+        rewardCloud9Reward.textProperty().bind(Bindings.createStringBinding(
+                () -> "$".repeat(rewardModel.getCloud9())
+        ));
+
+        //Interest Binding
+        rewardModel.interestRewardProperty().bind(Bindings.createIntegerBinding(
+                () -> gameModel.getMoney() / 5
+        ));
+        rewardInterestCount.textProperty().bind(rewardModel.interestRewardProperty().asString());
+        rewardInterestReward.textProperty().bind(Bindings.createStringBinding(
+                () -> "$".repeat(rewardModel.getInterestReward())
         ));
 
     }
 
     public void cashOut(ActionEvent actionEvent) {
         int reward= 0;
-        model.addMoney(reward);
+        gameModel.addMoney(reward);
     }
 
 }
