@@ -16,7 +16,7 @@ public class PointsScoredController {
     @FXML
     private ImageView stakeImageView;
 
-    private GameModel model = GameController.getGameModel();
+    private final GameModel model = GameController.getGameModel();
 
     public void initialize() {
         /*System.out.println("🚀 initialize() gestartet!");

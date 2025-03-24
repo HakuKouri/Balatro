@@ -123,14 +123,8 @@ public class GameController
     private PlayedCardsController playedCardsController;
     //endregion
 
-    //region PLACEHOLDER
-    private AnchorPane smallBlind = null;
-    private AnchorPane bigBlind = null;
-    private AnchorPane boss = null;
     private AnchorPane shop = null;
     private AnchorPane reward = null;
-    private AnchorPane holdingHand = null;
-    private AnchorPane playedCards = null;
     //endregion
 
 
@@ -156,25 +150,26 @@ public class GameController
 
         //LOAD / READY PLACEHOLDER
         try {
-            holdingHand = loaderHoldingHand.load();
+            AnchorPane holdingHand = loaderHoldingHand.load();
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
 
-            playedCards = loaderPlayedCards.load();
+            AnchorPane playedCards = loaderPlayedCards.load();
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
 
-            smallBlind = loaderSmall.load();
+            //region PLACEHOLDER
+            AnchorPane smallBlind = loaderSmall.load();
             smallController = loaderSmall.getController();
             smallController.setGameScreenController(this);
             smallBlindAnchor.getChildren().add(smallBlind);
 
-            bigBlind = loaderBig.load();
+            AnchorPane bigBlind = loaderBig.load();
             bigController = loaderBig.getController();
             bigController.setGameScreenController(this);
             bigBlindAnchor.getChildren().add(bigBlind);
 
-            boss = loaderBoss.load();
+            AnchorPane boss = loaderBoss.load();
             bossController = loaderBoss.getController();
             bossController.setGameScreenController(this);
             bossBlindAnchor.getChildren().add(boss);

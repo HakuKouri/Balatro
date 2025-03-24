@@ -16,7 +16,7 @@ public class PlayedCardsController {
 
     public StackPane playedCards_StackPane;
 
-    GameModel model = GameController.getGameModel();
+    private final GameModel model = GameController.getGameModel();
 
     public void initialize() {
         model.getPlayedCards().addListener((ListChangeListener<? super PlayingCard>) change -> {

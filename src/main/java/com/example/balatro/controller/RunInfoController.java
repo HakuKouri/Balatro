@@ -17,7 +17,7 @@ public class RunInfoController {
     @FXML
     private Label roundLabel;
 
-    private GameModel model = GameController.getGameModel();
+    private final GameModel model = GameController.getGameModel();
 
     public void initialize() {
         handsLabel.textProperty().bind(model.handsProperty().asString());
