@@ -28,10 +28,6 @@ public class GameController
     private AnchorPane gameScreenAnchor;
 
 
-
-
-
-
     @FXML
     private Label toBeatEffect;
     @FXML
@@ -226,6 +222,18 @@ public class GameController
                 () -> gameModel.getScoreToReach().compareTo(gameModel.getScoredPoints()) >= 0,
                 gameModel.pointsScoredProperty, gameModel.pointsReachedProperty()
         ));
+
+        //Joker Space Bind
+        gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    spaceJoker.getChildren().addAll(change.getAddedSubList());
+                }
+                if(change.wasRemoved()) {
+                    spaceJoker.getChildren().removeAll(change.getRemoved());
+                }
+            }
+        });
     }
 
     private void setBlindPanels() {
@@ -238,7 +246,6 @@ public class GameController
         smallController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3).getBlindScoreMultiplier().replace("x base",""))));
         bigController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3 +1).getBlindScoreMultiplier().replace("x base",""))));
         bossController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3+2).getBlindScoreMultiplier().replace("x base",""))));
-
     }
 
     public void toggleBlind() {

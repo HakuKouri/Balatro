@@ -10,10 +10,17 @@ import java.util.*;
 
 public class GameModel {
 
-    //region LISTS
+    //region Lists of All Data (Tag, Blind, Booster, Voucher, Planet, Joker)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
-    private final List<Hand> allHandList = Hand.setHandList();
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
+    private final List<Booster> boosterList = SqlHandler.getAllBooster();
+    private final List<Voucher> voucherList = SqlHandler.getAllVoucher();
+    private final List<Planet> planetList = SqlHandler.getAllPlanets();
+    private final List<Joker> jokerList = SqlHandler.getAllJokers();
+    private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
+    //endregion
+
+    //region
     private final List<PlayingCard> deckFull = new ArrayList<>();
     private final List<PlayingCard> deckToPlay = new ArrayList<>();
     private final List<Blind> runBlinds = new ArrayList<>();
@@ -22,7 +29,7 @@ public class GameModel {
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
-    private final ObservableList<Hand> possibleHand = FXCollections.observableArrayList();
+    private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     //endregion
 
     //region GAME SETTINGS VAR
@@ -33,7 +40,7 @@ public class GameModel {
     //endregion
 
     //region HAND POINTS VAR
-    private final ObjectProperty<Hand> bestHand = new SimpleObjectProperty<>(new Hand());
+    private final ObjectProperty<PokerHand> bestHand = new SimpleObjectProperty<>(new PokerHand());
     private final StringProperty handName = new SimpleStringProperty();
     private final IntegerProperty handLevel = new SimpleIntegerProperty();
     private final IntegerProperty handChips = new SimpleIntegerProperty();
@@ -45,6 +52,10 @@ public class GameModel {
     private final BooleanProperty sortedByRank = new SimpleBooleanProperty(true);
     private final IntegerProperty handSize = new SimpleIntegerProperty(8);
     private final StringProperty stakeChipImageUrl = new SimpleStringProperty("file:src/main/resources/com/images/Stakechips/stake_chip_1.png");
+    //endregion
+
+    //region ACTIVE JOKERS
+    private final ObservableList<Joker> activeJokerObList = new SimpleListProperty<>();
     //endregion
 
     //region RUN INFO VAR
@@ -80,8 +91,8 @@ public class GameModel {
 
     //GETTER SETTER
     //region All Data Lists
-    public List<Hand> getAllHandList() {
-        return allHandList;
+    public List<PokerHand> getAllHandList() {
+        return allPokerHandList;
     }
 
     public List<Tag> getAllTagList() {
@@ -91,6 +102,23 @@ public class GameModel {
     public List<Blind> getAllBlindsList() {
         return allBlindsList;
     }
+
+    public List<Booster> getBoosterList() {
+        return boosterList;
+    }
+
+    public List<Voucher> getVoucherList() {
+        return voucherList;
+    }
+
+    public List<Planet> getPlanetList() {
+        return planetList;
+    }
+
+    public List<Joker> getJokerList() {
+        return jokerList;
+    }
+
     //endregion
 
     //region Full Deck
@@ -207,21 +235,21 @@ public class GameModel {
     }
 
     //Possible Hands
-    public ObservableList<Hand> getPossibleHand() {
-        return possibleHand;
+    public ObservableList<PokerHand> getPossibleHand() {
+        return possiblePokerHand;
     }
 
-    public void setPossibleHand(List<Hand> handList) {
-        possibleHand.clear();
-        possibleHand.addAll(handList);
+    public void setPossibleHand(List<PokerHand> pokerHandList) {
+        possiblePokerHand.clear();
+        possiblePokerHand.addAll(pokerHandList);
     }
 
-    public void addHandToPossibleList(Hand hand) {
-        possibleHand.add(hand);
+    public void addHandToPossibleList(PokerHand pokerHand) {
+        possiblePokerHand.add(pokerHand);
     }
 
-    public void removeHandFromPossible(Hand hand) {
-        possibleHand.remove(hand);
+    public void removeHandFromPossible(PokerHand pokerHand) {
+        possiblePokerHand.remove(pokerHand);
     }
 
 //    private final ObservableList<Tag> tagStack = FXCollections.observableArrayList();
@@ -267,17 +295,17 @@ public class GameModel {
 
     //region HAND POINTS VAR
     //Best Hand
-    public Hand getBestHand() {
+    public PokerHand getBestHand() {
         return bestHand.get();
     }
 
-    public ObjectProperty<Hand> bestHandProperty() {
+    public ObjectProperty<PokerHand> bestHandProperty() {
         return bestHand;
     }
 
-    public void setBestHand(Hand bestHand) {
-        this.bestHand.get().setName(bestHand.getName());
-        this.bestHand.get().setHand(bestHand);
+    public void setBestHand(PokerHand bestPokerHand) {
+        this.bestHand.get().setName(bestPokerHand.getName());
+        this.bestHand.get().setHand(bestPokerHand);
     }
 
     //endregion
@@ -442,6 +470,16 @@ public class GameModel {
     public void decreaseHandSizeBy(int sub) {
         handSize.set(handSize.get() + sub);
     }
+    //endregion
+
+    //region ACTIVE JOKER GS
+    public ObservableList<Joker> getActiveJokerObList() {
+        return activeJokerObList;
+    }
+    //endregion
+
+    //region CONSUMABLES ON BOARD
+
     //endregion
 
     //region RUN INFO VAR

@@ -27,6 +27,7 @@ public class SqlHandler {
     private static final String LanguagesTableColumns = " (id, languageName, text, notes)";
     private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
     private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect)";
+    private static final String PokerHandsTableColumns = " (pokerHandId, pokerHandName, pokerHandChips, pokerHandMulti)";
 
     static {
         try {
@@ -527,6 +528,36 @@ public class SqlHandler {
         return planets;
     }
 
+    public static List<PokerHand> getAllPokerHands() {
+        List<PokerHand> pokerHands = new ArrayList<>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM PokerHands";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                PokerHand pokerHand = new PokerHand();
+
+                pokerHand.setId(rs.getInt(1));
+                pokerHand.setName(rs.getString(2));
+                pokerHand.setChips(rs.getInt(3));
+                pokerHand.setMulti(rs.getInt(4));
+                pokerHand.setLevel(1);
+                pokerHand.setPlayed(0);
+
+                pokerHands.add(pokerHand);
+
+                //SET UNIQUE PLANETS
+                Planet.putUniquePlanet(rs.getString(3));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return pokerHands;
+    }
 }
 
 //region Example

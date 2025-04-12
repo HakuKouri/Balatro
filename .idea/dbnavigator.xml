@@ -24,7 +24,12 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="163831f7-bfe1-4c39-bd55-96ff2253c667">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+      <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[create Table PokerHands (
+    PokerHandId int,
+    PokerHandName varchar(255),
+    PokerHandChips int,
+    PokerHandMulti int
+);]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -37,12 +42,18 @@
     <connection id="163831f7-bfe1-4c39-bd55-96ff2253c667" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Enhancements" active-filter-id="" />
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards" active-filter-id="" />
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Tags" active-filter-id="8c522c54-b65b-45d8-8800-7fafb504ab50">
       <filter id="8c522c54-b65b-45d8-8800-7fafb504ab50" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Blinds" active-filter-id="739836ef-e749-4df9-b3b1-9e43f0a5cfe1">
       <filter id="739836ef-e749-4df9-b3b1-9e43f0a5cfe1" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.PokerHands" active-filter-id="" />
+  </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
@@ -567,5 +578,9 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+    <execution-variable-types />
   </component>
 </project>

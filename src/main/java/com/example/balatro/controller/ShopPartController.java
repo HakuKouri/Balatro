@@ -22,12 +22,7 @@ public class ShopPartController {
     private GameController gameController;
     private GameModel model = GameController.getGameModel();
 
-    private static List<Booster> boosterList = SqlHandler.getAllBooster();
-    private static List<Voucher> voucherList = SqlHandler.getAllVoucher();
-    private static List<Planet> planetList = SqlHandler.getAllPlanets();
-    private static List<Joker> jokerList = SqlHandler.getAllJokers();
     private static List<PlayingCard> playingCardList;
-
     private static int maxItems = 2;
 
     public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
@@ -48,7 +43,7 @@ public class ShopPartController {
     }
 
     private void drawVoucher() {
-        VoucherArea.getChildren().add(voucherList.get(model.getRand().nextInt(voucherList.size())));
+        VoucherArea.getChildren().add(model.getVoucherList().get(model.getRand().nextInt(model.getVoucherList().size())));
     }
 
     private void removeFromVoucher(Voucher voucher) {
@@ -57,7 +52,7 @@ public class ShopPartController {
 
     private void drawBooster() {
 
-        BoosterArea.getChildren().add(boosterList.get(model.getRand().nextInt(boosterList.size())));
+        BoosterArea.getChildren().add(model.getBoosterList().get(model.getRand().nextInt(model.getBoosterList().size())));
     }
 
     private void removeFromBooster(Booster booster) {

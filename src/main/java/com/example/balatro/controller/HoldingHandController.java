@@ -1,6 +1,6 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.classes.Hand;
+import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
 import com.example.balatro.models.GameModel;
@@ -184,16 +184,16 @@ public class HoldingHandController {
     private void setHandInfo(List<String> hands) {
         int maxPoints = 0;
 
-        if(hands.isEmpty()) model.setBestHand(new Hand());
+        if(hands.isEmpty()) model.setBestHand(new PokerHand());
 
-        for (Hand hand : model.getAllHandList()) {
-            if(hands.contains(hand.getName())) {
-                System.out.println(hand.getName());
-                int points = hand.getChips() * hand.getMulti();
+        for (PokerHand pokerHand : model.getAllHandList()) {
+            if(hands.contains(pokerHand.getName())) {
+                System.out.println(pokerHand.getName());
+                int points = pokerHand.getChips() * pokerHand.getMulti();
                 System.out.println("Possible Points: " + points);
                 if(maxPoints < points) {
                     maxPoints = points;
-                    model.setBestHand(hand);
+                    model.setBestHand(pokerHand);
                 }
             }
         }

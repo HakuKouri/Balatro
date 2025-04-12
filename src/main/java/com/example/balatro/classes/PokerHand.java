@@ -8,18 +8,19 @@ import javafx.beans.property.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hand {
+public class PokerHand {
+    private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
     private IntegerProperty level = new SimpleIntegerProperty();
     private IntegerProperty chips = new SimpleIntegerProperty();
     private IntegerProperty multi = new SimpleIntegerProperty();
     private IntegerProperty played = new SimpleIntegerProperty();
 
-    public Hand() {
+    public PokerHand() {
 
     }
 
-    public Hand(String name, int chips, int multi) {
+    public PokerHand(String name, int chips, int multi) {
         this.name.set(name);
         this.level.set(1);
         this.chips.set(chips);
@@ -28,12 +29,24 @@ public class Hand {
     }
 
     //region GETTER SETTER
-    public void setHand(Hand hand) {
-        setName(hand.getName());
-        setLevel(hand.getLevel());
-        setChips(hand.getChips());
-        setMulti(hand.getMulti());
-        setPlayed(hand.getPlayed());
+    public void setHand(PokerHand pokerHand) {
+        setName(pokerHand.getName());
+        setLevel(pokerHand.getLevel());
+        setChips(pokerHand.getChips());
+        setMulti(pokerHand.getMulti());
+        setPlayed(pokerHand.getPlayed());
+    }
+
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getName() {
@@ -98,23 +111,23 @@ public class Hand {
 
     //endregion
 
-    public static List<Hand> setHandList() {
-        List<Hand> allHandList = new ArrayList<>();
-        allHandList.add(new Hand("Flush Five",     160, 16));
-        allHandList.add(new Hand("Flush House",    140, 14));
-        allHandList.add(new Hand("Five of a Kind", 120, 12));
-        allHandList.add(new Hand("Royal Flush",    100, 8));
-        allHandList.add(new Hand("Straight Flush", 100, 8));
-        allHandList.add(new Hand("Four of a Kind", 60, 7));
-        allHandList.add(new Hand("Full House",     40, 4));
-        allHandList.add(new Hand("Flush",          35, 4));
-        allHandList.add(new Hand("Straight",       30, 4));
-        allHandList.add(new Hand("Three of a Kind",30, 3));
-        allHandList.add(new Hand("Two Pair",       20, 2));
-        allHandList.add(new Hand("One Pair",       10, 2));
-        allHandList.add(new Hand("High Card",      5, 1));
+    public static List<PokerHand> setHandList() {
+        List<PokerHand> allPokerHandList = new ArrayList<>();
+        allPokerHandList.add(new PokerHand("Flush Five",     160, 16));
+        allPokerHandList.add(new PokerHand("Flush House",    140, 14));
+        allPokerHandList.add(new PokerHand("Five of a Kind", 120, 12));
+        allPokerHandList.add(new PokerHand("Royal Flush",    100, 8));
+        allPokerHandList.add(new PokerHand("Straight Flush", 100, 8));
+        allPokerHandList.add(new PokerHand("Four of a Kind", 60, 7));
+        allPokerHandList.add(new PokerHand("Full House",     40, 4));
+        allPokerHandList.add(new PokerHand("Flush",          35, 4));
+        allPokerHandList.add(new PokerHand("Straight",       30, 4));
+        allPokerHandList.add(new PokerHand("Three of a Kind",30, 3));
+        allPokerHandList.add(new PokerHand("Two Pair",       20, 2));
+        allPokerHandList.add(new PokerHand("One Pair",       10, 2));
+        allPokerHandList.add(new PokerHand("High Card",      5, 1));
 
-        return allHandList;
+        return allPokerHandList;
     }
 
 }
