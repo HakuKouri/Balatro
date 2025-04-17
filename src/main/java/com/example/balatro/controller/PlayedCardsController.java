@@ -31,21 +31,11 @@ public class PlayedCardsController {
         });
     }
 
-    public ObservableList<Node> getPlayedCards_StackPane() {
-        return playedCards_StackPane.getChildren();
-    }
-
-
-    public void addCard(PlayingCard card) {
-        playedCards_StackPane.getChildren().add(card);
-        moveCards();
-    }
-
     public void addSelectedCards() {
         model.getPlayedCards().addAll(model.getSelectedCards());
         model.getSelectedCards().clear();
         moveCards();
-        List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(model.getSelectedCards(), model.getBestHand().getName());
+        List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(model.getPlayedCards(), model.getBestHand().getName());
         for(PlayingCard card : model.getPlayedCards()) {
             if(countedCards.contains(card)) {
                 card.setTranslateY(-20);
@@ -54,33 +44,31 @@ public class PlayedCardsController {
         }
 
         countPoints();
+
     }
 
     private void countPoints() {
-        for(Node card : playedCards_StackPane.getChildren()) {
+        for(PlayingCard card : model.getPlayedCards()) {
             if(card.getTranslateY() == -20) {
-                model.addToScoredPoints(BigDecimal.valueOf(((PlayingCard)card).getValue()));
+                model.addToScoredPoints(BigDecimal.valueOf((card).getValue()));
             }
         }
 
         model.addToScoredPoints(BigDecimal.valueOf((long) model.getBestHand().getChips() * model.getBestHand().getMulti()));
+        System.out.println("Points Reached?: " + model.isPointsReached());
+        if(model.isPointsReached()) {
 
-//        if(model.isPointsReached()) {
-//            GameController.getInstance().openSummary();
-//            model.setRound(model.getRound() + 1);
-//            model.setScoredPoints(BigDecimal.valueOf(0));
-//            model.clearHandCards();
-//
-//            if(model.getAllBlindsList().get(model.getRound()-1).getBlindId() > 1) {
-//                model.setAnte((model.getAnte() + 1));
-//            }
-//        } else {
+            GameController.getInstance().openSummary();
+            model.setRound(model.getRound() + 1);
+            model.setScoredPoints(BigDecimal.valueOf(0));
+            model.clearHandCards();
+
+            if(model.getAllBlindsList().get(model.getRound()-1).getBlindId() > 1) {
+                model.setAnte((model.getAnte() + 1));
+            }
+        } else {
             model.toggleHandButtonVisibilty();
-        //}
-    }
-
-    public void removeCard(PlayingCard card) {
-        playedCards_StackPane.getChildren().remove(card);
+        }
     }
 
     public void removeAllCards() {
@@ -88,7 +76,7 @@ public class PlayedCardsController {
     }
 
     public void moveCards() {
-        int cardsize = 140;
+        int cardWidth = 140;
         int lastPos = 570;
 
         int cards = model.getPlayedCards().size();
@@ -100,9 +88,9 @@ public class PlayedCardsController {
             } else {
                 playedCards_StackPane.setAlignment(Pos.CENTER);
                 if(cards%2==0) {
-                    pos = cardsize/2 + i * cardsize - cards/2*cardsize + i * 5;
+                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
                 } else {
-                    pos = i * cardsize - cards/2*cardsize + i * 5;
+                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
                 }
             }
             model.getPlayedCards().get(i).setTranslateX(pos);

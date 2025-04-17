@@ -255,7 +255,7 @@
       <AnchorPane fx:id="bigBlindAnchor" prefHeight="600.0" prefWidth="200.0" />
       <AnchorPane fx:id="bossBlindAnchor" prefHeight="600.0" prefWidth="200.0" />
    </HBox>
-   <Button layoutX="1175.0" layoutY="207.0" mnemonicParsing="false" text="Button" />
+   <Button fx:id="testButton" layoutX="1175.0" layoutY="207.0" mnemonicParsing="false" text="Button" />
    <ImageView fx:id="testImageView" fitHeight="190.0" fitWidth="142.0" layoutX="1124.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
    </ImageView>

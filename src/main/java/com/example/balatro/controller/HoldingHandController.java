@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
@@ -38,6 +39,27 @@ public class HoldingHandController {
 
         handButtonBox.visibleProperty().bind(model.handButtonVisibilityProperty());
         model.toggleHandButtonVisibilty();
+
+        //region Event Playing Card CLICKED
+        HoldingHand.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
+
+            if (source instanceof PlayingCard) {
+                // Wenn das geklickte Element eine PlayingCard ist
+                PlayingCard card = (PlayingCard) source;
+                if(card.isSelected()) {
+                    card.setSelected(false);
+                    model.removeCardFromSelectedCards(card);
+                }
+                else {
+                    card.setSelected(true);
+                    model.addCardToSelectedCards(card);
+                }
+                System.out.println("Holding hand card clicked");
+                setHandInfo(checkHand.evaluateHands(model.getSelectedCards()));
+            }
+        });
+        //endregion
     }
 
     public List<PlayingCard> getSelectedCards() {
@@ -48,49 +70,8 @@ public class HoldingHandController {
         return model.getHandCards();
     }
 
-    public void clearHandCards() {
-        model.getHandCards().clear();
-    }
-
-    public void addCardToHoldingHand(PlayingCard card) {
-        model.addCardToHandCards(card);
-    }
-
-    public void removeCardFromHoldingHand(PlayingCard card) {
-        model.removeCardFromHandCards(card);
-    }
-
-    public void addAllToHoldingHand(List<PlayingCard> cards) {
-        model.addManyCardsToHandCards(cards);
-    }
-
-    public void clearHoldingHand() {
-        HoldingHand.getChildren().clear();
-        model.clearHandCards();
-    }
-
-    public ObservableList<Node> getHoldingHand() {
-        return HoldingHand.getChildren();
-    }
-
-    public void addCardToHand(PlayingCard card) {
-        model.getHandCards().add(card);
-    }
-
-    public void removeCardFromHand(PlayingCard card) {
-        model.getHandCards().remove(card);
-    }
-
-    public void addCardToSelectedCard(PlayingCard card) {
-        model.getSelectedCards().add(card);
-    }
-
-    public void removeCardFromSelectedCard(PlayingCard card) {
-        model.getSelectedCards().remove(card);
-    }
-
     public void moveCards() {
-        int cardsize = 140;
+        int cardWidth = 140;
         int lastPos = 570;
 
         int cards = HoldingHand.getChildren().size();
@@ -102,9 +83,9 @@ public class HoldingHandController {
             } else {
                 HoldingHand.setAlignment(Pos.CENTER);
                 if(cards%2==0) {
-                    pos = cardsize/2 + i * cardsize - cards/2*cardsize + i * 5;
+                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
                 } else {
-                    pos = i * cardsize - cards/2*cardsize + i * 5;
+                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
                 }
             }
             HoldingHand.getChildren().get(i).setTranslateX(pos);
@@ -119,34 +100,13 @@ public class HoldingHandController {
         HoldingHand.setTranslateY(100);
     }
 
-    public int getHoldingHandSize() {
-        return HoldingHand.getChildren().size();
-    }
-
-    public int getSelectedCardCounter() {
-        return model.getSelectedCardCounter();
-    }
-
-    public void selectedCardCounterIncrement() {
-        model.setSelectedCardCounter(model.getSelectedCardCounter() + 1);
-    }
-
-    public void selectedCardCounterDecrement() {
-        model.setSelectedCardCounter(model.getSelectedCardCounter() - 1);
-    }
-
-    public void setSelectedCardCounter(int i) {
-        model.setSelectedCardCounter(i);
-    }
-
 
     //Drawing Cards
     public void drawCards() {
         while (model.getHandCards().size() < model.handSizeProperty().get() && !model.getDeckToPlay().isEmpty()) {
             PlayingCard cardToDraw = model.getDeckToPlay().get(0);
-            cardToDraw.setOnMouseClicked(mouseEvent -> playingCardClicked((PlayingCard) mouseEvent.getSource()));
             cardToDraw.setClickAble(true);
-            addCardToHand(cardToDraw);
+            model.addCardToHandCards(cardToDraw);
             model.getDeckToPlay().remove(0);
         }
         sort();
@@ -155,32 +115,14 @@ public class HoldingHandController {
     public void drawCards(int cardCount) {
         for (int i = 0; i < cardCount  && !model.getDeckToPlay().isEmpty() ; i++) {
             PlayingCard cardToDraw = model.getDeckToPlay().get(0);
-            cardToDraw.setOnMouseClicked(mouseEvent -> playingCardClicked((PlayingCard) mouseEvent.getSource()));
             cardToDraw.setClickAble(true);
-            addCardToHand(cardToDraw);
+            model.addCardToHandCards(cardToDraw);
         }
         sort();
     }
 
 
     //Selecting Cards
-    private void playingCardClicked(PlayingCard card) {
-        if(!card.isClickAble()) return;
-
-        if(card.getTranslateY() == 0 && model.getSelectedCards().size() < 5) {
-            model.addCardToSelectedCards(card);
-            card.setTranslateY(-20);
-        }
-        else if(card.getTranslateY() == -20) {
-            model.removeCardFromSelectedCards(card);
-            card.setTranslateY(0);
-        }
-
-        setHandInfo(checkHand.evaluateHands(model.getSelectedCards()));
-
-
-    }
-
     private void setHandInfo(List<String> hands) {
         int maxPoints = 0;
 
