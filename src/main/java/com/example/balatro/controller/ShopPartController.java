@@ -33,13 +33,13 @@ public class ShopPartController {
         drawVoucher();
     }
 
-    public void rerollShop() {
+    public void reRollShop() {
         ShopArea.getChildren().clear();
         drawItems();
     }
 
     private void drawItems() {
-
+        
     }
 
     private void drawVoucher() {
