@@ -89,6 +89,18 @@ public class GameModel {
     //endregion
 
 
+    //region Constructor
+    public GameModel() {
+        pointsScoredProperty.addListener((observable, oldValue, newValue) -> {
+            pointsReached.set(newValue.compareTo(getScoreToReach()) > -1);
+        });
+    }
+
+
+    //endregion
+
+
+
     //GETTER SETTER
     //region All Data Lists
     public List<PokerHand> getAllHandList() {
@@ -747,6 +759,8 @@ public class GameModel {
     }
 
     //Points Reached
+
+
     public boolean isPointsReached() {
         return pointsReached.get();
     }

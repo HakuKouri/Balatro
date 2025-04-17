@@ -3,11 +3,13 @@ package com.example.balatro.controller;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -99,6 +101,9 @@ public class GameController
     @FXML
     private ImageView testImageView;
 
+    @FXML
+    private Button testButton;
+
     //region FXMLLOADER
     private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
     private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
@@ -184,8 +189,6 @@ public class GameController
             throw new RuntimeException(e);
         }
 
-
-        //holdingHandController.hideHandButtons();
         toggleBlind();
 
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
@@ -205,8 +208,8 @@ public class GameController
         //Bind Points Scored
         stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
 
-        pointsScoredLabel.textProperty().bind(Bindings.createObjectBinding(
-                () -> gameModel.getScoredPoints().toString(), gameModel.pointsScoredProperty));
+        pointsScoredLabel.textProperty().bind(Bindings.createStringBinding(
+                () -> gameModel.getScoredPoints().toString(), gameModel.scoredPointsProperty()));
 
         //Bind HandInfo
         infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
@@ -217,11 +220,6 @@ public class GameController
         infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
         infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
 
-        //Bind Points Reached
-        gameModel.pointsReachedProperty().bind(Bindings.createBooleanBinding(
-                () -> gameModel.getScoreToReach().compareTo(gameModel.getScoredPoints()) >= 0,
-                gameModel.pointsScoredProperty, gameModel.pointsReachedProperty()
-        ));
 
         //Joker Space Bind
         gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
@@ -233,6 +231,12 @@ public class GameController
                     spaceJoker.getChildren().removeAll(change.getRemoved());
                 }
             }
+        });
+
+        testButton.setOnAction(event -> {
+            gameModel.setScoredPoints(gameModel.getScoredPoints().add(BigDecimal.valueOf(10)));
+            System.out.println(gameModel.getScoredPoints().toString());
+
         });
     }
 
@@ -335,6 +339,7 @@ public class GameController
 
             delay(2000,() -> {playedCardsController.removeAllCards();});
 
+            gameModel.handButtonVisibilityProperty().set(true);
             holdingHandController.moveCards();
         }
 

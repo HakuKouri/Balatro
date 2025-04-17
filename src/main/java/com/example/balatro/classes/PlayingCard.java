@@ -1,6 +1,18 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.controller.GameController;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.event.EventTarget;
+import javafx.event.EventHandler;
+
 
 public class PlayingCard extends Card
 {
@@ -15,8 +27,12 @@ public class PlayingCard extends Card
     private Enhancement enhancement;
     private Edition edition;
     private boolean clickAble = false;
+    private BooleanProperty selected = new SimpleBooleanProperty(false);
+
+    //public static GameController controller;
 
     public PlayingCard(int rank, int suit) {
+
         this.rank = rankArray[rank];
         this.suit = suitArray[suit];
         orderPosition = rank;
@@ -31,6 +47,22 @@ public class PlayingCard extends Card
         this.setImage(image);
         this.setFitHeight(200);
         this.setPreserveRatio(true);
+
+        selected.addListener((observable, oldValue, newValue) -> {
+            // Only if completed
+            if (newValue)
+                this.setTranslateY(-20);
+            else
+                this.setTranslateY(0);
+        });
+
+
+        //region EVENT TEST
+//        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+//            fireEvent(new CardClickedEvent(this));
+//
+//        });
+        //endregion
     }
 
     //region GETTER SETTER
@@ -130,7 +162,36 @@ public class PlayingCard extends Card
         }
         return -1; // Wenn Suit nicht gefunden wird
     }
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected.set(selected);
+    }
+
     //endregion
 
+
+
+    //EVENT TEST
+//    public static final EventType<CardClickedEvent> CARD_CLICKED =
+//            new EventType<>(Event.ANY, "CARD_CLICKED");
+//
+//    public static class CardClickedEvent extends Event {
+//        public CardClickedEvent(PlayingCard source) {
+//            super(source, source, CARD_CLICKED);
+//        }
+//
+//        @Override
+//        public PlayingCard getSource() {
+//            return (PlayingCard) super.getSource();
+//        }
+//    }
 
 }
