@@ -42,8 +42,8 @@ public class BlindPickPanelsController {
 
     private ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
-    private GameController gameController;
-    private GameModel model = GameController.getGameModel();
+    private final GameController gameController = GameController.getInstance();
+    private final GameModel model = GameController.getGameModel();
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
@@ -53,14 +53,11 @@ public class BlindPickPanelsController {
     private AnchorPane bossPane;
 
     public void initialize() {
-        System.out.printf("guck mal");
         imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         lblBlindName.textProperty().bind(blind.get().blindNameProperty());
         effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
     }
-
-    public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
         this.blind.get().setBlind(blind);
@@ -122,10 +119,6 @@ public class BlindPickPanelsController {
 
     public void setActivity(boolean isActivity) {
         blindPanel.setDisable(isActivity);
-    }
-
-    public void setBlindImage(Image image) {
-        imageViewBlindChip.setImage(image);
     }
 
     public void setMinScore(BigDecimal score) {

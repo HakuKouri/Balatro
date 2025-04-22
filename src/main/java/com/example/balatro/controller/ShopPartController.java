@@ -19,13 +19,11 @@ public class ShopPartController {
     @FXML
     private StackPane BoosterArea;
 
-    private GameController gameController;
-    private GameModel model = GameController.getGameModel();
+    private final GameController gameController = GameController.getInstance();
+    private final GameModel model = GameController.getGameModel();
 
     private static List<PlayingCard> playingCardList;
     private static int maxItems = 2;
-
-    public void setGameScreenController(GameController gameController) {this.gameController = gameController;}
 
     public void setupShop() {
         drawItems();

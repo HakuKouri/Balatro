@@ -21,6 +21,7 @@ import java.util.*;
 
 public class GameController
 {
+
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -92,7 +93,9 @@ public class GameController
     @FXML
     private StackPane spaceConsumable;
     @FXML
-    private AnchorPane placeHolderShopReward;
+    private AnchorPane placeHolderShop;
+    @FXML
+    private AnchorPane placeHolderReward;
     @FXML
     private HBox blindBox;
     //endregion
@@ -129,24 +132,24 @@ public class GameController
     //endregion
 
 
-    //INSTANCE
+    //region INSTANCE
     private static GameController instance;
 
     public static GameController getInstance() {
         return instance;
     }
+    //endregion
 
-    //MODELS
+    //region GAMEMODEL
     private static final GameModel gameModel = new GameModel();
 
     public static GameModel getGameModel() {
         return gameModel;
     }
-
+    //endregion
 
     //UI HANDLER
     public void initialize(){
-        System.out.println("INITIALIZE");
         instance = this;
 
         //LOAD / READY PLACEHOLDER
@@ -162,29 +165,28 @@ public class GameController
             //region PLACEHOLDER
             AnchorPane smallBlind = loaderSmall.load();
             smallController = loaderSmall.getController();
-            smallController.setGameScreenController(this);
             smallBlindAnchor.getChildren().add(smallBlind);
 
             AnchorPane bigBlind = loaderBig.load();
             bigController = loaderBig.getController();
-            bigController.setGameScreenController(this);
             bigBlindAnchor.getChildren().add(bigBlind);
 
             AnchorPane boss = loaderBoss.load();
             bossController = loaderBoss.getController();
-            bossController.setGameScreenController(this);
             bossBlindAnchor.getChildren().add(boss);
 
             blindBox.setTranslateY(600);
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
-            shopController.setGameScreenController(this);
+            placeHolderShop.getChildren().add(shop);
 
             reward = loaderReward.load();
             rewardSummarController = loaderReward.getController();
+            placeHolderReward.getChildren().add(reward);
 
-            placeHolderShopReward.setTranslateY(560);
+            placeHolderShop.setTranslateY(560);
+            placeHolderReward.setTranslateY(560);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -202,14 +204,27 @@ public class GameController
             }
         });
 
+        //Bind Shop
+        placeHolderShop.translateYProperty().bind(Bindings.createIntegerBinding(
+                () -> gameModel.isShopVisibility() ? 0 : 560,
+                gameModel.shopVisibilityProperty()
+        ));
+
+        //Bind Reward
+        placeHolderReward.translateYProperty().bind(Bindings.createIntegerBinding(
+                () -> gameModel.isRewardVisibility() ? 0 : 560,
+                gameModel.rewardVisibilityProperty()
+        ));
+
         //Bind Deck Cover
         imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
 
         //Bind Points Scored
         stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
 
-        pointsScoredLabel.textProperty().bind(Bindings.createStringBinding(
-                () -> gameModel.getScoredPoints().toString(), gameModel.scoredPointsProperty()));
+        pointsScoredLabel.textProperty().bind(
+                Bindings.createStringBinding( () -> gameModel.getScoredPoints().toString(),
+                gameModel.scoredPointsProperty()));
 
         //Bind HandInfo
         infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
@@ -219,7 +234,6 @@ public class GameController
                         .otherwise("lv."));
         infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
         infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
-
 
         //Joker Space Bind
         gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
@@ -236,7 +250,6 @@ public class GameController
         testButton.setOnAction(event -> {
             gameModel.setScoredPoints(gameModel.getScoredPoints().add(BigDecimal.valueOf(10)));
             System.out.println(gameModel.getScoredPoints().toString());
-
         });
     }
 
@@ -274,30 +287,6 @@ public class GameController
         transitionSmall.play();
         transitionBig.play();
         transitionBoss.play();
-    }
-
-    private void openShop() {
-        if(placeHolderShopReward.getTranslateY() != 0) {
-            placeHolderShopReward.setTranslateY(0);
-        }
-        placeHolderShopReward.getChildren().clear();
-        placeHolderShopReward.getChildren().add(shop);
-    }
-
-    public void closeShop() {
-        placeHolderShopReward.setTranslateY(560);
-    }
-
-    public void openSummary() {
-        if(placeHolderShopReward.getTranslateY() != 0) {
-            placeHolderShopReward.setTranslateY(0);
-        }
-        placeHolderShopReward.getChildren().clear();
-        placeHolderShopReward.getChildren().add(reward);
-    }
-
-    private void closeSummary() {
-        placeHolderShopReward.setTranslateY(560);
     }
 
     //SETTING UP GAME
@@ -377,7 +366,8 @@ public class GameController
     }
 
     public void nextRound() {
-        closeShop();
+        //closeShop();
+        gameModel.setShopVisibility(false);
         gameModel.setRound(gameModel.getRound() + 1);
         toggleBlind();
     }
@@ -393,7 +383,7 @@ public class GameController
     public void addMoney(int reward) {
         gameModel.setMoney(gameModel.getMoney() + reward);
 
-        openShop();
+        gameModel.setShopVisibility(true);
     }
 
     //BACKGROUND HANDLER

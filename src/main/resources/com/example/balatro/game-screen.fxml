@@ -260,5 +260,6 @@
       <Image url="@../../images/DEFAULT/BASIC/8BitDeck1.png" />
    </ImageView>
    <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" layoutX="1198.0" layoutY="471.0" prefHeight="200.0" prefWidth="70.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="20.0" />
-   <AnchorPane fx:id="placeHolderShopReward" layoutX="290.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="placeHolderShop" layoutX="290.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="placeHolderReward" layoutX="290.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
 </AnchorPane>

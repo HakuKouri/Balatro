@@ -1,16 +1,21 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PokerHandChecker;
 import com.example.balatro.models.GameModel;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class PlayedCardsController {
 
@@ -28,6 +33,7 @@ public class PlayedCardsController {
                     playedCards_StackPane.getChildren().removeAll(change.getRemoved());
                 }
             }
+            moveCards();
         });
     }
 
@@ -37,28 +43,25 @@ public class PlayedCardsController {
         moveCards();
         List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(model.getPlayedCards(), model.getBestHand().getName());
         for(PlayingCard card : model.getPlayedCards()) {
-            if(countedCards.contains(card)) {
-                card.setTranslateY(-20);
-            } else
-                card.setTranslateY(0);
+            card.setSelected(countedCards.contains(card));
         }
 
         countPoints();
-
     }
 
     private void countPoints() {
-        for(PlayingCard card : model.getPlayedCards()) {
-            if(card.getTranslateY() == -20) {
-                model.addToScoredPoints(BigDecimal.valueOf((card).getValue()));
-            }
-        }
+        List<PlayingCard> selectedCards = model.getPlayedCards().stream()
+                .filter(PlayingCard::isSelected)
+                .collect(Collectors.toList());
 
-        model.addToScoredPoints(BigDecimal.valueOf((long) model.getBestHand().getChips() * model.getBestHand().getMulti()));
+        animateSelectedCards(selectedCards, 0);
+
+        //TODO ADD EDITION, TRIGGER
+
         System.out.println("Points Reached?: " + model.isPointsReached());
-        if(model.isPointsReached()) {
 
-            GameController.getInstance().openSummary();
+        if(model.isPointsReached()) {
+            model.setRewardVisibility(true);
             model.setRound(model.getRound() + 1);
             model.setScoredPoints(BigDecimal.valueOf(0));
             model.clearHandCards();
@@ -71,8 +74,39 @@ public class PlayedCardsController {
         }
     }
 
+    private void animateSelectedCards(List<PlayingCard> cards, int index) {
+        if(index >= cards.size()) {
+            model.addToScoredPoints(BigDecimal.valueOf((long) model.getBestHand().getMulti() * model.getBestHand().getChips()));
+            model.bestHandProperty().set(new PokerHand());
+            return;
+        }
+
+        PlayingCard card = cards.get(index);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(0), new KeyValue(card.rotateProperty(), 0)),
+                new KeyFrame(Duration.millis(1), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis(2), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis(3), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis(4), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis(5), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis(6), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis(7), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis(8), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis(9), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis(10), new KeyValue(card.rotateProperty(), 0)));
+        timeline.setCycleCount(3);
+        timeline.setDelay(Duration.seconds(0.2));
+
+        timeline.setOnFinished(event -> {
+            model.getBestHand().chipsProperty().set(card.getValue() + model.getBestHand().getChips());
+            animateSelectedCards(cards, index + 1);
+        });
+
+        timeline.play();
+    }
+
     public void removeAllCards() {
-        playedCards_StackPane.getChildren().clear();
+        model.getPlayedCards().clear();
     }
 
     public void moveCards() {
@@ -95,11 +129,5 @@ public class PlayedCardsController {
             }
             model.getPlayedCards().get(i).setTranslateX(pos);
         }
-
     }
-
-    public int count() {
-        return playedCards_StackPane.getChildren().size();
-    }
-
 }

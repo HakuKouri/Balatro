@@ -35,7 +35,7 @@
                   <Insets left="25.0" right="25.0" />
                </padding>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#rerollShop" prefHeight="309.0" prefWidth="161.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#reRollShop" prefHeight="309.0" prefWidth="161.0" style="-fx-background-color: #32B881; -fx-background-radius: 10;" text="Reroll $5" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                <font>
                   <Font name="balatro Regular" size="17.0" />
                </font>

@@ -10,6 +10,7 @@ import java.util.*;
 
 public class GameModel {
 
+    //region ATTRIBUTES
     //region Lists of All Data (Tag, Blind, Booster, Voucher, Planet, Joker)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
@@ -20,7 +21,7 @@ public class GameModel {
     private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
     //endregion
 
-    //region
+    //region Run Lists
     private final List<PlayingCard> deckFull = new ArrayList<>();
     private final List<PlayingCard> deckToPlay = new ArrayList<>();
     private final List<Blind> runBlinds = new ArrayList<>();
@@ -88,20 +89,21 @@ public class GameModel {
     public ObjectProperty<BigDecimal> pointsScoredProperty = new SimpleObjectProperty<>(new BigDecimal(0));
     //endregion
 
+    //endregion
 
-    //region Constructor
+    //region CONSTRUCTOR
     public GameModel() {
-        pointsScoredProperty.addListener((observable, oldValue, newValue) -> {
+        scoredPoints.addListener((observable, oldValue, newValue) -> {
+            System.out.println("points reached old: " + oldValue);
+            System.out.println("points reached old: " + newValue);
+
             pointsReached.set(newValue.compareTo(getScoreToReach()) > -1);
         });
     }
-
-
     //endregion
 
+    //region GETTER SETTER
 
-
-    //GETTER SETTER
     //region All Data Lists
     public List<PokerHand> getAllHandList() {
         return allPokerHandList;
@@ -236,7 +238,7 @@ public class GameModel {
     }
     //endregion
 
-    //Played Cards
+    //region Played Cards
     public ObservableList<PlayingCard> getPlayedCards() {
         return playedCards;
     }
@@ -245,8 +247,9 @@ public class GameModel {
         this.playedCards.clear();
         this.playedCards.addAll(playedCards);
     }
+    //endregion
 
-    //Possible Hands
+    //region Possible Hands
     public ObservableList<PokerHand> getPossibleHand() {
         return possiblePokerHand;
     }
@@ -263,10 +266,7 @@ public class GameModel {
     public void removeHandFromPossible(PokerHand pokerHand) {
         possiblePokerHand.remove(pokerHand);
     }
-
-//    private final ObservableList<Tag> tagStack = FXCollections.observableArrayList();
-    //TODO
-
+    //endregion
 
     //region GAME SETTINGS VAR
     //Chosen Deck
@@ -322,6 +322,7 @@ public class GameModel {
 
     //endregion
 
+    //region Poker Hand
     //Poker Hand Name
     public String getHandName() {
         return handName.get();
@@ -727,7 +728,7 @@ public class GameModel {
 
     //endregion
 
-    //Scored Points
+    //region Scored Points
     public BigDecimal getScoredPoints() {
         return scoredPoints.get();
     }
@@ -743,9 +744,9 @@ public class GameModel {
     public void addToScoredPoints(BigDecimal scoredPoints) {
         setScoredPoints(getScoredPoints().add(scoredPoints));
     }
+    //endregion
 
-
-    //Score To Reach
+    //region Score To Reach
     public BigDecimal getScoreToReach() {
         return scoreToReach.get();
     }
@@ -757,10 +758,9 @@ public class GameModel {
     public void setScoreToReach(BigDecimal scoreToReach) {
         this.scoreToReach.set(scoreToReach);
     }
+    //endregion
 
-    //Points Reached
-
-
+    //region Points Reached
     public boolean isPointsReached() {
         return pointsReached.get();
     }
@@ -768,8 +768,9 @@ public class GameModel {
     public BooleanProperty pointsReachedProperty() {
         return pointsReached;
     }
+    //endregion
 
-    //Chip Requirement
+    //region Chip Requirement
     public BigDecimal[] getChipRequirement() {
         return chipRequirement;
     }
@@ -777,6 +778,7 @@ public class GameModel {
     public BigDecimal getChipRequirementByIndex(int index) {
         return getChipRequirement()[index];
     }
+    //endregion
 
-
+    //endregion
 }

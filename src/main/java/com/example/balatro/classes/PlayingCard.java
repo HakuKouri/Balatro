@@ -27,9 +27,8 @@ public class PlayingCard extends Card
     private Enhancement enhancement;
     private Edition edition;
     private boolean clickAble = false;
-    private BooleanProperty selected = new SimpleBooleanProperty(false);
-
-    //public static GameController controller;
+    private final BooleanProperty selected = new SimpleBooleanProperty(false);
+    private final BooleanProperty countForPoint = new SimpleBooleanProperty(false);
 
     public PlayingCard(int rank, int suit) {
 
@@ -175,8 +174,15 @@ public class PlayingCard extends Card
         this.selected.set(selected);
     }
 
-    //endregion
+    public boolean isCountForPoint() {
+        return countForPoint.get();
+    }
 
+    public BooleanProperty countForPointProperty() {
+        return countForPoint;
+    }
+
+    //endregion
 
 
     //EVENT TEST

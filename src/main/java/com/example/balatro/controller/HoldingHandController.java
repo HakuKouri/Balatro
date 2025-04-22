@@ -5,7 +5,6 @@ import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
 import com.example.balatro.models.GameModel;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;

@@ -103,12 +103,13 @@ public class RewardSummarController {
         rewardInterestReward.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(rewardModel.getInterestReward())
         ));
-
     }
 
     public void cashOut(ActionEvent actionEvent) {
         int reward= 0;
         gameModel.addMoney(reward);
+        gameModel.setRewardVisibility(false);
+        gameModel.setShopVisibility(true);
     }
 
 }
