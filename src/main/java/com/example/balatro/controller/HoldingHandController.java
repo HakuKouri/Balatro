@@ -4,11 +4,13 @@ import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
 import com.example.balatro.models.GameModel;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -17,6 +19,7 @@ import java.util.*;
 
 public class HoldingHandController {
 
+    public Label handCardsCounterLabel;
     @FXML
     private StackPane HoldingHand;
     @FXML
@@ -37,7 +40,11 @@ public class HoldingHandController {
         });
 
         handButtonBox.visibleProperty().bind(model.handButtonVisibilityProperty());
-        model.toggleHandButtonVisibilty();
+        //model.toggleHandButtonVisibility();
+
+        handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
+            model.getHandCards().size() + "/" + model.getHandSize(), model.getHandCards()
+        ));
 
         //region Event Playing Card CLICKED
         HoldingHand.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
@@ -50,11 +57,10 @@ public class HoldingHandController {
                     card.setSelected(false);
                     model.removeCardFromSelectedCards(card);
                 }
-                else {
+                else if(model.getSelectedCards().size() <5){
                     card.setSelected(true);
                     model.addCardToSelectedCards(card);
                 }
-                System.out.println("Holding hand card clicked");
                 setHandInfo(checkHand.evaluateHands(model.getSelectedCards()));
             }
         });
@@ -90,15 +96,6 @@ public class HoldingHandController {
             HoldingHand.getChildren().get(i).setTranslateX(pos);
         }
     }
-
-    public void moveHoldingHandUp() {
-        HoldingHand.setTranslateY(0);
-    }
-
-    public void moveHoldingHandDown() {
-        HoldingHand.setTranslateY(100);
-    }
-
 
     //Drawing Cards
     public void drawCards() {
@@ -140,7 +137,6 @@ public class HoldingHandController {
         }
     }
 
-
     //Button Funktions
     public void sortRank() {
         model.setSortedByRank(true);
@@ -155,7 +151,7 @@ public class HoldingHandController {
     public void sort() {
         List<PlayingCard> tempCardList = new ArrayList<>();
         for(var card : model.getHandCards()) {
-            if(card instanceof PlayingCard)
+            if(card != null)
                 tempCardList.add(card);
         }
 
@@ -178,15 +174,19 @@ public class HoldingHandController {
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
-        getHandCards().removeAll(getSelectedCards());
-        GameController.getInstance().playSelectedCards();
+        if(!model.getSelectedCards().isEmpty()) {
+            model.toggleHandButtonVisibility();
+            getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
+            getHandCards().removeAll(getSelectedCards());
+            GameController.getInstance().playSelectedCards();
 
-        if(model.getActiveBlind().getBlindName() == "The Serpent")
-            drawCards(3);
-        else
-            drawCards();
-        model.decrementHands();
+            if(model.getActiveBlind().getBlindName() == "The Serpent")
+                drawCards(3);
+            else
+                drawCards();
+            model.decrementHands();
+        }
+
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {

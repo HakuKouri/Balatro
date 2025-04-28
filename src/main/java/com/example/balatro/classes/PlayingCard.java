@@ -55,6 +55,10 @@ public class PlayingCard extends Card
                 this.setTranslateY(0);
         });
 
+        getStyleClass().add("card");
+
+        //addEventFilter();
+
 
         //region EVENT TEST
 //        this.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {

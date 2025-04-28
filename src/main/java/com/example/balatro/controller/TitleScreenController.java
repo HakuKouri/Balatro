@@ -34,7 +34,6 @@ public class TitleScreenController
 
     public void openNewGameMenu() throws IOException
     {
-        System.out.println("Play button pressed");
         Pane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/newGameMenu-screen.fxml"));
         panePlayMenu.getChildren().add(pane);
     }

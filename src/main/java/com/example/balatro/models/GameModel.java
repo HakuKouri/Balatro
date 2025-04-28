@@ -1,6 +1,7 @@
 package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,7 +67,7 @@ public class GameModel {
     private final IntegerProperty discards = new SimpleIntegerProperty(3);
     private final IntegerProperty money = new SimpleIntegerProperty(3);
     private final IntegerProperty ante = new SimpleIntegerProperty(0);
-    private final IntegerProperty round = new SimpleIntegerProperty(1);
+    private final IntegerProperty round = new SimpleIntegerProperty(0);
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
     //endregion
@@ -95,9 +96,10 @@ public class GameModel {
     public GameModel() {
         scoredPoints.addListener((observable, oldValue, newValue) -> {
             System.out.println("points reached old: " + oldValue);
-            System.out.println("points reached old: " + newValue);
+            System.out.println("points reached new: " + newValue);
 
-            pointsReached.set(newValue.compareTo(getScoreToReach()) > -1);
+            System.out.println("Compare result: " + newValue.compareTo(getScoreToReach()));
+            pointsReachedProperty().set(newValue.compareTo(getScoreToReach()) > -1);
         });
     }
     //endregion
@@ -249,12 +251,12 @@ public class GameModel {
     }
     //endregion
 
-    //region Possible Hands
-    public ObservableList<PokerHand> getPossibleHand() {
+    //region Possible Poker Hands
+    public ObservableList<PokerHand> getPossiblePokerHand() {
         return possiblePokerHand;
     }
 
-    public void setPossibleHand(List<PokerHand> pokerHandList) {
+    public void setPossiblePokerHands(List<PokerHand> pokerHandList) {
         possiblePokerHand.clear();
         possiblePokerHand.addAll(pokerHandList);
     }
@@ -468,6 +470,10 @@ public class GameModel {
     }
 
     //Hand Size
+    public int getHandSize() {
+        return handSize.get();
+    }
+
     public IntegerProperty handSizeProperty() {
         return handSize;
     }
@@ -553,7 +559,7 @@ public class GameModel {
     }
 
     public void decrementDiscards() {
-        setDiscards(getDiscards() + 1);
+        setDiscards(getDiscards() - 1);
     }
 
     //Money
@@ -699,7 +705,7 @@ public class GameModel {
         setRewardVisibility(!isRewardVisibility());
     }
 
-    //Hand Buttons Visibilty
+    //Hand Buttons Visibility
     public boolean isHandButtonVisibility() {
         return handButtonVisibility.get();
     }
@@ -708,7 +714,7 @@ public class GameModel {
         return handButtonVisibility;
     }
 
-    public void toggleHandButtonVisibilty() {
+    public void toggleHandButtonVisibility() {
         handButtonVisibility.set(!handButtonVisibility.get());
     }
 

@@ -37,3 +37,13 @@ shadow: 0,9,10 #00090A
 green: 50,184,129 #32B881
 red: 250,71,61 #FA473D
 Money yellow: 221,164,80 #DDA450
+
+Button Light Blue: 0,135,240 #0087f0
+Button Yellow: 255, 140, 0 #ff8c00
+Button Red: 250, 68, 58 #f9443a
+Button Green: 65, 146, 111 #41926f
+
+Button hover Light Blue: 0, 79, 148 #004f94
+Button hover Yellow: 147, 93, 0 #935d00
+Button hover Red: 147, 36, 28 #93241c
+Button hover Green: 30, 86, 63 #1e563f

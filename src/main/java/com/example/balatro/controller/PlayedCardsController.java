@@ -14,7 +14,6 @@ import javafx.util.Duration;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class PlayedCardsController {
@@ -46,19 +45,20 @@ public class PlayedCardsController {
             card.setSelected(countedCards.contains(card));
         }
 
-        countPoints();
-    }
-
-    private void countPoints() {
         List<PlayingCard> selectedCards = model.getPlayedCards().stream()
                 .filter(PlayingCard::isSelected)
                 .collect(Collectors.toList());
 
         animateSelectedCards(selectedCards, 0);
+        countPoints();
+    }
+
+    private void countPoints() {
+
 
         //TODO ADD EDITION, TRIGGER
 
-        System.out.println("Points Reached?: " + model.isPointsReached());
+        System.out.println("Points Reached? (Played Cards): " + model.isPointsReached());
 
         if(model.isPointsReached()) {
             model.setRewardVisibility(true);
@@ -66,11 +66,11 @@ public class PlayedCardsController {
             model.setScoredPoints(BigDecimal.valueOf(0));
             model.clearHandCards();
 
-            if(model.getAllBlindsList().get(model.getRound()-1).getBlindId() > 1) {
+            if(model.getAllBlindsList().get(model.getRound()).getBlindId() > 1) {
                 model.setAnte((model.getAnte() + 1));
             }
         } else {
-            model.toggleHandButtonVisibilty();
+            model.toggleHandButtonVisibility();
         }
     }
 
@@ -78,6 +78,7 @@ public class PlayedCardsController {
         if(index >= cards.size()) {
             model.addToScoredPoints(BigDecimal.valueOf((long) model.getBestHand().getMulti() * model.getBestHand().getChips()));
             model.bestHandProperty().set(new PokerHand());
+            countPoints();
             return;
         }
 

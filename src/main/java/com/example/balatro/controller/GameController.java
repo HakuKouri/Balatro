@@ -21,7 +21,7 @@ import java.util.*;
 
 public class GameController
 {
-
+    public RowConstraints bottomRow;
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -154,7 +154,7 @@ public class GameController
 
         //LOAD / READY PLACEHOLDER
         try {
-            AnchorPane holdingHand = loaderHoldingHand.load();
+            VBox holdingHand = loaderHoldingHand.load();
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
 
@@ -247,15 +247,30 @@ public class GameController
             }
         });
 
+        handsLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getHands()), gameModel.handsProperty()));
+        discardsLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getDiscards()), gameModel.discardsProperty()));
+        moneyLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                "$" + gameModel.getMoney(), gameModel.moneyProperty()));
+        anteLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getAnte() + "/8", gameModel.anteProperty()));
+        roundLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getRound()), gameModel.roundProperty()));
+
+        bottomRow.prefHeightProperty().bind(Bindings.createIntegerBinding(() ->
+                gameModel.isHandButtonVisibility() ? 350 : 220,
+                gameModel.handButtonVisibilityProperty()));
+
         testButton.setOnAction(event -> {
-            gameModel.setScoredPoints(gameModel.getScoredPoints().add(BigDecimal.valueOf(10)));
-            System.out.println(gameModel.getScoredPoints().toString());
+            gameModel.setMoney(gameModel.getMoney()+1);
+            System.out.println(gameModel.getMoney());
         });
     }
 
     private void setBlindPanels() {
         int ante = gameModel.getAnte();
-        int round = gameModel.getRound();
+        int round = gameModel.getRound() + 1;
         smallController.setBlind(gameModel.getRunBlinds().get((ante-1)*3), gameModel.getAllTagList().get(round-ante), 1);
         bigController.setBlind(gameModel.getRunBlinds().get((ante-1)*3+1), gameModel.getAllTagList().get(round-ante), 2);
         bossController.setBlind(gameModel.getRunBlinds().get((ante-1)*3+2), gameModel.getAllTagList().get(round-ante), 3);
@@ -274,9 +289,9 @@ public class GameController
         TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
         if (gameModel.getBlindsVisibility()) {
             transitionBlindBox.setToY(0);
-            if(round%3 == 1) transitionSmall.setToY(-50);
-            if(round%3 == 2) transitionBig.setToY(-50);
-            if(round%3 == 0) transitionBoss.setToY(-50);
+            if(round%3 == 0) transitionSmall.setToY(-50);
+            if(round%3 == 1) transitionBig.setToY(-50);
+            if(round%3 == 2) transitionBoss.setToY(-50);
         } else {
             transitionBlindBox.setToY(600);
             transitionSmall.setToY(0);
@@ -326,7 +341,7 @@ public class GameController
 
             gameModel.clearSelectedCards();
 
-            delay(2000,() -> {playedCardsController.removeAllCards();});
+            delay(4000,() -> {playedCardsController.removeAllCards();});
 
             gameModel.handButtonVisibilityProperty().set(true);
             holdingHandController.moveCards();
@@ -342,7 +357,7 @@ public class GameController
         gameModel.setHands(4);
         gameModel.setDiscards(3);
         gameModel.setAnte(1);
-        gameModel.setRound(1);
+        gameModel.setRound(0);
         gameModel.setMoney(0);
 
         gameModel.setRand(new Random());
@@ -366,7 +381,6 @@ public class GameController
     }
 
     public void nextRound() {
-        //closeShop();
         gameModel.setShopVisibility(false);
         gameModel.setRound(gameModel.getRound() + 1);
         toggleBlind();

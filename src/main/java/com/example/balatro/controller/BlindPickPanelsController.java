@@ -132,6 +132,8 @@ public class BlindPickPanelsController {
     }
 
     public void play() {
+        model.setRound(model.getRound()+1);
+        model.toggleHandButtonVisibility();
         gameController.startRound(blind.get(),new BigDecimal(lblMinScore.getText()));
     }
 
