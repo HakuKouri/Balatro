@@ -1,5 +1,6 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.Tag;
 import com.example.balatro.models.GameModel;
@@ -18,8 +19,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 public class BlindPickPanelsController {
-
-    public static BlindPickPanelsController smallPanel;
 
     public Label effectText_label;
 
@@ -40,10 +39,10 @@ public class BlindPickPanelsController {
     @FXML
     private Label lblEarn;
 
-    private ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
+    private final ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
     private final GameController gameController = GameController.getInstance();
-    private final GameModel model = GameController.getGameModel();
+    private final GameModel model = Balatro.getGameModel();
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
@@ -53,10 +52,23 @@ public class BlindPickPanelsController {
     private AnchorPane bossPane;
 
     public void initialize() {
+        System.out.println("Blind Panel Init");
         imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         lblBlindName.textProperty().bind(blind.get().blindNameProperty());
         effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
+
+
+
+    }
+
+    //GETTER SETTER
+    public Blind getBlind() {
+        return blind.get();
+    }
+
+    public ObjectProperty<Blind> blindProperty() {
+        return blind;
     }
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
@@ -126,14 +138,13 @@ public class BlindPickPanelsController {
     }
 
     public void setEarn(int score) {
-        StringBuilder text = new StringBuilder();
-        text.append("$".repeat(Math.max(0, score)));
-        lblEarn.setText(text+"+");
+        lblEarn.setText("$".repeat(Math.max(0, score)) +"+");
     }
 
     public void play() {
+        model.setActiveBlind(blind.get());
         model.setRound(model.getRound()+1);
-        model.toggleHandButtonVisibility();
+        model.setHandButtonVisibility(true);
         gameController.startRound(blind.get(),new BigDecimal(lblMinScore.getText()));
     }
 

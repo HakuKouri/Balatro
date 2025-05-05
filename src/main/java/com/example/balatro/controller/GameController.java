@@ -1,5 +1,7 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
+import com.example.balatro.BlindBoxController;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.TranslateTransition;
@@ -9,6 +11,7 @@ import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -21,7 +24,8 @@ import java.util.*;
 
 public class GameController
 {
-    public RowConstraints bottomRow;
+
+
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -29,20 +33,22 @@ public class GameController
     private StackPane playedCards_StackPane;
     @FXML
     private AnchorPane gameScreenAnchor;
-
-
+    @FXML
+    private RowConstraints bottomRow;
+    @FXML
+    private HBox JokerConsumeHBox;
+    @FXML
+    private Label cardsInDeckLabel;
     @FXML
     private Label toBeatEffect;
     @FXML
     private GridPane toBeat;
     @FXML
-    private AnchorPane smallBlindAnchor;
-    @FXML
-    private AnchorPane bigBlindAnchor;
-    @FXML
-    private AnchorPane bossBlindAnchor;
-    @FXML
     private Label labelBlind;
+    @FXML
+    private AnchorPane blindBox;
+    @FXML
+    private HBox blindBoxHBox;
 
     //region Score Display
     @FXML
@@ -96,8 +102,6 @@ public class GameController
     private AnchorPane placeHolderShop;
     @FXML
     private AnchorPane placeHolderReward;
-    @FXML
-    private HBox blindBox;
     //endregion
 
     //TEST
@@ -108,23 +112,19 @@ public class GameController
     private Button testButton;
 
     //region FXMLLOADER
-    private final FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
-    private final FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
-    private final FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
     private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand_StackPane.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
+    private final FXMLLoader loaderBlindBox = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-box.fxml"));
     //endregion
 
     //region CONTROLLER
-    private BlindPickPanelsController smallController;
-    private BlindPickPanelsController bigController;
-    private BlindPickPanelsController bossController;
     private ShopPartController shopController;
     private RewardSummarController rewardSummarController;
     private HoldingHandController holdingHandController;
     private PlayedCardsController playedCardsController;
+    private BlindBoxController blindBoxController;
     //endregion
 
     private AnchorPane shop = null;
@@ -141,11 +141,7 @@ public class GameController
     //endregion
 
     //region GAMEMODEL
-    private static final GameModel gameModel = new GameModel();
-
-    public static GameModel getGameModel() {
-        return gameModel;
-    }
+    private static final GameModel gameModel = Balatro.getGameModel();
     //endregion
 
     //UI HANDLER
@@ -162,20 +158,10 @@ public class GameController
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
 
-            //region PLACEHOLDER
-            AnchorPane smallBlind = loaderSmall.load();
-            smallController = loaderSmall.getController();
-            smallBlindAnchor.getChildren().add(smallBlind);
+            loaderBlindBox.load();
+            blindBoxController = loaderBlindBox.getController(); // Hier bekommst du den Controller
 
-            AnchorPane bigBlind = loaderBig.load();
-            bigController = loaderBig.getController();
-            bigBlindAnchor.getChildren().add(bigBlind);
-
-            AnchorPane boss = loaderBoss.load();
-            bossController = loaderBoss.getController();
-            bossBlindAnchor.getChildren().add(boss);
-
-            blindBox.setTranslateY(600);
+            //blindBox.setTranslateY(600);
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
@@ -262,46 +248,40 @@ public class GameController
                 gameModel.isHandButtonVisibility() ? 350 : 220,
                 gameModel.handButtonVisibilityProperty()));
 
+
+
+
+
+        //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.setMoney(gameModel.getMoney()+1);
-            System.out.println(gameModel.getMoney());
+            gameModel.getPlayedCards().get(gameModel.getPlayedCards().size()-1).visibleProperty().set(false);
         });
+
     }
 
-    private void setBlindPanels() {
-        int ante = gameModel.getAnte();
-        int round = gameModel.getRound() + 1;
-        smallController.setBlind(gameModel.getRunBlinds().get((ante-1)*3), gameModel.getAllTagList().get(round-ante), 1);
-        bigController.setBlind(gameModel.getRunBlinds().get((ante-1)*3+1), gameModel.getAllTagList().get(round-ante), 2);
-        bossController.setBlind(gameModel.getRunBlinds().get((ante-1)*3+2), gameModel.getAllTagList().get(round-ante), 3);
-
-        smallController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3).getBlindScoreMultiplier().replace("x base",""))));
-        bigController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3 +1).getBlindScoreMultiplier().replace("x base",""))));
-        bossController.setMinScore(gameModel.getChipRequirement()[ante].multiply(new BigDecimal(gameModel.getAllBlindsList().get((ante-1)* 3+2).getBlindScoreMultiplier().replace("x base",""))));
-    }
 
     public void toggleBlind() {
         int round = gameModel.getRound();
         gameModel.toggleBlindVisibity();
-        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
-        TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
-        TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
-        TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
+//        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
+//        TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
+//        TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
+//        TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
         if (gameModel.getBlindsVisibility()) {
-            transitionBlindBox.setToY(0);
-            if(round%3 == 0) transitionSmall.setToY(-50);
-            if(round%3 == 1) transitionBig.setToY(-50);
-            if(round%3 == 2) transitionBoss.setToY(-50);
+ //           transitionBlindBox.setToY(0);
+//            if(round%3 == 0) transitionSmall.setToY(-50);
+//            if(round%3 == 1) transitionBig.setToY(-50);
+//            if(round%3 == 2) transitionBoss.setToY(-50);
         } else {
-            transitionBlindBox.setToY(600);
-            transitionSmall.setToY(0);
-            transitionBig.setToY(0);
-            transitionBoss.setToY(0);
+ //           transitionBlindBox.setToY(600);
+//            transitionSmall.setToY(0);
+//            transitionBig.setToY(0);
+//            transitionBoss.setToY(0);
         }
-        transitionBlindBox.play();
-        transitionSmall.play();
-        transitionBig.play();
-        transitionBoss.play();
+ //       transitionBlindBox.play();
+//        transitionSmall.play();
+//        transitionBig.play();
+//        transitionBoss.play();
     }
 
     //SETTING UP GAME
@@ -328,6 +308,15 @@ public class GameController
         }
     }
 
+    private void createTagList() {
+        for (int i = 0; i <= 8; i++) {
+            for (int j = 0; j < 3; j++) {
+                gameModel.getRunTags().add(gameModel.getAllTagList().get(gameModel.getRand().nextInt(gameModel.getAllTagList().size())));
+            }
+        }
+
+    }
+
     //PLAYING CARD HANDLER
     public void playSelectedCards() {
         List<PlayingCard> selectedCards = gameModel.getSelectedCards();
@@ -337,16 +326,17 @@ public class GameController
                 card.setClickAble(false);
             }
 
-            playedCardsController.addSelectedCards();
-
-            gameModel.clearSelectedCards();
-
-            delay(4000,() -> {playedCardsController.removeAllCards();});
-
-            gameModel.handButtonVisibilityProperty().set(true);
-            holdingHandController.moveCards();
+            playedCardsController.addSelectedCards( () -> {
+                Platform.runLater(() -> {
+                    holdingHandController.drawCards();
+                    gameModel.handButtonVisibilityProperty().set(true);
+                    holdingHandController.moveCards();
+                    gameModel.clearSelectedCards();
+                    playedCardsController.removeAllCards();
+                    //delay(4000,() -> {playedCardsController.removeAllCards();});
+                });
+            });
         }
-
     }
 
     //GAME HANDLER
@@ -366,8 +356,12 @@ public class GameController
 
         setPlayingDeck();
         createBlindList();
-        setBlindPanels();
+        createTagList();
+
+        blindBoxController.setUpBlinds();
     }
+
+
 
     public void startRound(Blind blind, BigDecimal score) {
         gameModel.setScoreToReach(score);

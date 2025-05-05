@@ -1,7 +1,6 @@
 package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,7 +25,7 @@ public class GameModel {
     private final List<PlayingCard> deckFull = new ArrayList<>();
     private final List<PlayingCard> deckToPlay = new ArrayList<>();
     private final List<Blind> runBlinds = new ArrayList<>();
-    private final List<Tag> blindTags = new ArrayList<>();
+    private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
@@ -66,7 +65,7 @@ public class GameModel {
     private final IntegerProperty maxDiscards = new SimpleIntegerProperty(3);
     private final IntegerProperty discards = new SimpleIntegerProperty(3);
     private final IntegerProperty money = new SimpleIntegerProperty(3);
-    private final IntegerProperty ante = new SimpleIntegerProperty(0);
+    private final IntegerProperty ante = new SimpleIntegerProperty(1);
     private final IntegerProperty round = new SimpleIntegerProperty(0);
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
@@ -203,13 +202,13 @@ public class GameModel {
     //endregion
 
     //region Tags for the Run
-    public List<Tag> getBlindTags() {
-        return blindTags;
+    public List<Tag> getRunTags() {
+        return runTags;
     }
 
-    public void setBlindTags(List<Tag> tags) {
-        blindTags.clear();
-        blindTags.addAll(tags);
+    public void setRunTags(List<Tag> tags) {
+        runTags.clear();
+        runTags.addAll(tags);
     }
     //endregion
 
@@ -718,6 +717,10 @@ public class GameModel {
         handButtonVisibility.set(!handButtonVisibility.get());
     }
 
+    public void setHandButtonVisibility(Boolean value) {
+        handButtonVisibility.set(value);
+    }
+
     //Difficulty Stake Image
     public String getStakeChipImageUrl() {
         return stakeChipImageUrl.get();
@@ -787,4 +790,5 @@ public class GameModel {
     //endregion
 
     //endregion
+
 }

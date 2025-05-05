@@ -1,5 +1,6 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
@@ -10,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -20,15 +22,17 @@ import java.util.*;
 public class HoldingHandController {
 
     public Label handCardsCounterLabel;
+    public Button playSelectedCardsButton;
+    public Button discardSelectedCardsButton;
     @FXML
     private StackPane HoldingHand;
     @FXML
     private GridPane handButtonBox;
 
-    GameModel model = GameController.getGameModel();
+    GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-        model.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
+        gameModel.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
                     HoldingHand.getChildren().addAll(change.getAddedSubList());
@@ -39,11 +43,10 @@ public class HoldingHandController {
             }
         });
 
-        handButtonBox.visibleProperty().bind(model.handButtonVisibilityProperty());
-        //model.toggleHandButtonVisibility();
+        handButtonBox.visibleProperty().bind(gameModel.handButtonVisibilityProperty());
 
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-            model.getHandCards().size() + "/" + model.getHandSize(), model.getHandCards()
+            gameModel.getHandCards().size() + "/" + gameModel.getHandSize(), gameModel.getHandCards()
         ));
 
         //region Event Playing Card CLICKED
@@ -55,24 +58,27 @@ public class HoldingHandController {
                 PlayingCard card = (PlayingCard) source;
                 if(card.isSelected()) {
                     card.setSelected(false);
-                    model.removeCardFromSelectedCards(card);
+                    gameModel.removeCardFromSelectedCards(card);
                 }
-                else if(model.getSelectedCards().size() <5){
+                else if(gameModel.getSelectedCards().size() <5){
                     card.setSelected(true);
-                    model.addCardToSelectedCards(card);
+                    gameModel.addCardToSelectedCards(card);
                 }
-                setHandInfo(checkHand.evaluateHands(model.getSelectedCards()));
+                setHandInfo(checkHand.evaluateHands(gameModel.getSelectedCards()));
             }
         });
         //endregion
+
+        playSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
+        discardSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
     }
 
     public List<PlayingCard> getSelectedCards() {
-        return model.getSelectedCards();
+        return gameModel.getSelectedCards();
     }
 
     public List<PlayingCard> getHandCards() {
-        return model.getHandCards();
+        return gameModel.getHandCards();
     }
 
     public void moveCards() {
@@ -99,20 +105,20 @@ public class HoldingHandController {
 
     //Drawing Cards
     public void drawCards() {
-        while (model.getHandCards().size() < model.handSizeProperty().get() && !model.getDeckToPlay().isEmpty()) {
-            PlayingCard cardToDraw = model.getDeckToPlay().get(0);
+        while (gameModel.getHandCards().size() < gameModel.handSizeProperty().get() && !gameModel.getDeckToPlay().isEmpty()) {
+            PlayingCard cardToDraw = gameModel.getDeckToPlay().get(0);
             cardToDraw.setClickAble(true);
-            model.addCardToHandCards(cardToDraw);
-            model.getDeckToPlay().remove(0);
+            gameModel.addCardToHandCards(cardToDraw);
+            gameModel.getDeckToPlay().remove(0);
         }
         sort();
     }
 
     public void drawCards(int cardCount) {
-        for (int i = 0; i < cardCount  && !model.getDeckToPlay().isEmpty() ; i++) {
-            PlayingCard cardToDraw = model.getDeckToPlay().get(0);
+        for (int i = 0; i < cardCount  && !gameModel.getDeckToPlay().isEmpty() ; i++) {
+            PlayingCard cardToDraw = gameModel.getDeckToPlay().get(0);
             cardToDraw.setClickAble(true);
-            model.addCardToHandCards(cardToDraw);
+            gameModel.addCardToHandCards(cardToDraw);
         }
         sort();
     }
@@ -122,16 +128,16 @@ public class HoldingHandController {
     private void setHandInfo(List<String> hands) {
         int maxPoints = 0;
 
-        if(hands.isEmpty()) model.setBestHand(new PokerHand());
+        if(hands.isEmpty()) gameModel.setBestHand(new PokerHand());
 
-        for (PokerHand pokerHand : model.getAllHandList()) {
+        for (PokerHand pokerHand : gameModel.getAllHandList()) {
             if(hands.contains(pokerHand.getName())) {
                 System.out.println(pokerHand.getName());
                 int points = pokerHand.getChips() * pokerHand.getMulti();
                 System.out.println("Possible Points: " + points);
                 if(maxPoints < points) {
                     maxPoints = points;
-                    model.setBestHand(pokerHand);
+                    gameModel.setBestHand(pokerHand);
                 }
             }
         }
@@ -139,23 +145,23 @@ public class HoldingHandController {
 
     //Button Funktions
     public void sortRank() {
-        model.setSortedByRank(true);
+        gameModel.setSortedByRank(true);
         sort();
     }
 
     public void sortSuit() {
-        model.setSortedByRank(false);
+        gameModel.setSortedByRank(false);
         sort();
     }
 
     public void sort() {
         List<PlayingCard> tempCardList = new ArrayList<>();
-        for(var card : model.getHandCards()) {
+        for(var card : gameModel.getHandCards()) {
             if(card != null)
                 tempCardList.add(card);
         }
 
-        if(model.isSortedByRank()) {
+        if(gameModel.isSortedByRank()) {
             tempCardList.sort(Comparator
                     .comparingInt(PlayingCard::getOrderPosition)
                     .thenComparingInt(PlayingCard::getSuitOrder));
@@ -167,36 +173,38 @@ public class HoldingHandController {
 
         Collections.reverse(tempCardList);
 
-        model.getHandCards().clear();
-        model.setHandCards(tempCardList);
+        gameModel.getHandCards().clear();
+        gameModel.setHandCards(tempCardList);
 
         moveCards();
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        if(!model.getSelectedCards().isEmpty()) {
-            model.toggleHandButtonVisibility();
+        if(!gameModel.getSelectedCards().isEmpty()) {
+            gameModel.toggleHandButtonVisibility();
             getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
             getHandCards().removeAll(getSelectedCards());
             GameController.getInstance().playSelectedCards();
 
-            if(model.getActiveBlind().getBlindName() == "The Serpent")
+            if(gameModel.getActiveBlind().getBlindName() == "The Serpent")
                 drawCards(3);
             else
                 drawCards();
-            model.decrementHands();
+            gameModel.decrementHands();
         }
-
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        getHandCards().removeAll(getSelectedCards());
-        getSelectedCards().clear();
-        if(model.getActiveBlind().getBlindName() == "The Serpent")
-            drawCards(3);
-        else
-            drawCards();
-        model.decrementDiscards();
+        if(!gameModel.getSelectedCards().isEmpty()) {
+            getHandCards().removeAll(getSelectedCards());
+            getSelectedCards().clear();
+
+            if (gameModel.getActiveBlind().getBlindName() == "The Serpent")
+                drawCards(3);
+            else
+                drawCards();
+            gameModel.decrementDiscards();
+        }
     }
 
 }

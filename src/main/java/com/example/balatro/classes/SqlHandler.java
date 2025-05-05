@@ -74,7 +74,6 @@ public class SqlHandler {
         });
     }
 
-
     private void handleDB() {
         try {
             Statement stmt = connection.createStatement();

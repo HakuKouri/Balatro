@@ -1,4 +1,3 @@
-/*--background-color: #444;*/
 @font-face {
     font-family: Balatro;
     src: url("../font/balatro.ttf");
@@ -23,7 +22,6 @@
 
 .font-white {
     -fx-text-fill: white;
-
 }
 
 #gameScreenAnchor {
@@ -98,7 +96,6 @@
 
 .money {
     -fx-background-color: -fx-money-color;
-
 }
 
 .shadow-b {

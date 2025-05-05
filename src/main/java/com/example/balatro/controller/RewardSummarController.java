@@ -1,5 +1,6 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.Planet;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.RewardModel;
@@ -59,12 +60,12 @@ public class RewardSummarController {
     private Label rewardInterestReward;
     //endregion
 
-    private final GameModel gameModel = GameController.getGameModel();
+    private final GameModel gameModel = Balatro.getGameModel();
     private final RewardModel rewardModel = new RewardModel();
 
     public void initialize() {
-        rewardBlindStake.imageProperty().bind(gameModel.getChosenStake().imageProperty());
         rewardBlindChip.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
+        rewardBlindStake.imageProperty().bind(gameModel.getChosenStake().imageProperty());
         rewardBlindScore.textProperty().bind(gameModel.scoreToReachProperty().asString());
         rewardBlindReward.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),

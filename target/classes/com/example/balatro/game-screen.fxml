@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
@@ -35,7 +36,7 @@
             <padding>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
-            <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+            <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" styleClass="font-white" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -55,15 +56,15 @@
                   <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="44.0" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" />
                </rowConstraints>
-               <Label fx:id="toBeatEffect" alignment="CENTER" layoutX="31.0" layoutY="6.0" prefHeight="21.0" prefWidth="155.0" text="Effect" GridPane.columnSpan="2147483647" />
+               <Label fx:id="toBeatEffect" alignment="CENTER" layoutX="31.0" layoutY="6.0" prefHeight="21.0" prefWidth="155.0" styleClass="font-white" text="Effect" GridPane.columnSpan="2147483647" />
                <ImageView fx:id="toBeatImage" fitHeight="80.0" fitWidth="80.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.rowSpan="3">
                   <GridPane.margin>
                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
                </ImageView>
-               <Label alignment="CENTER" prefHeight="13.0" prefWidth="164.0" text="Score at least" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-               <Label fx:id="toBeatScore" alignment="CENTER" prefHeight="47.0" prefWidth="123.0" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-               <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="164.0" text="to earn" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <Label alignment="CENTER" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="Score at least" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+               <Label fx:id="toBeatScore" alignment="CENTER" prefHeight="47.0" prefWidth="123.0" styleClass="font-white" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+               <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="to earn" GridPane.columnIndex="1" GridPane.rowIndex="3">
                   <GridPane.margin>
                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                   </GridPane.margin>
@@ -242,19 +243,27 @@
                      </Label>
                   </children>
                </VBox>
-               <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="90.0" styleClass="btn-red" text="Run Info" textAlignment="CENTER" wrapText="true" GridPane.rowSpan="3">
+               <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="90.0" text="Run Info" textAlignment="CENTER" wrapText="true" GridPane.rowSpan="3">
                   <font>
                      <Font name="balatro Regular" size="15.0" />
                   </font>
+                  <styleClass>
+                     <String fx:value="btn-red" />
+                     <String fx:value="font-white" />
+                  </styleClass>
                </Button>
-               <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="90.0" styleClass="btn-yellow" text="Options" textAlignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="3">
+               <Button alignment="CENTER" mnemonicParsing="false" prefHeight="100.0" prefWidth="90.0" text="Options" textAlignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="3">
                   <font>
                      <Font name="balatro Regular" size="12.0" />
                   </font>
+                  <styleClass>
+                     <String fx:value="btn-yellow" />
+                     <String fx:value="font-white" />
+                  </styleClass>
                </Button>
             </GridPane>
          </VBox>
-         <HBox fx:id="JokerConsumHBox" alignment="CENTER" prefHeight="177.0" prefWidth="963.0" spacing="50.0" GridPane.columnIndex="1">
+         <HBox fx:id="JokerConsumeHBox" alignment="CENTER" prefHeight="177.0" prefWidth="963.0" spacing="50.0" GridPane.columnIndex="1">
             <children>
                <VBox alignment="CENTER_LEFT">
                   <children>
@@ -275,12 +284,24 @@
                <Insets right="200.0" />
             </GridPane.margin>
          </StackPane>
-         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+           <columnConstraints>
+             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="75.0" prefWidth="100.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
             <children>
-               <AnchorPane fx:id="holdingHand_AnchorPane" maxWidth="720.0" prefHeight="200.0" prefWidth="720.0" styleClass="spot" />
-               <VBox alignment="CENTER_RIGHT">
+               <AnchorPane fx:id="holdingHand_AnchorPane" maxWidth="720.0" prefHeight="211.0" prefWidth="691.0" styleClass="spot" />
+               <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="1">
                   <children>
-                     <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true" styleClass="deck" />
+                     <ImageView fx:id="imageViewDeckField" fitHeight="200.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true">
+                        <styleClass>
+                           <String fx:value="deck" />
+                           <String fx:value="spot" />
+                        </styleClass></ImageView>
                      <Label fx:id="cardsInDeckLabel" text="0/52" textFill="WHITE">
                         <font>
                            <Font name="balatro Regular" size="12.0" />
@@ -288,12 +309,9 @@
                      </Label>
                   </children>
                </VBox>
-               <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="70.0" />
+               <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" prefHeight="217.0" prefWidth="56.0" styleClass="spot" GridPane.columnIndex="2" />
             </children>
-            <padding>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
-         </HBox>
+         </GridPane>
       </children>
    </GridPane>
    <VBox layoutX="1124.0" layoutY="207.0">
@@ -304,15 +322,11 @@
          </ImageView>
       </children>
    </VBox>
-   <HBox fx:id="blindBox" layoutX="300.0" layoutY="120.0" spacing="55.0">
-      <AnchorPane fx:id="smallBlindAnchor" prefHeight="600.0" prefWidth="200.0">
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-      </AnchorPane>
-      <AnchorPane fx:id="bigBlindAnchor" prefHeight="600.0" prefWidth="200.0" />
-      <AnchorPane fx:id="bossBlindAnchor" prefHeight="600.0" prefWidth="200.0" />
-   </HBox>
    <AnchorPane fx:id="placeHolderShop" layoutX="290.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
    <AnchorPane fx:id="placeHolderReward" layoutX="290.0" layoutY="160.0" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="blindBox" layoutX="350.0" AnchorPane.bottomAnchor="0.0">
+      <children>
+         <fx:include fx:id="blindBoxHBox" source="blind-box.fxml" AnchorPane.bottomAnchor="0.0" />
+      </children>
+   </AnchorPane>
 </AnchorPane>

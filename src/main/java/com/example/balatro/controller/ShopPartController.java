@@ -1,5 +1,6 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.fxml.FXML;
@@ -20,7 +21,7 @@ public class ShopPartController {
     private StackPane BoosterArea;
 
     private final GameController gameController = GameController.getInstance();
-    private final GameModel model = GameController.getGameModel();
+    private final GameModel gameModel = Balatro.getGameModel();
 
     private static List<PlayingCard> playingCardList;
     private static int maxItems = 2;
@@ -41,7 +42,7 @@ public class ShopPartController {
     }
 
     private void drawVoucher() {
-        VoucherArea.getChildren().add(model.getVoucherList().get(model.getRand().nextInt(model.getVoucherList().size())));
+        VoucherArea.getChildren().add(gameModel.getVoucherList().get(gameModel.getRand().nextInt(gameModel.getVoucherList().size())));
     }
 
     private void removeFromVoucher(Voucher voucher) {
@@ -50,7 +51,7 @@ public class ShopPartController {
 
     private void drawBooster() {
 
-        BoosterArea.getChildren().add(model.getBoosterList().get(model.getRand().nextInt(model.getBoosterList().size())));
+        BoosterArea.getChildren().add(gameModel.getBoosterList().get(gameModel.getRand().nextInt(gameModel.getBoosterList().size())));
     }
 
     private void removeFromBooster(Booster booster) {

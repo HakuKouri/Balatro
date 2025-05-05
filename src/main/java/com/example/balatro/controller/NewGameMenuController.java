@@ -69,7 +69,7 @@ public class NewGameMenuController
         setDeckName();
         loadDeckImage();
         setDeckDescription();
-        changeAviableStakeLevel();
+        changeAvailableStakeLevel();
 
         setStake();
         highlightActiveDeck();
@@ -132,7 +132,7 @@ public class NewGameMenuController
     private void setDeckDescription() {
         labelDeckEffect.setText(deckList.get(activeDeck).getDeckDescription());
     }
-    private void changeAviableStakeLevel() {
+    private void changeAvailableStakeLevel() {
         for(int i = 0; i < 7; i++) {
             if(i <= deckList.get(activeDeck).getStageCleared())
                 ((Rectangle)boxStakeLevel.getChildren().get(7-i)).setWidth(20);
