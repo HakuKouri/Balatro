@@ -36,46 +36,43 @@
             <padding>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
-            <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" styleClass="font-white" text="Label" textAlignment="CENTER" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </Label>
-            <GridPane fx:id="toBeat" prefHeight="119.0" prefWidth="230.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #444; -fx-background-radius: 10;">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-               <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" maxWidth="86.0" minWidth="58.0" prefWidth="83.0" />
-                  <ColumnConstraints maxWidth="83.0" minWidth="10.0" prefWidth="62.0" />
-                  <ColumnConstraints maxWidth="101.0" minWidth="10.0" prefWidth="85.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="64.0" minHeight="27.0" prefHeight="27.0" valignment="CENTER" />
-                  <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="25.0" />
-                  <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="44.0" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
-               </rowConstraints>
-               <Label fx:id="toBeatEffect" alignment="CENTER" layoutX="31.0" layoutY="6.0" prefHeight="21.0" prefWidth="155.0" styleClass="font-white" text="Effect" GridPane.columnSpan="2147483647" />
-               <ImageView fx:id="toBeatImage" fitHeight="80.0" fitWidth="80.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.rowSpan="3">
-                  <GridPane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </GridPane.margin>
-               </ImageView>
-               <Label alignment="CENTER" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="Score at least" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-               <Label fx:id="toBeatScore" alignment="CENTER" prefHeight="47.0" prefWidth="123.0" styleClass="font-white" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-               <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="to earn" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                  <GridPane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </GridPane.margin>
-               </Label>
-               <ImageView fx:id="toBeatStake" fitHeight="43.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <Label fx:id="toBeatReward" prefHeight="13.0" prefWidth="61.0" text="\$$$" textFill="#c9be21" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                  <GridPane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </GridPane.margin>
-               </Label>
-            </GridPane>
+            <VBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Label fx:id="labelBlind" alignment="CENTER" prefHeight="60.0" prefWidth="238.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #555; -fx-background-radius: 10;" styleClass="font-white" text="Label" textAlignment="CENTER" />
+                  <GridPane fx:id="toBeat" prefHeight="119.0" prefWidth="230.0" style="-fx-effect: dropshadow(three-pass-box,black,0,0,0,5); -fx-background-color: #444; -fx-background-radius: 10;">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" maxWidth="86.0" minWidth="58.0" prefWidth="83.0" />
+                        <ColumnConstraints maxWidth="83.0" minWidth="10.0" prefWidth="62.0" />
+                        <ColumnConstraints maxWidth="101.0" minWidth="10.0" prefWidth="85.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="64.0" minHeight="27.0" prefHeight="27.0" valignment="CENTER" />
+                        <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="25.0" />
+                        <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="44.0" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                     </rowConstraints>
+                     <Label fx:id="toBeatEffect" alignment="CENTER" layoutX="31.0" layoutY="6.0" prefHeight="21.0" prefWidth="155.0" styleClass="font-white" text="Effect" GridPane.columnSpan="2147483647" />
+                     <ImageView fx:id="toBeatImage" fitHeight="80.0" fitWidth="80.0" layoutX="5.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                        <GridPane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                     </ImageView>
+                     <Label alignment="CENTER" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="Score at least" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                     <Label fx:id="toBeatScore" alignment="CENTER" prefHeight="47.0" prefWidth="123.0" styleClass="font-white" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                     <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="164.0" styleClass="font-white" text="to earn" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <GridPane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                     </Label>
+                     <ImageView fx:id="toBeatStake" fitHeight="43.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <Label fx:id="toBeatReward" prefHeight="13.0" prefWidth="61.0" text="\$$$" textFill="#c9be21" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <GridPane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </GridPane.margin>
+                     </Label>
+                  </GridPane>
+               </children>
+            </VBox>
             <AnchorPane prefHeight="70.0" prefWidth="230.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box,black,0,0,0,5);">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

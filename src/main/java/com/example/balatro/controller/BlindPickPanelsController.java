@@ -53,11 +53,13 @@ public class BlindPickPanelsController {
 
     public void initialize() {
         System.out.println("Blind Panel Init");
+
         imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
-        lblBlindName.textProperty().bind(blind.get().blindNameProperty());
-        effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
 
+        lblBlindName.textProperty().bind(blind.get().blindNameProperty());
+        imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
+        effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
 
 
     }
@@ -69,6 +71,10 @@ public class BlindPickPanelsController {
 
     public ObjectProperty<Blind> blindProperty() {
         return blind;
+    }
+
+    public void setBlind(Blind newBlind) {
+        blind.get().setBlind(newBlind);
     }
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
@@ -142,6 +148,8 @@ public class BlindPickPanelsController {
     }
 
     public void play() {
+        System.out.println("Bound: " + blindProperty().get().blindNameProperty().isBound());
+
         model.setActiveBlind(blind.get());
         model.setRound(model.getRound()+1);
         model.setHandButtonVisibility(true);
@@ -154,5 +162,12 @@ public class BlindPickPanelsController {
 
     public void setTag(Tag tag) {
         blindSkipController.setTag(tag);
+    }
+
+    public void setName(String test) {
+        System.out.println(lblBlindName.textProperty().isBound());
+        System.out.println(blind.get().getBlindName());
+        blind.get().setBlindName(test);
+        System.out.println(blind.get().getBlindName());
     }
 }

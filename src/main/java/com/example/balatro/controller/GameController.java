@@ -1,23 +1,20 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.BlindBoxController;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -146,7 +143,9 @@ public class GameController
 
     //UI HANDLER
     public void initialize(){
+        System.out.println("Game Controller init!");
         instance = this;
+        System.out.println("Game Controller instance: " + instance);
 
         //LOAD / READY PLACEHOLDER
         try {
@@ -158,6 +157,7 @@ public class GameController
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
 
+            System.out.println("Gamecontroller BlindBox Load");
             loaderBlindBox.load();
             blindBoxController = loaderBlindBox.getController(); // Hier bekommst du den Controller
 
@@ -254,7 +254,7 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.getPlayedCards().get(gameModel.getPlayedCards().size()-1).visibleProperty().set(false);
+            blindBoxController.testBlinds("test");
         });
 
     }

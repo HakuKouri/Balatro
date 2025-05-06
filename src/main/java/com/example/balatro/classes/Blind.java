@@ -154,4 +154,19 @@ public class Blind extends ImageView
     }
 
     //endregion
+
+    //region Funktionen
+    public void copyFrom(Blind newBlind) {
+        System.out.println("Copy Done");
+        setBlindId(newBlind.getBlindId());
+        setBlindImageUrl(newBlind.getBlindImageUrl());
+        setBlindName(newBlind.getBlindName());
+        setBlindDescription(newBlind.getBlindDescription());
+        setBlindMinimumAnte(newBlind.getBlindMinimumAnte());
+        setBlindScoreMultiplier(newBlind.getBlindScoreMultiplier());
+        setBlindEarn(newBlind.getBlindEarn());
+        setBlindSkipped(newBlind.isBlindSkipped());
+        setColorScheme(newBlind.getColorScheme());
+    }
+    //endregion
 }
