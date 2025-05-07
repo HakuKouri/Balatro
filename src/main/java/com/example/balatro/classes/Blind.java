@@ -22,6 +22,15 @@ public class Blind extends ImageView
         blindImageUrl.addListener((obs, oldVal, newVal) -> {
             this.setImage(new Image("file:" +newVal,true));
         });
+        blindId.set(-1);
+        blindImageUrl.set("");
+        blindName.set("default");
+        blindDescription.set("");
+        blindMinimumAnte.set("-1");
+        blindScoreMultiplier.set("0");
+        blindEarn.set("0");
+        blindSkipped.set(false);
+        colorScheme.set(new Color(0,0,0,0));
     }
 
     //region GETTER SETTER

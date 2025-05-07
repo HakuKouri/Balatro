@@ -1,6 +1,5 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.Balatro;
 import com.example.balatro.classes.Tag;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +16,7 @@ public class BlindSkipPaneController {
 
     private Tag tag;
 
-    private BlindPickPanelsController blindPickPanelsController;
+    private BlindBoxPanelController blindPickPanelsController;
 
     public void setTag(Tag tag) {
         this.tag = tag;
@@ -32,7 +31,7 @@ public class BlindSkipPaneController {
         ivSkipReward.setImage(new Image("file:" + imageUrl));
     }
 
-    public void setBlindPickPanels(BlindPickPanelsController blindPickPanelsController) {
+    public void setBlindPickPanels(BlindBoxPanelController blindPickPanelsController) {
         this.blindPickPanelsController = blindPickPanelsController;
     }
 

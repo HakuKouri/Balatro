@@ -3,11 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BlindBoxController">
+<HBox fx:id="blindBox" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.BlindBoxController">
    <children>
-      <fx:include fx:id="smallBlind" source="blindPickPanels.fxml" />
-      <fx:include fx:id="bigBlind" source="blindPickPanels.fxml" />
-      <fx:include fx:id="bossBlind" source="blindPickPanels.fxml" />
+     <!-- ?> <fx:include fx:id="smallBlind" source="blind-Box-Panel.fxml" />
+      <fx:include fx:id="bigBlind" source="blind-Box-Panel.fxml" />
+      <fx:include fx:id="bossBlind" source="blind-Box-Panel.fxml" />-->
    </children>
    <padding>
       <Insets left="10.0" right="10.0" />

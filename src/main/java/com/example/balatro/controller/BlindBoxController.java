@@ -1,69 +1,28 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.controller.BlindPickPanelsController;
 import com.example.balatro.models.GameModel;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class BlindBoxController implements Initializable {
+public class BlindBoxController {
 
-    @FXML
-    private AnchorPane smallBlind;
+    public HBox blindBox;
 
     private final GameModel gameModel = Balatro.getGameModel();
 
-    private BlindPickPanelsController smallBlindController;
-    private BlindPickPanelsController bigBlindController;
-    private BlindPickPanelsController bossBlindController;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader loaderSmall = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
-        FXMLLoader loaderBig = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
-        FXMLLoader loaderBoss = new FXMLLoader(getClass().getResource("/com/example/balatro/blindPickPanels.fxml"));
-        try {
-            //loader.setRoot(smallBlind);
-            //loader.setControllerFactory(param -> null); // deaktiviert neuen Controller
-            System.out.println("Small Blind Load");
-            loaderSmall.load();
-            smallBlindController = loaderSmall.getController(); // Hier bekommst du den Controller
-            System.out.println("Big Blind Load");
-            loaderBig.load();
-            bigBlindController = loaderBig.getController();
-            System.out.println("Boss Blind Load");
-            loaderBoss.load();
-            bossBlindController = loaderBoss.getController();
+    private BlindBoxPanelController smallBlindController;
+    private BlindBoxPanelController bigBlindController;
+    private BlindBoxPanelController bossBlindController;
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    public void setUpBlinds() {
-//        smallBlindController.setBlind(
-//                gameModel.getRunBlinds().get(0),
-//                gameModel.getRunTags().get(0),
-//                1);
-//        smallBlindController.blindProperty().bind(Bindings.createObjectBinding(() -> {
-//            System.out.println("Setup Blinds: " + gameModel.getRunBlinds().stream().findFirst().get().getBlindName());
-//            return gameModel.getRunBlinds().get((gameModel.getAnte()-1)*3);
-//        }));
-        System.out.println("Small blind schould be: " + gameModel.getRunBlinds().get(0).getBlindName());
-
-
-        //smallBlindController.setBlind(gameModel.getRunBlinds().get(0));
-    }
 
     public void testBlinds(String test) {
         smallBlindController.getBlind().setBlindName("testController");

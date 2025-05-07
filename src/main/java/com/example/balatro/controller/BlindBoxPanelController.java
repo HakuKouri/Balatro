@@ -4,9 +4,10 @@ import com.example.balatro.Balatro;
 import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.Tag;
 import com.example.balatro.models.GameModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -18,7 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class BlindPickPanelsController {
+public class BlindBoxPanelController {
 
     public Label effectText_label;
 
@@ -41,7 +42,8 @@ public class BlindPickPanelsController {
 
     private final ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
-    private final GameController gameController = GameController.getInstance();
+    private GameController gameController = GameController.getInstance();
+
     private final GameModel model = Balatro.getGameModel();
 
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
@@ -54,13 +56,18 @@ public class BlindPickPanelsController {
     public void initialize() {
         System.out.println("Blind Panel Init");
 
+        lblBlindName.textProperty().bind(Bindings.createStringBinding(() ->
+            blind.get().getBlindName(), blindProperty()
+        ));
+
+
+
         imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
 
-        lblBlindName.textProperty().bind(blind.get().blindNameProperty());
+
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
-
 
     }
 
@@ -79,7 +86,7 @@ public class BlindPickPanelsController {
 
     public void setBlind(Blind blind, Tag tag, int blindNumber) {
         this.blind.get().setBlind(blind);
-        if(blindNumber == 1) {
+        if (blindNumber == 1) {
             setButtonText("Select");
 
             setActivity(false);
@@ -92,7 +99,7 @@ public class BlindPickPanelsController {
             blindSkipController = loaderSkipPane.getController();
             skipAnchorPane.getChildren().add(skipPane);
             setTag(tag);
-        } else if(blindNumber == 2) {
+        } else if (blindNumber == 2) {
             setButtonText("Upcoming");
 
             setActivity(false);
@@ -105,7 +112,7 @@ public class BlindPickPanelsController {
             blindSkipController = loaderSkipPane.getController();
             skipAnchorPane.getChildren().add(skipPane);
             setTag(tag);
-        } else if(blindNumber == 3) {
+        } else if (blindNumber == 3) {
             setButtonText("Upcoming");
 
             setActivity(false);
@@ -130,7 +137,7 @@ public class BlindPickPanelsController {
             } else {
                 skipPane.getChildren().add(loaderSkipPane.load());
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -144,16 +151,17 @@ public class BlindPickPanelsController {
     }
 
     public void setEarn(int score) {
-        lblEarn.setText("$".repeat(Math.max(0, score)) +"+");
+        lblEarn.setText("$".repeat(Math.max(0, score)) + "+");
     }
 
     public void play() {
-        System.out.println("Bound: " + blindProperty().get().blindNameProperty().isBound());
+       System.out.println("Bound: " + blindProperty().get().blindNameProperty().isBound());
 
-        model.setActiveBlind(blind.get());
-        model.setRound(model.getRound()+1);
-        model.setHandButtonVisibility(true);
-        gameController.startRound(blind.get(),new BigDecimal(lblMinScore.getText()));
+       model.setActiveBlind(blind.get());
+       model.setRound(model.getRound() + 1);
+       model.setHandButtonVisibility(true);
+
+       gameController.startRound(new BigDecimal(lblMinScore.getText()));
     }
 
     public void skip() {

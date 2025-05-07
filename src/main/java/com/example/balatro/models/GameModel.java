@@ -24,7 +24,7 @@ public class GameModel {
     //region Run Lists
     private final List<PlayingCard> deckFull = new ArrayList<>();
     private final List<PlayingCard> deckToPlay = new ArrayList<>();
-    private final List<Blind> runBlinds = new ArrayList<>();
+    private final ObservableList<Blind> runBlinds = FXCollections.observableArrayList();
     private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
@@ -191,7 +191,7 @@ public class GameModel {
         activeBlind.get().setBlind(pickedBlind);
     }
 
-    public List<Blind> getRunBlinds() {
+    public ObservableList<Blind> getRunBlinds() {
         return runBlinds;
     }
 
@@ -579,6 +579,7 @@ public class GameModel {
     }
 
     //Aktueller Ante
+
     public int getAnte() {
         return ante.get();
     }

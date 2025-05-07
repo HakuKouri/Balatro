@@ -18,6 +18,7 @@ public class Stake extends ImageView
 
 
     public void setStake(Stake chosenStake) {
+        setImage(new Image("file:" + stakeImageChipUrl));
         setStakeId(chosenStake.getStakeId());
         setStakeName(chosenStake.getStakeName());
         setStakeImageStickerUrl(chosenStake.getStakeImageStickerUrl());
