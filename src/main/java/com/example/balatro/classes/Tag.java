@@ -21,8 +21,23 @@ public class Tag extends ImageView
         tagImageUrl.addListener((obs, oldVal, newVal) -> {
             this.setImage(new Image("file:" +newVal,true));
         });
+        setTagId(-1);
+        setTagImageUrl("");
+        setTagName("default");
+        setTagBenefit("default benefit");
+        setTagNotes("default notes");
+        setMinAnte("0");
         this.setFitHeight(100);
         this.setPreserveRatio(true);
+    }
+
+    public void setTag(Tag newTag) {
+        setTagId(newTag.getTagId());
+        setTagImageUrl(newTag.getTagImageUrl());
+        setTagName(newTag.getTagName());
+        setTagBenefit(newTag.getTagBenefit());
+        setTagNotes(newTag.getTagNotes());
+        setMinAnte(newTag.getMinAnte());
     }
 
     //region GETTER SETTER

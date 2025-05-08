@@ -1,6 +1,8 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.classes.Tag;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,16 +16,26 @@ public class BlindSkipPaneController {
     @FXML
     private ImageView ivSkipReward;
 
-    private Tag tag;
+
+    private final ObjectProperty<Tag> tag = new SimpleObjectProperty<>(new Tag());
+
 
     private BlindBoxPanelController blindPickPanelsController;
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
-        setIvSkipReward(tag.getTagImageUrl());
+    public void initialize() {
+        ivSkipReward.imageProperty().bind(tag.get().imageProperty());
+
     }
 
-    public Tag getTag() {
+
+
+    public void setTag(Tag newTag) {
+        tag.get().setTag(newTag);
+
+        //setIvSkipReward(tag.get().getTagImageUrl());
+    }
+
+    public ObjectProperty<Tag> getTag() {
         return tag;
     }
 
@@ -38,6 +50,6 @@ public class BlindSkipPaneController {
 
     public void onClickSkip(ActionEvent actionEvent) {
         System.out.println("Skipped clicked");
-        GameController.getInstance().skip(tag);
+        GameController.getInstance().skip(tag.get());
     }
 }

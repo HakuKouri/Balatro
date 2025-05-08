@@ -13,14 +13,13 @@ public class Blind extends ImageView
     private final StringProperty blindDescription = new SimpleStringProperty();
     private final StringProperty blindMinimumAnte = new SimpleStringProperty();
     private final StringProperty blindScoreMultiplier = new SimpleStringProperty();
-    private final StringProperty blindEarn = new SimpleStringProperty();
+    private final IntegerProperty blindReward = new SimpleIntegerProperty();
     private final BooleanProperty blindSkipped = new SimpleBooleanProperty();
     private final ObjectProperty<Color> colorScheme = new SimpleObjectProperty<>();
-    private final IntegerProperty blindReward = new SimpleIntegerProperty();
 
     public Blind() {
         blindImageUrl.addListener((obs, oldVal, newVal) -> {
-            this.setImage(new Image("file:" +newVal,true));
+            this.setImage(new Image("file:" + newVal,true));
         });
         blindId.set(-1);
         blindImageUrl.set("");
@@ -28,7 +27,7 @@ public class Blind extends ImageView
         blindDescription.set("");
         blindMinimumAnte.set("-1");
         blindScoreMultiplier.set("0");
-        blindEarn.set("0");
+        blindReward.set(0);
         blindSkipped.set(false);
         colorScheme.set(new Color(0,0,0,0));
     }
@@ -41,7 +40,7 @@ public class Blind extends ImageView
         blindDescription.set(blind.getBlindDescription());
         blindMinimumAnte.set(blind.getBlindMinimumAnte());
         blindScoreMultiplier.set(blind.getBlindScoreMultiplier());
-        blindEarn.set(blind.getBlindEarn());
+        blindReward.set(blind.getBlindReward());
         blindSkipped.set(blind.isBlindSkipped());
         colorScheme.set(blind.getColorScheme());
     }
@@ -118,16 +117,16 @@ public class Blind extends ImageView
         this.blindScoreMultiplier.set(blindScoreMultiplier);
     }
 
-    public String getBlindEarn() {
-        return blindEarn.get();
+    public int getBlindReward() {
+        return blindReward.get();
     }
 
-    public StringProperty blindEarnProperty() {
-        return blindEarn;
+    public IntegerProperty blindRewardProperty() {
+        return blindReward;
     }
 
-    public void setBlindEarn(String blindEarn) {
-        this.blindEarn.set(blindEarn);
+    public void setBlindReward(int blindReward) {
+        this.blindReward.set(blindReward);
     }
 
     public boolean isBlindSkipped() {
@@ -154,14 +153,6 @@ public class Blind extends ImageView
         this.colorScheme.set(colorScheme);
     }
 
-    public int getBlindReward() {
-        return blindReward.get();
-    }
-
-    public IntegerProperty blindRewardProperty() {
-        return blindReward;
-    }
-
     //endregion
 
     //region Funktionen
@@ -173,7 +164,7 @@ public class Blind extends ImageView
         setBlindDescription(newBlind.getBlindDescription());
         setBlindMinimumAnte(newBlind.getBlindMinimumAnte());
         setBlindScoreMultiplier(newBlind.getBlindScoreMultiplier());
-        setBlindEarn(newBlind.getBlindEarn());
+        setBlindReward(newBlind.getBlindReward());
         setBlindSkipped(newBlind.isBlindSkipped());
         setColorScheme(newBlind.getColorScheme());
     }

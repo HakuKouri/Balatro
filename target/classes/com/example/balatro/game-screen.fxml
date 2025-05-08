@@ -260,18 +260,18 @@
                </Button>
             </GridPane>
          </VBox>
-         <HBox fx:id="JokerConsumeHBox" alignment="CENTER" prefHeight="177.0" prefWidth="963.0" spacing="50.0" GridPane.columnIndex="1">
+         <HBox fx:id="jokerConsumeHBox" alignment="CENTER" prefHeight="177.0" prefWidth="963.0" spacing="50.0" GridPane.columnIndex="1">
             <children>
                <VBox alignment="CENTER_LEFT">
                   <children>
                      <StackPane fx:id="spaceJoker" prefHeight="139.0" prefWidth="545.0" styleClass="spot" />
-                     <Label prefHeight="13.0" prefWidth="37.0" text="0/5" textFill="WHITE" />
+                     <Label fx:id="jokerCountLabel" prefHeight="13.0" prefWidth="37.0" text="0/5" textFill="WHITE" />
                   </children>
                </VBox>
                <VBox alignment="CENTER_RIGHT">
                   <children>
                      <StackPane fx:id="spaceConsumable" prefHeight="139.0" prefWidth="298.0" styleClass="spot" />
-                     <Label text="0/2" textFill="WHITE" />
+                     <Label fx:id="consumableCountLabel" text="0/2" textFill="WHITE" />
                   </children>
                </VBox>
             </children>

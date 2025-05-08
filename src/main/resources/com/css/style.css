@@ -20,6 +20,11 @@
     -fx-money-color: #f5b244;
 }
 
+.border {
+    -fx-border-color: white;
+    -fx-border-width: 2;
+}
+
 .font-white {
     -fx-text-fill: white;
 }

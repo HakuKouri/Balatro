@@ -22,8 +22,8 @@ public class GameModel {
     //endregion
 
     //region Run Lists
-    private final List<PlayingCard> deckFull = new ArrayList<>();
-    private final List<PlayingCard> deckToPlay = new ArrayList<>();
+    private final ObservableList<PlayingCard> deckFull = FXCollections.observableArrayList();
+    private final ObservableList<PlayingCard> deckToPlay = FXCollections.observableArrayList();
     private final ObservableList<Blind> runBlinds = FXCollections.observableArrayList();
     private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
@@ -38,6 +38,9 @@ public class GameModel {
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
     private Random rand;
     private final ObjectProperty<Blind> activeBlind = new SimpleObjectProperty<>(new Blind());
+
+    private final IntegerProperty maxJokers = new SimpleIntegerProperty(5);
+    private final IntegerProperty maxConsumables = new SimpleIntegerProperty(2);
     //endregion
 
     //region HAND POINTS VAR
@@ -59,14 +62,18 @@ public class GameModel {
     private final ObservableList<Joker> activeJokerObList = new SimpleListProperty<>();
     //endregion
 
+    //region Collected Consumables
+    private final ObservableList<Card> consumableList = FXCollections.observableArrayList();
+    //endregion
+
     //region RUN INFO VAR
     private final IntegerProperty maxHands = new SimpleIntegerProperty(4);
     private final IntegerProperty hands = new SimpleIntegerProperty(4);
     private final IntegerProperty maxDiscards = new SimpleIntegerProperty(3);
     private final IntegerProperty discards = new SimpleIntegerProperty(3);
     private final IntegerProperty money = new SimpleIntegerProperty(3);
-    private final IntegerProperty ante = new SimpleIntegerProperty(1);
-    private final IntegerProperty round = new SimpleIntegerProperty(0);
+    private final IntegerProperty ante = new SimpleIntegerProperty(0);
+    private final IntegerProperty round = new SimpleIntegerProperty(-1);
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
     //endregion
@@ -137,7 +144,9 @@ public class GameModel {
     //endregion
 
     //region Full Deck
-    public List<PlayingCard> getDeckFull() {
+
+
+    public ObservableList<PlayingCard> getDeckFull() {
         return deckFull;
     }
 
@@ -156,7 +165,9 @@ public class GameModel {
     //endregion
 
     //region Deck to Play with
-    public List<PlayingCard> getDeckToPlay() {
+
+
+    public ObservableList<PlayingCard> getDeckToPlay() {
         return deckToPlay;
     }
 
@@ -189,6 +200,31 @@ public class GameModel {
 
     public void setActiveBlind(Blind pickedBlind) {
         activeBlind.get().setBlind(pickedBlind);
+    }
+
+
+    public int getMaxJokers() {
+        return maxJokers.get();
+    }
+
+    public IntegerProperty maxJokersProperty() {
+        return maxJokers;
+    }
+
+    public void setMaxJokers(int maxJokers) {
+        this.maxJokers.set(maxJokers);
+    }
+
+    public int getMaxConsumables() {
+        return maxConsumables.get();
+    }
+
+    public IntegerProperty maxConsumablesProperty() {
+        return maxConsumables;
+    }
+
+    public void setMaxConsumables(int maxConsumables) {
+        this.maxConsumables.set(maxConsumables);
     }
 
     public ObservableList<Blind> getRunBlinds() {
@@ -496,7 +532,11 @@ public class GameModel {
     }
     //endregion
 
+
     //region CONSUMABLES ON BOARD
+    public ObservableList<Card> getConsumableList() {
+        return consumableList;
+    }
 
     //endregion
 

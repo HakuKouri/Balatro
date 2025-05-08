@@ -6,13 +6,11 @@ import com.example.balatro.models.GameModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
@@ -22,8 +20,6 @@ import java.util.*;
 
 public class GameController
 {
-
-
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -34,7 +30,7 @@ public class GameController
     @FXML
     private RowConstraints bottomRow;
     @FXML
-    private HBox JokerConsumeHBox;
+    private HBox jokerConsumeHBox;
     @FXML
     private Label cardsInDeckLabel;
     @FXML
@@ -94,8 +90,12 @@ public class GameController
     private VBox spaceTag;
     @FXML
     private StackPane spaceJoker;
+    public Label jokerCountLabel;
+
     @FXML
     private StackPane spaceConsumable;
+    public Label consumableCountLabel;
+
     @FXML
     private AnchorPane placeHolderShop;
     @FXML
@@ -164,52 +164,37 @@ public class GameController
             //region Blind Box
             smallBlindPanel = loaderSmallBlind.load();
             smallBlindController = loaderSmallBlind.getController();
-            smallBlindController.blindProperty().bind(
-                    Bindings.createObjectBinding(
-                            () -> {
-                                System.out.println("Changed");
-                                ObservableList<Blind> blinds = gameModel.getRunBlinds();
-                                int ante = gameModel.anteProperty().get(); // Achtung: .get(), wenn es eine Property ist
-                                return blinds.isEmpty() ? new Blind() : blinds.get((ante - 1) * 3);
-                            },
-                            gameModel.getRunBlinds(), // Dependency 1
-                            gameModel.anteProperty()  // Dependency 2
-                    )
-            );
 
             bigBlindPanel = loaderBigBlind.load();
             bigBlindController = loaderBigBlind.getController();
-            bigBlindController.blindProperty().bind(
-                    Bindings.createObjectBinding(
-                            () -> {
-                                System.out.println("Changed");
-                                ObservableList<Blind> blinds = gameModel.getRunBlinds();
-                                int ante = gameModel.anteProperty().get(); // Achtung: .get(), wenn es eine Property ist
-                                return blinds.isEmpty() ? new Blind() : blinds.get((ante - 1) * 3 + 1);
-                            },
-                            gameModel.getRunBlinds(), // Dependency 1
-                            gameModel.anteProperty()  // Dependency 2
-                    )
-            );
 
             bossBlindPanel = loaderBossBlind.load();
             bossBlindController = loaderBossBlind.getController();
-            bossBlindController.blindProperty().bind(
-                    Bindings.createObjectBinding(
-                            () -> {
-                                System.out.println("Changed");
-                                ObservableList<Blind> blinds = gameModel.getRunBlinds();
-                                int ante = gameModel.anteProperty().get(); // Achtung: .get(), wenn es eine Property ist
-                                return blinds.isEmpty() ? new Blind() : blinds.get((ante - 1) * 3 + 2);
-                            },
-                            gameModel.getRunBlinds(), // Dependency 1
-                            gameModel.anteProperty()  // Dependency 2
-                    )
-            );
+
+            gameModel.anteProperty().addListener((obs, oldAnte, newAnte) -> {
+                System.out.println("ANTE CHANGED");
+                smallBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3));
+                smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                smallBlindController.setBossPanel(false);
+                smallBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2));
+                bigBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 1));
+                bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                bigBlindController.setBossPanel(false);
+                bigBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2 + 1));
+                bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 2));
+                bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                bossBlindController.setBossPanel(true);
+            });
 
             blindBoxHBox.getChildren().add(smallBlindPanel);
             blindBoxHBox.getChildren().add(bigBlindPanel);
             blindBoxHBox.getChildren().add(bossBlindPanel);
+
+            gameModel.roundProperty().addListener((obs, oldValue, newValue) -> {
+                blindBoxHBox.getChildren().get(0).setDisable(gameModel.getRound()%3 != 0);
+                blindBoxHBox.getChildren().get(1).setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
+                blindBoxHBox.getChildren().get(2).setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
+            });
             //endregion
 
             VBox holdingHand = loaderHoldingHand.load();
@@ -253,17 +238,19 @@ public class GameController
             }
         });
 
-        //Bind Shop
+        //region Bind Shop
         placeHolderShop.translateYProperty().bind(Bindings.createIntegerBinding(
                 () -> gameModel.isShopVisibility() ? 0 : 560,
                 gameModel.shopVisibilityProperty()
         ));
+        //endregion
 
-        //Bind Reward
+        //region Bind Reward
         placeHolderReward.translateYProperty().bind(Bindings.createIntegerBinding(
                 () -> gameModel.isRewardVisibility() ? 0 : 560,
                 gameModel.rewardVisibilityProperty()
         ));
+        //endregion
 
         //region Deck CoverBind
         imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
@@ -335,10 +322,22 @@ public class GameController
         ));
         //endregion
 
+        //region Label card counts Bind
+        cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
+            gameModel.getDeckToPlay().size() + "/" + gameModel.getDeckFull().size(), gameModel.getDeckToPlay()
+        ));
+        jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getActiveJokerObList().size() + "/" + gameModel.getMaxJokers(), gameModel.getActiveJokerObList()
+        ));
+        consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getConsumableList().size() + "/" + gameModel.getMaxConsumables(), gameModel.getConsumableList()
+        ));
+
+        //end region
+
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            System.out.println(gameModel.getRunBlinds().get(0).getBlindName());
-            System.out.println(smallBlindController.getBlind().getBlindName());
+            System.out.println("tag: " + smallBlindController.getTag().getTagName());
         });
 
     }
@@ -425,6 +424,9 @@ public class GameController
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
         gameModel.setRand(new Random());
+        createBlindList();
+        createTagList();
+
         gameModel.setChosenDeck(gameSetup.getChosenDeck());
         gameModel.setChosenStake(gameSetup.getChosenStake());
         gameModel.setHands(4);
@@ -433,17 +435,10 @@ public class GameController
         gameModel.setRound(0);
         gameModel.setMoney(0);
 
-        gameModel.setRand(new Random());
-
         Planet.resetUniquePlanets();
 
         setPlayingDeck();
-        createBlindList();
-        createTagList();
-
-
     }
-
 
 
     public void startRound(BigDecimal score) {

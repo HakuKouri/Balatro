@@ -146,7 +146,7 @@ public class SqlHandler {
                     ps.setString(4, ((Blind) listItem).getBlindDescription());
                     ps.setString(5, ((Blind) listItem).getBlindMinimumAnte());
                     ps.setString(6, ((Blind) listItem).getBlindScoreMultiplier());
-                    ps.setString(7, ((Blind) listItem).getBlindEarn());
+                    ps.setString(7, String.valueOf(((Blind) listItem).getBlindReward()));
                     ps.executeUpdate();
                 } else if (listItem.getClass() == Stake.class) {
                     //StakesTableColumns = " (id, stakeIcon, stakeName, stakeEffect, unlocks)";
@@ -365,7 +365,7 @@ public class SqlHandler {
                 blind.setBlindDescription(rs.getString(4));
                 blind.setBlindMinimumAnte(rs.getString(5));
                 blind.setBlindScoreMultiplier(rs.getString(6));
-                blind.setBlindEarn(rs.getString(7));
+                blind.setBlindReward(Integer.parseInt(rs.getString(7).substring(1)));
                 blind.setColorScheme(Color.valueOf(rs.getString(8)));
 
                 blinds.add(blind);

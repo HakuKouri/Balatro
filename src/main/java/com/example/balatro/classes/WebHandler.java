@@ -148,7 +148,7 @@ public class WebHandler
                     blind.setBlindDescription(cells.get(2).text());
                     blind.setBlindMinimumAnte(cells.get(3).text());
                     blind.setBlindScoreMultiplier(cells.get(4).text());
-                    blind.setBlindEarn(cells.get(5).text());
+                    blind.setBlindReward(Integer.parseInt(cells.get(5).text().substring(0,1)));
                 }
                 catch (Exception e) {
                     System.out.println("Fehler aufgetreten!! Blinds: ");

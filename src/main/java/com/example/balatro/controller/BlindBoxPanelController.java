@@ -7,12 +7,10 @@ import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
@@ -42,36 +40,42 @@ public class BlindBoxPanelController {
 
     private final ObjectProperty<Blind> blind = new SimpleObjectProperty<>(new Blind());
 
+    //region Game
     private GameController gameController = GameController.getInstance();
+    private final GameModel gameModel = Balatro.getGameModel();
+    //endregion
 
-    private final GameModel model = Balatro.getGameModel();
-
+    //region Loader
     private final FXMLLoader loaderSkipPane = new FXMLLoader(getClass().getResource("/com/example/balatro/blindSkipPane.fxml"));
     private final FXMLLoader loaderBossPane = new FXMLLoader(getClass().getResource("/com/example/balatro/bossPane.fxml"));
+    //endregion
 
     private BlindSkipPaneController blindSkipController;
     private AnchorPane skipPane;
     private AnchorPane bossPane;
 
+    private int activeModulo = -1;
+
     public void initialize() {
-        System.out.println("Blind Panel Init");
 
-        lblBlindName.textProperty().bind(Bindings.createStringBinding(() ->
-            blind.get().getBlindName(), blindProperty()
-        ));
-
-
-
-        imageViewStakeImage.imageProperty().bind(model.getChosenStake().imageProperty());
-        imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
-
-
+        lblBlindName.textProperty().bind(blind.get().blindNameProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
 
+        imageViewStakeImage.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+
+        lblEarn.textProperty().bind(Bindings.createStringBinding(
+                () -> "$".repeat(Math.max(0, blind.get().getBlindReward())),
+                blind.get().blindRewardProperty()
+        ));
+        effectText_label.setWrapText(true);
     }
 
     //GETTER SETTER
+
+    public void setActiveModulo(int value) {
+        activeModulo = value;
+    }
     public Blind getBlind() {
         return blind.get();
     }
@@ -80,11 +84,7 @@ public class BlindBoxPanelController {
         return blind;
     }
 
-    public void setBlind(Blind newBlind) {
-        blind.get().setBlind(newBlind);
-    }
-
-    public void setBlind(Blind blind, Tag tag, int blindNumber) {
+    /*public void setBlind(Blind blind, Tag tag, int blindNumber) {
         this.blind.get().setBlind(blind);
         if (blindNumber == 1) {
             setButtonText("Select");
@@ -129,17 +129,27 @@ public class BlindBoxPanelController {
     public void setButtonText(String text) {
         btnSelectBlind.setText(text);
     }
+    */
 
     public void setBossPanel(boolean isBoss) {
         try {
             if (isBoss) {
-                skipPane.getChildren().add(loaderBossPane.load());
+                skipAnchorPane.getChildren().add(loaderBossPane.load());
             } else {
-                skipPane.getChildren().add(loaderSkipPane.load());
+                skipAnchorPane.getChildren().add(loaderSkipPane.load());
+                blindSkipController = loaderSkipPane.getController();
+                System.out.println("Tags empty: " + gameModel.getRunTags().isEmpty());
+            //    setTag(gameModel.getRunTags().isEmpty() ?
+            //            new Tag() :
+            //            gameModel.getRunTags().get((gameModel.getAnte()-1)*2));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public Tag getTag() {
+       return blindSkipController.getTag().get();
     }
 
     public void setActivity(boolean isActivity) {
@@ -155,20 +165,21 @@ public class BlindBoxPanelController {
     }
 
     public void play() {
-       System.out.println("Bound: " + blindProperty().get().blindNameProperty().isBound());
+       System.out.println("Blind: " + blind.get().getBlindName());
 
-       model.setActiveBlind(blind.get());
-       model.setRound(model.getRound() + 1);
-       model.setHandButtonVisibility(true);
+       gameModel.setActiveBlind(blind.get());
+       gameModel.setRound(gameModel.getRound() + 1);
+       gameModel.setHandButtonVisibility(true);
 
        gameController.startRound(new BigDecimal(lblMinScore.getText()));
     }
 
     public void skip() {
-        gameController.skip(blindSkipController.getTag());
+        gameController.skip(blindSkipController.getTag().get());
     }
 
     public void setTag(Tag tag) {
+        System.out.println("Set Tag");
         blindSkipController.setTag(tag);
     }
 
