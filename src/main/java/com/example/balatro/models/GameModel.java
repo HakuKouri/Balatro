@@ -79,9 +79,9 @@ public class GameModel {
     //endregion
 
     //region UI VAR
-    private final BooleanProperty blindsVisibility = new SimpleBooleanProperty(false);
-    private final BooleanProperty shopVisibility = new SimpleBooleanProperty(false);
-    private final BooleanProperty rewardVisibility = new SimpleBooleanProperty(false);
+    private final BooleanProperty blindsVisibility = new SimpleBooleanProperty(true);
+    private final BooleanProperty shopVisibility = new SimpleBooleanProperty(true);
+    private final BooleanProperty rewardVisibility = new SimpleBooleanProperty(true);
     private final BooleanProperty handButtonVisibility = new SimpleBooleanProperty(false);
     //endregion
 
@@ -257,10 +257,6 @@ public class GameModel {
         return tagQueue.get(0);
     }
 
-    public void setTagQueue(List<Tag> queueTags) {
-        tagQueue.clear();
-        tagQueue.addAll(queueTags);
-    }
 
     public void addTagToTagQueue(Tag tag) {
         tagQueue.add(tag);
@@ -280,20 +276,11 @@ public class GameModel {
         return playedCards;
     }
 
-    public void setPlayedCards(List<PlayingCard> playedCards) {
-        this.playedCards.clear();
-        this.playedCards.addAll(playedCards);
-    }
     //endregion
 
     //region Possible Poker Hands
     public ObservableList<PokerHand> getPossiblePokerHand() {
         return possiblePokerHand;
-    }
-
-    public void setPossiblePokerHands(List<PokerHand> pokerHandList) {
-        possiblePokerHand.clear();
-        possiblePokerHand.addAll(pokerHandList);
     }
 
     public void addHandToPossibleList(PokerHand pokerHand) {
@@ -328,9 +315,6 @@ public class GameModel {
         return chosenStake;
     }
 
-    public void setChosenStake(Stake chosenStake) {
-        this.chosenStake.get().setStake(chosenStake);
-    }
 
     //Random Seed
     public Random getRand() {
@@ -352,10 +336,6 @@ public class GameModel {
         return bestHand;
     }
 
-    public void setBestHand(PokerHand bestPokerHand) {
-        this.bestHand.get().setName(bestPokerHand.getName());
-        this.bestHand.get().setHand(bestPokerHand);
-    }
 
     //endregion
 
@@ -369,10 +349,6 @@ public class GameModel {
         return handName;
     }
 
-    public void setHandName(String handName) {
-        this.handName.set(handName);
-    }
-
     //Poker Hand Level
     public int getHandLevel() {
         return handLevel.get();
@@ -380,10 +356,6 @@ public class GameModel {
 
     public IntegerProperty handLevelProperty() {
         return handLevel;
-    }
-
-    public void setHandLevel(int handLevel) {
-        this.handLevel.set(handLevel);
     }
 
     //Poker Hand Chips
@@ -395,10 +367,6 @@ public class GameModel {
         return handChips;
     }
 
-    public void setHandChips(int handChips) {
-        this.handChips.set(handChips);
-    }
-
     //Poker Hand Multiplyer
     public double getHandMultiplier() {
         return handMultiplier.get();
@@ -408,20 +376,12 @@ public class GameModel {
         return handMultiplier;
     }
 
-    public void setHandMultiplier(int handMultiplier) {
-        this.handMultiplier.set(handMultiplier);
-    }
     //endregion
 
     //region HOLDING HAND GS
     //Handcards
     public ObservableList<PlayingCard> getHandCards() {
         return handCards;
-    }
-
-    public void setHandCards(List<PlayingCard> cards) {
-        handCards.clear();
-        handCards.addAll(cards);
     }
 
     public void addCardToHandCards(PlayingCard card) {
@@ -447,11 +407,6 @@ public class GameModel {
     //Selected Cards
     public ObservableList<PlayingCard> getSelectedCards() {
         return selectedCards;
-    }
-
-    public void setSelectedCards(List<PlayingCard> cards) {
-        selectedCards.clear();
-        selectedCards.addAll(cards);
     }
 
     public void addCardToSelectedCards(PlayingCard card) {
@@ -724,10 +679,6 @@ public class GameModel {
         this.shopVisibility.set(shopVisibility);
     }
 
-    public void toggleShopVisibility() {
-        setShopVisibility(!isShopVisibility());
-    }
-
 
     public boolean isRewardVisibility() {
         return rewardVisibility.get();
@@ -741,10 +692,6 @@ public class GameModel {
         this.rewardVisibility.set(rewardVisibility);
     }
 
-    public void toggleRewardVisibility() {
-        setRewardVisibility(!isRewardVisibility());
-    }
-
     //Hand Buttons Visibility
     public boolean isHandButtonVisibility() {
         return handButtonVisibility.get();
@@ -752,10 +699,6 @@ public class GameModel {
 
     public BooleanProperty handButtonVisibilityProperty() {
         return handButtonVisibility;
-    }
-
-    public void toggleHandButtonVisibility() {
-        handButtonVisibility.set(!handButtonVisibility.get());
     }
 
     public void setHandButtonVisibility(Boolean value) {

@@ -148,6 +148,7 @@ public class BlindBoxPanelController {
             e.printStackTrace();
         }
     }
+
     public Tag getTag() {
        return blindSkipController.getTag().get();
     }
@@ -170,7 +171,9 @@ public class BlindBoxPanelController {
        gameModel.setActiveBlind(blind.get());
        gameModel.setRound(gameModel.getRound() + 1);
        gameModel.setHandButtonVisibility(true);
-
+        System.out.println("blind box visibilty: " + gameModel.getBlindsVisibility());
+       gameModel.setBlindsVisibility(false);
+        System.out.println("blind box visibilty: " + gameModel.getBlindsVisibility());
        gameController.startRound(new BigDecimal(lblMinScore.getText()));
     }
 

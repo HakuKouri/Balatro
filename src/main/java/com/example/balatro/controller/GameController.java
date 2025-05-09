@@ -3,16 +3,20 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -140,7 +144,6 @@ public class GameController
     private AnchorPane bossBlindPanel;
     //endregion
 
-
     //region INSTANCE
     private static GameController instance;
 
@@ -175,16 +178,20 @@ public class GameController
                 System.out.println("ANTE CHANGED");
                 smallBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3));
                 smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                smallBlindController.setBossPanel(false);
+
                 smallBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2));
                 bigBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 1));
                 bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                bigBlindController.setBossPanel(false);
+
                 bigBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2 + 1));
                 bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 2));
                 bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                bossBlindController.setBossPanel(true);
+
             });
+
+            smallBlindController.setBossPanel(false);
+            bigBlindController.setBossPanel(false);
+            bossBlindController.setBossPanel(true);
 
             blindBoxHBox.getChildren().add(smallBlindPanel);
             blindBoxHBox.getChildren().add(bigBlindPanel);
@@ -219,13 +226,10 @@ public class GameController
             rewardSummarController = loaderReward.getController();
             placeHolderReward.getChildren().add(reward);
 
-            placeHolderShop.setTranslateY(560);
-            placeHolderReward.setTranslateY(560);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        toggleBlind();
 
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
             while (change.next()) {
@@ -238,18 +242,33 @@ public class GameController
             }
         });
 
+        //region Bind Blind Box
+        //blindBox.visibleProperty().bind(gameModel.blindsVisibilityProperty());
+        gameModel.blindsVisibilityProperty().addListener((obs, oldValue, newValue) -> {
+            animateBox(blindBox, newValue);
+        });
+
+        //endregion
+
         //region Bind Shop
-        placeHolderShop.translateYProperty().bind(Bindings.createIntegerBinding(
+        /*placeHolderShop.translateYProperty().bind(Bindings.createIntegerBinding(
                 () -> gameModel.isShopVisibility() ? 0 : 560,
                 gameModel.shopVisibilityProperty()
-        ));
+        ));*/
+        gameModel.shopVisibilityProperty().addListener((obs, oldValue, newValue) -> {
+            animateBox(placeHolderShop, newValue);
+        });
         //endregion
 
         //region Bind Reward
-        placeHolderReward.translateYProperty().bind(Bindings.createIntegerBinding(
+        /*placeHolderReward.translateYProperty().bind(Bindings.createIntegerBinding(
                 () -> gameModel.isRewardVisibility() ? 0 : 560,
                 gameModel.rewardVisibilityProperty()
-        ));
+        ));*/
+        gameModel.rewardVisibilityProperty().addListener((obs, oldValue, newValue) -> {
+            System.out.println("Reward Visibility: " + newValue);
+            animateBox(placeHolderReward, newValue);
+        });
         //endregion
 
         //region Deck CoverBind
@@ -410,7 +429,7 @@ public class GameController
 
             playedCardsController.addSelectedCards( () -> {
                 Platform.runLater(() -> {
-                    holdingHandController.drawCards();
+                    //holdingHandController.drawCardToLimit();
                     gameModel.handButtonVisibilityProperty().set(true);
                     holdingHandController.moveCards();
                     gameModel.clearSelectedCards();
@@ -427,8 +446,8 @@ public class GameController
         createBlindList();
         createTagList();
 
-        gameModel.setChosenDeck(gameSetup.getChosenDeck());
-        gameModel.setChosenStake(gameSetup.getChosenStake());
+        gameModel.getChosenDeck().setDeck(gameSetup.getChosenDeck());
+        gameModel.getChosenStake().setStake(gameSetup.getChosenStake());
         gameModel.setHands(4);
         gameModel.setDiscards(3);
         gameModel.setAnte(1);
@@ -438,19 +457,21 @@ public class GameController
         Planet.resetUniquePlanets();
 
         setPlayingDeck();
+
+        gameModel.setShopVisibility(false);
+        gameModel.setRewardVisibility(false);
     }
 
 
     public void startRound(BigDecimal score) {
         gameModel.setScoreToReach(score);
-        gameModel.blindsVisibilityProperty().set(true);
-        holdingHandController.drawCards();
+        gameModel.blindsVisibilityProperty().set(false);
+        holdingHandController.drawCardToLimit();
     }
 
     public void nextRound() {
         gameModel.setShopVisibility(false);
-        gameModel.setRound(gameModel.getRound() + 1);
-        toggleBlind();
+        gameModel.setBlindsVisibility(true);
     }
 
     public void skip(Tag tag) {
@@ -466,6 +487,18 @@ public class GameController
 
         gameModel.setShopVisibility(true);
     }
+
+    //UI
+    private void animateBox(Node node, boolean bool) {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(.2), node);
+
+        transition.setToY(bool ? 0 : 650);
+        transition.setInterpolator(Interpolator.LINEAR);
+
+        transition.play();
+    }
+
+
 
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {

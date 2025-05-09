@@ -54,7 +54,7 @@ public class PlayedCardsController {
                 .collect(Collectors.toList());
 
         animateSelectedCards(selectedCards, 0, onComplete);
-        countPoints();
+        //countPoints();
     }
 
     private void countPoints() {
@@ -65,20 +65,23 @@ public class PlayedCardsController {
         if(gameModel.isPointsReached()) {
             gameModel.setRewardVisibility(true);
             gameModel.setScoredPoints(BigDecimal.valueOf(0));
-            gameModel.clearHandCards();
+            gameModel.getHandCards().clear();
 
-            if(gameModel.getAllBlindsList().get(gameModel.getRound()).getBlindId() > 1) {
+
+
+            if(gameModel.getActiveBlind().getBlindId() > 1) {
                 gameModel.setAnte((gameModel.getAnte() + 1));
             }
         } else {
-            gameModel.toggleHandButtonVisibility();
+            gameModel.setHandButtonVisibility(true);
         }
+        System.out.println("Handsize: " + gameModel.getHandCards().size());
     }
 
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
-            gameModel.bestHandProperty().set(new PokerHand());
+            gameModel.getBestHand().setHand(new PokerHand());
             countPoints();
             if(onComplete != null) onComplete.run();
             return;
