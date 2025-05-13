@@ -67,8 +67,6 @@ public class PlayedCardsController {
             gameModel.setScoredPoints(BigDecimal.valueOf(0));
             gameModel.getHandCards().clear();
 
-
-
             if(gameModel.getActiveBlind().getBlindId() > 1) {
                 gameModel.setAnte((gameModel.getAnte() + 1));
             }

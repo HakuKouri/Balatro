@@ -516,9 +516,6 @@ public class SqlHandler {
                 planet.setSecret(!Objects.equals(rs.getString(6), "0"));
 
                 planets.add(planet);
-
-                //SET UNIQUE PLANETS
-                Planet.putUniquePlanet(rs.getString(3));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -547,9 +544,6 @@ public class SqlHandler {
                 pokerHand.setPlayed(0);
 
                 pokerHands.add(pokerHand);
-
-                //SET UNIQUE PLANETS
-                Planet.putUniquePlanet(rs.getString(3));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

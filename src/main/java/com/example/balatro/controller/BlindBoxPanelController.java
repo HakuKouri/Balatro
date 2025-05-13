@@ -57,7 +57,6 @@ public class BlindBoxPanelController {
     private int activeModulo = -1;
 
     public void initialize() {
-
         lblBlindName.textProperty().bind(blind.get().blindNameProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());

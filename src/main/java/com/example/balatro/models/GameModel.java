@@ -4,6 +4,7 @@ import com.example.balatro.classes.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -31,6 +32,7 @@ public class GameModel {
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
+    private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
     //endregion
 
     //region GAME SETTINGS VAR
@@ -76,6 +78,7 @@ public class GameModel {
     private final IntegerProperty round = new SimpleIntegerProperty(-1);
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
+    private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
     //endregion
 
     //region UI VAR
@@ -255,11 +258,6 @@ public class GameModel {
 
     public Tag getNextTagFromQueue() {
         return tagQueue.get(0);
-    }
-
-
-    public void addTagToTagQueue(Tag tag) {
-        tagQueue.add(tag);
     }
 
     public void removeTagFromTagQueue(Tag tag) {
@@ -485,6 +483,15 @@ public class GameModel {
     public ObservableList<Joker> getActiveJokerObList() {
         return activeJokerObList;
     }
+
+    public ObservableMap<Joker, IntegerProperty> getRocketJokers() {
+        return rocketJokers.get();
+    }
+
+    public MapProperty<Joker, IntegerProperty> rocketJokersProperty() {
+        return rocketJokers;
+    }
+
     //endregion
 
 
@@ -646,6 +653,15 @@ public class GameModel {
     public void incrementHandsDiscarded() {
         setHandsDiscarded(getHandsDiscarded() + 1);
     }
+
+    public int getMaxInterest() {
+        return maxInterest.get();
+    }
+
+    public IntegerProperty maxInterestProperty() {
+        return maxInterest;
+    }
+
     //endregion
 
     //region UI VAR

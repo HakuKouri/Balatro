@@ -183,10 +183,10 @@ public class HoldingHandController {
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty()) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getHands() > 0) {
             gameModel.setHandButtonVisibility(false);
-            getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
-            getHandCards().removeAll(getSelectedCards());
+            gameModel.getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
+            gameModel.getHandCards().removeAll(getSelectedCards());
             GameController.getInstance().playSelectedCards();
 
             if(gameModel.getActiveBlind().getBlindName() == "The Serpent")
@@ -198,7 +198,7 @@ public class HoldingHandController {
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty()) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getDiscards() > 0) {
             getHandCards().removeAll(getSelectedCards());
             getSelectedCards().clear();
 

@@ -198,10 +198,17 @@ public class GameController
             blindBoxHBox.getChildren().add(bossBlindPanel);
 
             gameModel.roundProperty().addListener((obs, oldValue, newValue) -> {
-                blindBoxHBox.getChildren().get(0).setDisable(gameModel.getRound()%3 != 0);
-                blindBoxHBox.getChildren().get(1).setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
-                blindBoxHBox.getChildren().get(2).setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
+                smallBlindPanel.setDisable(gameModel.getRound()%3 != 0);
+                bigBlindPanel.setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
+                bossBlindPanel.setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
+            //    blindBoxHBox.getChildren().get(0).setDisable(gameModel.getRound()%3 != 0);
+            //    blindBoxHBox.getChildren().get(1).setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
+            //    blindBoxHBox.getChildren().get(2).setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
             });
+
+            //smallBlindPanel.setDisable(false);
+            //bigBlindPanel.setDisable(true);
+            //bossBlindPanel.setDisable(true);
             //endregion
 
             VBox holdingHand = loaderHoldingHand.load();
@@ -356,34 +363,9 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            System.out.println("tag: " + smallBlindController.getTag().getTagName());
+            gameModel.scoredPointsProperty().set(gameModel.getScoredPoints().add(gameModel.getScoreToReach()));
         });
 
-    }
-
-
-    public void toggleBlind() {
-        int round = gameModel.getRound();
-        gameModel.toggleBlindVisibity();
-//        TranslateTransition transitionBlindBox = new TranslateTransition(Duration.seconds(.5), blindBox);
-//        TranslateTransition transitionSmall = new TranslateTransition(Duration.seconds(.5), smallBlindAnchor);
-//        TranslateTransition transitionBig = new TranslateTransition(Duration.seconds(.5), bigBlindAnchor);
-//        TranslateTransition transitionBoss = new TranslateTransition(Duration.seconds(.5), bossBlindAnchor);
-        if (gameModel.getBlindsVisibility()) {
- //           transitionBlindBox.setToY(0);
-//            if(round%3 == 0) transitionSmall.setToY(-50);
-//            if(round%3 == 1) transitionBig.setToY(-50);
-//            if(round%3 == 2) transitionBoss.setToY(-50);
-        } else {
- //           transitionBlindBox.setToY(600);
-//            transitionSmall.setToY(0);
-//            transitionBig.setToY(0);
-//            transitionBoss.setToY(0);
-        }
- //       transitionBlindBox.play();
-//        transitionSmall.play();
-//        transitionBig.play();
-//        transitionBoss.play();
     }
 
     //SETTING UP GAME
@@ -429,12 +411,10 @@ public class GameController
 
             playedCardsController.addSelectedCards( () -> {
                 Platform.runLater(() -> {
-                    //holdingHandController.drawCardToLimit();
                     gameModel.handButtonVisibilityProperty().set(true);
                     holdingHandController.moveCards();
                     gameModel.clearSelectedCards();
                     playedCardsController.removeAllCards();
-                    //delay(4000,() -> {playedCardsController.removeAllCards();});
                 });
             });
         }
@@ -476,7 +456,8 @@ public class GameController
 
     public void skip(Tag tag) {
         System.out.println(tag.getTagImageUrl());
-        gameModel.addTagToTagQueue(tag);
+        tag.setFitHeight(50);
+        gameModel.getTagQueue().add(tag);
         System.out.println(tag);
         System.out.println(spaceTag.getChildren().stream().findFirst());
         gameModel.setRound(gameModel.getRound() + 1);
@@ -490,9 +471,10 @@ public class GameController
 
     //UI
     private void animateBox(Node node, boolean bool) {
+        int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
         TranslateTransition transition = new TranslateTransition(Duration.seconds(.2), node);
 
-        transition.setToY(bool ? 0 : 650);
+        transition.setToY(bool ? up : 650);
         transition.setInterpolator(Interpolator.LINEAR);
 
         transition.play();
