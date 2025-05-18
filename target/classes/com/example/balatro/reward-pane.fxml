@@ -19,11 +19,9 @@
     <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ImageView fx:id="tagImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tags/tag_7.png" />
-         </image>
-      </ImageView>
+       <ImageView fx:id="tagImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+           <Image url="@../../images/tags/tag_7.png"/>
+       </ImageView>
       <Label fx:id="countLabel" alignment="CENTER" prefHeight="45.0" prefWidth="45.0" text="Label" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

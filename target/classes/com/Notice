@@ -1,0 +1,60 @@
+Size 2560
+
+Deck height 275
+deck margin right 245
+
+Shop
+Consumable + Joker height 295
+Booster height 365
+Voucher height 285
+
+price tag height 75 width 125
+
+Consumable + Joker Field height 290
+Joker Field Width 1115
+consumable width 525
+On field Consumable + Joker height 290
+-"- spacing 24
+consumable field margin right 195
+
+info width 560
+info border 6
+info margin left 90
+
+booster info height 200
+border 6
+skip button width 200 height 135
+
+reward summery width 1190 height 945
+
+handbutton width 845 height 165
+
+info Blind height 390
+blind info height 165
+image + info 500
+
+Option width 1445 height 1090
+
+SETTINGS
+GAME
+GameSpeed 0.5 - 4
+Play/Discard / Discard/Play
+Screen Shake  0-100
+Checkbox Display Stake Sticker during run
+Checkbox High Contrast
+Checkbox Reduce Motion
+VIDEO
+Display Choice
+Window Mode
+Resolution
+VSync
+Button Apply
+GRAPHICS
+Shadows
+Pixel art Smoothing
+Crt 0-100
+Crt Bloom
+AUDIO
+Master Volume 0 - 100
+Music Volume 0 - 100
+Game Volume 0 - 100

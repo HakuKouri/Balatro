@@ -11,6 +11,7 @@ import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -201,14 +202,9 @@ public class GameController
                 smallBlindPanel.setDisable(gameModel.getRound()%3 != 0);
                 bigBlindPanel.setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
                 bossBlindPanel.setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
-            //    blindBoxHBox.getChildren().get(0).setDisable(gameModel.getRound()%3 != 0);
-            //    blindBoxHBox.getChildren().get(1).setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
-            //    blindBoxHBox.getChildren().get(2).setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
+
             });
 
-            //smallBlindPanel.setDisable(false);
-            //bigBlindPanel.setDisable(true);
-            //bossBlindPanel.setDisable(true);
             //endregion
 
             VBox holdingHand = loaderHoldingHand.load();
@@ -222,8 +218,6 @@ public class GameController
             System.out.println("Gamecontroller BlindBox Load");
             loaderBlindBox.load();
             blindBoxController = loaderBlindBox.getController(); // Hier bekommst du den Controller
-
-            //blindBox.setTranslateY(600);
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
@@ -250,28 +244,18 @@ public class GameController
         });
 
         //region Bind Blind Box
-        //blindBox.visibleProperty().bind(gameModel.blindsVisibilityProperty());
         gameModel.blindsVisibilityProperty().addListener((obs, oldValue, newValue) -> {
             animateBox(blindBox, newValue);
         });
-
         //endregion
 
         //region Bind Shop
-        /*placeHolderShop.translateYProperty().bind(Bindings.createIntegerBinding(
-                () -> gameModel.isShopVisibility() ? 0 : 560,
-                gameModel.shopVisibilityProperty()
-        ));*/
         gameModel.shopVisibilityProperty().addListener((obs, oldValue, newValue) -> {
             animateBox(placeHolderShop, newValue);
         });
         //endregion
 
         //region Bind Reward
-        /*placeHolderReward.translateYProperty().bind(Bindings.createIntegerBinding(
-                () -> gameModel.isRewardVisibility() ? 0 : 560,
-                gameModel.rewardVisibilityProperty()
-        ));*/
         gameModel.rewardVisibilityProperty().addListener((obs, oldValue, newValue) -> {
             System.out.println("Reward Visibility: " + newValue);
             animateBox(placeHolderReward, newValue);
@@ -310,6 +294,7 @@ public class GameController
                     spaceJoker.getChildren().removeAll(change.getRemoved());
                 }
             }
+            moveCards();
         });
         //endregion
 
@@ -363,7 +348,10 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.scoredPointsProperty().set(gameModel.getScoredPoints().add(gameModel.getScoreToReach()));
+            Joker joker = new Joker(gameModel.getJokerList().get(0));
+            joker.setFitHeight(100);
+            gameModel.getActiveJokerObList().add(joker);
+            //gameModel.getActiveJokerObList().addAll(gameModel.getJokerList());
         });
 
     }
@@ -480,6 +468,27 @@ public class GameController
         transition.play();
     }
 
+    public void moveCards() {
+        int cardWidth = 140;
+        int lastPos = 570;
+
+        int cards = spaceJoker.getChildren().size();
+        int pos = 0;
+        for(int i = 0; i < cards; i++) {
+            if(cards > 5) {
+                spaceJoker.setAlignment(Pos.CENTER_LEFT);
+                pos = i * lastPos / (cards - 1);
+            } else {
+                spaceJoker.setAlignment(Pos.CENTER);
+                if(cards%2==0) {
+                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
+                } else {
+                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
+                }
+            }
+            spaceJoker.getChildren().get(i).setTranslateX(pos);
+        }
+    }
 
 
     //BACKGROUND HANDLER

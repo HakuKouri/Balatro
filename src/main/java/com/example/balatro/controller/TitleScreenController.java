@@ -1,8 +1,10 @@
 package com.example.balatro.controller;
 
+import com.example.balatro.Balatro;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -13,6 +15,7 @@ import java.util.Objects;
 
 public class TitleScreenController
 {
+    public Pane titleScreen;
     @FXML
     private MediaView mediaTitleBackground;
     @FXML
@@ -32,10 +35,17 @@ public class TitleScreenController
         mediaTitleBackground.getMediaPlayer().play();
     }
 
-    public void openNewGameMenu() throws IOException
-    {
+    public void openNewGameMenu() throws IOException {
         Pane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/newGameMenu-screen.fxml"));
         panePlayMenu.getChildren().add(pane);
     }
 
+    public void openOptionsMenu() throws IOException {
+        TabPane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/option-screen.fxml"));
+        titleScreen.getChildren().add(pane);
+    }
+
+    public void closeGame() {
+        Balatro.getPrimaryStage().close();
+    }
 }

@@ -61,7 +61,7 @@ public class GameModel {
     //endregion
 
     //region ACTIVE JOKERS
-    private final ObservableList<Joker> activeJokerObList = new SimpleListProperty<>();
+    private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
     //endregion
 
     //region Collected Consumables

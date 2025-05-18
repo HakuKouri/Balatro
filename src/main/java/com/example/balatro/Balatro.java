@@ -7,13 +7,23 @@ import com.example.balatro.models.GameModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.media.MediaView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class Balatro extends Application
 {
     static private Stage primaryStage;
+    public MediaView mediaBackground;
+    public Canvas canvasGame;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
 
     private static final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
 
@@ -24,17 +34,18 @@ public class Balatro extends Application
         return gameModel;
     }
 
+
     @Override
     public void start(Stage primaryStage) throws IOException
     {
-
+        ScreenResolutions();
         //SqlHandler.main();
         Balatro.primaryStage = primaryStage;
 
-        Scene scene = new Scene(fxmlLoaderTitle.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoaderTitle.load(), 2560, 1440);
         primaryStage.setTitle("Balatro");
         primaryStage.setScene(scene);
-        //primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
 
         Thread sqlThread = new Thread(() -> SqlHandler.main());
@@ -52,6 +63,23 @@ public class Balatro extends Application
 
     }
 
+    public void ScreenResolutions() {
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+        for(GraphicsDevice device : ge.getScreenDevices())
+            for(DisplayMode mode : device.getDisplayModes())
+                System.out.println(mode);
+
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        DisplayMode[] modes = gd.getDisplayModes();
+
+            for (DisplayMode mode : modes) {
+                System.out.println(mode.toString());
+                System.out.println("Resolution: " + mode.getWidth() + " x " + mode.getHeight());
+            }
+
+    }
 
 
     public static void newGame(GameSetup gameSetup) throws IOException {
