@@ -1,7 +1,9 @@
 package com.example.balatro.models;
 
 import com.example.balatro.Balatro;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
@@ -9,11 +11,15 @@ import javafx.stage.Screen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class SettingsModel {
 
-    private DoubleProperty windowWidth = new SimpleDoubleProperty(Balatro.getPrimaryStage().getWidth());
-    private DoubleProperty windowHeight = new SimpleDoubleProperty(Balatro.getPrimaryStage().getHeight());
+    private DoubleProperty windowWidth = new SimpleDoubleProperty();
+    private DoubleProperty windowHeight = new SimpleDoubleProperty();
 
     //region Game Settings
     private final IntegerProperty gameSpeed = new SimpleIntegerProperty();
@@ -26,7 +32,10 @@ public class SettingsModel {
 
     //region Video Settings
     private final ObservableList<Screen> screens = FXCollections.observableArrayList();
+    private final IntegerProperty screen = new SimpleIntegerProperty();
     private enum ScreenState {fullscreen, borderless, windowed, none};
+    private final StringProperty windowMode = new SimpleStringProperty();
+    private final StringProperty resolution = new SimpleStringProperty();
     //TODO Screen Resolution
     //private final List<Rectangle2D> resolutions = new List(){new Rectangle2D()}
     private final BooleanProperty vsync = new SimpleBooleanProperty(true);
@@ -53,8 +62,6 @@ public class SettingsModel {
 
     //region Constructor
     public SettingsModel() {
-        screens.addAll(Screen.getScreens());
-
     }
     //endregion
 
@@ -109,6 +116,30 @@ public class SettingsModel {
 
     public ObservableList<Screen> getScreens() {
         return screens;
+    }
+
+    public int getScreen() {
+        return screen.get();
+    }
+
+    public IntegerProperty screenProperty() {
+        return screen;
+    }
+
+    public String getWindowMode() {
+        return windowMode.get();
+    }
+
+    public StringProperty windowModeProperty() {
+        return windowMode;
+    }
+
+    public String getResolution() {
+        return resolution.get();
+    }
+
+    public StringProperty resolutionProperty() {
+        return resolution;
     }
 
     public boolean isVsync() {
@@ -178,6 +209,100 @@ public class SettingsModel {
     //endregion
 
     //region Function
+    public void setSettings(String rootPath) {
+        Properties properties = new Properties();
+        try {
+            properties.loadFromXML(new FileInputStream(rootPath));
+
+            //Game
+            gameSpeedProperty().set(Integer.parseInt(properties.getProperty("game speed")));
+            playDiscardOrderProperty().set(Boolean.parseBoolean(properties.getProperty("hand button order")));
+            screenShakeProperty().set(Integer.parseInt(properties.getProperty("screen shake")));
+            displayStakeDuringRunProperty().set(Boolean.parseBoolean(properties.getProperty("display stake")));
+            highContrastProperty().set(Boolean.parseBoolean(properties.getProperty("high contrast")));
+            reduceMotionProperty().set(Boolean.parseBoolean(properties.getProperty("reduced motion")));
+            //Video
+            screenProperty().set(Integer.parseInt(properties.getProperty("display monitor")));
+            windowModeProperty().set(properties.getProperty("window mode"));
+            resolutionProperty().set(properties.getProperty("resolution"));
+            vsyncProperty().set(Boolean.parseBoolean(properties.getProperty("vsync")));
+            //Graphics
+            shadowProperty().set(Boolean.parseBoolean(properties.getProperty("shadows")));
+            pixelArtSmoothingProperty().set(Boolean.parseBoolean(properties.getProperty("pixel art smooting")));
+            crtEffectProperty().set(Integer.parseInt(properties.getProperty("crt")));
+            crtBloomProperty().set(Boolean.parseBoolean(properties.getProperty("crt bloom")));
+            //Audio
+            masterVolumeProperty().set(Integer.parseInt(properties.getProperty("master volume")));
+            musicVolumeProperty().set(Integer.parseInt(properties.getProperty("music volume")));
+            gameVolumeProperty().set(Integer.parseInt(properties.getProperty("game volume")));
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createSettingsFile(String rootPath) {
+        String newAppConfigXmlFile = rootPath;
+
+        Properties props = new Properties();
+        //Game
+        props.setProperty("game speed", "1");
+        props.setProperty("hand button order", "true");
+        props.setProperty("screen shake", "50");
+        props.setProperty("display stake", "false");
+        props.setProperty("high contrast", "false");
+        props.setProperty("reduced motion", "false");
+        //Video
+
+        props.setProperty("display monitor", String.valueOf(Screen.getScreens().indexOf(Screen.getPrimary())));
+        props.setProperty("window mode", "fullscreen");
+        props.setProperty("resolution", Screen.getPrimary().getBounds().getWidth() + "|" +  Screen.getPrimary().getBounds().getWidth() );
+        props.setProperty("vsync", "true");
+        //Graphics
+        props.setProperty("shadows", "true");
+        props.setProperty("pixel art smooting", "true");
+        props.setProperty("crt", "50");
+        props.setProperty("crt bloom", "false");
+        //Audio
+        props.setProperty("master volume", "50");
+        props.setProperty("music volume", "50");
+        props.setProperty("game volume", "50");
+
+        try {
+            props.storeToXML(new FileOutputStream(newAppConfigXmlFile), "store to xml file");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Properties getSettings() {
+        Properties props = new Properties();
+        //Game
+        props.getProperty("game speed");
+        props.getProperty("hand button order");
+        props.getProperty("screen shake");
+        props.getProperty("display stake");
+        props.getProperty("high contrast");
+        props.getProperty("reduced motion");
+        //Video
+        props.getProperty("display monitor");
+        props.getProperty("window mode");
+        props.getProperty("resolution");
+        props.getProperty("vsync");
+        //Graphics
+        props.getProperty("shadows");
+        props.getProperty("pixel art smooting");
+        props.getProperty("crt");
+        props.getProperty("crt bloom");
+        //Audio
+        props.getProperty("master volume");
+        props.getProperty("music volume");
+        props.getProperty("game volume");
+
+        return props;
+    }
+
     public void changeWindow(ScreenState applied, JFrame frame) {
 
         if (applied == ScreenState.fullscreen && current != ScreenState.fullscreen) {

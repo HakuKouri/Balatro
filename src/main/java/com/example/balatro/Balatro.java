@@ -4,6 +4,7 @@ import com.example.balatro.classes.GameSetup;
 import com.example.balatro.classes.SqlHandler;
 import com.example.balatro.controller.GameController;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,13 +14,16 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 public class Balatro extends Application
 {
     static private Stage primaryStage;
     public MediaView mediaBackground;
     public Canvas canvasGame;
+    private String rootPath = getRootPath() + "settings.xml";
 
     public static Stage getPrimaryStage() {
         return primaryStage;
@@ -29,15 +33,25 @@ public class Balatro extends Application
 
     //region GAMEMODEL
     private static GameModel gameModel;
+    private static SettingsModel settingsModel = new SettingsModel();
 
     public static GameModel getGameModel() {
         return gameModel;
     }
-
+    public static SettingsModel getSettings() { return settingsModel; }
 
     @Override
     public void start(Stage primaryStage) throws IOException
     {
+        File settingsFile = new File(rootPath);
+        if(!settingsFile.exists()) {
+            System.out.println("Create Settings File");
+            SettingsModel.createSettingsFile(settingsFile.getPath());
+        }
+
+
+        settingsModel.setSettings(rootPath);
+
         ScreenResolutions();
         //SqlHandler.main();
         Balatro.primaryStage = primaryStage;
@@ -97,4 +111,11 @@ public class Balatro extends Application
         launch(args);
     }
 
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
+    }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>store to xml file</comment>
+<entry key="display monitor">0</entry>
+<entry key="crt">50</entry>
+<entry key="screen shake">50</entry>
+<entry key="vsync">true</entry>
+<entry key="crt bloom">false</entry>
+<entry key="music volume">50</entry>
+<entry key="game volume">50</entry>
+<entry key="game speed">1</entry>
+<entry key="display stake">false</entry>
+<entry key="reduced motion">false</entry>
+<entry key="resolution">2560.0|2560.0</entry>
+<entry key="master volume">50</entry>
+<entry key="hand button order">true</entry>
+<entry key="high contrast">false</entry>
+<entry key="window mode">fullscreen</entry>
+<entry key="pixel art smooting">true</entry>
+<entry key="shadows">true</entry>
+</properties>
