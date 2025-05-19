@@ -8,59 +8,57 @@ import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.media.MediaView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
 public class Balatro extends Application
 {
+    //region Primary Stage
     static private Stage primaryStage;
-    public MediaView mediaBackground;
-    public Canvas canvasGame;
-    private String rootPath = getRootPath() + "settings.xml";
 
     public static Stage getPrimaryStage() {
         return primaryStage;
     }
+    //endregion
 
-    private static final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
-
-    //region GAMEMODEL
+    //region Game Model
     private static GameModel gameModel;
-    private static SettingsModel settingsModel = new SettingsModel();
 
     public static GameModel getGameModel() {
         return gameModel;
     }
+    //endregion
+
+    //region Settings Model
+    private static final SettingsModel settingsModel = new SettingsModel();
+    private String rootPath = getRootPath() + "settings.xml";
+
     public static SettingsModel getSettings() { return settingsModel; }
+    //endregion
+
+    //region Title Screen
+    private static final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
+    private AnchorPane anchorPane;
+    //endregion
 
     @Override
     public void start(Stage primaryStage) throws IOException
     {
+        Balatro.primaryStage = primaryStage;
+
+        //region Settings
         File settingsFile = new File(rootPath);
         if(!settingsFile.exists()) {
             System.out.println("Create Settings File");
             SettingsModel.createSettingsFile(settingsFile.getPath());
         }
-
-
         settingsModel.setSettings(rootPath);
-
-        ScreenResolutions();
-        //SqlHandler.main();
-        Balatro.primaryStage = primaryStage;
-
-        Scene scene = new Scene(fxmlLoaderTitle.load(), 2560, 1440);
-        primaryStage.setTitle("Balatro");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+        //endregion
 
         Thread sqlThread = new Thread(() -> SqlHandler.main());
 
@@ -72,9 +70,33 @@ public class Balatro extends Application
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println("Primary Screen: " + Screen.getPrimary());
+        System.out.println("Primary Resolution: " + Screen.getPrimary().getBounds().getWidth() + "x" + Screen.getPrimary().getBounds().getHeight());
+        System.out.println("Settings Screen: " + Screen.getScreens().get(settingsModel.getScreen()));
+        System.out.println("Settings Resolution: " +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth() + "x" +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
+
+
+        anchorPane = fxmlLoaderTitle.load();
+        anchorPane.setPrefSize(Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth(), Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
+        Scene scene = new Scene(anchorPane);
+        System.out.println("Scene Width " + scene.getWidth());
+        System.out.println("Scene Height " + scene.getHeight());
+
+        primaryStage.setTitle("Balatro");
+        primaryStage.setFullScreen(true);
+        primaryStage.setScene(scene);
+
+
+
+        primaryStage.show();
+        System.out.println("Primary Width: " + primaryStage.getWidth());
+        System.out.println("Primary Height: " + primaryStage.getHeight());
+
+
+
         System.out.println("test after join");
         //WebHandler.setupDb();
-
     }
 
     public void ScreenResolutions() {
@@ -95,10 +117,9 @@ public class Balatro extends Application
 
     }
 
-
     public static void newGame(GameSetup gameSetup) throws IOException {
         FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
-        Scene scene = new Scene(fxmlLoaderGame.load(), 1280, 720);
+        Scene scene = new Scene(fxmlLoaderGame.load(), primaryStage.getWidth(), primaryStage.getHeight());
         primaryStage.setScene(scene);
 
         GameController controller = fxmlLoaderGame.getController();
