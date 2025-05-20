@@ -18,8 +18,8 @@ import java.util.Properties;
 
 public class SettingsModel {
 
-    private DoubleProperty windowWidth = new SimpleDoubleProperty();
-    private DoubleProperty windowHeight = new SimpleDoubleProperty();
+    private final DoubleProperty windowWidth = new SimpleDoubleProperty();
+    private final DoubleProperty windowHeight = new SimpleDoubleProperty();
 
     //region Game Settings
     private final IntegerProperty gameSpeed = new SimpleIntegerProperty();
@@ -66,6 +66,30 @@ public class SettingsModel {
     //endregion
 
     //region Getter Setter
+    public double getWindowWidth() {
+        return windowWidth.get();
+    }
+
+    public DoubleProperty windowWidthProperty() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(double windowWidth) {
+        this.windowWidth.set(windowWidth);
+    }
+
+    public double getWindowHeight() {
+        return windowHeight.get();
+    }
+
+    public DoubleProperty windowHeightProperty() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(double windowHeight) {
+        this.windowHeight.set(windowHeight);
+    }
+
     public int getGameSpeed() {
         return gameSpeed.get();
     }
@@ -236,7 +260,11 @@ public class SettingsModel {
             musicVolumeProperty().set(Integer.parseInt(properties.getProperty("music volume")));
             gameVolumeProperty().set(Integer.parseInt(properties.getProperty("game volume")));
 
+            System.out.printf("Resolution: " + getResolution());
+            setWindowWidth(Double.parseDouble(getResolution().split("x")[0]));
+            setWindowHeight(Double.parseDouble(getResolution().split("x")[1]));
 
+            System.out.println("Width: " + getWindowWidth() + " Height: " + getWindowHeight());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -257,7 +285,7 @@ public class SettingsModel {
 
         props.setProperty("display monitor", String.valueOf(Screen.getScreens().indexOf(Screen.getPrimary())));
         props.setProperty("window mode", "fullscreen");
-        props.setProperty("resolution", Screen.getPrimary().getBounds().getWidth() + "|" +  Screen.getPrimary().getBounds().getWidth() );
+        props.setProperty("resolution", Screen.getPrimary().getBounds().getWidth() + "x" +  Screen.getPrimary().getBounds().getHeight());
         props.setProperty("vsync", "true");
         //Graphics
         props.setProperty("shadows", "true");

@@ -69,12 +69,14 @@ public class NewGameMenuController
         deckList = SqlHandler.getAllDecks();
         stakeList = SqlHandler.getAllStakes();
 
-        gridMenu.maxWidthProperty().bind(widthProperty());
+        gridMenu.maxWidthProperty().bind(heightProperty());
         gridMenu.maxHeightProperty().bind(heightProperty());
 
         activeDeckIndex.addListener((observable, oldValue, newValue) -> {
             activeDeck.set(deckList.get(activeDeckIndex.get()));
         });
+
+        heightProperty().set(Balatro.getSettings().getWindowHeight() * 0.88);
 
         activeStakeIndex.set(deckList.get(activeDeckIndex.get()).getStageCleared());
 

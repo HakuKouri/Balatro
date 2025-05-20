@@ -99,7 +99,7 @@
                <children>
                   <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>
-                      <ColumnConstraints fx:id="deckImageStackPaneColumn" hgrow="SOMETIMES" minWidth="10.0" percentWidth="26.7716535" prefWidth="100.0" />
+                      <ColumnConstraints fx:id="deckImageStackPaneColumn" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="26.7716535" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.1496063" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="418.0" minWidth="10.0" percentWidth="57.480315" prefWidth="418.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="1.57480315" />
@@ -123,7 +123,7 @@
                               <Insets />
                            </GridPane.margin>
                         </AnchorPane>
-                        <StackPane fx:id="stackPaneDeck" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" GridPane.rowIndex="2" GridPane.rowSpan="2147483647">
+                        <StackPane fx:id="stackPaneDeck" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
@@ -293,8 +293,8 @@
       </GridPane>
       <GridPane GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="9">
          <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="11.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>

@@ -8,6 +8,7 @@ import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -35,21 +36,26 @@ public class Balatro extends Application
     //endregion
 
     //region Settings Model
-    private static final SettingsModel settingsModel = new SettingsModel();
     private String rootPath = getRootPath() + "settings.xml";
+    private static final SettingsModel settingsModel = new SettingsModel();
 
     public static SettingsModel getSettings() { return settingsModel; }
     //endregion
 
     //region Title Screen
-    private static final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
-    private AnchorPane anchorPane;
+    private final FXMLLoader fxmlLoaderMain = new FXMLLoader(Balatro.class.getResource("balatro-screen.fxml"));
+    private final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
+    private static final FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
+    public static AnchorPane mainPane;
     //endregion
 
     @Override
     public void start(Stage primaryStage) throws IOException
     {
         Balatro.primaryStage = primaryStage;
+        primaryStage.setTitle("Balatro");
+        primaryStage.setMaximized(true);
+        primaryStage.show();
 
         //region Settings
         File settingsFile = new File(rootPath);
@@ -60,65 +66,40 @@ public class Balatro extends Application
         settingsModel.setSettings(rootPath);
         //endregion
 
+        //region Sql
         Thread sqlThread = new Thread(() -> SqlHandler.main());
 
         sqlThread.start();
         try {
             System.out.println("test before join");
             sqlThread.join();
-            gameModel = new GameModel();
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        //endregion
 
-        System.out.println("Primary Screen: " + Screen.getPrimary());
-        System.out.println("Primary Resolution: " + Screen.getPrimary().getBounds().getWidth() + "x" + Screen.getPrimary().getBounds().getHeight());
-        System.out.println("Settings Screen: " + Screen.getScreens().get(settingsModel.getScreen()));
-        System.out.println("Settings Resolution: " +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth() + "x" +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
+        gameModel = new GameModel();
 
-        anchorPane = fxmlLoaderTitle.load();
-        anchorPane.setPrefSize(Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth(), Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
-        Scene scene = new Scene(anchorPane);
-        System.out.println("Scene Width " + scene.getWidth());
-        System.out.println("Scene Height " + scene.getHeight());
-
-        primaryStage.setTitle("Balatro");
-        primaryStage.setFullScreen(true);
+        //region add Main Pane
+        mainPane = fxmlLoaderMain.load();
+        mainPane.getChildren().add(fxmlLoaderTitle.load());
+        Scene scene = new Scene(mainPane);
         primaryStage.setScene(scene);
-
-        primaryStage.show();
-        System.out.println("Primary Width: " + primaryStage.getWidth());
-        System.out.println("Primary Height: " + primaryStage.getHeight());
-
-        System.out.println("test after join");
-        //WebHandler.setupDb();
+        //endregion
     }
 
     public void ScreenResolutions() {
-
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-        for(GraphicsDevice device : ge.getScreenDevices())
-            for(DisplayMode mode : device.getDisplayModes())
-                System.out.println(mode);
-
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         DisplayMode[] modes = gd.getDisplayModes();
-
-            for (DisplayMode mode : modes) {
-                System.out.println(mode.toString());
-                System.out.println("Resolution: " + mode.getWidth() + " x " + mode.getHeight());
-            }
-
     }
 
     public static void newGame(GameSetup gameSetup) throws IOException {
-        FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
-        Scene scene = new Scene(fxmlLoaderGame.load(), primaryStage.getWidth(), primaryStage.getHeight());
-        primaryStage.setScene(scene);
-
+        AnchorPane gamePane = fxmlLoaderGame.load();
+        mainPane.getChildren().clear();
+        mainPane.getChildren().add(gamePane);
         GameController controller = fxmlLoaderGame.getController();
-        System.out.println(controller);
         controller.startNewGame(gameSetup);
     }
 
