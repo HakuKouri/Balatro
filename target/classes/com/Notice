@@ -35,6 +35,8 @@ image + info 500
 
 Option width 1445 height 1090
 
+new run width 410 height 455  1000x538
+
 SETTINGS
 GAME
 GameSpeed 0.5 - 4

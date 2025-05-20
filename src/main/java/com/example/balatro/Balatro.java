@@ -76,7 +76,6 @@ public class Balatro extends Application
         System.out.println("Settings Screen: " + Screen.getScreens().get(settingsModel.getScreen()));
         System.out.println("Settings Resolution: " +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth() + "x" +  Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
 
-
         anchorPane = fxmlLoaderTitle.load();
         anchorPane.setPrefSize(Screen.getScreens().get(settingsModel.getScreen()).getBounds().getWidth(), Screen.getScreens().get(settingsModel.getScreen()).getBounds().getHeight());
         Scene scene = new Scene(anchorPane);
@@ -87,13 +86,9 @@ public class Balatro extends Application
         primaryStage.setFullScreen(true);
         primaryStage.setScene(scene);
 
-
-
         primaryStage.show();
         System.out.println("Primary Width: " + primaryStage.getWidth());
         System.out.println("Primary Height: " + primaryStage.getHeight());
-
-
 
         System.out.println("test after join");
         //WebHandler.setupDb();

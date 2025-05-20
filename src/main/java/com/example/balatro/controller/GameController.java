@@ -199,10 +199,9 @@ public class GameController
             blindBoxHBox.getChildren().add(bossBlindPanel);
 
             gameModel.roundProperty().addListener((obs, oldValue, newValue) -> {
-                smallBlindPanel.setDisable(gameModel.getRound()%3 != 0);
-                bigBlindPanel.setDisable(gameModel.getRound()%3 != 1 && gameModel.getRound() != 0);
-                bossBlindPanel.setDisable(gameModel.getRound()%3 != 2 && gameModel.getRound() != 0);
-
+                smallBlindPanel.setDisable(newValue.intValue()%3 != 0);
+                bigBlindPanel.setDisable(newValue.intValue()%3 != 1 && newValue.intValue() != 0);
+                bossBlindPanel.setDisable(newValue.intValue()%3 != 2 && newValue.intValue() != 0);
             });
 
             //endregion

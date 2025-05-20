@@ -11,6 +11,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -19,12 +21,14 @@ import javafx.scene.media.MediaView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.*;
 import javafx.util.Duration;
+import org.controlsfx.control.spreadsheet.Grid;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class TitleScreenController
 {
+    //region FXML
     public Pane titleScreen;
     public Canvas canvasGame;
     public Button btnTitleOption;
@@ -38,21 +42,33 @@ public class TitleScreenController
     
     @FXML
     private Pane panePlayMenu;
+    //endregion
 
+    //region FXML Loader
+    private final FXMLLoader newGameLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/newGameMenu-screen.fxml"));
+    private final FXMLLoader optionLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/option-screen.fxml"));
+    //private final FXMLLoader collectionLoader = new FXMLLoader(getClass().getResource("collection.fxml"));
+
+    private NewGameMenuController newGameMenuController;
+    private OptionScreenController optionScreenController;
+    private GridPane newGameGrid;
+    private TabPane optionsTabPane;
+    //endregion
+
+    //region Global Variables
     private double angle = 0;
+    private AnimationTimer timer;
+    //endregion
 
     public void initialize() {
+
+
         titlePane.setVisible(false);
         btnTitleQuit.setMaxHeight(btnTitlePlay.getPrefHeight()*0.858);
 
         String s = getClass().getResource("/com/video/balatro_background_animation.mp4").toExternalForm();
         Media media = new Media(s);
 
-        //MediaPlayer player = new MediaPlayer(media);
-        //player.setCycleCount(Integer.MAX_VALUE);
-        //mediaTitleBackground.setMediaPlayer(player);
-        //mediaTitleBackground.getMediaPlayer().play();
-        //startBackgroundAnimation();
         int width = (int) canvasGame.getWidth();
         int height = (int) canvasGame.getHeight();
 
@@ -60,7 +76,7 @@ public class TitleScreenController
         GraphicsContext gc = canvasGame.getGraphicsContext2D();
         PixelWriter pw = gc.getPixelWriter();
 
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             long lastTime = 0;
 
             @Override
@@ -102,18 +118,30 @@ public class TitleScreenController
             }
         };
         timer.start();
+
+        try {
+            newGameGrid = newGameLoader.load();
+            newGameMenuController = newGameLoader.getController();
+            optionsTabPane = optionLoader.load();
+            optionScreenController = optionLoader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void openNewGameMenu() throws IOException {
-        Pane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/newGameMenu-screen.fxml"));
+    public void openNewGameMenu() {
+        newGameMenuController.setSize(Balatro.getPrimaryStage().getHeight());
+        newGameMenuController.setDeck();
+        timer.stop();
         titlePane.setVisible(true);
-        titlePane.getChildren().add(pane);
+        titlePane.getChildren().add(newGameGrid);
+
     }
 
     public void openOptionsMenu() throws IOException {
-        TabPane pane = FXMLLoader.load(getClass().getResource("/com/example/balatro/option-screen.fxml"));
+
         titlePane.setVisible(true);
-        titlePane.getChildren().add(pane);
+        titlePane.getChildren().add(optionsTabPane);
     }
 
     public void closeGame() {
