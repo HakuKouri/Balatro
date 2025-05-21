@@ -15,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
@@ -25,6 +26,8 @@ import java.util.*;
 
 public class GameController
 {
+    public ImageView shopImageView;
+    public AnchorPane shopImageAnchorPane;
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -162,6 +165,16 @@ public class GameController
     public void initialize(){
         instance = this;
 
+        gameScreenAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("New GameScreen Anchor Width: " + newValue.doubleValue());
+        });
+
+
+        System.out.println("GameController Initialize Settings Sizes: " + Balatro.getSettings().getWindowWidth() + ", " + Balatro.getSettings().getWindowHeight());
+        gameScreenAnchor.setMaxWidth(Balatro.getSettings().getWindowWidth());
+        gameScreenAnchor.setMaxHeight(Balatro.getSettings().getWindowHeight());
+        System.out.println("GameController Initialize: " + gameScreenAnchor.getMaxWidth() + ", " + gameScreenAnchor.getMaxHeight());
+
         gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
         //LOAD / READY PLACEHOLDER
         try {
@@ -206,6 +219,7 @@ public class GameController
 
             //endregion
 
+            //region Place Holder
             VBox holdingHand = loaderHoldingHand.load();
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
@@ -225,11 +239,11 @@ public class GameController
             reward = loaderReward.load();
             rewardSummarController = loaderReward.getController();
             placeHolderReward.getChildren().add(reward);
+            //endregion
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
 
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
             while (change.next()) {
@@ -252,6 +266,9 @@ public class GameController
         gameModel.shopVisibilityProperty().addListener((obs, oldValue, newValue) -> {
             animateBox(placeHolderShop, newValue);
         });
+        shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
+            return Balatro.getSettings().getWindowWidth() * 0.186;
+        }));
         //endregion
 
         //region Bind Reward
@@ -310,9 +327,9 @@ public class GameController
                 String.valueOf(gameModel.getRound()), gameModel.roundProperty()));
         //endregion
 
-        bottomRow.prefHeightProperty().bind(Bindings.createIntegerBinding(() ->
+        /*bottomRow.prefHeightProperty().bind(Bindings.createIntegerBinding(() ->
                 gameModel.isHandButtonVisibility() ? 350 : 220,
-                gameModel.handButtonVisibilityProperty()));
+                gameModel.handButtonVisibilityProperty()));*/
 
         labelBlind.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
 
@@ -343,16 +360,15 @@ public class GameController
                 gameModel.getConsumableList().size() + "/" + gameModel.getMaxConsumables(), gameModel.getConsumableList()
         ));
 
-        //end region
+        //endregion
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            Joker joker = new Joker(gameModel.getJokerList().get(0));
-            joker.setFitHeight(100);
-            gameModel.getActiveJokerObList().add(joker);
+            System.out.println("Gamescreen Width: " + gameScreenAnchor.getWidth());
+            System.out.println("Gamescreen MaxWidth: " + gameScreenAnchor.getMaxWidth());
+            System.out.println("Gamescreen MinWidth: " + gameScreenAnchor.getMinWidth());
             //gameModel.getActiveJokerObList().addAll(gameModel.getJokerList());
         });
-
     }
 
     //SETTING UP GAME
@@ -409,6 +425,8 @@ public class GameController
 
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
+        System.out.println("GameController Initialize: " + gameScreenAnchor.getWidth());
+
         gameModel.setRand(new Random());
         createBlindList();
         createTagList();
@@ -427,6 +445,8 @@ public class GameController
 
         gameModel.setShopVisibility(false);
         gameModel.setRewardVisibility(false);
+        System.out.println("GameController Initialize: " + gameScreenAnchor.getWidth());
+
     }
 
 

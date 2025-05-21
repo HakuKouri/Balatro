@@ -64,16 +64,13 @@ public class TitleScreenController
         titlePane.setVisible(false);
         btnTitleQuit.setMaxHeight(btnTitlePlay.getPrefHeight()*0.858);
 
-        String s = getClass().getResource("/com/video/balatro_background_animation.mp4").toExternalForm();
-        Media media = new Media(s);
+        double width = Balatro.getSettings().getWindowWidth();
+        double height = Balatro.getSettings().getWindowHeight();
 
-        int width = (int) Balatro.getSettings().getWindowWidth();
-        int height = (int) Balatro.getSettings().getWindowHeight();
 
-        canvasGame.setWidth(width);
-        canvasGame.setHeight(height);
+        canvasGame.setWidth(Balatro.getSettings().getWindowWidth());
+        canvasGame.setHeight(Balatro.getSettings().getWindowHeight());
 
-        System.out.println("width: " + width + " height: " + height);
         GraphicsContext gc = canvasGame.getGraphicsContext2D();
         PixelWriter pw = gc.getPixelWriter();
 
@@ -131,10 +128,11 @@ public class TitleScreenController
     }
 
     public void openNewGameMenu() {
+        titlePane.getChildren().add(newGameGrid);
+        titlePane.setVisible(true);
+        newGameMenuController.setSize(Balatro.getSettings().getWindowHeight());
         newGameMenuController.setDeck();
         timer.stop();
-        titlePane.setVisible(true);
-        titlePane.getChildren().add(newGameGrid);
     }
 
     public void openOptionsMenu() throws IOException {

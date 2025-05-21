@@ -78,10 +78,10 @@
       </AnchorPane>
       <GridPane GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" percentWidth="10.0" prefWidth="84.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="773.0" minWidth="10.0" percentWidth="2.0" prefWidth="653.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="773.0" minWidth="10.0" prefWidth="653.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="773.0" minWidth="10.0" percentWidth="2.0" prefWidth="653.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="78.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="2.0" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
@@ -99,11 +99,11 @@
                <children>
                   <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>
-                      <ColumnConstraints fx:id="deckImageStackPaneColumn" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" percentWidth="26.7716535" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.1496063" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="418.0" minWidth="10.0" percentWidth="57.480315" prefWidth="418.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="1.57480315" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" percentWidth="7.08661417" prefWidth="5.0" />
+                      <ColumnConstraints fx:id="deckImageStackPaneColumn" hgrow="SOMETIMES" percentWidth="26.7716535" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="3.1496063" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="1.57480315" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="7.08661417" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="290.0" minHeight="10.0" percentHeight="3.60655738" prefHeight="284.0" vgrow="SOMETIMES" />
@@ -123,11 +123,14 @@
                               <Insets />
                            </GridPane.margin>
                         </AnchorPane>
-                        <StackPane fx:id="stackPaneDeck" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-min-height: 120px; -fx-min-width: 50px;" styleClass="deck" GridPane.rowIndex="2">
+                        <AnchorPane fx:id="deckImageAnchorPane" GridPane.rowIndex="2">
+                           <children>
+                              <StackPane fx:id="stackPaneDeck" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
-                        </StackPane>
+                        </AnchorPane>
                         <HBox fx:id="selectedDeckDisplay" alignment="CENTER" spacing="5.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                            <children>
                               <Circle fill="#333333" radius="3.0" stroke="BLACK" strokeType="INSIDE" />

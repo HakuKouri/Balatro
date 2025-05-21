@@ -7,9 +7,10 @@ import com.example.balatro.models.GameModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -55,12 +56,19 @@ public class Balatro extends Application
         Balatro.primaryStage = primaryStage;
         primaryStage.setTitle("Balatro");
         primaryStage.setMaximized(true);
-        primaryStage.show();
+        primaryStage.setResizable(false);
+
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        primaryStage.setX(bounds.getMinX());
+        primaryStage.setY(bounds.getMinY());
+        primaryStage.setWidth(bounds.getWidth());
+        primaryStage.setHeight(bounds.getHeight());
 
         //region Settings
         File settingsFile = new File(rootPath);
         if(!settingsFile.exists()) {
-            System.out.println("Create Settings File");
             SettingsModel.createSettingsFile(settingsFile.getPath());
         }
         settingsModel.setSettings(rootPath);
@@ -82,10 +90,16 @@ public class Balatro extends Application
         gameModel = new GameModel();
 
         //region add Main Pane
+
         mainPane = fxmlLoaderMain.load();
-        mainPane.getChildren().add(fxmlLoaderTitle.load());
-        Scene scene = new Scene(mainPane);
+        AnchorPane titleScreen = fxmlLoaderTitle.load();
+        titleScreen.setMaxWidth(settingsModel.getWindowWidth());
+        titleScreen.setMaxHeight(settingsModel.getWindowHeight());
+        mainPane.getChildren().add(titleScreen);
+        Scene scene = new Scene(mainPane, bounds.getWidth(), bounds.getHeight());
         primaryStage.setScene(scene);
+        primaryStage.sizeToScene();
+        primaryStage.show();
         //endregion
     }
 
@@ -96,11 +110,23 @@ public class Balatro extends Application
     }
 
     public static void newGame(GameSetup gameSetup) throws IOException {
-        AnchorPane gamePane = fxmlLoaderGame.load();
+        //clear Pane
         mainPane.getChildren().clear();
-        mainPane.getChildren().add(gamePane);
+
+        //declare
+        AnchorPane gamePane = fxmlLoaderGame.load();
         GameController controller = fxmlLoaderGame.getController();
+
+        //set max size Game Pane
+        gamePane.setMaxWidth(settingsModel.getWindowWidth());
+        gamePane.setMaxHeight(settingsModel.getWindowHeight());
+
+        //add Game Pane to Main Pane
+        mainPane.getChildren().add(gamePane);
+
+        //start new Game
         controller.startNewGame(gameSetup);
+        System.out.println("Test after start new Game: " + gamePane.widthProperty());
     }
 
     public static void main(String[] args)

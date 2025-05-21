@@ -18,6 +18,7 @@ import java.util.Properties;
 
 public class SettingsModel {
 
+    private Screen screen;
     private final DoubleProperty windowWidth = new SimpleDoubleProperty();
     private final DoubleProperty windowHeight = new SimpleDoubleProperty();
 
@@ -32,7 +33,7 @@ public class SettingsModel {
 
     //region Video Settings
     private final ObservableList<Screen> screens = FXCollections.observableArrayList();
-    private final IntegerProperty screen = new SimpleIntegerProperty();
+    private final IntegerProperty screenIndex = new SimpleIntegerProperty();
     private enum ScreenState {fullscreen, borderless, windowed, none};
     private final StringProperty windowMode = new SimpleStringProperty();
     private final StringProperty resolution = new SimpleStringProperty();
@@ -143,11 +144,11 @@ public class SettingsModel {
     }
 
     public int getScreen() {
-        return screen.get();
+        return screenIndex.get();
     }
 
     public IntegerProperty screenProperty() {
-        return screen;
+        return screenIndex;
     }
 
     public String getWindowMode() {
@@ -285,7 +286,7 @@ public class SettingsModel {
 
         props.setProperty("display monitor", String.valueOf(Screen.getScreens().indexOf(Screen.getPrimary())));
         props.setProperty("window mode", "fullscreen");
-        props.setProperty("resolution", Screen.getPrimary().getBounds().getWidth() + "x" +  Screen.getPrimary().getBounds().getHeight());
+        props.setProperty("resolution", Screen.getPrimary().getVisualBounds().getWidth() + "x" +  Screen.getPrimary().getVisualBounds().getHeight());
         props.setProperty("vsync", "true");
         //Graphics
         props.setProperty("shadows", "true");

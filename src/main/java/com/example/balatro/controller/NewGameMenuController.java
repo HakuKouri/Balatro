@@ -27,6 +27,7 @@ public class NewGameMenuController
     //region FXML
     public GridPane gridMenu;
     public ColumnConstraints deckImageStackPaneColumn;
+    public AnchorPane deckImageAnchorPane;
     @FXML
     private StackPane stackPaneDeck;
     @FXML
@@ -194,12 +195,15 @@ public class NewGameMenuController
 
     private void loadDeckImage() {
         ImageView deckCover = new ImageView(new Image("file:"+deckList.get(getActiveDeckIndex()).getDeckCoverUrl()));
-        deckCover.setFitWidth(stackPaneDeck.getWidth());
+        double deckImageHeight = Balatro.getSettings().getWindowHeight() * 0.2;
+
+        deckCover.setFitHeight(deckImageHeight);
         deckCover.setPreserveRatio(true);
+
         stackPaneDeck.getChildren().add(deckCover);
         if(deckList.get(getActiveDeckIndex()).getStageCleared() > 0) {
             ImageView stakeChip = new ImageView(new Image("file:"+ stakeList.get(getActiveStakeIndex()).getStakeImageStickerUrl()));
-            stakeChip.setFitHeight(120);
+            stakeChip.setFitHeight(deckImageHeight);
             stakeChip.setPreserveRatio(true);
             stackPaneDeck.getChildren().add(stakeChip);
         }
@@ -265,6 +269,7 @@ public class NewGameMenuController
                 ((Rectangle)rec).setStroke(grey);
         }
     }
+
     public void startNewGame(ActionEvent actionEvent) {
         GameSetup gameSetup = new GameSetup();
         gameSetup.setChosenDeck(deckList.get(getActiveDeckIndex()));
