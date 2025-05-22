@@ -43,9 +43,9 @@ public class PlayingCard extends Card
         edition = new Edition();
         edition.setId(0);
         Image image = new Image(getClass().getResource("/com/images/DEFAULT/BASIC/8BitDeck"+(rank+1+suit*13)+".png").toExternalForm());
-        this.setImage(image);
-        this.setFitHeight(200);
-        this.setPreserveRatio(true);
+        setImage(image);
+        setFitHeight(200);
+        setPreserveRatio(true);
 
         selected.addListener((observable, oldValue, newValue) -> {
             // Only if completed

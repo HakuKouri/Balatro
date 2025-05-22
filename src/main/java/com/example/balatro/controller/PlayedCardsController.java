@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PokerHandChecker;
@@ -70,6 +71,8 @@ public class PlayedCardsController {
             if(gameModel.getActiveBlind().getBlindId() > 1) {
                 gameModel.setAnte((gameModel.getAnte() + 1));
             }
+
+            gameModel.getActiveBlind().setBlind(new Blind());
         } else {
             gameModel.setHandButtonVisibility(true);
         }

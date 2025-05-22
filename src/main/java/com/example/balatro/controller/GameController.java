@@ -15,7 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
@@ -26,8 +25,27 @@ import java.util.*;
 
 public class GameController
 {
-    public ImageView shopImageView;
-    public AnchorPane shopImageAnchorPane;
+    public AnchorPane shop_Include;
+    public AnchorPane holdingHand_Include;
+    public AnchorPane reward_Include;
+    @FXML
+    private AnchorPane playedCards_AnchorPane;
+    @FXML
+    private AnchorPane deckCover_AnchorPane;
+    @FXML
+    private ImageView shopImageView;
+    @FXML
+    private AnchorPane chooseBlind_AnchorPane;
+    @FXML
+    private AnchorPane shopSign_AnchorPane;
+    @FXML
+    private AnchorPane pickedBlind_AnchorPane;
+    @FXML
+    private AnchorPane roundScore_AnchorPane;
+    @FXML
+    private AnchorPane handInfo_AnchorPane;
+    @FXML
+    private AnchorPane runInfo_AnchorPane;
     //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -35,8 +53,6 @@ public class GameController
     private StackPane playedCards_StackPane;
     @FXML
     private AnchorPane gameScreenAnchor;
-    @FXML
-    private RowConstraints bottomRow;
     @FXML
     private HBox jokerConsumeHBox;
     @FXML
@@ -46,7 +62,7 @@ public class GameController
     @FXML
     private GridPane toBeat;
     @FXML
-    private Label labelBlind;
+    private Label blindToBeat_Label;
     @FXML
     private AnchorPane blindBox;
     @FXML
@@ -93,16 +109,18 @@ public class GameController
     @FXML
     private Label toBeatReward;
     @FXML
-    private ImageView imageViewDeckField;
+    private ImageView deckCover_ImageView;
     @FXML
     private VBox spaceTag;
     @FXML
     private StackPane spaceJoker;
-    public Label jokerCountLabel;
+    @FXML
+    private Label jokerCountLabel;
 
     @FXML
     private StackPane spaceConsumable;
-    public Label consumableCountLabel;
+    @FXML
+    private Label consumableCountLabel;
 
     @FXML
     private AnchorPane placeHolderShop;
@@ -168,14 +186,11 @@ public class GameController
         gameScreenAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("New GameScreen Anchor Width: " + newValue.doubleValue());
         });
-
-
-        System.out.println("GameController Initialize Settings Sizes: " + Balatro.getSettings().getWindowWidth() + ", " + Balatro.getSettings().getWindowHeight());
         gameScreenAnchor.setMaxWidth(Balatro.getSettings().getWindowWidth());
         gameScreenAnchor.setMaxHeight(Balatro.getSettings().getWindowHeight());
-        System.out.println("GameController Initialize: " + gameScreenAnchor.getMaxWidth() + ", " + gameScreenAnchor.getMaxHeight());
 
         gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
+
         //LOAD / READY PLACEHOLDER
         try {
             //region Blind Box
@@ -219,18 +234,22 @@ public class GameController
 
             //endregion
 
+
             //region Place Holder
-            VBox holdingHand = loaderHoldingHand.load();
+            AnchorPane holdingHand = loaderHoldingHand.load();
+            holdingHand.maxWidthProperty().bind(holdingHand_AnchorPane.widthProperty());
+            holdingHand.maxHeightProperty().bind(holdingHand_AnchorPane.heightProperty());
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
 
             AnchorPane playedCards = loaderPlayedCards.load();
+            playedCards.setMaxWidth(playedCards_AnchorPane.getWidth());
+            playedCards.setMaxHeight(playedCards_AnchorPane.getHeight());
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
 
-            System.out.println("Gamecontroller BlindBox Load");
             loaderBlindBox.load();
-            blindBoxController = loaderBlindBox.getController(); // Hier bekommst du den Controller
+            blindBoxController = loaderBlindBox.getController();
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
@@ -260,6 +279,8 @@ public class GameController
         gameModel.blindsVisibilityProperty().addListener((obs, oldValue, newValue) -> {
             animateBox(blindBox, newValue);
         });
+        chooseBlind_AnchorPane.visibleProperty().bind(gameModel.blindsVisibilityProperty());
+
         //endregion
 
         //region Bind Shop
@@ -269,17 +290,18 @@ public class GameController
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
             return Balatro.getSettings().getWindowWidth() * 0.186;
         }));
+        shopSign_AnchorPane.visibleProperty().bind(gameModel.shopVisibilityProperty());
         //endregion
 
         //region Bind Reward
         gameModel.rewardVisibilityProperty().addListener((obs, oldValue, newValue) -> {
-            System.out.println("Reward Visibility: " + newValue);
             animateBox(placeHolderReward, newValue);
         });
         //endregion
 
         //region Deck CoverBind
-        imageViewDeckField.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
+        deckCover_ImageView.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
+
         //endregion
 
         //region Points Scored Bind
@@ -331,9 +353,15 @@ public class GameController
                 gameModel.isHandButtonVisibility() ? 350 : 220,
                 gameModel.handButtonVisibilityProperty()));*/
 
-        labelBlind.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
 
         //region to Beat Bind
+        pickedBlind_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+            gameModel.getActiveBlind().getBlindName() != "default",
+            gameModel.getActiveBlind().blindNameProperty()
+        ));
+
+        blindToBeat_Label.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
+
         toBeatScore.textProperty().bind(Bindings.createStringBinding(() ->
                         String.valueOf(gameModel.getScoreToReach()),
                 gameModel.scoreToReachProperty()
@@ -364,9 +392,8 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            System.out.println("Gamescreen Width: " + gameScreenAnchor.getWidth());
-            System.out.println("Gamescreen MaxWidth: " + gameScreenAnchor.getMaxWidth());
-            System.out.println("Gamescreen MinWidth: " + gameScreenAnchor.getMinWidth());
+            System.out.println(holdingHand_AnchorPane.getHeight());
+            holdingHandController.getHeight();
             //gameModel.getActiveJokerObList().addAll(gameModel.getJokerList());
         });
     }
@@ -481,7 +508,7 @@ public class GameController
         int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
         TranslateTransition transition = new TranslateTransition(Duration.seconds(.2), node);
 
-        transition.setToY(bool ? up : 650);
+        transition.setToY(bool ? up : Balatro.getSettings().getWindowHeight());
         transition.setInterpolator(Interpolator.LINEAR);
 
         transition.play();

@@ -18,6 +18,9 @@ public class Deck extends ImageView
 
 
     public void setDeck(Deck deck) {
+        deckCoverUrl.addListener((observable, oldValue, newValue) -> {
+            setImage(new Image("file:" + newValue, true));
+        });
         setDeckId(deck.getDeckId());
         setDeckName(deck.getDeckName());
         setDeckCoverUrl(deck.getDeckCoverUrl());

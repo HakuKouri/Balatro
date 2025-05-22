@@ -44,6 +44,12 @@
     -fx-background-size: cover;
 }
 
+.shopSign {
+    -fx-border-color: red;
+    -fx-border-width: 5;
+    -fx-border-radius: 20;
+}
+
 /* Buttons */
 .btnClose {
     -fx-background-image: url("../images/menuIcons/close-button.png");
@@ -91,8 +97,9 @@
 /* */
 .info-label {
     -fx-background-color: #333;
+    -fx-background-radius: 5;
     -fx-effect:  dropshadow(three-pass-box,black,0,0,0,5);
-    -fx-background-radius: 10;
+
 }
 
 .info-label label {

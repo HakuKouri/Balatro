@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
@@ -24,6 +25,7 @@ public class HoldingHandController {
     public Label handCardsCounterLabel;
     public Button playSelectedCardsButton;
     public Button discardSelectedCardsButton;
+    public AnchorPane holdingHand_AnchorPane;
     @FXML
     private StackPane HoldingHand;
     @FXML
@@ -180,6 +182,10 @@ public class HoldingHandController {
         gameModel.getHandCards().addAll(tempCardList);
 
         moveCards();
+    }
+
+    public void getHeight() {
+        System.out.println(holdingHand_AnchorPane.getHeight());
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
