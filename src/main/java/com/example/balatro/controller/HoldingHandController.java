@@ -26,8 +26,8 @@ public class HoldingHandController {
     public Button playSelectedCardsButton;
     public Button discardSelectedCardsButton;
     public AnchorPane holdingHand_AnchorPane;
-    @FXML
-    private StackPane HoldingHand;
+    public AnchorPane holdHand_AnchorPane;
+    public StackPane holdingHand_StackPane;
     @FXML
     private GridPane handButtonBox;
 
@@ -38,17 +38,17 @@ public class HoldingHandController {
         gameModel.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
-                    HoldingHand.getChildren().addAll(change.getAddedSubList());
+                    holdingHand_StackPane.getChildren().addAll(change.getAddedSubList());
                 }
                 if(change.wasRemoved()) {
                     System.out.println("Hand Card removed");
-                    HoldingHand.getChildren().removeAll(change.getRemoved());
+                    holdingHand_StackPane.getChildren().removeAll(change.getRemoved());
                 }
             }
         });
 
         //region Event Playing Card CLICKED
-        HoldingHand.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+        holdingHand_StackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
 
             if (source instanceof PlayingCard) {
@@ -58,7 +58,7 @@ public class HoldingHandController {
                     card.setSelected(false);
                     gameModel.removeCardFromSelectedCards(card);
                 }
-                else if(gameModel.getSelectedCards().size() <5){
+                else if(gameModel.getSelectedCards().size() < 5){
                     card.setSelected(true);
                     gameModel.addCardToSelectedCards(card);
                 }
@@ -87,24 +87,24 @@ public class HoldingHandController {
     }
 
     public void moveCards() {
-        int cardWidth = 140;
-        int lastPos = 570;
+        double cardWidth = 140;
+        double lastPos = holdHand_AnchorPane.getWidth() - cardWidth - 10;
 
-        int cards = HoldingHand.getChildren().size();
-        int pos = 0;
+        int cards = holdingHand_StackPane.getChildren().size();
+        double pos = 0;
         for(int i = 0; i < cards; i++) {
             if(cards > 5) {
-                HoldingHand.setAlignment(Pos.CENTER_LEFT);
+                holdingHand_StackPane.setAlignment(Pos.CENTER_LEFT);
                 pos = i * lastPos / (cards - 1);
             } else {
-                HoldingHand.setAlignment(Pos.CENTER);
+                holdingHand_StackPane.setAlignment(Pos.CENTER);
                 if(cards%2==0) {
                     pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
                 } else {
                     pos = i * cardWidth - cards/2*cardWidth + i * 5;
                 }
             }
-            HoldingHand.getChildren().get(i).setTranslateX(pos);
+            holdingHand_StackPane.getChildren().get(i).setTranslateX(pos);
         }
     }
 
@@ -150,6 +150,7 @@ public class HoldingHandController {
 
     //Button Funktions
     public void sortRank() {
+        System.out.println(holdingHand_StackPane.getWidth());
         gameModel.setSortedByRank(true);
         sort();
     }

@@ -188,7 +188,10 @@ public class GameController
         });
         gameScreenAnchor.setMaxWidth(Balatro.getSettings().getWindowWidth());
         gameScreenAnchor.setMaxHeight(Balatro.getSettings().getWindowHeight());
-
+        System.out.println("Height: " + Balatro.getSettings().getWindowHeight());
+        gameScreenAnchor.heightProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("New GameScreen Anchor Height: " + newValue.doubleValue());
+        });
         gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
 
         //LOAD / READY PLACEHOLDER
@@ -233,7 +236,6 @@ public class GameController
             });
 
             //endregion
-
 
             //region Place Holder
             AnchorPane holdingHand = loaderHoldingHand.load();
