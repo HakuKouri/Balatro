@@ -67,9 +67,8 @@ public class TitleScreenController
         double width = Balatro.getSettings().getWindowWidth();
         double height = Balatro.getSettings().getWindowHeight();
 
-
-        canvasGame.setWidth(Balatro.getSettings().getWindowWidth());
-        canvasGame.setHeight(Balatro.getSettings().getWindowHeight());
+        canvasGame.setWidth(Balatro.getPrimaryStage().getWidth());
+        canvasGame.setHeight(Balatro.getPrimaryStage().getHeight());
 
         GraphicsContext gc = canvasGame.getGraphicsContext2D();
         PixelWriter pw = gc.getPixelWriter();

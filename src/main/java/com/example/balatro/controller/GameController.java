@@ -239,8 +239,10 @@ public class GameController
 
             //region Place Holder
             AnchorPane holdingHand = loaderHoldingHand.load();
-            holdingHand.maxWidthProperty().bind(holdingHand_AnchorPane.widthProperty());
-            holdingHand.maxHeightProperty().bind(holdingHand_AnchorPane.heightProperty());
+            AnchorPane.setBottomAnchor(holdingHand, 0.0);
+            AnchorPane.setTopAnchor(holdingHand, 0.0);
+            AnchorPane.setLeftAnchor(holdingHand, 0.0);
+            AnchorPane.setRightAnchor(holdingHand, 0.0);
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
 

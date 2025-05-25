@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
 import java.util.*;
@@ -28,6 +29,7 @@ public class HoldingHandController {
     public AnchorPane holdingHand_AnchorPane;
     public AnchorPane holdHand_AnchorPane;
     public StackPane holdingHand_StackPane;
+    public RowConstraints handButton_Column;
     @FXML
     private GridPane handButtonBox;
 
