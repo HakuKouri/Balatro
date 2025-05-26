@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<comment>store to xml file</comment>
+<comment>update xml file</comment>
 <entry key="display monitor">0</entry>
 <entry key="crt">50</entry>
 <entry key="screen shake">50</entry>

@@ -272,8 +272,6 @@ public class SettingsModel {
     }
 
     public static void createSettingsFile(String rootPath) {
-        String newAppConfigXmlFile = rootPath;
-
         Properties props = new Properties();
         //Game
         props.setProperty("game speed", "1");
@@ -299,7 +297,7 @@ public class SettingsModel {
         props.setProperty("game volume", "50");
 
         try {
-            props.storeToXML(new FileOutputStream(newAppConfigXmlFile), "store to xml file");
+            props.storeToXML(new FileOutputStream(rootPath), "store to xml file");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -308,28 +306,53 @@ public class SettingsModel {
     public Properties getSettings() {
         Properties props = new Properties();
         //Game
-        props.getProperty("game speed");
-        props.getProperty("hand button order");
-        props.getProperty("screen shake");
-        props.getProperty("display stake");
-        props.getProperty("high contrast");
-        props.getProperty("reduced motion");
+        props.setProperty("game speed", String.valueOf(getGameSpeed()));
+        props.setProperty("hand button order", String.valueOf(isPlayDiscardOrder()));
+        props.setProperty("screen shake", String.valueOf(getScreenShake()));
+        props.setProperty("display stake", String.valueOf(isDisplayStakeDuringRun()));
+        props.setProperty("high contrast", String.valueOf(isHighContrast()));
+        props.setProperty("reduced motion", String.valueOf(isReduceMotion()));
         //Video
-        props.getProperty("display monitor");
-        props.getProperty("window mode");
-        props.getProperty("resolution");
-        props.getProperty("vsync");
+        props.setProperty("display monitor", String.valueOf(getScreen()));
+        props.setProperty("window mode", getWindowMode());
+        props.setProperty("resolution", getResolution());
+        props.setProperty("vsync", String.valueOf(isVsync()));
         //Graphics
-        props.getProperty("shadows");
-        props.getProperty("pixel art smooting");
-        props.getProperty("crt");
-        props.getProperty("crt bloom");
+        props.setProperty("shadows", String.valueOf(isShadow()));
+        props.setProperty("pixel art smooting", String.valueOf(isPixelArtSmoothing()));
+        props.setProperty("crt", String.valueOf(getCrtEffect()));
+        props.setProperty("crt bloom", String.valueOf(isCrtBloom()));
         //Audio
-        props.getProperty("master volume");
-        props.getProperty("music volume");
-        props.getProperty("game volume");
+        props.setProperty("master volume", String.valueOf(getMasterVolume()));
+        props.setProperty("music volume", String.valueOf(getMusicVolume()));
+        props.setProperty("game volume", String.valueOf(getGameVolume()));
 
         return props;
+    }
+
+    public void updateSettings(String rootPath) {
+        Properties props = getSettings();
+
+        //Video
+        props.setProperty("display monitor", String.valueOf(Screen.getScreens().indexOf(Screen.getPrimary())));
+        props.setProperty("window mode", getSettings().getProperty("window mode"));
+        props.setProperty("resolution", Screen.getPrimary().getVisualBounds().getWidth() + "x" +  Screen.getPrimary().getVisualBounds().getHeight());
+        props.setProperty("vsync", getSettings().getProperty("vsync"));
+        //Graphics
+        props.setProperty("shadows", getSettings().getProperty("shadows"));
+        props.setProperty("pixel art smooting", getSettings().getProperty("pixel art smooting"));
+        props.setProperty("crt", getSettings().getProperty("crt"));
+        props.setProperty("crt bloom", getSettings().getProperty("crt bloom"));
+        //Audio
+        props.setProperty("master volume", getSettings().getProperty("master volume"));
+        props.setProperty("music volume", getSettings().getProperty("music volume"));
+        props.setProperty("game volume", getSettings().getProperty("game volume"));
+
+        try {
+            props.storeToXML(new FileOutputStream(rootPath), "update xml file");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void changeWindow(ScreenState applied, JFrame frame) {

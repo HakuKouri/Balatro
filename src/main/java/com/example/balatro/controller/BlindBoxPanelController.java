@@ -59,7 +59,7 @@ public class BlindBoxPanelController {
     public void initialize() {
         lblBlindName.textProperty().bind(blind.get().blindNameProperty());
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
-        effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
+        //effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
 
         imageViewStakeImage.imageProperty().bind(gameModel.getChosenStake().imageProperty());
 
@@ -68,6 +68,10 @@ public class BlindBoxPanelController {
                 blind.get().blindRewardProperty()
         ));
         effectText_label.setWrapText(true);
+        effectText_label.textProperty().bind(Bindings.createStringBinding(() -> {
+            System.out.println(blind.get().getBlindId());
+            return blind.get().getBlindId() < 2 ? "" : gameModel.activeBlindProperty().get().getBlindDescription();
+        }));
     }
 
     //GETTER SETTER
@@ -83,53 +87,6 @@ public class BlindBoxPanelController {
         return blind;
     }
 
-    /*public void setBlind(Blind blind, Tag tag, int blindNumber) {
-        this.blind.get().setBlind(blind);
-        if (blindNumber == 1) {
-            setButtonText("Select");
-
-            setActivity(false);
-            setEarn(3);
-            try {
-                skipPane = loaderSkipPane.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            blindSkipController = loaderSkipPane.getController();
-            skipAnchorPane.getChildren().add(skipPane);
-            setTag(tag);
-        } else if (blindNumber == 2) {
-            setButtonText("Upcoming");
-
-            setActivity(false);
-            setEarn(4);
-            try {
-                skipPane = loaderSkipPane.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            blindSkipController = loaderSkipPane.getController();
-            skipAnchorPane.getChildren().add(skipPane);
-            setTag(tag);
-        } else if (blindNumber == 3) {
-            setButtonText("Upcoming");
-
-            setActivity(false);
-            setEarn(5);
-            try {
-                bossPane = loaderBossPane.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            skipAnchorPane.getChildren().add(bossPane);
-        }
-    }
-
-    public void setButtonText(String text) {
-        btnSelectBlind.setText(text);
-    }
-    */
-
     public void setBossPanel(boolean isBoss) {
         try {
             if (isBoss) {
@@ -137,11 +94,6 @@ public class BlindBoxPanelController {
             } else {
                 skipAnchorPane.getChildren().add(loaderSkipPane.load());
                 blindSkipController = loaderSkipPane.getController();
-                System.out.println("Tags empty: " + gameModel.getRunTags().isEmpty());
-            //    setTag(gameModel.getRunTags().isEmpty() ?
-            //            new Tag() :
-            //            gameModel.getRunTags().get((gameModel.getAnte()-1)*2));
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,12 +117,11 @@ public class BlindBoxPanelController {
     }
 
     public void play() {
-       System.out.println("Blind: " + blind.get().getBlindName());
-
        gameModel.setActiveBlind(blind.get());
        gameModel.setRound(gameModel.getRound() + 1);
        gameModel.setHandButtonVisibility(true);
        gameModel.setBlindsVisibility(false);
+       gameModel.pickedBlindVisibilityProperty().set(true);
        gameController.startRound(new BigDecimal(lblMinScore.getText()));
     }
 

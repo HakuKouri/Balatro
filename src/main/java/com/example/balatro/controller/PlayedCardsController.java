@@ -55,7 +55,6 @@ public class PlayedCardsController {
                 .collect(Collectors.toList());
 
         animateSelectedCards(selectedCards, 0, onComplete);
-        //countPoints();
     }
 
     private void countPoints() {
@@ -72,11 +71,11 @@ public class PlayedCardsController {
                 gameModel.setAnte((gameModel.getAnte() + 1));
             }
 
-            gameModel.getActiveBlind().setBlind(new Blind());
+            gameModel.setHands(gameModel.getMaxHands());
+            gameModel.setDiscards(gameModel.getMaxDiscards());
         } else {
             gameModel.setHandButtonVisibility(true);
         }
-        System.out.println("Handsize: " + gameModel.getHandCards().size());
     }
 
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {

@@ -31,6 +31,7 @@ public class Blind extends ImageView
         blindReward.set(0);
         blindSkipped.set(false);
         colorScheme.set(new Color(0,0,0,0));
+        rewarded.set(true);
     }
 
     //region GETTER SETTER
@@ -44,6 +45,7 @@ public class Blind extends ImageView
         blindReward.set(blind.getBlindReward());
         blindSkipped.set(blind.isBlindSkipped());
         colorScheme.set(blind.getColorScheme());
+        rewarded.set(blind.isRewarded());
     }
 
     public int getBlindId() {
@@ -161,21 +163,9 @@ public class Blind extends ImageView
     public BooleanProperty rewardedProperty() {
         return rewarded;
     }
-
     //endregion
 
     //region Funktionen
-    public void copyFrom(Blind newBlind) {
-        System.out.println("Copy Done");
-        setBlindId(newBlind.getBlindId());
-        setBlindImageUrl(newBlind.getBlindImageUrl());
-        setBlindName(newBlind.getBlindName());
-        setBlindDescription(newBlind.getBlindDescription());
-        setBlindMinimumAnte(newBlind.getBlindMinimumAnte());
-        setBlindScoreMultiplier(newBlind.getBlindScoreMultiplier());
-        setBlindReward(newBlind.getBlindReward());
-        setBlindSkipped(newBlind.isBlindSkipped());
-        setColorScheme(newBlind.getColorScheme());
-    }
+
     //endregion
 }

@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.classes.Blind;
 import com.example.balatro.classes.Joker;
 import com.example.balatro.classes.Planet;
 import com.example.balatro.classes.Tag;
@@ -13,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class RewardSummarController {
+public class RewardSummaryController {
 
     //region FXML
     @FXML
@@ -64,6 +64,7 @@ public class RewardSummarController {
         //TODO REWARD ROCKET BIND
 
         gameModel.rewardVisibilityProperty().addListener((observable, oldValue, newValue) -> {
+            gameModel.pickedBlindVisibilityProperty().setValue(false);
             if(newValue) setRewards(gameModel.getActiveJokerObList());
         });
     }
@@ -76,6 +77,10 @@ public class RewardSummarController {
 
         //Blind Reward
         blindRewardPane.setVisible(gameModel.activeBlindProperty().get().isRewarded());
+        if(gameModel.activeBlindProperty().get().isRewarded()) {
+            reward += gameModel.activeBlindProperty().get().getBlindReward();
+
+        }
 
         //remaining Hands Reward
         if(gameModel.getHands() > 0) {
@@ -138,10 +143,11 @@ public class RewardSummarController {
     }
 
     public void cashOut(ActionEvent actionEvent) {
-        int reward= 0;
+        gameModel.getActiveBlind().setBlind(new Blind());
         gameModel.addMoney(reward);
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
+
     }
 
     public GridPane createRewardPane(int count, String effect, int money, boolean tag) {

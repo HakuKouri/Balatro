@@ -82,6 +82,7 @@ public class GameModel {
     //endregion
 
     //region UI VAR
+    private final BooleanProperty pickedBlindVisibility = new SimpleBooleanProperty(false);
     private final BooleanProperty blindsVisibility = new SimpleBooleanProperty(true);
     private final BooleanProperty shopVisibility = new SimpleBooleanProperty(true);
     private final BooleanProperty rewardVisibility = new SimpleBooleanProperty(true);
@@ -665,6 +666,15 @@ public class GameModel {
     //endregion
 
     //region UI VAR
+    //Picked Blind Visibility
+    public boolean isPickedBlindVisibility() {
+        return pickedBlindVisibility.get();
+    }
+
+    public BooleanProperty pickedBlindVisibilityProperty() {
+        return pickedBlindVisibility;
+    }
+
     //Blinds Visibility
     public boolean getBlindsVisibility() {
         return blindsVisibility.get();

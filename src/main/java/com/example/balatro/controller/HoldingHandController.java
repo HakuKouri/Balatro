@@ -43,7 +43,6 @@ public class HoldingHandController {
                     holdingHand_StackPane.getChildren().addAll(change.getAddedSubList());
                 }
                 if(change.wasRemoved()) {
-                    System.out.println("Hand Card removed");
                     holdingHand_StackPane.getChildren().removeAll(change.getRemoved());
                 }
             }
@@ -123,7 +122,6 @@ public class HoldingHandController {
             drawCard();
         }
     }
-
     public void drawCardToLimit(int cardCount) {
         for (int i = 0; i < cardCount  && !gameModel.getDeckToPlay().isEmpty() ; i++) {
             drawCard();
@@ -152,7 +150,6 @@ public class HoldingHandController {
 
     //Button Funktions
     public void sortRank() {
-        System.out.println(holdingHand_StackPane.getWidth());
         gameModel.setSortedByRank(true);
         sort();
     }

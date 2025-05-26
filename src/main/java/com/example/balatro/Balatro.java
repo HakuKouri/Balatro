@@ -10,13 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+
+import static com.example.balatro.controller.GameController.delay;
 
 public class Balatro extends Application
 {
@@ -37,7 +37,7 @@ public class Balatro extends Application
     //endregion
 
     //region Settings Model
-    private String rootPath = getRootPath() + "settings.xml";
+    private String rootPath = "settings.xml";
     private static final SettingsModel settingsModel = new SettingsModel();
 
     public static SettingsModel getSettings() { return settingsModel; }
@@ -66,31 +66,29 @@ public class Balatro extends Application
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
-        //region Settings
-        File settingsFile = new File(rootPath);
-        if(!settingsFile.exists()) {
-            SettingsModel.createSettingsFile(settingsFile.getPath());
-        }
-        settingsModel.setSettings(rootPath);
-        //endregion
-
         //region Sql
         Thread sqlThread = new Thread(() -> SqlHandler.main());
 
         sqlThread.start();
         try {
-            System.out.println("test before join");
             sqlThread.join();
-
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         //endregion
-
         gameModel = new GameModel();
 
-        //region add Main Pane
+        //region Settings
+        File settingsFile = new File(rootPath);
+        if(!settingsFile.exists()) {
+            SettingsModel.createSettingsFile(settingsFile.getPath());
+        }
 
+        settingsModel.setSettings(rootPath);
+        settingsModel.updateSettings(rootPath);
+        //endregion
+
+        //region add Main Pane
         mainPane = fxmlLoaderMain.load();
         AnchorPane titleScreen = fxmlLoaderTitle.load();
         titleScreen.setMaxWidth(settingsModel.getWindowWidth());
@@ -126,19 +124,10 @@ public class Balatro extends Application
 
         //start new Game
         controller.startNewGame(gameSetup);
-        System.out.println("Test after start new Game: " + gamePane.widthProperty());
     }
 
     public static void main(String[] args)
     {
         launch(args);
-    }
-
-    public String getRootPath() {
-        return rootPath;
-    }
-
-    public void setRootPath(String rootPath) {
-        this.rootPath = rootPath;
     }
 }

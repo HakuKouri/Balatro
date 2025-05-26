@@ -25,9 +25,6 @@ import java.util.*;
 
 public class GameController
 {
-    public AnchorPane shop_Include;
-    public AnchorPane holdingHand_Include;
-    public AnchorPane reward_Include;
     @FXML
     private AnchorPane playedCards_AnchorPane;
     @FXML
@@ -58,15 +55,7 @@ public class GameController
     @FXML
     private Label cardsInDeckLabel;
     @FXML
-    private Label toBeatEffect;
-    @FXML
-    private GridPane toBeat;
-    @FXML
     private Label blindToBeat_Label;
-    @FXML
-    private AnchorPane blindBox;
-    @FXML
-    private HBox blindBoxHBox;
 
     //region Score Display
     @FXML
@@ -101,6 +90,10 @@ public class GameController
 
     //region to beat elements
     @FXML
+    private Label toBeatEffect;
+    @FXML
+    private GridPane toBeat;
+    @FXML
     private ImageView toBeatImage;
     @FXML
     private ImageView toBeatStake;
@@ -123,6 +116,8 @@ public class GameController
     private Label consumableCountLabel;
 
     @FXML
+    private AnchorPane blindBox_AnchorPane;
+    @FXML
     private AnchorPane placeHolderShop;
     @FXML
     private AnchorPane placeHolderReward;
@@ -138,39 +133,30 @@ public class GameController
     //region FXMLLOADER
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
     private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
-    private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand_StackPane.fxml"));
+    private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
     private final FXMLLoader loaderBlindBox = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-box.fxml"));
 
-    private final FXMLLoader loaderSmallBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
-    private final FXMLLoader loaderBigBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
-    private final FXMLLoader loaderBossBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
     //endregion
 
     //region CONTROLLER
     private ShopPartController shopController;
-    private RewardSummarController rewardSummarController;
+    private RewardSummaryController rewardSummarController;
     private HoldingHandController holdingHandController;
     private PlayedCardsController playedCardsController;
     private BlindBoxController blindBoxController;
-    private BlindBoxPanelController smallBlindController;
-    private BlindBoxPanelController bigBlindController;
-    private BlindBoxPanelController bossBlindController;
+    private List<BlindBoxPanelController> blindPanelControllerList;
     //endregion
 
     private AnchorPane shop = null;
     private AnchorPane reward = null;
 
-    private AnchorPane smallBlindPanel;
-    private AnchorPane bigBlindPanel;
-    private AnchorPane bossBlindPanel;
     //endregion
 
     //region INSTANCE
     private static GameController instance;
 
     public static GameController getInstance() {
-        System.out.println("GameController Get Instance");
         return instance;
     }
     //endregion
@@ -183,85 +169,41 @@ public class GameController
     public void initialize(){
         instance = this;
 
-        gameScreenAnchor.widthProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("New GameScreen Anchor Width: " + newValue.doubleValue());
-        });
         gameScreenAnchor.setMaxWidth(Balatro.getSettings().getWindowWidth());
         gameScreenAnchor.setMaxHeight(Balatro.getSettings().getWindowHeight());
-        System.out.println("Height: " + Balatro.getSettings().getWindowHeight());
-        gameScreenAnchor.heightProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("New GameScreen Anchor Height: " + newValue.doubleValue());
-        });
+
         gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
 
         //LOAD / READY PLACEHOLDER
         try {
             //region Blind Box
-            smallBlindPanel = loaderSmallBlind.load();
-            smallBlindController = loaderSmallBlind.getController();
+            AnchorPane blindBox = loaderBlindBox.load();
+            blindBoxController = loaderBlindBox.getController();
 
-            bigBlindPanel = loaderBigBlind.load();
-            bigBlindController = loaderBigBlind.getController();
-
-            bossBlindPanel = loaderBossBlind.load();
-            bossBlindController = loaderBossBlind.getController();
-
-            gameModel.anteProperty().addListener((obs, oldAnte, newAnte) -> {
-                System.out.println("ANTE CHANGED");
-                smallBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3));
-                smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-
-                smallBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2));
-                bigBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 1));
-                bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-
-                bigBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2 + 1));
-                bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 2));
-                bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-
-            });
-
-            smallBlindController.setBossPanel(false);
-            bigBlindController.setBossPanel(false);
-            bossBlindController.setBossPanel(true);
-
-            blindBoxHBox.getChildren().add(smallBlindPanel);
-            blindBoxHBox.getChildren().add(bigBlindPanel);
-            blindBoxHBox.getChildren().add(bossBlindPanel);
-
-            gameModel.roundProperty().addListener((obs, oldValue, newValue) -> {
-                smallBlindPanel.setDisable(newValue.intValue()%3 != 0);
-                bigBlindPanel.setDisable(newValue.intValue()%3 != 1 && newValue.intValue() != 0);
-                bossBlindPanel.setDisable(newValue.intValue()%3 != 2 && newValue.intValue() != 0);
-            });
-
+            blindBox_AnchorPane.getChildren().add(blindBox);
+            blindPanelControllerList = blindBoxController.setBlindPanels();
+            configurePlaceHolder(blindBox_AnchorPane);
             //endregion
 
             //region Place Holder
             AnchorPane holdingHand = loaderHoldingHand.load();
-            AnchorPane.setBottomAnchor(holdingHand, 0.0);
-            AnchorPane.setTopAnchor(holdingHand, 0.0);
-            AnchorPane.setLeftAnchor(holdingHand, 0.0);
-            AnchorPane.setRightAnchor(holdingHand, 0.0);
             holdingHandController = loaderHoldingHand.getController();
             holdingHand_AnchorPane.getChildren().add(holdingHand);
 
             AnchorPane playedCards = loaderPlayedCards.load();
-            playedCards.setMaxWidth(playedCards_AnchorPane.getWidth());
-            playedCards.setMaxHeight(playedCards_AnchorPane.getHeight());
             playedCardsController = loaderPlayedCards.getController();
             playedCards_StackPane.getChildren().add(playedCards);
 
-            loaderBlindBox.load();
-            blindBoxController = loaderBlindBox.getController();
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
             placeHolderShop.getChildren().add(shop);
+            configurePlaceHolder(placeHolderShop);
 
             reward = loaderReward.load();
             rewardSummarController = loaderReward.getController();
             placeHolderReward.getChildren().add(reward);
+            configurePlaceHolder(placeHolderReward);
             //endregion
 
         } catch (IOException e) {
@@ -281,10 +223,9 @@ public class GameController
 
         //region Bind Blind Box
         gameModel.blindsVisibilityProperty().addListener((obs, oldValue, newValue) -> {
-            animateBox(blindBox, newValue);
+            animateBox(blindBox_AnchorPane, newValue);
         });
         chooseBlind_AnchorPane.visibleProperty().bind(gameModel.blindsVisibilityProperty());
-
         //endregion
 
         //region Bind Shop
@@ -359,11 +300,12 @@ public class GameController
 
 
         //region to Beat Bind
-        pickedBlind_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-            gameModel.getActiveBlind().getBlindName() != "default",
-            gameModel.getActiveBlind().blindNameProperty()
-        ));
+        pickedBlind_AnchorPane.visibleProperty().bind(gameModel.pickedBlindVisibilityProperty());
+        pickedBlind_AnchorPane.setMaxHeight(Balatro.getSettings().getWindowHeight() * 0.26);
 
+        toBeatEffect.textProperty().bind(Bindings.createStringBinding(() -> {
+            return gameModel.activeBlindProperty().get().getBlindId() < 2 ? "" : gameModel.activeBlindProperty().get().getBlindDescription();
+        }));
         blindToBeat_Label.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
 
         toBeatScore.textProperty().bind(Bindings.createStringBinding(() ->
@@ -396,9 +338,8 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            System.out.println(holdingHand_AnchorPane.getHeight());
             holdingHandController.getHeight();
-            //gameModel.getActiveJokerObList().addAll(gameModel.getJokerList());
+
         });
     }
 
@@ -456,8 +397,6 @@ public class GameController
 
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
-        System.out.println("GameController Initialize: " + gameScreenAnchor.getWidth());
-
         gameModel.setRand(new Random());
         createBlindList();
         createTagList();
@@ -468,7 +407,7 @@ public class GameController
         gameModel.setDiscards(3);
         gameModel.setAnte(1);
         gameModel.setRound(0);
-        gameModel.setMoney(0);
+        gameModel.setMoney(4);
 
         Planet.resetUniquePlanets();
 
@@ -476,10 +415,8 @@ public class GameController
 
         gameModel.setShopVisibility(false);
         gameModel.setRewardVisibility(false);
-        System.out.println("GameController Initialize: " + gameScreenAnchor.getWidth());
 
     }
-
 
     public void startRound(BigDecimal score) {
         gameModel.setScoreToReach(score);
@@ -493,11 +430,8 @@ public class GameController
     }
 
     public void skip(Tag tag) {
-        System.out.println(tag.getTagImageUrl());
         tag.setFitHeight(50);
         gameModel.getTagQueue().add(tag);
-        System.out.println(tag);
-        System.out.println(spaceTag.getChildren().stream().findFirst());
         gameModel.setRound(gameModel.getRound() + 1);
     }
 
@@ -519,11 +453,11 @@ public class GameController
     }
 
     public void moveCards() {
-        int cardWidth = 140;
-        int lastPos = 570;
+        double cardWidth = 140;
+        double lastPos = spaceJoker.getWidth();
 
         int cards = spaceJoker.getChildren().size();
-        int pos = 0;
+        double pos = 0;
         for(int i = 0; i < cards; i++) {
             if(cards > 5) {
                 spaceJoker.setAlignment(Pos.CENTER_LEFT);
@@ -540,6 +474,12 @@ public class GameController
         }
     }
 
+    private void configurePlaceHolder(AnchorPane anchorPane) {
+        anchorPane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .53);
+        anchorPane.setPrefHeight(Balatro.getSettings().getWindowHeight() * .72);
+        anchorPane.setLayoutX(Balatro.getSettings().getWindowWidth() * .26);
+        anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .34);
+    }
 
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {
