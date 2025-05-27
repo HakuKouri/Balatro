@@ -1,10 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Blind;
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.PokerHand;
-import com.example.balatro.classes.PokerHandChecker;
+import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -57,32 +54,16 @@ public class PlayedCardsController {
         animateSelectedCards(selectedCards, 0, onComplete);
     }
 
-    private void countPoints() {
-        //TODO ADD EDITION, TRIGGER
-
-        System.out.println("Points Reached? (Played Cards): " + gameModel.isPointsReached());
-
-        if(gameModel.isPointsReached()) {
-            gameModel.setRewardVisibility(true);
-            gameModel.setScoredPoints(BigDecimal.valueOf(0));
-            gameModel.getHandCards().clear();
-
-            if(gameModel.getActiveBlind().getBlindId() > 1) {
-                gameModel.setAnte((gameModel.getAnte() + 1));
-            }
-
-            gameModel.setHands(gameModel.getMaxHands());
-            gameModel.setDiscards(gameModel.getMaxDiscards());
-        } else {
-            gameModel.setHandButtonVisibility(true);
-        }
-    }
-
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
+
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
             gameModel.getBestHand().setHand(new PokerHand());
+
+            triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
+
             countPoints();
+
             if(onComplete != null) onComplete.run();
             return;
         }
@@ -105,10 +86,34 @@ public class PlayedCardsController {
 
         timeline.setOnFinished(event -> {
             gameModel.getBestHand().chipsProperty().set(card.getValue() + gameModel.getBestHand().getChips());
+            triggerJokers(JokerTrigger.ON_CARD_SCORED, List.of(card));
             animateSelectedCards(cards, index + 1, onComplete);
         });
 
         timeline.play();
+    }
+
+    private void countPoints() {
+        //TODO ADD EDITION, TRIGGER
+
+        System.out.println("Points Reached? (Played Cards): " + gameModel.isPointsReached());
+
+        if(gameModel.isPointsReached()) {
+            gameModel.setRewardVisibility(true);
+            gameModel.setScoredPoints(BigDecimal.valueOf(0));
+            gameModel.getHandCards().clear();
+
+            triggerJokers(JokerTrigger.END_OF_ROUND, gameModel.getPlayedCards());
+
+            if(gameModel.getActiveBlind().getBlindId() > 1) {
+                gameModel.setAnte((gameModel.getAnte() + 1));
+            }
+
+            gameModel.setHands(gameModel.getMaxHands());
+            gameModel.setDiscards(gameModel.getMaxDiscards());
+        } else {
+            gameModel.setHandButtonVisibility(true);
+        }
     }
 
     public void removeAllCards() {
@@ -134,6 +139,12 @@ public class PlayedCardsController {
                 }
             }
             gameModel.getPlayedCards().get(i).setTranslateX(pos);
+        }
+    }
+
+    private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
+        for (Joker joker : gameModel.getActiveJokerObList()) {
+            joker.tryActivate(trigger, gameModel, playedCards);
         }
     }
 }

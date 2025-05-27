@@ -16,7 +16,7 @@ public class checkHand {
 
         // Häufigkeit der Kartenränge zählen
         Map<String, Integer> rankCount = new HashMap<>();
-        Map<String, Integer> suitCount = new HashMap<>();
+        Map<Suit, Integer> suitCount = new HashMap<>();
         for (PlayingCard card : cards) {
             rankCount.put(card.getRank(), rankCount.getOrDefault(card.getRank(), 0) + 1);
             suitCount.put(card.getSuit(), suitCount.getOrDefault(card.getSuit(), 0) + 1);

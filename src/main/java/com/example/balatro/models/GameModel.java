@@ -797,6 +797,10 @@ public class GameModel {
     public BigDecimal getChipRequirementByIndex(int index) {
         return getChipRequirement()[index];
     }
+
+    public void addToMultiplier(int i) {
+        handMultiplier.add(i);
+    }
     //endregion
 
     //endregion

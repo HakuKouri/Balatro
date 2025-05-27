@@ -1,27 +1,17 @@
 package com.example.balatro.classes;
 
-import com.example.balatro.controller.GameController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.event.EventTarget;
-import javafx.event.EventHandler;
-
 
 public class PlayingCard extends Card
 {
     private String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
     private int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
-    private String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
+    //private String[] suitArray = {"Hearts", "Clubs", "Diamonds", "Spades"};
     private int orderPosition;
     private String rank;
-    private String suit;
+    private Suit suit;
     private int value;
     private Seal seal;
     private Enhancement enhancement;
@@ -33,7 +23,7 @@ public class PlayingCard extends Card
     public PlayingCard(int rank, int suit) {
 
         this.rank = rankArray[rank];
-        this.suit = suitArray[suit];
+        this.suit = Suit.values()[suit];
         orderPosition = rank;
         value = valueArray[rank];
         seal = new Seal();
@@ -77,11 +67,11 @@ public class PlayingCard extends Card
         this.rank = rank;
     }
 
-    public String getSuit() {
+    public Suit getSuit() {
         return suit;
     }
 
-    public void setSuit(String suit) {
+    public void setSuit(Suit suit) {
         this.suit = suit;
     }
 
@@ -125,13 +115,13 @@ public class PlayingCard extends Card
         this.rankArray = rankArray;
     }
 
-    public String[] getSuitArray() {
-        return suitArray;
-    }
-
-    public void setSuitArray(String[] suitArray) {
-        this.suitArray = suitArray;
-    }
+//    public String[] getSuitArray() {
+//        return suitArray;
+//    }
+//
+//    public void setSuitArray(String[] suitArray) {
+//        this.suitArray = suitArray;
+//    }
 
     public int[] getValueArray() {
         return valueArray;
@@ -158,8 +148,8 @@ public class PlayingCard extends Card
     }
 
     public int getSuitOrder() {
-        for (int i = 0; i < suitArray.length; i++) {
-            if (suitArray[i].equals(suit)) {
+        for (int i = 0; i < Suit.values().length; i++) {
+            if (Suit.values()[i].equals(suit)) {
                 return i;
             }
         }

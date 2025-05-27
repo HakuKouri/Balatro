@@ -1,19 +1,27 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.Balatro;
+import com.example.balatro.interfaces.JokerEffect;
+import com.example.balatro.models.GameModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Joker extends Card
 {
-    private StringProperty jokerImageUrl = new SimpleStringProperty("");
-    private StringProperty jokerEffect = new SimpleStringProperty("");
-    private StringProperty rarity = new SimpleStringProperty("");
-    private StringProperty unlockRequirement = new SimpleStringProperty("");
-    private StringProperty actTiming = new SimpleStringProperty("");
-    private BooleanProperty unlocked = new SimpleBooleanProperty(false);
+    private final StringProperty jokerImageUrl = new SimpleStringProperty("");
+    private final StringProperty jokerDescription = new SimpleStringProperty("");
+    private final StringProperty rarity = new SimpleStringProperty("");
+    private final StringProperty unlockRequirement = new SimpleStringProperty("");
+    private final StringProperty actTiming = new SimpleStringProperty("");
+    private final BooleanProperty unlocked = new SimpleBooleanProperty(false);
+
+    private final List<JokerEffectTrigger> triggers = new ArrayList<>();
 
     public Joker() {
         setup();
@@ -22,13 +30,30 @@ public class Joker extends Card
     public Joker(Joker joker) {
         setup();
         setJokerImageUrl(joker.getJokerImageUrl());
-        setJokerEffect(joker.getJokerEffect());
+        setJokerDescription(joker.getJokerDescription());
         setRarity(joker.getRarity());
         setUnlockRequirement(joker.getUnlockRequirement());
         setActTiming(joker.getActTiming());
         setUnlocked(joker.getUnlocked());
+        triggers.addAll(joker.triggers);
     }
 
+    // ==== Trigger Check ====
+    public void tryActivate(JokerTrigger currentTrigger, GameModel gameModel, List<PlayingCard> playedCards) {
+//        if (triggers.contains(currentTrigger) && effect != null) {
+//            effect.apply(gameModel, this, playedCards);
+//        }
+    }
+
+    // ==== Getter / Setter für Trigger & Effect ====
+    public List<JokerEffectTrigger> getTriggers() {
+        return triggers;
+    }
+
+    public void setTriggers(List<JokerEffectTrigger> triggers) {
+        this.triggers.clear();
+        this.triggers.addAll(triggers);
+    }
 
     public String getJokerImageUrl() {
         return jokerImageUrl.get();
@@ -42,16 +67,16 @@ public class Joker extends Card
         this.jokerImageUrl.set(jokerImageUrl);
     }
 
-    public String getJokerEffect() {
-        return jokerEffect.get();
+    public String getJokerDescription() {
+        return jokerDescription.get();
     }
 
-    public StringProperty jokerEffectProperty() {
-        return jokerEffect;
+    public StringProperty jokerDescriptionProperty() {
+        return jokerDescription;
     }
 
-    public void setJokerEffect(String jokerEffect) {
-        this.jokerEffect.set(jokerEffect);
+    public void setJokerDescription(String jokerDescription) {
+        this.jokerDescription.set(jokerDescription);
     }
 
     public String getRarity() {
@@ -106,7 +131,12 @@ public class Joker extends Card
         jokerImageUrlProperty().addListener((obs, oldUrl, newUrl) -> {
             setImage(new Image("file:" + newUrl));
         });
-        this.setFitHeight(290);
+
+        this.setFitHeight(120);
         this.setPreserveRatio(true);
     }
+
+
 }
+
+

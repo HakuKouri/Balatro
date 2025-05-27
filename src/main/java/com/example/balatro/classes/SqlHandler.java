@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class SqlHandler {
     private static final String DecksTableColumns = " (id, deckCover, deckName, deckDescription, unlockRequirement, stageCleared)";
     private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
     private static final String StakesTableColumns = " (id, stakeStickerUrl, stakeChipUrl, stakeName, stakeEffect, unlocks)";
-    private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)";
+    private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act, triggers, effect_keys)";
     private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
     private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
     private static final String SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
@@ -255,7 +256,7 @@ public class SqlHandler {
                     ps.setString(5, ((Booster) listItem).getBoosterSize());
                     ps.setString(6, ((Booster) listItem).getBoosterEffect());
                     ps.executeUpdate();
-                }else if (listItem.getClass() == Language.class) {
+                } else if (listItem.getClass() == Language.class) {
                     //LanguagesTableColumns = " (id, languageName, text, notes)";
                 }
             }
@@ -350,8 +351,7 @@ public class SqlHandler {
     public static List<Blind> getAllBlinds() {
         List<Blind> blinds = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM Blinds";
             ResultSet rs = statement.executeQuery(statementString);
@@ -380,8 +380,7 @@ public class SqlHandler {
     public static List<Booster> getAllBooster() {
         List<Booster> boosters = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM Boosters";
             ResultSet rs = statement.executeQuery(statementString);
@@ -389,7 +388,7 @@ public class SqlHandler {
             while (rs.next()) {
                 Booster booster = new Booster();
 
-                booster.setBoosterId (rs.getInt(1));
+                booster.setBoosterId(rs.getInt(1));
                 booster.setboosterImageUrl(rs.getString(2));
                 booster.setBoosterName(rs.getString(3));
                 booster.setBoosterSize(rs.getString(4));
@@ -408,8 +407,7 @@ public class SqlHandler {
     public static List<Joker> getAllJokers() {
         List<Joker> jokers = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM JokerCards";
             ResultSet rs = statement.executeQuery(statementString);
@@ -420,12 +418,13 @@ public class SqlHandler {
                 joker.setCardId(rs.getInt(1));
                 joker.setJokerImageUrl(rs.getString(2));
                 joker.setName(rs.getString(3));
-                joker.setJokerEffect(rs.getString(4));
+                joker.setJokerDescription(rs.getString(4));
                 joker.setCost(rs.getInt(5));
                 joker.setRarity(rs.getString(6));
                 joker.setUnlockRequirement(rs.getString(7));
                 joker.setType(rs.getString(8));
                 joker.setActTiming(rs.getString(9));
+                joker.setTriggers(getTrigger(rs.getString(10), rs.getString(11)));
 
                 jokers.add(joker);
             }
@@ -439,8 +438,7 @@ public class SqlHandler {
     public static List<Tag> getAllTags() {
         List<Tag> tags = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM Tags";
             ResultSet rs = statement.executeQuery(statementString);
@@ -467,8 +465,7 @@ public class SqlHandler {
     public static List<Voucher> getAllVoucher() {
         List<Voucher> vouchers = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM VoucherCards";
             ResultSet rs = statement.executeQuery(statementString);
@@ -498,8 +495,7 @@ public class SqlHandler {
     public static List<Planet> getAllPlanets() {
         List<Planet> planets = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM PlanetCards";
             ResultSet rs = statement.executeQuery(statementString);
@@ -527,8 +523,7 @@ public class SqlHandler {
     public static List<PokerHand> getAllPokerHands() {
         List<PokerHand> pokerHands = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             String statementString = "SELECT * FROM PokerHands";
             ResultSet rs = statement.executeQuery(statementString);
@@ -551,8 +546,31 @@ public class SqlHandler {
 
         return pokerHands;
     }
-}
 
+
+    private static List<JokerEffectTrigger> getTrigger(String triggers, String effect_keys) {
+        String[] triggerParts = triggers.split(",");
+        String[] effectParts = effect_keys.split(",");
+
+        List<JokerEffectTrigger> jokerTriggers = new ArrayList<>();
+
+        for (int i = 0; i < triggerParts.length; i++) {
+            String triggerName = triggerParts[i].trim();
+            JokerTrigger triggerEnum = JokerTrigger.valueOf(triggerName);  // String zu Enum
+
+            String effectKeysConcat = effectParts.length > i ? effectParts[i].trim() : "";
+
+            List<String> effectKeys = new ArrayList<>();
+            if (!effectKeysConcat.isEmpty()) {
+                effectKeys = Arrays.asList(effectKeysConcat.split("\\|"));
+            }
+
+            jokerTriggers.add(new JokerEffectTrigger(triggerEnum, effectKeys));
+        }
+
+        return jokerTriggers;
+    }
+}
 //region Example
             /*stmt.executeUpdate("DROP TABLE IF EXISTS books;");
             stmt.executeUpdate("CREATE TABLE books (author, title, publication, pages, price);");

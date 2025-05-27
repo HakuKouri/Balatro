@@ -44,7 +44,7 @@ public class RewardSummaryController {
     private final GameModel gameModel = Balatro.getGameModel();
     private final RewardModel rewardModel = new RewardModel();
 
-    private FXMLLoader rewardFxmlLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-pane.fxml"));
+    private final FXMLLoader rewardFxmlLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-pane.fxml"));
     private GridPane rewardGridPane;
 
     public void initialize() {
@@ -91,7 +91,7 @@ public class RewardSummaryController {
         List<Joker> satelliteJokers = jokers.stream().filter(x -> Objects.equals(x.getName(), "Satellite")).collect(Collectors.toList());
         if(!satelliteJokers.isEmpty()) {
             for(Joker joker : satelliteJokers) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerEffect(), Planet.getUniquePlanetsPlayedCount(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerDescription(), Planet.getUniquePlanetsPlayedCount(), false));
             }
         }
 
@@ -99,7 +99,7 @@ public class RewardSummaryController {
         List<Joker> rocketList = jokers.stream().filter(x -> Objects.equals(x.getName(), "Rocket")).collect(Collectors.toList());
         if(!rocketList.isEmpty()) {
             for(Joker joker : rocketList) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerEffect(), gameModel.getRocketJokers().get(joker).get(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerDescription(), gameModel.getRocketJokers().get(joker).get(), false));
             }
         }
 
@@ -107,7 +107,7 @@ public class RewardSummaryController {
         List<Joker> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getName(), "Delayed Gratification")).collect(Collectors.toList());
         if(!delayedGrafList.isEmpty() && gameModel.getDiscards() == gameModel.getMaxDiscards()) {
             for(Joker joker : delayedGrafList) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerEffect(), gameModel.getDiscards(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerDescription(), gameModel.getDiscards(), false));
             }
         }
 
@@ -115,7 +115,7 @@ public class RewardSummaryController {
         List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getName(), "Cloud 9")).collect(Collectors.toList());
         if(!cloud9List.isEmpty()) {
             for(Joker joker : cloud9List) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerEffect(), (int) gameModel.getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerDescription(), (int) gameModel.getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
             }
         }
 
@@ -123,7 +123,7 @@ public class RewardSummaryController {
         List<Joker> goldenJokerList = jokers.stream().filter(x -> Objects.equals(x.getName(), "Golden Joker")).collect(Collectors.toList());
         if(!goldenJokerList.isEmpty()) {
             for(Joker joker : goldenJokerList) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerEffect(), 4, false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getJokerDescription(), 4, false));
             }
         }
 
