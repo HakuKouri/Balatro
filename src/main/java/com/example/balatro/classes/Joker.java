@@ -22,6 +22,7 @@ public class Joker extends Card
     private final BooleanProperty unlocked = new SimpleBooleanProperty(false);
 
     private final List<JokerEffectTrigger> triggers = new ArrayList<>();
+    private final StringProperty params = new SimpleStringProperty("");
 
     public Joker() {
         setup();
@@ -34,8 +35,9 @@ public class Joker extends Card
         setRarity(joker.getRarity());
         setUnlockRequirement(joker.getUnlockRequirement());
         setActTiming(joker.getActTiming());
-        setUnlocked(joker.getUnlocked());
+        setUnlocked(joker.isUnlocked());
         triggers.addAll(joker.triggers);
+        setParams(joker.getParams());
     }
 
     // ==== Trigger Check ====
@@ -43,16 +45,6 @@ public class Joker extends Card
 //        if (triggers.contains(currentTrigger) && effect != null) {
 //            effect.apply(gameModel, this, playedCards);
 //        }
-    }
-
-    // ==== Getter / Setter für Trigger & Effect ====
-    public List<JokerEffectTrigger> getTriggers() {
-        return triggers;
-    }
-
-    public void setTriggers(List<JokerEffectTrigger> triggers) {
-        this.triggers.clear();
-        this.triggers.addAll(triggers);
     }
 
     public String getJokerImageUrl() {
@@ -115,7 +107,7 @@ public class Joker extends Card
         this.actTiming.set(actTiming);
     }
 
-    public boolean getUnlocked() {
+    public boolean isUnlocked() {
         return unlocked.get();
     }
 
@@ -125,6 +117,28 @@ public class Joker extends Card
 
     public void setUnlocked(boolean unlocked) {
         this.unlocked.set(unlocked);
+    }
+
+    // ==== Getter / Setter für Trigger & Effect ====
+    public List<JokerEffectTrigger> getTriggers() {
+        return triggers;
+    }
+
+    public void setTriggers(List<JokerEffectTrigger> triggers) {
+        this.triggers.clear();
+        this.triggers.addAll(triggers);
+    }
+
+    public String getParams() {
+        return params.get();
+    }
+
+    public StringProperty paramsProperty() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params.set(params);
     }
 
     private void setup() {

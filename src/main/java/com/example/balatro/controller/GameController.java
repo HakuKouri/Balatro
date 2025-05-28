@@ -25,25 +25,29 @@ import java.util.*;
 
 public class GameController
 {
+    //region FXML
     @FXML
     private AnchorPane playedCards_AnchorPane;
     @FXML
     private AnchorPane deckCover_AnchorPane;
     @FXML
     private ImageView shopImageView;
+
+    //region Phase Display
     @FXML
     private AnchorPane chooseBlind_AnchorPane;
     @FXML
     private AnchorPane shopSign_AnchorPane;
     @FXML
     private AnchorPane pickedBlind_AnchorPane;
+    //endregion
+
     @FXML
     private AnchorPane roundScore_AnchorPane;
     @FXML
     private AnchorPane handInfo_AnchorPane;
     @FXML
     private AnchorPane runInfo_AnchorPane;
-    //region FXML IDs
     @FXML
     private AnchorPane holdingHand_AnchorPane;
     @FXML
@@ -56,13 +60,22 @@ public class GameController
     private Label cardsInDeckLabel;
     @FXML
     private Label blindToBeat_Label;
-
-    //region Score Display
     @FXML
     private ImageView stakeImageView;
     @FXML
     private Label pointsScoredLabel;
-    //endregion
+    @FXML
+    private VBox spaceTag;
+    @FXML
+    private StackPane spaceJoker;
+    @FXML
+    private Label jokerCountLabel;
+    @FXML
+    private ImageView deckCover_ImageView;
+    @FXML
+    private StackPane spaceConsumable;
+    @FXML
+    private Label consumableCountLabel;
 
     //region Handinfo
     @FXML
@@ -101,20 +114,9 @@ public class GameController
     private Label toBeatScore;
     @FXML
     private Label toBeatReward;
-    @FXML
-    private ImageView deckCover_ImageView;
-    @FXML
-    private VBox spaceTag;
-    @FXML
-    private StackPane spaceJoker;
-    @FXML
-    private Label jokerCountLabel;
+    //endregion
 
-    @FXML
-    private StackPane spaceConsumable;
-    @FXML
-    private Label consumableCountLabel;
-
+    //region Placeholder
     @FXML
     private AnchorPane blindBox_AnchorPane;
     @FXML
@@ -126,9 +128,10 @@ public class GameController
     //TEST
     @FXML
     private ImageView testImageView;
-
     @FXML
     private Button testButton;
+
+    //endregion
 
     //region FXMLLOADER
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
@@ -136,7 +139,6 @@ public class GameController
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
     private final FXMLLoader loaderBlindBox = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-box.fxml"));
-
     //endregion
 
     //region CONTROLLER
@@ -148,9 +150,9 @@ public class GameController
     private List<BlindBoxPanelController> blindPanelControllerList;
     //endregion
 
+    //region
     private AnchorPane shop = null;
     private AnchorPane reward = null;
-
     //endregion
 
     //region INSTANCE
@@ -298,7 +300,6 @@ public class GameController
                 gameModel.isHandButtonVisibility() ? 350 : 220,
                 gameModel.handButtonVisibilityProperty()));*/
 
-
         //region to Beat Bind
         pickedBlind_AnchorPane.visibleProperty().bind(gameModel.pickedBlindVisibilityProperty());
         pickedBlind_AnchorPane.setMaxHeight(Balatro.getSettings().getWindowHeight() * 0.26);
@@ -323,7 +324,7 @@ public class GameController
         ));
         //endregion
 
-        //region Label card counts Bind
+        //region Card count Labels Bind
         cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
             gameModel.getDeckToPlay().size() + "/" + gameModel.getDeckFull().size(), gameModel.getDeckToPlay()
         ));
@@ -333,7 +334,6 @@ public class GameController
         consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 gameModel.getConsumableList().size() + "/" + gameModel.getMaxConsumables(), gameModel.getConsumableList()
         ));
-
         //endregion
 
         //TEST BUTTON

@@ -16,7 +16,7 @@ public class SqlHandler {
     private static final String DecksTableColumns = " (id, deckCover, deckName, deckDescription, unlockRequirement, stageCleared)";
     private static final String BlindsTableColumns = " (id, blindIcon, blindName, blindDescription, minimumAnte, minimumScore, earn)";
     private static final String StakesTableColumns = " (id, stakeStickerUrl, stakeChipUrl, stakeName, stakeEffect, unlocks)";
-    private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act, triggers, effect_keys)";
+    private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act, triggers, effect_keys, params)";
     private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
     private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
     private static final String SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
@@ -425,6 +425,7 @@ public class SqlHandler {
                 joker.setType(rs.getString(8));
                 joker.setActTiming(rs.getString(9));
                 joker.setTriggers(getTrigger(rs.getString(10), rs.getString(11)));
+                joker.setParams(rs.getString(12));
 
                 jokers.add(joker);
             }
@@ -546,7 +547,6 @@ public class SqlHandler {
 
         return pokerHands;
     }
-
 
     private static List<JokerEffectTrigger> getTrigger(String triggers, String effect_keys) {
         String[] triggerParts = triggers.split(",");
