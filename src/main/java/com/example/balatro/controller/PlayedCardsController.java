@@ -56,11 +56,15 @@ public class PlayedCardsController {
 
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
+            //Löse Joker Trigger aus
+            System.out.println("Before Joker: " + gameModel.getBestHand().getMulti());
+            triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
+            System.out.println("After Joker: " + gameModel.getBestHand().getMulti());
 
+            //Rechne Punkte zusammen
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
             gameModel.getBestHand().setHand(new PokerHand());
 
-            triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
 
             countPoints();
 

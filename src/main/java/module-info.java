@@ -9,6 +9,7 @@ module com.example.balatro {
     requires org.jsoup;
     requires java.desktop;
     requires javafx.media;
+    requires com.fasterxml.jackson.databind;
 
     opens com.example.balatro to javafx.fxml;
     exports com.example.balatro;

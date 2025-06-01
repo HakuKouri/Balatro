@@ -4,5 +4,6 @@ public enum Suit {
     HEARTS,
     CLUBS,
     DIAMONDS,
-    SPADES
+    SPADES,
+    NO_SUIT
 }

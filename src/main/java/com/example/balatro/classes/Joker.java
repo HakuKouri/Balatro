@@ -11,9 +11,9 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class Joker extends Card
-{
+public class Joker extends Card {
     private final StringProperty jokerImageUrl = new SimpleStringProperty("");
     private final StringProperty jokerDescription = new SimpleStringProperty("");
     private final StringProperty rarity = new SimpleStringProperty("");
@@ -42,9 +42,30 @@ public class Joker extends Card
 
     // ==== Trigger Check ====
     public void tryActivate(JokerTrigger currentTrigger, GameModel gameModel, List<PlayingCard> playedCards) {
-//        if (triggers.contains(currentTrigger) && effect != null) {
-//            effect.apply(gameModel, this, playedCards);
-//        }
+        System.out.println("Joker: " + getName());
+        System.out.println("tryActivate called with: " + currentTrigger);
+        // Parsen der JSON-Params (Liste von Param-Maps)
+        List<Map<String, Object>> paramList = JokerEffectUtil.parseParamList(params.get());
+
+        int effectIndex = 0; // Index für Parametrisierung
+        for (JokerEffectTrigger triggerEntry : triggers) {
+            if (triggerEntry.getTrigger() == currentTrigger) {
+                List<String> effectKeys = triggerEntry.getEffectKeys();
+                for (String effectKey : effectKeys) {
+                    JokerEffect effect = JokerEffectRegistry.getEffect(effectKey);
+                    if (effect != null) {
+                        System.out.println("Activating effect: " + effectKey);
+                        Map<String, Object> effectParams = effectIndex < paramList.size()
+                                ? paramList.get(effectIndex)
+                                : Map.of(); // fallback falls params fehlen
+                        effect.apply(gameModel, this, playedCards, effectParams);
+                    } else {
+                        System.out.println("Effect not found for key: " + effectKey);
+                    }
+                    effectIndex++;
+                }
+            }
+        }
     }
 
     public String getJokerImageUrl() {

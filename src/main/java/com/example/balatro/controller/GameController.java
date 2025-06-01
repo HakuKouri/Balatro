@@ -338,7 +338,7 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(2));
+            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(0));
             gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(3));
             gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(4));
             gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(5));

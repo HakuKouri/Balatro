@@ -23,6 +23,8 @@ public enum JokerTrigger {
         CARD_SOLED,
         ON_CARD_DESTROYED,
         ON_POSITION_SWAPED,
+        JOKER_ADDED,
+        JOKER_REMOVE,
         // etc.
 }
 

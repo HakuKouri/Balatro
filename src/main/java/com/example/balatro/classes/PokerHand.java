@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PokerHand {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private StringProperty name = new SimpleStringProperty();
-    private IntegerProperty level = new SimpleIntegerProperty();
-    private IntegerProperty chips = new SimpleIntegerProperty();
-    private IntegerProperty multi = new SimpleIntegerProperty();
-    private IntegerProperty played = new SimpleIntegerProperty();
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final StringProperty name = new SimpleStringProperty();
+    private final IntegerProperty level = new SimpleIntegerProperty();
+    private final IntegerProperty chips = new SimpleIntegerProperty();
+    private final IntegerProperty multi = new SimpleIntegerProperty();
+    private final IntegerProperty played = new SimpleIntegerProperty();
 
     public PokerHand() {
 
@@ -110,6 +110,11 @@ public class PokerHand {
     }
 
     //endregion
+
+    public void addMult(int multiplier) {
+        setMulti(getMulti() + multiplier);
+    }
+
 
     public static List<PokerHand> setHandList() {
         List<PokerHand> allPokerHandList = new ArrayList<>();
