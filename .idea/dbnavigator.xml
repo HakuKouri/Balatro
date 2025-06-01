@@ -29,21 +29,28 @@
     PokerHandName varchar(255),
     PokerHandChips int,
     PokerHandMulti int
-);]]></console>
+);
+
+ALTER TABLE]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" object-ref="schemas/main/tables/JokerCards" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="163831f7-bfe1-4c39-bd55-96ff2253c667" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Enhancements" active-filter-id="" />
-    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards" active-filter-id="" />
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards_dg_tmp" active-filter-id="" />
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards" active-filter-id="57100021-af84-4ffd-af72-045869582749">
+      <filter id="57100021-af84-4ffd-af72-045869582749" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Tags" active-filter-id="8c522c54-b65b-45d8-8800-7fafb504ab50">
       <filter id="8c522c54-b65b-45d8-8800-7fafb504ab50" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
