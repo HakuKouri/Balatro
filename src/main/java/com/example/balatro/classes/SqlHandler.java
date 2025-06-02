@@ -250,7 +250,7 @@ public class SqlHandler {
                     query += BoostersTableColumns + " VALUES (?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1, ((Booster) listItem).getBoosterId());
-                    ps.setString(2, ((Booster) listItem).getboosterImageUrl());
+                    ps.setString(2, ((Booster) listItem).getBoosterImageUrl());
                     ps.setString(3, ((Booster) listItem).getBoosterName());
                     ps.setString(4, ((Booster) listItem).getBoosterEffect());
                     ps.setString(5, ((Booster) listItem).getBoosterSize());
@@ -389,7 +389,7 @@ public class SqlHandler {
                 Booster booster = new Booster();
 
                 booster.setBoosterId(rs.getInt(1));
-                booster.setboosterImageUrl(rs.getString(2));
+                booster.setBoosterImageUrl(rs.getString(2));
                 booster.setBoosterName(rs.getString(3));
                 booster.setBoosterSize(rs.getString(4));
                 booster.setBoosterCost(rs.getString(5));

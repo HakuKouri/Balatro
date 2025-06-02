@@ -147,7 +147,7 @@ public class RewardSummaryController {
         gameModel.addMoney(reward);
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
-
+        GameController.getInstance().restockShop();
     }
 
     public GridPane createRewardPane(int count, String effect, int money, boolean tag) {
@@ -157,4 +157,5 @@ public class RewardSummaryController {
 
         return rewardGridPane;
     }
+
 }

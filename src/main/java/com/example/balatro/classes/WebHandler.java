@@ -453,7 +453,7 @@ public class WebHandler
                 try
                 {
                     booster.setBoosterId(arrayList.size()+1);
-                    booster.setboosterImageUrl("src\\main\\resources\\com\\images\\BoosterPacks\\booster_" + booster.getId() + ".png");
+                    booster.setBoosterImageUrl("src\\main\\resources\\com\\images\\BoosterPacks\\booster_" + booster.getId() + ".png");
                     booster.setBoosterCost(cells.get(1).text());
                     booster.setBoosterSize(cells.get(2).text());
                     booster.setBoosterEffect(cells.get(3).text());

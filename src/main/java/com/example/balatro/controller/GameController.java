@@ -171,8 +171,14 @@ public class GameController
     public void initialize(){
         instance = this;
 
-        gameScreenAnchor.setMaxWidth(Balatro.getSettings().getWindowWidth());
-        gameScreenAnchor.setMaxHeight(Balatro.getSettings().getWindowHeight());
+        double height = Balatro.getSettings().getWindowHeight();
+        double width = Balatro.getSettings().getWindowWidth();
+
+        Booster.setImageHeightProperty(height * .26);
+        Booster.setImageWidthProperty(width * .09);
+
+        gameScreenAnchor.setMaxWidth(width);
+        gameScreenAnchor.setMaxHeight(height);
 
         gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
 
@@ -235,7 +241,7 @@ public class GameController
             animateBox(placeHolderShop, newValue);
         });
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
-            return Balatro.getSettings().getWindowWidth() * 0.186;
+            return width * 0.186;
         }));
         shopSign_AnchorPane.visibleProperty().bind(gameModel.shopVisibilityProperty());
         //endregion
@@ -248,7 +254,6 @@ public class GameController
 
         //region Deck CoverBind
         deckCover_ImageView.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
-
         //endregion
 
         //region Points Scored Bind
@@ -302,7 +307,7 @@ public class GameController
 
         //region to Beat Bind
         pickedBlind_AnchorPane.visibleProperty().bind(gameModel.pickedBlindVisibilityProperty());
-        pickedBlind_AnchorPane.setMaxHeight(Balatro.getSettings().getWindowHeight() * 0.26);
+        pickedBlind_AnchorPane.setMaxHeight(height * 0.26);
 
         toBeatEffect.textProperty().bind(Bindings.createStringBinding(() -> {
             return gameModel.activeBlindProperty().get().getBlindId() < 2 ? "" : gameModel.activeBlindProperty().get().getBlindDescription();
@@ -443,6 +448,10 @@ public class GameController
         gameModel.setShopVisibility(true);
     }
 
+    public void restockShop() {
+        shopController.restockShop();
+    }
+
     //UI
     private void animateBox(Node node, boolean bool) {
         int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
@@ -480,7 +489,7 @@ public class GameController
         anchorPane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .53);
         anchorPane.setPrefHeight(Balatro.getSettings().getWindowHeight() * .72);
         anchorPane.setLayoutX(Balatro.getSettings().getWindowWidth() * .26);
-        anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .34);
+        anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .3);
     }
 
     //BACKGROUND HANDLER
