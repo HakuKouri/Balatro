@@ -1,73 +1,151 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.Balatro;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Card extends ImageView
 {
-    protected int id;
-    protected String name;
-    protected String type;
-    protected String cardFrontCoverUrl;
-    protected String description;
-    protected int cost;
+    //region Properties
+    protected IntegerProperty cardId = new SimpleIntegerProperty(-1);
+    protected StringProperty cardType = new SimpleStringProperty("");
+    protected StringProperty cardName = new SimpleStringProperty("");
+    protected StringProperty cardImageUrl = new SimpleStringProperty("");
+    protected StringProperty cardDescription = new SimpleStringProperty("");
+    protected IntegerProperty cardCost = new SimpleIntegerProperty(-1);
+    protected IntegerProperty maxCost = new SimpleIntegerProperty(-1);
+    protected IntegerProperty editionCost = new SimpleIntegerProperty(-1);
+    //endregion
 
-    public int getCardId()
-    {
-        return id;
+    //region Constructor
+    public Card() {
+        cardImageUrl.addListener((observable, oldValue, newValue) -> {
+            setImage(new Image("file:" + newValue));
+
+            setFitHeight(Balatro.getSettings().getCardHeight());
+            setPreserveRatio(true);
+            setFitWidth(getImage().getWidth());
+        });
+        maxCostProperty().bind(Bindings.createIntegerBinding(() ->
+            cardCost.add(editionCost).intValue(),
+                cardCostProperty(), editionCostProperty())
+        );
+    }
+    //endregion
+
+    //region Getter Setter
+    public int getCardId() {
+        return cardId.get();
     }
 
-    public void setCardId(int id)
-    {
-        this.id = id;
+    public IntegerProperty cardIdProperty() {
+        return cardId;
     }
 
-    public String getName()
-    {
-        return name;
+    public void setCardId(int cardId) {
+        this.cardId.set(cardId);
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public String getCardType() {
+        return cardType.get();
     }
 
-    public String getType()
-    {
-        return type;
+    public StringProperty cardTypeProperty() {
+        return cardType;
     }
 
-    public void setType(String type)
-    {
-        this.type = type;
+    public void setCardType(String cardType) {
+        this.cardType.set(cardType);
     }
 
-    public String getCardFrontCoverUrl()
-    {
-        return cardFrontCoverUrl;
+    public String getCardName() {
+        return cardName.get();
     }
 
-    public void setCardFrontCoverUrl(String cardFrontCover)
-    {
-        this.cardFrontCoverUrl = cardFrontCover;
+    public StringProperty cardNameProperty() {
+        return cardName;
     }
 
-    public String getDescription()
-    {
-        return description;
+    public void setCardName(String cardName) {
+        this.cardName.set(cardName);
     }
 
-    public void setDescription(String description)
-    {
-        this.description = description;
+    public String getCardImageUrl() {
+        return cardImageUrl.get();
     }
 
-    public int getCost()
-    {
-        return cost;
+    public StringProperty cardImageUrlProperty() {
+        return cardImageUrl;
     }
 
-    public void setCost(int cost)
-    {
-        this.cost = cost;
+    public void setCardImageUrl(String cardImageUrl) {
+        this.cardImageUrl.set(cardImageUrl);
     }
+
+    public String getCardDescription() {
+        return cardDescription.get();
+    }
+
+    public StringProperty cardDescriptionProperty() {
+        return cardDescription;
+    }
+
+    public void setCardDescription(String cardDescription) {
+        this.cardDescription.set(cardDescription);
+    }
+
+    public int getCardCost() {
+        return cardCost.get();
+    }
+
+    public IntegerProperty cardCostProperty() {
+        return cardCost;
+    }
+
+    public void setCardCost(int cost) {
+        this.cardCost.set(cost);
+    }
+
+    public int getMaxCost() {
+        return maxCost.get();
+    }
+
+    public IntegerProperty maxCostProperty() {
+        return maxCost;
+    }
+
+    public void setMaxCost(int maxCost) {
+        this.maxCost.set(maxCost);
+    }
+
+    public int getEditionCost() {
+        return editionCost.get();
+    }
+
+    public IntegerProperty editionCostProperty() {
+        return editionCost;
+    }
+
+    public void setEditionCost(int editionCost) {
+        this.editionCost.set(editionCost);
+    }
+    //endregion
+
+    //region Functions
+    public void setCard(Card card) {
+        setCardId(card.getCardId());
+        setCardType(card.getCardType());
+        setCardName(card.getCardName());
+        setCardImageUrl(card.getCardImageUrl());
+        setCardDescription(card.getCardDescription());
+        setCardCost(card.getCardCost());
+        setEditionCost(card.getEditionCost());
+        setMaxCost(card.getMaxCost());
+    }
+
 }

@@ -343,10 +343,15 @@ public class GameController
 
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(0));
-            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(3));
-            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(4));
-            gameModel.getActiveJokerObList().add(gameModel.getJokerList().get(5));
+            System.out.println("Card Height: " + Balatro.getSettings().getCardHeight());
+            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(0));
+            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(3));
+            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(4));
+            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(5));
+
+            for (Joker joker : gameModel.getActiveJokerObList()) {
+                joker.setFitHeight(Balatro.getSettings().getCardHeight());
+            }
         });
     }
 

@@ -1,29 +1,48 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.Balatro;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.Map.entry;
 
 public class Planet extends Card
 {
-    private static final List<Planet> uniquePlanetPlayed = new ArrayList<Planet>();
+    private static Map<String, Boolean> uniquePlanetPlayed = new HashMap<>() {{
+        put("Pluto", false);
+        put("Mercury", false);
+        put("Uranus", false);
+        put("Venus", false);
+        put("Saturn", false);
+        put("Jupiter", false);
+        put("Earth", false);
+        put("Mars", false);
+        put("Neptune", false);
+        put("Planet X", false);
+        put("Ceres", false);
+        put("Eris", false);
+    }};
 
-    private int planetId;
-    private String planetImageUrl;
-    private String planetName;
-    private String planetAddition;
-    private String planetPokerHand;
-    private String planetHandBaseScore;
-    private boolean secret;
+    private final StringProperty planetAddition = new SimpleStringProperty("");
+    private final StringProperty planetPokerHand = new SimpleStringProperty("");
+    private final StringProperty planetHandBaseScore = new SimpleStringProperty("");
+    private final BooleanProperty secret = new SimpleBooleanProperty(false);
 
     //Constructor
     public Planet() {
-        secret = false;
     }
 
-    //Statics
-    public static void addUniquePlanet(Planet planet) {
-        if(!uniquePlanetPlayed.contains(planet))
-            uniquePlanetPlayed.add(planet);
+    //region Statics
+    public static void planetPlayed(String planetName) {
+        uniquePlanetPlayed.put(planetName, true);
     }
 
     public static int getUniquePlanetsPlayedCount() {
@@ -31,75 +50,69 @@ public class Planet extends Card
     }
 
     public static void resetUniquePlanets() {
-        uniquePlanetPlayed.clear();
+        uniquePlanetPlayed.replaceAll((k,v) ->  false);
+    }
+    //endregion
+
+    //region Getter Setter
+    public String getPlanetAddition() {
+        return planetAddition.get();
     }
 
-    //GETTER SETTER
-    public int getPlanetId() {
-        return planetId;
-    }
-
-    public void setPlanetId(int planetId) {
-        this.planetId = planetId;
-    }
-
-    public String getPlanetImageUrl()
-    {
-        return planetImageUrl;
-    }
-
-    public void setPlanetImageUrl(String planetImageUrl)
-    {
-        this.planetImageUrl = planetImageUrl;
-    }
-
-    public String getPlanetName()
-    {
-        return planetName;
-    }
-
-    public void setPlanetName(String planetName)
-    {
-        this.planetName = planetName;
-    }
-
-    public String getPlanetAddition()
-    {
+    public StringProperty planetAdditionProperty() {
         return planetAddition;
     }
 
-    public void setPlanetAddition(String planetAddition)
-    {
-        this.planetAddition = planetAddition;
+    public void setPlanetAddition(String planetAddition) {
+        this.planetAddition.set(planetAddition);
     }
 
-    public String getPlanetPokerHand()
-    {
+    public String getPlanetPokerHand() {
+        return planetPokerHand.get();
+    }
+
+    public StringProperty planetPokerHandProperty() {
         return planetPokerHand;
     }
 
-    public void setPlanetPokerHand(String planetPokerHand)
-    {
-        this.planetPokerHand = planetPokerHand;
+    public void setPlanetPokerHand(String planetPokerHand) {
+        this.planetPokerHand.set(planetPokerHand);
     }
 
-    public String getPlanetHandBaseScore()
-    {
+    public String getPlanetHandBaseScore() {
+        return planetHandBaseScore.get();
+    }
+
+    public StringProperty planetHandBaseScoreProperty() {
         return planetHandBaseScore;
     }
 
-    public void setPlanetHandBaseScore(String planetHandBaseScore)
-    {
-        this.planetHandBaseScore = planetHandBaseScore;
+    public void setPlanetHandBaseScore(String planetHandBaseScore) {
+        this.planetHandBaseScore.set(planetHandBaseScore);
     }
 
-    public boolean isSecret()
-    {
+    public boolean isSecret() {
+        return secret.get();
+    }
+
+    public BooleanProperty secretProperty() {
         return secret;
     }
 
-    public void setSecret(boolean secret)
-    {
-        this.secret = secret;
+    public void setSecret(boolean secret) {
+        this.secret.set(secret);
     }
+    //endregion
+
+    //region Functions
+    public void setPlanet(Planet planet) {
+        setCardId(planet.getCardId());
+        setCardImageUrl(planet.getCardImageUrl());
+        setCardName(planet.getCardName());
+        setPlanetAddition(planet.getPlanetAddition());
+        setPlanetPokerHand(planet.getPlanetPokerHand());
+        setPlanetHandBaseScore(planet.getPlanetHandBaseScore());
+        setSecret(planet.isSecret());
+    }
+    //endregion
 }

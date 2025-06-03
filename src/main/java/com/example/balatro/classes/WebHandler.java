@@ -12,6 +12,7 @@ public class WebHandler
 
     public static void WebHandlerMain() {
     }
+
     public static void setupDb() {
         getBlindWithWebHandler();
         getDeckWithWebHandler();
@@ -41,19 +42,19 @@ public class WebHandler
                 try
                 {
                     joker.setCardId(Integer.parseInt(cells.get(0).text()));
-                    joker.setName(cells.get(1).childNode(0).attr("title"));
-                    joker.setCardFrontCoverUrl("src\\main\\resources\\com\\images\\Jokers\\joker_" + joker.getCardId() + ".png");
-                    if(joker.getCardId()== 70) joker.setCardFrontCoverUrl(joker.getCardFrontCoverUrl().replace(".png", ".gif"));
-                    joker.setDescription(cells.get(2).text());
+                    joker.setCardName(cells.get(1).childNode(0).attr("title"));
+                    joker.setCardImageUrl("src\\main\\resources\\com\\images\\Jokers\\joker_" + joker.getCardId() + ".png");
+                    if(joker.getCardId()== 70) joker.setCardImageUrl(joker.getCardImageUrl().replace(".png", ".gif"));
+                    joker.setCardDescription(cells.get(2).text());
                     try {
-                        joker.setCost(Integer.parseInt(cells.get(3).text().substring(1)));
+                        joker.setCardCost(Integer.parseInt(cells.get(3).text().substring(1)));
                     } catch (Exception e) {
-                        joker.setCost(20);
+                        joker.setCardCost(20);
                     }
                     String rarityText = cells.get(4).childNode(1).attr("title");
                     joker.setRarity(rarityText.substring(9, rarityText.indexOf(" ")));
                     joker.setUnlockRequirement(cells.get(5).text());
-                    joker.setType(cells.get(6).text());
+                    joker.setCardType(cells.get(6).text());
                     joker.setActTiming(cells.get(7).text());
                 }
                 catch (Exception e) {
@@ -242,8 +243,8 @@ public class WebHandler
                 try
                 {
                     planet.setCardId(arrayList.size()+1);
-                    planet.setPlanetImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\planet_" + planet.getCardId() + ".png");
-                    planet.setPlanetName(cells.get(1).text());
+                    planet.setCardImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\planet_" + planet.getCardId() + ".png");
+                    planet.setCardName(cells.get(1).text());
                     planet.setPlanetAddition(cells.get(2).text());
                     planet.setPlanetPokerHand(cells.get(3).text());
                     planet.setPlanetHandBaseScore(cells.get(4).text());

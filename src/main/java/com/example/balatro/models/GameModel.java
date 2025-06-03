@@ -12,13 +12,14 @@ import java.util.*;
 public class GameModel {
 
     //region ATTRIBUTES
-    //region Lists of All Data (Tag, Blind, Booster, Voucher, Planet, Joker)
+    //region Lists of All Data (Tag, Blind, Joker, Tarot. Planet, Booster, Voucher, PokerHand)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
-    private final List<Booster> boosterList = SqlHandler.getAllBooster();
-    private final List<Voucher> voucherList = SqlHandler.getAllVoucher();
-    private final List<Planet> planetList = SqlHandler.getAllPlanets();
-    private final List<Joker> jokerList = SqlHandler.getAllJokers();
+    private final List<Joker> allJokerList = SqlHandler.getAllJokers();
+    private final List<Tarot> allTarotList = SqlHandler.getAllTarots();
+    private final List<Planet> allPlanetList = SqlHandler.getAllPlanets();
+    private final List<Booster> allBoosterList = SqlHandler.getAllBooster();
+    private final List<Voucher> allVoucherList = SqlHandler.getAllVoucher();
     private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
     //endregion
 
@@ -36,11 +37,10 @@ public class GameModel {
     //endregion
 
     //region GAME SETTINGS VAR
+    private Random rand;
     private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>(new Deck());
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
-    private Random rand;
     private final ObjectProperty<Blind> activeBlind = new SimpleObjectProperty<>(new Blind());
-
     private final IntegerProperty maxJokers = new SimpleIntegerProperty(5);
     private final IntegerProperty maxConsumables = new SimpleIntegerProperty(2);
     //endregion
@@ -100,15 +100,47 @@ public class GameModel {
     public ObjectProperty<BigDecimal> pointsScoredProperty = new SimpleObjectProperty<>(new BigDecimal(0));
     //endregion
 
+    //region Voucher Flags
+    private final BooleanProperty TarotMerchantVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty TarotTycoonVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty PlanetMerchantVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty PlanetTycoonVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty MagicTrickVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty IllusionVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty HoneVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty GlowUpVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty ClearanceSaleVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty LiquidationVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty RerollSurplusVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty RerollGlutVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty CrystalBallVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty OmenGlobeVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty TelescopeVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty ObservatoryVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty GrabberVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty NachoTongVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty WastefulVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty RecyclomancyVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty SeedMoneyVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty MoneyTreeVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty BlankVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty AntimatterVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty HieroglyphVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty PetroglyphVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty DirectorsCutVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty RetconVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty PaintBrushVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty PaletteVoucher = new SimpleBooleanProperty(false);
+    //endregion
+
     //endregion
 
     //region CONSTRUCTOR
     public GameModel() {
         scoredPoints.addListener((observable, oldValue, newValue) -> {
-            System.out.println("points reached old: " + oldValue);
-            System.out.println("points reached new: " + newValue);
-
-            System.out.println("Compare result: " + newValue.compareTo(getScoreToReach()));
+//            System.out.println("points reached old: " + oldValue);
+//            System.out.println("points reached new: " + newValue);
+//            System.out.println("Compare result: " + newValue.compareTo(getScoreToReach()));
             pointsReachedProperty().set(newValue.compareTo(getScoreToReach()) > -1);
         });
     }
@@ -129,20 +161,28 @@ public class GameModel {
         return allBlindsList;
     }
 
-    public List<Booster> getBoosterList() {
-        return boosterList;
+    public List<Booster> getAllBoosterList() {
+        return allBoosterList;
     }
 
-    public List<Voucher> getVoucherList() {
-        return voucherList;
+    public List<Voucher> getAllVoucherList() {
+        return allVoucherList;
     }
 
-    public List<Planet> getPlanetList() {
-        return planetList;
+    public List<Tarot> getAllTarotList() {
+        return allTarotList;
     }
 
-    public List<Joker> getJokerList() {
-        return jokerList;
+    public List<Planet> getAllPlanetList() {
+        return allPlanetList;
+    }
+
+    public List<PokerHand> getAllPokerHandList() {
+        return allPokerHandList;
+    }
+
+    public List<Joker> getAllJokerList() {
+        return allJokerList;
     }
 
     //endregion
@@ -803,6 +843,248 @@ public class GameModel {
     }
     //endregion
 
+    //region Voucher Flags
+    public boolean isTarotMerchantVoucher() {
+        return TarotMerchantVoucher.get();
+    }
+
+    public BooleanProperty tarotMerchantVoucherProperty() {
+        return TarotMerchantVoucher;
+    }
+
+    public boolean isTarotTycoonVoucher() {
+        return TarotTycoonVoucher.get();
+    }
+
+    public BooleanProperty tarotTycoonVoucherProperty() {
+        return TarotTycoonVoucher;
+    }
+
+    public boolean isPlanetMerchantVoucher() {
+        return PlanetMerchantVoucher.get();
+    }
+
+    public BooleanProperty planetMerchantVoucherProperty() {
+        return PlanetMerchantVoucher;
+    }
+
+    public boolean isPlanetTycoonVoucher() {
+        return PlanetTycoonVoucher.get();
+    }
+
+    public BooleanProperty planetTycoonVoucherProperty() {
+        return PlanetTycoonVoucher;
+    }
+
+    public boolean isMagicTrickVoucher() {
+        return MagicTrickVoucher.get();
+    }
+
+    public BooleanProperty magicTrickVoucherProperty() {
+        return MagicTrickVoucher;
+    }
+
+    public boolean isIllusionVoucher() {
+        return IllusionVoucher.get();
+    }
+
+    public BooleanProperty illusionVoucherProperty() {
+        return IllusionVoucher;
+    }
+
+    public boolean isHoneVoucher() {
+        return HoneVoucher.get();
+    }
+
+    public BooleanProperty honeVoucherProperty() {
+        return HoneVoucher;
+    }
+
+    public boolean isGlowUpVoucher() {
+        return GlowUpVoucher.get();
+    }
+
+    public BooleanProperty glowUpVoucherProperty() {
+        return GlowUpVoucher;
+    }
+
+    public boolean isClearanceSaleVoucher() {
+        return ClearanceSaleVoucher.get();
+    }
+
+    public BooleanProperty clearanceSaleVoucherProperty() {
+        return ClearanceSaleVoucher;
+    }
+
+    public boolean isLiquidationVoucher() {
+        return LiquidationVoucher.get();
+    }
+
+    public BooleanProperty liquidationVoucherProperty() {
+        return LiquidationVoucher;
+    }
+
+    public boolean isRerollSurplusVoucher() {
+        return RerollSurplusVoucher.get();
+    }
+
+    public BooleanProperty rerollSurplusVoucherProperty() {
+        return RerollSurplusVoucher;
+    }
+
+    public boolean isRerollGlutVoucher() {
+        return RerollGlutVoucher.get();
+    }
+
+    public BooleanProperty rerollGlutVoucherProperty() {
+        return RerollGlutVoucher;
+    }
+
+    public boolean isCrystalBallVoucher() {
+        return CrystalBallVoucher.get();
+    }
+
+    public BooleanProperty crystalBallVoucherProperty() {
+        return CrystalBallVoucher;
+    }
+
+    public boolean isOmenGlobeVoucher() {
+        return OmenGlobeVoucher.get();
+    }
+
+    public BooleanProperty omenGlobeVoucherProperty() {
+        return OmenGlobeVoucher;
+    }
+
+    public boolean isTelescopeVoucher() {
+        return TelescopeVoucher.get();
+    }
+
+    public BooleanProperty telescopeVoucherProperty() {
+        return TelescopeVoucher;
+    }
+
+    public boolean isObservatoryVoucher() {
+        return ObservatoryVoucher.get();
+    }
+
+    public BooleanProperty observatoryVoucherProperty() {
+        return ObservatoryVoucher;
+    }
+
+    public boolean isGrabberVoucher() {
+        return GrabberVoucher.get();
+    }
+
+    public BooleanProperty grabberVoucherProperty() {
+        return GrabberVoucher;
+    }
+
+    public boolean isNachoTongVoucher() {
+        return NachoTongVoucher.get();
+    }
+
+    public BooleanProperty nachoTongVoucherProperty() {
+        return NachoTongVoucher;
+    }
+
+    public boolean isWastefulVoucher() {
+        return WastefulVoucher.get();
+    }
+
+    public BooleanProperty wastefulVoucherProperty() {
+        return WastefulVoucher;
+    }
+
+    public boolean isRecyclomancyVoucher() {
+        return RecyclomancyVoucher.get();
+    }
+
+    public BooleanProperty recyclomancyVoucherProperty() {
+        return RecyclomancyVoucher;
+    }
+
+    public boolean isSeedMoneyVoucher() {
+        return SeedMoneyVoucher.get();
+    }
+
+    public BooleanProperty seedMoneyVoucherProperty() {
+        return SeedMoneyVoucher;
+    }
+
+    public boolean isMoneyTreeVoucher() {
+        return MoneyTreeVoucher.get();
+    }
+
+    public BooleanProperty moneyTreeVoucherProperty() {
+        return MoneyTreeVoucher;
+    }
+
+    public boolean isBlankVoucher() {
+        return BlankVoucher.get();
+    }
+
+    public BooleanProperty blankVoucherProperty() {
+        return BlankVoucher;
+    }
+
+    public boolean isAntimatterVoucher() {
+        return AntimatterVoucher.get();
+    }
+
+    public BooleanProperty antimatterVoucherProperty() {
+        return AntimatterVoucher;
+    }
+
+    public boolean isHieroglyphVoucher() {
+        return HieroglyphVoucher.get();
+    }
+
+    public BooleanProperty hieroglyphVoucherProperty() {
+        return HieroglyphVoucher;
+    }
+
+    public boolean isPetroglyphVoucher() {
+        return PetroglyphVoucher.get();
+    }
+
+    public BooleanProperty petroglyphVoucherProperty() {
+        return PetroglyphVoucher;
+    }
+
+    public boolean isDirectorsCutVoucher() {
+        return DirectorsCutVoucher.get();
+    }
+
+    public BooleanProperty directorsCutVoucherProperty() {
+        return DirectorsCutVoucher;
+    }
+
+    public boolean isRetconVoucher() {
+        return RetconVoucher.get();
+    }
+
+    public BooleanProperty retconVoucherProperty() {
+        return RetconVoucher;
+    }
+
+    public boolean isPaintBrushVoucher() {
+        return PaintBrushVoucher.get();
+    }
+
+    public BooleanProperty paintBrushVoucherProperty() {
+        return PaintBrushVoucher;
+    }
+
+    public boolean isPaletteVoucher() {
+        return PaletteVoucher.get();
+    }
+
+    public BooleanProperty paletteVoucherProperty() {
+        return PaletteVoucher;
+    }
+
+    //endregion
     //endregion
 
 }

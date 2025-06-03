@@ -118,13 +118,13 @@ public class SqlHandler {
                     query += JokerCardsTableColumns + " VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1, ((Joker) listItem).getCardId());
-                    ps.setString(2, ((Joker) listItem).getCardFrontCoverUrl());
-                    ps.setString(3, ((Joker) listItem).getName());
-                    ps.setString(4, ((Joker) listItem).getDescription());
-                    ps.setInt(5, ((Joker) listItem).getCost());
+                    ps.setString(2, ((Joker) listItem).getCardImageUrl());
+                    ps.setString(3, ((Joker) listItem).getCardName());
+                    ps.setString(4, ((Joker) listItem).getCardDescription());
+                    ps.setInt(5, ((Joker) listItem).getCardCost());
                     ps.setString(6, ((Joker) listItem).getRarity());
                     ps.setString(7, ((Joker) listItem).getUnlockRequirement());
-                    ps.setString(8, ((Joker) listItem).getType());
+                    ps.setString(8, ((Joker) listItem).getCardType());
                     ps.setString(9, ((Joker) listItem).getActTiming());
                     ps.executeUpdate();
                 } else if (listItem.getClass() == Deck.class) {
@@ -174,8 +174,8 @@ public class SqlHandler {
                     query += PlanetCardsTableColumns + "VALUES (?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
                     ps.setInt(1, ((Planet) listItem).getCardId());
-                    ps.setString(2, ((Planet) listItem).getPlanetImageUrl());
-                    ps.setString(3, ((Planet) listItem).getPlanetName());
+                    ps.setString(2, ((Planet) listItem).getCardImageUrl());
+                    ps.setString(3, ((Planet) listItem).getCardName());
                     ps.setString(4, ((Planet) listItem).getPlanetAddition());
                     ps.setString(5, ((Planet) listItem).getPlanetPokerHand());
                     ps.setString(6, ((Planet) listItem).getPlanetHandBaseScore());
@@ -415,14 +415,15 @@ public class SqlHandler {
             while (rs.next()) {
                 Joker joker = new Joker();
 
+                joker.setCardType("Joker");
                 joker.setCardId(rs.getInt(1));
-                joker.setJokerImageUrl(rs.getString(2));
-                joker.setName(rs.getString(3));
-                joker.setJokerDescription(rs.getString(4));
-                joker.setCost(rs.getInt(5));
+                joker.setCardImageUrl(rs.getString(2));
+                joker.setCardName(rs.getString(3));
+                joker.setCardDescription(rs.getString(4));
+                joker.setCardCost(rs.getInt(5));
                 joker.setRarity(rs.getString(6));
                 joker.setUnlockRequirement(rs.getString(7));
-                joker.setType(rs.getString(8));
+                joker.setCardType(rs.getString(8));
                 joker.setActTiming(rs.getString(9));
                 joker.setTriggers(getTrigger(rs.getString(10), rs.getString(11)));
                 joker.setParams(rs.getString(12));
@@ -504,9 +505,10 @@ public class SqlHandler {
             while (rs.next()) {
                 Planet planet = new Planet();
 
-                planet.setPlanetId(rs.getInt(1));
-                planet.setPlanetImageUrl(rs.getString(2));
-                planet.setPlanetName(rs.getString(3));
+                planet.setCardType("Planet");
+                planet.setCardId(rs.getInt(1));
+                planet.setCardImageUrl(rs.getString(2));
+                planet.setCardName(rs.getString(3));
                 planet.setPlanetAddition(rs.getString(4));
                 planet.setPlanetPokerHand(rs.getString(5));
                 planet.setPlanetHandBaseScore(rs.getString(6));
@@ -519,6 +521,32 @@ public class SqlHandler {
         }
 
         return planets;
+    }
+
+    public static List<Tarot> getAllTarots() {
+        //(id, tarotImage, tarotName, tarotDescription)
+        List<Tarot> tarots = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM TarotCards";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Tarot tarot = new Tarot();
+
+                tarot.setCardType("Tarot");
+                tarot.setCardId(rs.getInt(1));
+                tarot.setTarotImageUrl(rs.getString(2));
+                tarot.setTarotName(rs.getString(3));
+                tarot.setTarotDescription(rs.getString(4));
+
+                tarots.add(tarot);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return tarots;
     }
 
     public static List<PokerHand> getAllPokerHands() {

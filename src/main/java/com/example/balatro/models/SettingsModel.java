@@ -2,6 +2,7 @@ package com.example.balatro.models;
 
 import com.example.balatro.Balatro;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ public class SettingsModel {
     private Screen screen;
     private final DoubleProperty windowWidth = new SimpleDoubleProperty();
     private final DoubleProperty windowHeight = new SimpleDoubleProperty();
+    private final DoubleProperty cardHeight = new SimpleDoubleProperty(0);
 
     //region Game Settings
     private final IntegerProperty gameSpeed = new SimpleIntegerProperty();
@@ -63,6 +65,11 @@ public class SettingsModel {
 
     //region Constructor
     public SettingsModel() {
+        windowHeightProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("Window height: " + newVal);
+            cardHeightProperty().set((double)newVal * 0.20138);
+        });
+
     }
     //endregion
 
@@ -89,6 +96,14 @@ public class SettingsModel {
 
     public void setWindowHeight(double windowHeight) {
         this.windowHeight.set(windowHeight);
+    }
+
+    public double getCardHeight() {
+        return cardHeight.get();
+    }
+
+    public DoubleProperty cardHeightProperty() {
+        return cardHeight;
     }
 
     public int getGameSpeed() {

@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Booster extends ImageView {
-
     private static final DoubleProperty imageHeightProperty = new SimpleDoubleProperty();
     private static final DoubleProperty imageWidthProperty = new SimpleDoubleProperty();
 
