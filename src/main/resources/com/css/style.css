@@ -94,6 +94,13 @@
     -fx-background-color: #1e563f;
 }
 
+.buy-background {
+    -fx-background-color: #ff9700;
+}
+
+.sell-background {
+    -fx-background-color: #34bd85;
+}
 /* */
 .info-label {
     -fx-background-color: #333;

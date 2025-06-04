@@ -3,6 +3,7 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -10,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
@@ -17,11 +20,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ShopPartController {
 
-    public AnchorPane rotatedLabel_AnchorPane;
-    public Label rotatedLabel;
+    @FXML
+    private AnchorPane rotatedLabel_AnchorPane;
+    @FXML
+    private Label rotatedLabel;
     @FXML
     private AnchorPane shopAnchorPane;
     @FXML
@@ -39,23 +45,12 @@ public class ShopPartController {
     private final ObservableList<Voucher> voucherList = FXCollections.observableArrayList();
 
     private final ObservableList<Node> cardNodes = FXCollections.observableArrayList();
+    private final List<CardViewController> controllerList = new ArrayList<>();
 
     private int maxItems = 2;
     private int maxBoosters = 2;
 
     public void initialize() {
-        /*shopList.addListener((ListChangeListener<? super Card>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    shopArea.getChildren().addAll(change.getAddedSubList());
-                }
-                if (change.wasRemoved()) {
-                    shopArea.getChildren().removeAll(change.getRemoved());
-                }
-            }
-            moveItems(shopArea, 200);
-        });*/
-
         cardNodes.addListener((ListChangeListener<? super Node>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -67,7 +62,6 @@ public class ShopPartController {
             }
             moveItems(shopArea, 200);
         });
-
         boosterList.addListener((ListChangeListener<? super Booster>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -92,12 +86,24 @@ public class ShopPartController {
             }
             moveItems(voucherArea, 200);
         });
+
+        shopArea.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
+
+            if(source instanceof ImageView) {
+                AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
+                CardViewController controller = controllerList.get(shopArea.getChildren().indexOf(source.getParent().getParent().getParent()));
+
+                controller.setIsSelected(!controller.isIsSelected());
+                cardPane.translateYProperty().bind(Bindings.createDoubleBinding(() -> controller.isIsSelected() ? -50.0 : 0.0));
+
+            }
+        });
     }
 
     public void restockShop() {
 //        System.out.println("restockShop");
-        //drawItems();
-        testDrawItems();
+        drawItems();
         drawBooster();
         drawVoucher();
     }
@@ -109,28 +115,6 @@ public class ShopPartController {
     }
 
     private void drawItems() {
-        shopList.clear();
-        for (int i = 0; i < maxItems; i++) {
-            shopList.add(getRandomCard());
-        }
-//        System.out.println("Shop List Items: " + shopList.size());
-//        System.out.println("Shop Area Children: " + shopArea.getChildren().size());
-//        for (Card card : shopList) {
-//            System.out.println(card);
-//            if (card instanceof Joker) {
-//                System.out.println("Joker Card: " + ((Joker)card).getName());
-//            }
-//            if (card instanceof Tarot) {
-//                System.out.println("Tarot Card: " + ((Tarot)card).getName());
-//            }
-//            if (card instanceof Planet) {
-//                System.out.println("Planet Card: " + ((Planet)card).getName());
-//            }
-//        }
-//        System.out.println("______________________________________________________");
-    }
-
-    private void testDrawItems() {
         cardNodes.clear();
         for (int i = 0; i < maxItems; i++) {
             cardNodes.add(createCardNode(getRandomCard(),true,true));
@@ -180,7 +164,6 @@ public class ShopPartController {
 //        System.out.println("Spectral Card percentage: " + spectralCardPercentage);
 
         double itemChance = gameModel.getRand().nextInt(100) +1;
-
 //        System.out.println("itemChance: " + itemChance);
 //        System.out.println("joker chance: " + jokerPercentage);
 //        System.out.println("tarot chance: " + (jokerPercentage + tarotPercentage));
@@ -189,7 +172,6 @@ public class ShopPartController {
 //        System.out.println("Joker boolean: " + (itemChance < jokerPercentage));
 //        System.out.println("Tarot boolean: " + (itemChance < (jokerPercentage + tarotPercentage)));
 //        System.out.println("Planet boolean: " + (itemChance < (jokerPercentage + tarotPercentage + playingCardPercentage)));
-
 
         if (itemChance < jokerPercentage) {
 //            System.out.println("Joker will be picked");
@@ -229,12 +211,7 @@ public class ShopPartController {
     }
 
     private Joker getJokerFilteredByRarity(String rarity) {
-        List<Joker> jokerList = new ArrayList<>();
-        for (Joker x : gameModel.getAllJokerList()) {
-            if (Objects.equals(x.getRarity(), rarity)) {
-                jokerList.add(x);
-            }
-        }
+        List<Joker> jokerList = gameModel.getAllJokerList().stream().filter(x -> Objects.equals(x.getRarity(), rarity)).collect(Collectors.toList());
         return jokerList.get(gameModel.getRand().nextInt(jokerList.size()));
     }
     //endregion
@@ -338,9 +315,9 @@ public class ShopPartController {
 
         for(int i = 0; i < cards; i++) {
                 if(cards%2==0) {
-                    pos = width/2 + i * width - cards/2*width + i * 5;
+                    pos = width/2 + i * width - cards/2*width + i * 10;
                 } else {
-                    pos = i * width - cards/2*width + i * 5;
+                    pos = i * width - cards/2*width + i * 10;
                 }
         stackPane.getChildren().get(i).setTranslateX(pos);
         }
@@ -352,7 +329,9 @@ public class ShopPartController {
             AnchorPane cardPane = loader.load();
 
             CardViewController controller = loader.getController();
+            controllerList.add(controller);
             controller.setData(card, showBuy, showSell);
+            controller.setInShop(true);
 
             return cardPane;
         } catch (IOException e) {
