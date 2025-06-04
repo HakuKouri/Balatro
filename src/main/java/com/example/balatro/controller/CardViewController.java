@@ -3,10 +3,7 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.Card;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -37,13 +34,27 @@ public class CardViewController {
     @FXML
     private Label sellLabel;
 
-    //region
+
+    //region Properties
+    private ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
     private final BooleanProperty inShop = new SimpleBooleanProperty(false);
     private final StringProperty cardType = new SimpleStringProperty("");
     private final BooleanProperty isSelected = new SimpleBooleanProperty(false);
     //endregion
 
     //region Getter Setter
+    public Card getCard() {
+        return card.get();
+    }
+
+    public ObjectProperty<Card> cardProperty() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card.set(card);
+    }
+
     public boolean isInShop() {
         return inShop.get();
     }
@@ -77,7 +88,7 @@ public class CardViewController {
     }
 
     public void setIsSelected(boolean isSelected) {
-        this.isSelected.set(isSelected);
+        isSelectedProperty().set(isSelected);
     }
 
     //endregion
@@ -87,30 +98,21 @@ public class CardViewController {
         buy_AnchorPane.visibleProperty().bind(isSelectedProperty());
         sell_AnchorPane.visibleProperty().bind(isSelectedProperty());
 
-
+        priceLabel.textProperty().bind(Bindings.createStringBinding(() -> "$ " + card.get().getMaxCost(), card.get().maxCostProperty()));
     }
 
-    public void setData(Card card, boolean showBuy, boolean showSell) {
-        //card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding( () ->  cardImage.fitWidthProperty().get() + 300, cardImage.fitWidthProperty()));
-        card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .1296, Balatro.getSettings().windowWidthProperty()));
-
+    public void setData(Card card) {
+        card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
+        getCard().setCard(card);
         if (card.getCardImageUrl() != null) {
             cardImage.setImage(card.getImage());
             cardImage.setFitHeight(Balatro.getSettings().getCardHeight());
             cardImage.setPreserveRatio(true);
-            System.out.println("Card Width: " + cardImage.getFitWidth());
+
             cardImage.setOnMouseClicked(event -> {
-                System.out.println("Card Width: " + cardImage.getFitWidth());
-                System.out.println("Card Width: " + cardImage.getImage().getWidth());
-                System.out.println("Card Height: " + cardImage.getFitHeight());
-                System.out.println("Card Height: " + cardImage.getImage().getHeight());
+
             });
         }
-
-        priceLabel.setText("$" + card.getCardCost());
-
-        buyLabel.setVisible(showBuy);
-        sellLabel.setVisible(showSell);
     }
 
     public String getImageUrl() {

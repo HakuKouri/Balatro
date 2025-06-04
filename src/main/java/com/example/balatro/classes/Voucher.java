@@ -1,99 +1,86 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Voucher extends Card
 {
-    private int voucherId;
-    private String voucherBaseImageUrl;
-    private String voucherUpgradeImageUrl;
-    private String voucherBaseName;
-    private String voucherUpgradeName;
-    private String voucherBaseEffect;
-    private String voucherUpgradeEffect;
-    private String voucherUpgradeUnlockCondition;
-    private String voucherNotes;
+    //region Properties
+    private final StringProperty voucherEffect = new SimpleStringProperty("");
+    private final StringProperty voucherUpgradeFrom = new SimpleStringProperty("");
+    private final StringProperty voucherUnlockCondition = new SimpleStringProperty("");
+    private final StringProperty voucherNotes = new SimpleStringProperty("");
+    //endregion
 
-    public int getVoucherId() {
-        return voucherId;
+    //region Constructor
+    public Voucher() {
+
+    }
+    //endregion
+
+    //region Getter Setter
+    public String getVoucherEffect() {
+        return voucherEffect.get();
     }
 
-    public void setVoucherId(int voucherId) {
-        this.voucherId = voucherId;
+    public StringProperty voucherEffectProperty() {
+        return voucherEffect;
     }
 
-    public String getVoucherBaseImageUrl()
-    {
-        return voucherBaseImageUrl;
+    public void setVoucherEffect(String voucherEffect) {
+        this.voucherEffect.set(voucherEffect);
     }
 
-    public void setVoucherBaseImageUrl(String voucherBaseImageUrl)
-    {
-        this.voucherBaseImageUrl = voucherBaseImageUrl;
+    public String getVoucherUpgradeFrom() {
+        return voucherUpgradeFrom.get();
     }
 
-    public String getVoucherUpgradeImageUrl()
-    {
-        return voucherUpgradeImageUrl;
+    public StringProperty voucherUpgradeFromProperty() {
+        return voucherUpgradeFrom;
     }
 
-    public void setVoucherUpgradeImageUrl(String voucherUpgradeImageUrl) {
-        this.voucherUpgradeImageUrl = voucherUpgradeImageUrl;
+    public void setVoucherUpgradeFrom(String voucherUpgradeFrom) {
+        this.voucherUpgradeFrom.set(voucherUpgradeFrom);
     }
 
-    public String getVoucherBaseName()
-    {
-        return voucherBaseName;
+    public String getVoucherUnlockCondition() {
+        return voucherUnlockCondition.get();
     }
 
-    public void setVoucherBaseName(String voucherBaseName)
-    {
-        this.voucherBaseName = voucherBaseName;
+    public StringProperty voucherUnlockConditionProperty() {
+        return voucherUnlockCondition;
     }
 
-    public String getVoucherUpgradeName()
-    {
-        return voucherUpgradeName;
+    public void setVoucherUnlockCondition(String voucherUnlockCondition) {
+        this.voucherUnlockCondition.set(voucherUnlockCondition);
     }
 
-    public void setVoucherUpgradeName(String voucherUpgradeName)
-    {
-        this.voucherUpgradeName = voucherUpgradeName;
+    public String getVoucherNotes() {
+        return voucherNotes.get();
     }
 
-    public String getVoucherBaseEffect()
-    {
-        return voucherBaseEffect;
-    }
-
-    public void setVoucherBaseEffect(String voucherBaseEffect)
-    {
-        this.voucherBaseEffect = voucherBaseEffect;
-    }
-
-    public String getVoucherUpgradeEffect()
-    {
-        return voucherUpgradeEffect;
-    }
-
-    public void setVoucherUpgradeEffect(String voucherUpgradeEffect) {
-        this.voucherUpgradeEffect = voucherUpgradeEffect;
-    }
-
-    public String getVoucherUpgradeUnlockCondition()
-    {
-        return voucherUpgradeUnlockCondition;
-    }
-
-    public void setVoucherUpgradeUnlockCondition(String voucherUpgradeUnlockCondition) {
-        this.voucherUpgradeUnlockCondition = voucherUpgradeUnlockCondition;
-    }
-
-    public String getVoucherNotes()
-    {
+    public StringProperty voucherNotesProperty() {
         return voucherNotes;
     }
 
-    public void setVoucherNotes(String voucherNotes)
-    {
-        this.voucherNotes = voucherNotes;
+    public void setVoucherNotes(String voucherNotes) {
+        this.voucherNotes.set(voucherNotes);
     }
+    //endregion
+
+    //region Functions
+    public void setVoucher(Voucher voucher) {
+        setCardId(voucher.getCardId());
+        setCardImageUrl(voucher.getCardImageUrl());
+        setCardName(voucher.getCardName());
+        setCardCost(voucher.getCardCost());
+        setVoucherEffect(voucher.getVoucherEffect());
+        setVoucherUpgradeFrom(voucher.getVoucherUpgradeFrom());
+        setVoucherUnlockCondition(voucher.getVoucherUnlockCondition());
+        setVoucherNotes(voucher.getVoucherNotes());
+        setCardType(voucher.getCardType());
+    }
+    //endregion
 }

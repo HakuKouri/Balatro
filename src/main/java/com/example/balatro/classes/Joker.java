@@ -127,6 +127,7 @@ public class Joker extends Card {
         setCardImageUrl(joker.getCardImageUrl());
         setCardName(joker.getCardName());
         setCardDescription(joker.getCardDescription());
+        setCardCost(joker.getCardCost());
         setActTiming(joker.getActTiming());
         setRarity(joker.getRarity());
         setUnlockRequirement(joker.getUnlockRequirement());

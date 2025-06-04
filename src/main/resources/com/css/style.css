@@ -101,6 +101,8 @@
 .sell-background {
     -fx-background-color: #34bd85;
 }
+
+
 /* */
 .info-label {
     -fx-background-color: #333;
@@ -190,6 +192,70 @@
 
 .bgr-20 {
     -fx-background-radius: 20;
+}
+
+.bgr-l-5 {
+    -fx-background-radius: 5 0 0 5;
+}
+
+.bgr-l-10 {
+    -fx-background-radius: 10 0 0 10;
+}
+
+.bgr-l-15 {
+    -fx-background-radius: 15 0 0 15;
+}
+
+.bgr-l-20 {
+    -fx-background-radius: 20 0 0 20;
+}
+
+.bgr-r-5 {
+    -fx-background-radius: 0 5 5 0;
+}
+
+.bgr-r-10 {
+    -fx-background-radius: 0 10 10 0;
+}
+
+.bgr-r-15 {
+    -fx-background-radius: 0 15 15 0;
+}
+
+.bgr-r-20 {
+    -fx-background-radius: 0 20 20 0;
+}
+
+.bgr-b-5 {
+    -fx-background-radius: 0 0 5 5;
+}
+
+.bgr-b-10 {
+    -fx-background-radius: 0 0 10 10;
+}
+
+.bgr-b-15 {
+    -fx-background-radius: 0 0 15 15;
+}
+
+.bgr-b-20 {
+    -fx-background-radius: 0 0 20 20;
+}
+
+.bgr-t-5 {
+    -fx-background-radius: 5 5 0 0;
+}
+
+.bgr-t-10 {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.bgr-t-15 {
+    -fx-background-radius: 15 15 0 0;
+}
+
+.bgr-t-20 {
+    -fx-background-radius: 20 20 0 0;
 }
 
 /* Border Radius */

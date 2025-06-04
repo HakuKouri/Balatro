@@ -17,9 +17,9 @@ public class Card extends ImageView
     protected StringProperty cardName = new SimpleStringProperty("");
     protected StringProperty cardImageUrl = new SimpleStringProperty("");
     protected StringProperty cardDescription = new SimpleStringProperty("");
-    protected IntegerProperty cardCost = new SimpleIntegerProperty(-1);
-    protected IntegerProperty maxCost = new SimpleIntegerProperty(-1);
-    protected IntegerProperty editionCost = new SimpleIntegerProperty(-1);
+    protected IntegerProperty cardCost = new SimpleIntegerProperty(0);
+    protected IntegerProperty maxCost = new SimpleIntegerProperty(0);
+    protected IntegerProperty editionCost = new SimpleIntegerProperty(0);
     //endregion
 
     //region Constructor
@@ -29,7 +29,7 @@ public class Card extends ImageView
 
             setFitHeight(Balatro.getSettings().getCardHeight());
             setPreserveRatio(true);
-            setFitWidth(getImage().getWidth());
+            //setFitWidth(getImage().getWidth());
         });
         maxCostProperty().bind(Bindings.createIntegerBinding(() ->
             cardCost.add(editionCost).intValue(),
@@ -119,10 +119,6 @@ public class Card extends ImageView
         return maxCost;
     }
 
-    public void setMaxCost(int maxCost) {
-        this.maxCost.set(maxCost);
-    }
-
     public int getEditionCost() {
         return editionCost.get();
     }
@@ -145,7 +141,6 @@ public class Card extends ImageView
         setCardDescription(card.getCardDescription());
         setCardCost(card.getCardCost());
         setEditionCost(card.getEditionCost());
-        setMaxCost(card.getMaxCost());
     }
 
 }

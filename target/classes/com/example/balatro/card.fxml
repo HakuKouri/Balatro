@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
@@ -14,8 +15,8 @@
    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
      <columnConstraints>
          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="19.0" />
-         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="27.0" />
-         <ColumnConstraints fx:id="imageColumn" halignment="CENTER" hgrow="SOMETIMES" percentWidth="19.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="19.0" />
        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
      </columnConstraints>
      <rowConstraints>
@@ -26,7 +27,7 @@
          <RowConstraints percentHeight="16.9" valignment="TOP" vgrow="SOMETIMES" />
      </rowConstraints>
       <children>
-         <AnchorPane fx:id="price_AnchorPane" styleClass="background-dark" GridPane.columnIndex="1">
+         <AnchorPane fx:id="price_AnchorPane" GridPane.columnIndex="1">
             <children>
             
                 <Label fx:id="priceLabel" alignment="CENTER" style="-fx-font-size: 14; -fx-text-fill: gold;" styleClass="background-light" text="\$..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -34,30 +35,42 @@
             <padding>
                <Insets bottom="20.0" left="10.0" right="10.0" top="5.0" />
             </padding>
+            <styleClass>
+               <String fx:value="background-dark" />
+               <String fx:value="bgr-t-20" />
+            </styleClass>
          </AnchorPane>
-         <AnchorPane fx:id="buy_AnchorPane" styleClass="buy-background" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <AnchorPane fx:id="buy_AnchorPane" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <children>
             
-                <Label fx:id="buyLabel" alignment="CENTER" text="BUY" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Label fx:id="buyLabel" alignment="CENTER" text="BUY" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
+            <styleClass>
+               <String fx:value="buy-background" />
+               <String fx:value="bgr-b-20" />
+            </styleClass>
          </AnchorPane>
-         <AnchorPane fx:id="sell_AnchorPane" styleClass="sell-background" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <AnchorPane fx:id="sell_AnchorPane" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="CENTER">
             <children>
             
-                <Label fx:id="sellLabel" alignment="CENTER" text="SELL" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <Label fx:id="sellLabel" alignment="CENTER_RIGHT" text="SELL" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <font>
                      <Font size="14.0" />
                   </font>
                </Label>
             </children>
             <GridPane.margin>
-               <Insets left="-10.0" />
+               <Insets left="-20.0" />
             </GridPane.margin>
+            <styleClass>
+               <String fx:value="sell-background" />
+               <String fx:value="bgr-r-20" />
+            </styleClass>
          </AnchorPane>
-         <StackPane GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.rowSpan="3">
+         <StackPane GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3">
             <children>
             
-                <ImageView fx:id="cardImage" fitHeight="290.0" fitWidth="220.0" StackPane.alignment="CENTER" />
+                <ImageView fx:id="cardImage" StackPane.alignment="CENTER" />
             </children>
          </StackPane>
       </children>

@@ -21,6 +21,7 @@ public class GameModel {
     private final List<Booster> allBoosterList = SqlHandler.getAllBooster();
     private final List<Voucher> allVoucherList = SqlHandler.getAllVoucher();
     private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
+    private List<Spectral> allSpectralList = SqlHandler.getAllSpectrals();
     //endregion
 
     //region Run Lists
@@ -185,6 +186,9 @@ public class GameModel {
         return allJokerList;
     }
 
+    public List<Spectral> getAllSpectralList() {
+        return allSpectralList;
+    }
     //endregion
 
     //region Full Deck

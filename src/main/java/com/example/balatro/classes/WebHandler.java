@@ -24,7 +24,7 @@ public class WebHandler
         getStakeWithWebHandler();
         getTagWithWebHandler();
         getTarotWithWebHandler();
-        getVoucherWithWebHandler();
+        //getVoucherWithWebHandler();
         getSealWithWebHandler();
     }
 
@@ -211,8 +211,8 @@ public class WebHandler
                 try
                 {
                     tarot.setCardId(arrayList.size()+1);
-                    tarot.setTarotImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\tarot_" + tarot.getCardId() + ".png");
-                    tarot.setTarotName(cells.get(1).text());
+                    tarot.setCardImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\tarot_" + tarot.getCardId() + ".png");
+                    tarot.setCardName(cells.get(1).text());
                     tarot.setTarotDescription(cells.get(2).text());
 
                 }
@@ -294,42 +294,42 @@ public class WebHandler
         }
 
     }
-    private static void getVoucherWithWebHandler() {
-        ArrayList<Voucher> arrayList = new ArrayList<>();
-        try
-        {
-            Elements rows = Jsoup.connect(urlMain + "Vouchers").get().select("table").get(0).select("tbody > tr");
-            for (Element row : rows)
-            {
-                Voucher voucher = new Voucher();
-
-                Elements cells = row.select("td");
-                if(cells.size() == 0) continue;
-                try
-                {
-                    voucher.setCardId(arrayList.size()+1);
-                    voucher.setVoucherBaseImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_" + voucher.getCardId() + ".png");
-                    voucher.setVoucherBaseName(cells.get(0).text());
-                    voucher.setVoucherUpgradeImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_upgrade_" + voucher.getCardId() + ".png");
-                    voucher.setVoucherUpgradeName(cells.get(2).text());
-                    voucher.setVoucherBaseEffect(cells.get(1).text());
-                    voucher.setVoucherUpgradeEffect(cells.get(3).text());
-                    voucher.setVoucherUpgradeUnlockCondition(cells.get(4).text());
-                    voucher.setVoucherNotes(cells.get(5).text());
-                }
-                catch (Exception e) {
-                    System.out.println("Fehler aufgetreten!! Vouchers: ");
-                    System.out.println(e);
-                }
-                arrayList.add(voucher);
-            }
-            SqlHandler.ListToSql(arrayList, "VoucherCards");
-        } catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-
-    }
+//    private static void getVoucherWithWebHandler() {
+//        ArrayList<Voucher> arrayList = new ArrayList<>();
+//        try
+//        {
+//            Elements rows = Jsoup.connect(urlMain + "Vouchers").get().select("table").get(0).select("tbody > tr");
+//            for (Element row : rows)
+//            {
+//                Voucher voucher = new Voucher();
+//
+//                Elements cells = row.select("td");
+//                if(cells.size() == 0) continue;
+//                try
+//                {
+//                    voucher.setCardId(arrayList.size()+1);
+//                    voucher.setVoucherBaseImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_" + voucher.getCardId() + ".png");
+//                    voucher.setVoucherBaseName(cells.get(0).text());
+//                    voucher.setVoucherUpgradeImageUrl("src\\main\\resources\\com\\images\\Vouchers\\voucher_upgrade_" + voucher.getCardId() + ".png");
+//                    voucher.setVoucherUpgradeName(cells.get(2).text());
+//                    voucher.setVoucherBaseEffect(cells.get(1).text());
+//                    voucher.setVoucherUpgradeEffect(cells.get(3).text());
+//                    voucher.setVoucherUpgradeUnlockCondition(cells.get(4).text());
+//                    voucher.setVoucherNotes(cells.get(5).text());
+//                }
+//                catch (Exception e) {
+//                    System.out.println("Fehler aufgetreten!! Vouchers: ");
+//                    System.out.println(e);
+//                }
+//                arrayList.add(voucher);
+//            }
+//            SqlHandler.ListToSql(arrayList, "Voucher");
+//        } catch (Exception e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
     private static void getTagWithWebHandler() {
         ArrayList<Tag> arrayList = new ArrayList<>();
         try
@@ -453,8 +453,8 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    booster.setBoosterId(arrayList.size()+1);
-                    booster.setBoosterImageUrl("src\\main\\resources\\com\\images\\BoosterPacks\\booster_" + booster.getId() + ".png");
+                    booster.setCardId(arrayList.size()+1);
+                    booster.setCardImageUrl("src\\main\\resources\\com\\images\\BoosterPacks\\booster_" + booster.getId() + ".png");
                     booster.setBoosterCost(cells.get(1).text());
                     booster.setBoosterSize(cells.get(2).text());
                     booster.setBoosterEffect(cells.get(3).text());

@@ -109,6 +109,7 @@ public class Planet extends Card
         setCardId(planet.getCardId());
         setCardImageUrl(planet.getCardImageUrl());
         setCardName(planet.getCardName());
+        setCardCost(planet.getCardCost());
         setPlanetAddition(planet.getPlanetAddition());
         setPlanetPokerHand(planet.getPlanetPokerHand());
         setPlanetHandBaseScore(planet.getPlanetHandBaseScore());

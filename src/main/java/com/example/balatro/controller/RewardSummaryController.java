@@ -147,6 +147,7 @@ public class RewardSummaryController {
         gameModel.addMoney(reward);
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
+        reward = 0;
         GameController.getInstance().restockShop();
     }
 
