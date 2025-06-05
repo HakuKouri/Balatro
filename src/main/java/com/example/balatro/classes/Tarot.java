@@ -27,6 +27,7 @@ public class Tarot extends Card
         setCardName(tarot.getCardName());
         setCardImageUrl(tarot.getCardImageUrl());
         setCardCost(tarot.getCardCost());
+        setCardType(tarot.getCardType());
         setTarotDescription(tarot.getTarotDescription());
     }
 

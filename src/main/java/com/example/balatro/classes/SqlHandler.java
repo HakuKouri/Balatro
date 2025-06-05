@@ -1,5 +1,6 @@
 package com.example.balatro.classes;
 
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.paint.Color;
 
 import java.sql.*;
@@ -124,7 +125,7 @@ public class SqlHandler {
                     ps.setInt(5, ((Joker) listItem).getCardCost());
                     ps.setString(6, ((Joker) listItem).getRarity());
                     ps.setString(7, ((Joker) listItem).getUnlockRequirement());
-                    ps.setString(8, ((Joker) listItem).getCardType());
+                    ps.setString(8, ((Joker) listItem).getJokerType());
                     ps.setString(9, ((Joker) listItem).getActTiming());
                     ps.executeUpdate();
                 } else if (listItem.getClass() == Deck.class) {
@@ -392,6 +393,7 @@ public class SqlHandler {
                 booster.setCardImageUrl(rs.getString(2));
                 booster.setCardName(rs.getString(3));
                 booster.setCardCost(rs.getInt(4));
+                booster.setCardType("Booster");
                 booster.setBoosterSize(rs.getString(5));
                 booster.setBoosterEffect(rs.getString(6));
 
@@ -409,6 +411,7 @@ public class SqlHandler {
 
         try {
             Statement statement = connection.createStatement();
+            //(id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act, triggers, effect_keys, params)
             String statementString = "SELECT * FROM JokerCards";
             ResultSet rs = statement.executeQuery(statementString);
 
@@ -423,7 +426,7 @@ public class SqlHandler {
                 joker.setCardCost(rs.getInt(5));
                 joker.setRarity(rs.getString(6));
                 joker.setUnlockRequirement(rs.getString(7));
-                joker.setCardType(rs.getString(8));
+                joker.setJokerType(rs.getString(8));
                 joker.setActTiming(rs.getString(9));
                 joker.setTriggers(getTrigger(rs.getString(10), rs.getString(11)));
                 joker.setParams(rs.getString(12));

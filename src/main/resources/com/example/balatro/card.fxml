@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="card_AnchorPane" prefHeight="445.0" prefWidth="330.0" style="-fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.CardViewController">
+<AnchorPane fx:id="card_AnchorPane" prefHeight="445.0" prefWidth="330.0" style="-fx-background-color: transparent; -fx-border-color: #f00; -fx-border-width: 5;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.CardViewController">
    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
      <columnConstraints>
          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="19.0" />

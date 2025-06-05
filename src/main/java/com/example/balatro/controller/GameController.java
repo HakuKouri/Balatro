@@ -8,6 +8,7 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ import java.util.*;
 
 public class GameController
 {
+    public RowConstraints holdingHand_GrowRow;
     //region FXML
     @FXML
     private AnchorPane playedCards_AnchorPane;
@@ -275,7 +277,17 @@ public class GameController
         //endregion
 
         //region Joker Space Bind
-        gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
+        gameModel.getActiveJokerMap().addListener((MapChangeListener<? super AnchorPane, ? super CardViewController>) change -> {
+                if(change.wasAdded()) {
+                    spaceJoker.getChildren().addAll(change.getKey());
+                }
+                if(change.wasRemoved()) {
+                    spaceJoker.getChildren().removeAll(change.getKey());
+                }
+
+            moveCards();
+        });
+        /*gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
                     spaceJoker.getChildren().addAll(change.getAddedSubList());
@@ -285,7 +297,7 @@ public class GameController
                 }
             }
             moveCards();
-        });
+        });*/
         //endregion
 
         //region Run Info Binds
@@ -341,9 +353,9 @@ public class GameController
         ));
         //endregion
 
-        //TEST BUTTON
-        testButton.setOnAction(event -> {
-            System.out.println("Card Height: " + Balatro.getSettings().getCardHeight());
+        holdingHand_GrowRow.percentHeightProperty().bind(Bindings.createDoubleBinding(() -> gameModel.isHandButtonVisibility() ? 20.0 : 30.0, gameModel.handButtonVisibilityProperty()));
+
+        if(true) {
             gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(0));
             gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(3));
             gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(4));
@@ -352,6 +364,10 @@ public class GameController
             for (Joker joker : gameModel.getActiveJokerObList()) {
                 joker.setFitHeight(Balatro.getSettings().getCardHeight());
             }
+        }
+        //TEST BUTTON
+        testButton.setOnAction(event -> {
+            gameModel.setMoney(0);
         });
     }
 
@@ -457,6 +473,34 @@ public class GameController
         shopController.restockShop();
     }
 
+    public void buyItem(AnchorPane pane, CardViewController controller) {
+        System.out.printf("Buy item: ");
+        System.out.println(controller.getCard());
+        if(controller.getCard().getCardType() == "Joker") {
+            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
+            controller.isSelectedProperty().set(false);
+            controller.inShopProperty().set(false);
+            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
+            gameModel.getActiveJokerMap().put(pane, controller);
+            shopController.getItemMap().remove(pane);
+            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
+            pane.setOnMouseClicked(mouseEvent -> {
+                System.out.println(controller.getCard());
+                controller.isSelectedProperty().set(!controller.isIsSelected());
+            });
+
+        } else if(controller.getCard().getCardType() == "Tarot") {
+            System.out.printf("Tarot");
+        } else if(controller.getCard().getCardType() == "Planet") {
+            System.out.printf("Planet");
+        } else if(controller.getCard().getCardType() == "Spectral") {
+            System.out.printf("Spectral");
+        } else if(controller.getCard().getCardType() == "PlayingCard") {
+            System.out.printf("PlayingCard");
+        }
+        System.out.println();
+    }
+
     //UI
     private void animateBox(Node node, boolean bool) {
         int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
@@ -469,7 +513,7 @@ public class GameController
     }
 
     public void moveCards() {
-        double cardWidth = 140;
+        double cardWidth = 200;
         double lastPos = spaceJoker.getWidth();
 
         int cards = spaceJoker.getChildren().size();

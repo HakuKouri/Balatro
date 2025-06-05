@@ -76,6 +76,7 @@ public class Booster extends Card {
         setCardImageUrl(booster.getCardImageUrl());
         setCardName(booster.getCardName());
         setCardCost(booster.getCardCost());
+        setCardType(booster.getCardType());
         setBoosterSize(booster.getBoosterSize());
         setBoosterEffect(booster.getBoosterEffect());
     }

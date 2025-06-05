@@ -1,10 +1,12 @@
 package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
+import com.example.balatro.controller.CardViewController;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.scene.layout.AnchorPane;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -63,6 +65,7 @@ public class GameModel {
 
     //region ACTIVE JOKERS
     private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
+    private final ObservableMap<AnchorPane, CardViewController> activeJokerMap = FXCollections.observableHashMap();
     //endregion
 
     //region Collected Consumables
@@ -535,6 +538,10 @@ public class GameModel {
 
     public MapProperty<Joker, IntegerProperty> rocketJokersProperty() {
         return rocketJokers;
+    }
+
+    public ObservableMap<AnchorPane, CardViewController> getActiveJokerMap() {
+        return activeJokerMap;
     }
 
     //endregion

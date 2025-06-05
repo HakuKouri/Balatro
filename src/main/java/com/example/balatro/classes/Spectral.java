@@ -70,6 +70,7 @@ public class Spectral extends Card
         this.setCardId(spectral.getCardId());
         this.setSpectralName(spectral.getSpectralName());
         this.setSpectralImageUrl(spectral.getSpectralImageUrl());
+        setCardType(spectral.getCardType());
         this.setSpectralEffect(spectral.getSpectralEffect());
 
     }

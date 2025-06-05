@@ -76,6 +76,7 @@ public class Voucher extends Card
         setCardImageUrl(voucher.getCardImageUrl());
         setCardName(voucher.getCardName());
         setCardCost(voucher.getCardCost());
+        setCardType(voucher.getCardType());
         setVoucherEffect(voucher.getVoucherEffect());
         setVoucherUpgradeFrom(voucher.getVoucherUpgradeFrom());
         setVoucherUnlockCondition(voucher.getVoucherUnlockCondition());

@@ -35,6 +35,7 @@ public class PlayingCard extends Card
         edition.setId(0);
         Image image = new Image(getClass().getResource("/com/images/DEFAULT/BASIC/8BitDeck"+(rank+1+suit*13)+".png").toExternalForm());
         setImage(image);
+        setCardType("PlayingCard");
 
         setFitHeight(Balatro.getSettings().getCardHeight());
         setPreserveRatio(true);

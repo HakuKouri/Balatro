@@ -14,6 +14,7 @@ public class Joker extends Card {
     private final StringProperty rarity = new SimpleStringProperty("");
     private final StringProperty unlockRequirement = new SimpleStringProperty("");
     private final StringProperty actTiming = new SimpleStringProperty("");
+    private final StringProperty jokerType = new SimpleStringProperty("");
     private final BooleanProperty unlocked = new SimpleBooleanProperty(false);
 
     private final List<JokerEffectTrigger> triggers = new ArrayList<>();
@@ -99,6 +100,18 @@ public class Joker extends Card {
         this.unlocked.set(unlocked);
     }
 
+    public String getJokerType() {
+        return jokerType.get();
+    }
+
+    public StringProperty jokerTypeProperty() {
+        return jokerType;
+    }
+
+    public void setJokerType(String jokerType) {
+        this.jokerType.set(jokerType);
+    }
+
     // ==== Getter / Setter für Trigger & Effect ====
     public List<JokerEffectTrigger> getTriggers() {
         return triggers;
@@ -128,9 +141,11 @@ public class Joker extends Card {
         setCardName(joker.getCardName());
         setCardDescription(joker.getCardDescription());
         setCardCost(joker.getCardCost());
+        setCardType(joker.getCardType());
         setActTiming(joker.getActTiming());
         setRarity(joker.getRarity());
         setUnlockRequirement(joker.getUnlockRequirement());
+        setJokerType(joker.getJokerType());
         setTriggers(joker.getTriggers());
         setParams(joker.getParams());
     }

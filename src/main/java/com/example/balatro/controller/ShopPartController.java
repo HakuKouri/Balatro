@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 
 public class ShopPartController {
 
@@ -48,6 +50,33 @@ public class ShopPartController {
     private int maxItems = 2;
     private int maxBoosters = 2;
 
+    //region Getter Setter
+    public ObservableMap<AnchorPane, CardViewController> getItemMap() {
+        return itemMap;
+    }
+
+    public void setItemMap(ObservableMap<AnchorPane, CardViewController> itemMap) {
+        this.itemMap = itemMap;
+    }
+
+    public ObservableMap<AnchorPane, CardViewController> getBoosterMap() {
+        return boosterMap;
+    }
+
+    public void setBoosterMap(ObservableMap<AnchorPane, CardViewController> boosterMap) {
+        this.boosterMap = boosterMap;
+    }
+
+    public ObservableMap<AnchorPane, CardViewController> getVoucherMap() {
+        return voucherMap;
+    }
+
+    public void setVoucherMap(ObservableMap<AnchorPane, CardViewController> voucherMap) {
+        this.voucherMap = voucherMap;
+    }
+
+    //endregion
+
     public void initialize() {
         bindStackPane(itemMap, shopArea);
         bindStackPane(boosterMap, boosterArea);
@@ -62,6 +91,9 @@ public class ShopPartController {
         map.addListener((MapChangeListener<? super AnchorPane, ? super CardViewController>) change -> {
             if (change.wasAdded()) {
                 AnchorPane anchorPane = change.getKey();
+                CardViewController controller = map.get(anchorPane);
+                anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
+                controller.isIsSelected() ? -50.0 : 0.0  ,controller.isSelectedProperty()));
                 stackPane.getChildren().addAll(anchorPane);
             }
             if (change.wasRemoved()) {
@@ -74,13 +106,30 @@ public class ShopPartController {
     private void addCardClickEvent(StackPane stackPane, Map<AnchorPane,CardViewController> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node source = (Node) event.getTarget();
+            System.out.println("Clicked: " + source);
 
             if(source instanceof ImageView) {
+                System.out.println("ImageView clicked");
                 AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
                 CardViewController controller = map.get(cardPane);
 
                 controller.setIsSelected(!controller.isIsSelected());
-                cardPane.translateYProperty().bind(Bindings.createDoubleBinding(() -> controller.isIsSelected() ? -50.0 : 0.0));
+            } else {
+                Node currentNode = source;
+                if(source.getParent() instanceof Label) {
+                    System.out.println("LabeledText clicked");
+                    currentNode = source.getParent();
+                }
+
+                if(currentNode instanceof Label) {
+                    System.out.println("Label clicked");
+                    if (Objects.equals(currentNode.getId(), "buyLabel")) {
+                        System.out.println("BuyLabel clicked");
+                        AnchorPane cardPane = (AnchorPane) currentNode.getParent().getParent().getParent();
+                        CardViewController controller = map.get(cardPane);
+                        GameController.getInstance().buyItem(cardPane, controller);
+                    }
+                }
             }
         });
     }
@@ -99,6 +148,7 @@ public class ShopPartController {
     private void drawItems() {
         itemMap.clear();
         for (int i = 0; i < maxItems; i++) {
+            //CardViewController.createCardNode(getRandomCard(),itemMap);
             createCardNode(getRandomCard(),itemMap);
         }
     }
@@ -283,7 +333,6 @@ public class ShopPartController {
             controller.setData(card);
             controller.setInShop(true);
             map.put(cardPane,controller);
-
         } catch (IOException e) {
             e.printStackTrace();
             //return new Label("Error loading card");

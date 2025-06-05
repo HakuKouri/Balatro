@@ -4,11 +4,16 @@ import com.example.balatro.Balatro;
 import com.example.balatro.classes.Card;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
+
+import java.io.IOException;
 
 public class CardViewController {
 
@@ -33,7 +38,6 @@ public class CardViewController {
 
     @FXML
     private Label sellLabel;
-
 
     //region Properties
     private ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
@@ -98,6 +102,9 @@ public class CardViewController {
         buy_AnchorPane.visibleProperty().bind(isSelectedProperty());
         sell_AnchorPane.visibleProperty().bind(isSelectedProperty());
 
+        buyLabel.disableProperty().bind(Bindings.createBooleanBinding(() ->
+                Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
+
         priceLabel.textProperty().bind(Bindings.createStringBinding(() -> "$ " + card.get().getMaxCost(), card.get().maxCostProperty()));
     }
 
@@ -108,14 +115,29 @@ public class CardViewController {
             cardImage.setImage(card.getImage());
             cardImage.setFitHeight(Balatro.getSettings().getCardHeight());
             cardImage.setPreserveRatio(true);
-
-            cardImage.setOnMouseClicked(event -> {
-
-            });
         }
     }
 
     public String getImageUrl() {
         return cardImage.getImage().getUrl();
     }
+
+    public static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
+        try {
+            FXMLLoader loader = new FXMLLoader(CardViewController.class.getResource("/com/example/balatro/card.fxml"));
+            AnchorPane cardPane = loader.load();
+            CardViewController controller = loader.getController();
+
+            controller.setData(card);
+            controller.setInShop(true);
+            map.put(cardPane,controller);
+        } catch (IOException e) {
+            e.printStackTrace();
+            //return new Label("Error loading card");
+        }
+    }
+
+
+
+
 }

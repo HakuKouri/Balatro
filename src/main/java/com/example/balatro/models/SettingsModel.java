@@ -69,7 +69,6 @@ public class SettingsModel {
             System.out.println("Window height: " + newVal);
             cardHeightProperty().set((double)newVal * 0.20138);
         });
-
     }
     //endregion
 
