@@ -115,6 +115,9 @@ public class PokerHand {
         setMulti(getMulti() + multiplier);
     }
 
+    public void multMult(int i) {
+        setMulti(getMulti() * i);
+    }
 
     public static List<PokerHand> setHandList() {
         List<PokerHand> allPokerHandList = new ArrayList<>();
@@ -134,5 +137,6 @@ public class PokerHand {
 
         return allPokerHandList;
     }
+
 
 }

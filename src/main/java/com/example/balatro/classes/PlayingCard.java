@@ -181,6 +181,15 @@ public class PlayingCard extends Card
 
     //endregion
 
+    //region Funktionen
+
+    public static PlayingCard createRandomPlayingCard() {
+        return new PlayingCard(
+                Balatro.getGameModel().getRand().nextInt(13)-1,
+                Balatro.getGameModel().getRand().nextInt(4)-1);
+    }
+
+    //endregion
 
     //EVENT TEST
 //    public static final EventType<CardClickedEvent> CARD_CLICKED =

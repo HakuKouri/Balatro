@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameModel {
 
@@ -22,8 +23,10 @@ public class GameModel {
     private final List<Planet> allPlanetList = SqlHandler.getAllPlanets();
     private final List<Booster> allBoosterList = SqlHandler.getAllBooster();
     private final List<Voucher> allVoucherList = SqlHandler.getAllVoucher();
+    private final List<Spectral> allSpectralList = SqlHandler.getAllSpectrals();
     private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
-    private List<Spectral> allSpectralList = SqlHandler.getAllSpectrals();
+    private final List<Edition> allEditionList = SqlHandler.getAllEditions();
+    private final List<Enhancement> allEnhancementList = SqlHandler.getAllEnhancements();
     //endregion
 
     //region Run Lists
@@ -137,6 +140,19 @@ public class GameModel {
     private final BooleanProperty PaletteVoucher = new SimpleBooleanProperty(false);
     //endregion
 
+    //region Joker Flags
+    private int cloud9_flag = 0;
+    private int double_chance_flag = 0;
+    private int moon_flag = 0;
+    private int astronomer_flag = 0;
+    private int bones_flag = 0;
+    private int boss_disable_flag = 0;
+    private int grati_flag = 0;
+    private int four_finger_flag = 0;
+    private int free_roll_flag = 0;
+    private int debt_flag = 0;
+    private int all_count_flag = 0;
+    private int all_face_flag = 0;
     //endregion
 
     //region CONSTRUCTOR
@@ -192,6 +208,15 @@ public class GameModel {
     public List<Spectral> getAllSpectralList() {
         return allSpectralList;
     }
+
+    public List<Edition> getAllEditionList() {
+        return allEditionList;
+    }
+
+    public List<Enhancement> getAllEnhancementList() {
+        return allEnhancementList;
+    }
+
     //endregion
 
     //region Full Deck
@@ -542,6 +567,21 @@ public class GameModel {
 
     public ObservableMap<AnchorPane, CardViewController> getActiveJokerMap() {
         return activeJokerMap;
+    }
+
+    public List<Joker> getActiveJokerList() {
+        System.out.println("getActiveJokerList");
+
+        List<Joker> jokers = activeJokerMap.values().stream()
+                .map(CardViewController::getCard)       // holt die Card aus dem Controller
+                .filter(card -> card instanceof Joker)  // prüft ob es ein Joker ist
+                .map(card -> (Joker) card)              // castet auf Joker
+                .collect(Collectors.toList());               // Java 16+ oder collect(Collectors.toList())
+
+        for (Joker joker : jokers) {
+            System.out.println("joker: " + joker.getCardName());
+        }
+        return jokers;
     }
 
     //endregion
@@ -1096,6 +1136,109 @@ public class GameModel {
     }
 
     //endregion
+
+    //region Joker Flags
+    public int getCloud9_flag() {
+        return cloud9_flag;
+    }
+
+    public void setCloud9_flag(int cloud9_flag) {
+        this.cloud9_flag = cloud9_flag;
+    }
+
+    public int getDouble_chance_flag() {
+        return double_chance_flag;
+    }
+
+    public void setDouble_chance_flag(int double_chance_flag) {
+        this.double_chance_flag = double_chance_flag;
+    }
+
+    public int getMoon_flag() {
+        return moon_flag;
+    }
+
+    public void setMoon_flag(int moon_flag) {
+        this.moon_flag = moon_flag;
+    }
+
+    public int getAstronomer_flag() {
+        return astronomer_flag;
+    }
+
+    public void setAstronomer_flag(int astronomer_flag) {
+        this.astronomer_flag = astronomer_flag;
+    }
+
+    public int getBones_flag() {
+        return bones_flag;
+    }
+
+    public void setBones_flag(int bones_flag) {
+        this.bones_flag = bones_flag;
+    }
+
+    public int getBoss_disable_flag() {
+        return boss_disable_flag;
+    }
+
+    public void setBoss_disable_flag(int boss_disable_flag) {
+        this.boss_disable_flag = boss_disable_flag;
+    }
+
+    public int getGrati_flag() {
+        return grati_flag;
+    }
+
+    public void setGrati_flag(int grati_flag) {
+        this.grati_flag = grati_flag;
+    }
+
+    public int getFour_finger_flag() {
+        return four_finger_flag;
+    }
+
+    public void setFour_finger_flag(int four_finger_flag) {
+        this.four_finger_flag = four_finger_flag;
+    }
+
+    public int getFree_roll_flag() {
+        return free_roll_flag;
+    }
+
+    public void setFree_roll_flag(int free_roll_flag) {
+        this.free_roll_flag = free_roll_flag;
+    }
+
+    public int getDebt_flag() {
+        return debt_flag;
+    }
+
+    public void setDebt_flag(int debt_flag) {
+        this.debt_flag = debt_flag;
+    }
+
+    public int getAll_count_flag() {
+        return all_count_flag;
+    }
+
+    public void setAll_count_flag(int all_count_flag) {
+        this.all_count_flag = all_count_flag;
+    }
+
+    public int getAll_face_flag() {
+        return all_face_flag;
+    }
+
+    public void setAll_face_flag(int all_face_flag) {
+        this.all_face_flag = all_face_flag;
+    }
+
+
+    //endregion
+
+
+
     //endregion
 
 }

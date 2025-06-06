@@ -3,6 +3,7 @@ package com.example.balatro.classes;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.paint.Color;
 
+import java.beans.Encoder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -582,6 +583,61 @@ public class SqlHandler {
 
         return spectrals;
     }
+
+    public static List<Edition> getAllEditions() {
+        List<Edition> editions = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            //(id, appearance, edition, effect)
+            String statementString = "SELECT * FROM Editions";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Edition edition = new Edition();
+
+                edition.setId(rs.getInt(1));
+                edition.setEditionImageUrl(rs.getString(2));
+                edition.setEditionName(rs.getString(3));
+                edition.setEditionEffect(rs.getString(4));
+
+                editions.add(edition);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return editions;
+
+    }
+
+    public static List<Enhancement> getAllEnhancements() {
+        List<Enhancement> enhancements = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            //(id, appearance, enhancement, effect)
+            String statementString = "SELECT * FROM Enhancements";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Enhancement enhancement = new Enhancement();
+
+                enhancement.setId(rs.getInt(1));
+                enhancement.setEnhancementImageUrl(rs.getString(2));
+                enhancement.setEnhancementName(rs.getString(3));
+                enhancement.setEnhancementEffect(rs.getString(4));
+
+                enhancements.add(enhancement);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return enhancements;
+
+    }
+
 
     public static List<PokerHand> getAllPokerHands() {
         List<PokerHand> pokerHands = new ArrayList<>();

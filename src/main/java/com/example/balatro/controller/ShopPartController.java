@@ -111,7 +111,11 @@ public class ShopPartController {
             if(source instanceof ImageView) {
                 System.out.println("ImageView clicked");
                 AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
+                System.out.println("CardPane Height: " + cardPane.getHeight());
+                System.out.println("CardPane Width: " + cardPane.getWidth());
                 CardViewController controller = map.get(cardPane);
+                System.out.println("Image Height: " + ((ImageView) source).getFitHeight());
+                System.out.println("Image Width: " + ((ImageView) source).getFitWidth());
 
                 controller.setIsSelected(!controller.isIsSelected());
             } else {
@@ -332,6 +336,7 @@ public class ShopPartController {
             CardViewController controller = loader.getController();
             controller.setData(card);
             controller.setInShop(true);
+
             map.put(cardPane,controller);
         } catch (IOException e) {
             e.printStackTrace();

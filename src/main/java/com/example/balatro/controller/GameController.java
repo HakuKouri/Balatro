@@ -353,17 +353,34 @@ public class GameController
         ));
         //endregion
 
-        holdingHand_GrowRow.percentHeightProperty().bind(Bindings.createDoubleBinding(() -> gameModel.isHandButtonVisibility() ? 20.0 : 30.0, gameModel.handButtonVisibilityProperty()));
+        //holdingHand_GrowRow.percentHeightProperty().bind(Bindings.createDoubleBinding(() -> gameModel.isHandButtonVisibility() ? 20.0 : 30.0, gameModel.handButtonVisibilityProperty()));
 
         if(true) {
-            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(0));
-            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(3));
-            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(4));
-            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(5));
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(0), gameModel.getActiveJokerMap());
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(1), gameModel.getActiveJokerMap());
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(2), gameModel.getActiveJokerMap());
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(3), gameModel.getActiveJokerMap());
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(4), gameModel.getActiveJokerMap());
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(5), gameModel.getActiveJokerMap());
 
-            for (Joker joker : gameModel.getActiveJokerObList()) {
-                joker.setFitHeight(Balatro.getSettings().getCardHeight());
+            for (AnchorPane pane : gameModel.getActiveJokerMap().keySet()) {
+                CardViewController controller = gameModel.getActiveJokerMap().get(pane);
+                controller.setInShop(false);
+                System.out.println("Card instance: " + (controller.getCard() instanceof Joker));
+                pane.setOnMouseClicked(mouseEvent -> {
+                    System.out.println(controller.getCard());
+                    controller.isSelectedProperty().set(!controller.isIsSelected());
+                });
             }
+            moveCards();
+//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(0));
+//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(3));
+//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(4));
+//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(5));
+//
+//            for (Joker joker : gameModel.getActiveJokerObList()) {
+//                joker.setFitHeight(Balatro.getSettings().getCardHeight());
+//            }
         }
         //TEST BUTTON
         testButton.setOnAction(event -> {
@@ -514,21 +531,39 @@ public class GameController
 
     public void moveCards() {
         double cardWidth = 200;
-        double lastPos = spaceJoker.getWidth();
+        double lastPos = 700;
+
+//        int cards = spaceJoker.getChildren().size();
+//        double pos = 0;
+//        for(int i = 0; i < cards; i++) {
+//            if(cards > 5) {
+//                spaceJoker.setAlignment(Pos.CENTER_LEFT);
+//                pos = i * lastPos / (cards - 1);
+//            } else {
+//                spaceJoker.setAlignment(Pos.CENTER);
+//                if(cards%2==0) {
+//                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
+//                } else {
+//                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
+//                }
+//            }
+//            spaceJoker.getChildren().get(i).setTranslateX(pos);
+//        }
 
         int cards = spaceJoker.getChildren().size();
         double pos = 0;
+
         for(int i = 0; i < cards; i++) {
             if(cards > 5) {
                 spaceJoker.setAlignment(Pos.CENTER_LEFT);
                 pos = i * lastPos / (cards - 1);
             } else {
-                spaceJoker.setAlignment(Pos.CENTER);
-                if(cards%2==0) {
-                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
+                if (cards % 2 == 0) {
+                    pos = cardWidth / 2 + i * cardWidth - cards / 2 * cardWidth + i * 10;
                 } else {
-                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
+                    pos = i * cardWidth - cards / 2 * cardWidth + i * 10;
                 }
+
             }
             spaceJoker.getChildren().get(i).setTranslateX(pos);
         }

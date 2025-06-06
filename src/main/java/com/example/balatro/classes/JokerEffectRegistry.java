@@ -1,6 +1,8 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.interfaces.JokerEffect;
+import com.example.balatro.models.GameModel;
 import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.Map;
 
 public class JokerEffectRegistry {
     private static final Map<String, JokerEffect> effectMap = new HashMap<>();
+    private static final GameModel gameModel = Balatro.getGameModel();
 
     static {
         // Hier registrierst du alle Effekte über ihre Keys
@@ -29,6 +32,9 @@ public class JokerEffectRegistry {
 
         effectMap.put("ADD_STONE_CARD", (context, self, cards, params) -> {
             System.out.println("Trigger: ADD_STONE_CARD");
+            PlayingCard stoneCard = PlayingCard.createRandomPlayingCard();
+            stoneCard.setEnhancement(gameModel.getAllEnhancementList().get(5));
+            gameModel.addCardToDeckFull(stoneCard);
         });
 
         effectMap.put("BEAN_SET_VALUE", (context, self, cards, params) -> {
@@ -134,6 +140,7 @@ public class JokerEffectRegistry {
         });
         effectMap.put("MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_MULT");
+            context.getBestHand().multMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
         });
 
         effectMap.put("MAIL_DISCARD", (context, self, cards, params) -> {
@@ -209,19 +216,11 @@ public class JokerEffectRegistry {
         });
 
         effectMap.put("SUIT_MULT_ADD", (context, self, cards, params) -> {
-            System.out.println("Trigger: SUIT_MULT_ADD");
-            System.out.println("Applying SUIT_MULT_ADD with params: " + params);
-            System.out.println("Multiplier before: " + context.getBestHand().getMulti());
-
             if(cards.get(0).getSuit() == getSuit(params.get("suit").toString())) {
-                System.out.println("SUIT MATCHES");
-
                 String rawMultiplier = (String) params.get("multiplier");
                 int value = Integer.parseInt(rawMultiplier.replace(" Mult", ""));
                 context.getBestHand().addMult(value);
             }
-
-            System.out.println("Multiplier after: " + context.getBestHand().getMulti());
         });
 
         effectMap.put("SUB_MULT_VALUE", (context, self, cards, params) -> {
@@ -435,102 +434,127 @@ public class JokerEffectRegistry {
         });
 
 
-        //FLAGS
+        //region FLAGS
         effectMap.put("SET_CLOUD9_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_CLOUD9_FLAG");
+            context.setCloud9_flag(context.getCloud9_flag() + 1);
         });
 
         effectMap.put("UNSET_CLOUD9_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_CLOUD9_FLAG");
+            context.setCloud9_flag(context.getCloud9_flag() - 1);
         });
 
         effectMap.put("SET_DOUBLE_CHANCE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_DOUBLE_CHANCE_FLAG");
+            context.setDouble_chance_flag(context.getDouble_chance_flag() + 1);
         });
 
         effectMap.put("UNSET_DOUBLE_CHANCE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_DOUBLE_CHANCE_FLAG");
+            context.setDouble_chance_flag(context.getDouble_chance_flag() - 1);
         });
 
         effectMap.put("SET_MOON_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_MOON_FLAG");
+            context.setMoon_flag(context.getMoon_flag() + 1);
         });
 
         effectMap.put("UNSET_MOON_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_MOON_FLAG");
+            context.setMoon_flag(context.getMoon_flag() - 1);
         });
 
         effectMap.put("SET_ASTRONOMER_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_ASTRONOMER_FLAG");
+            context.setAstronomer_flag(context.getAstronomer_flag() + 1);
         });
 
         effectMap.put("UNSET_ASTRONOMER_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_ASTRONOMER_FLAG");
+            context.setAstronomer_flag(context.getAstronomer_flag() - 1);
         });
 
         effectMap.put("SET_BONES_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_BONES_FLAG");
+            context.setBones_flag(context.getBones_flag() + 1);
         });
 
         effectMap.put("UNSET_BONES_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_BONES_FLAG");
+            context.setBones_flag(context.getBones_flag() - 1);
         });
 
         effectMap.put("SET_BOSS_DISABLE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_BOSS_DISABLE_FLAG");
+            context.setBoss_disable_flag(context.getBoss_disable_flag() + 1);
         });
 
         effectMap.put("UNSET_BOSS_DISABLE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_BOSS_DISABLE_FLAG");
+            context.setBoss_disable_flag(context.getBoss_disable_flag() - 1);
         });
 
         effectMap.put("GRATI_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: GRATI_SET_FLAG");
+            context.setGrati_flag(context.getGrati_flag() + 1);
         });
 
         effectMap.put("GRATI_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: GRATI_UNSET_FLAG");
+            context.setGrati_flag(context.getGrati_flag() - 1);
         });
 
         effectMap.put("FOUR_FINGER_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FOUR_FINGER_SET_FLAG");
+            context.setFour_finger_flag(context.getFour_finger_flag() + 1);
         });
 
         effectMap.put("FOUR_FINGER_UNSET_FLAG", (context, self, cards, params) -> {
-            System.out.println("Trigger: ");
+            System.out.println("Trigger: FOUR_FINGER_UNSET_FLAG");
+            context.setFour_finger_flag(context.getFour_finger_flag() - 1);
         });
 
         effectMap.put("FREE_ROLL_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FREE_ROLL_SET_FLAG");
+            context.setFree_roll_flag(context.getFree_roll_flag() + 1);
         });
 
         effectMap.put("FREE_ROLL_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FREE_ROLL_UNSET_FLAG");
+            context.setFree_roll_flag(context.getFree_roll_flag() - 1);
         });
 
         effectMap.put("DEPT_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: DEPT_SET_FLAG");
+            context.setDebt_flag(context.getDebt_flag() + 1);
         });
 
         effectMap.put("DEPT_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: DEPT_UNSET_FLAG");
+            context.setDebt_flag(context.getDebt_flag() - 1);
         });
 
         effectMap.put("ALL_COUNT_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_COUNT_SET_FLAG");
+            context.setAll_count_flag(context.getAll_count_flag() + 1);
         });
 
         effectMap.put("ALL_COUNT_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_COUNT_UNSET_FLAG");
+            context.setAll_count_flag(context.getAll_count_flag() - 1);
         });
 
         effectMap.put("ALL_FACE_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_FACE_SET_FLAG");
+            context.setAll_face_flag(context.getAll_face_flag() + 1);
         });
 
         effectMap.put("ALL_FACE_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_FACE_UNSET_FLAG");
+            context.setAll_face_flag(context.getAll_face_flag() - 1);
         });
+        //endregion
 
         // weitere Effekte hier registrieren...
     }

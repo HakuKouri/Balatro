@@ -65,7 +65,6 @@ public class PlayedCardsController {
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
             gameModel.getBestHand().setHand(new PokerHand());
 
-
             countPoints();
 
             if(onComplete != null) onComplete.run();
@@ -147,7 +146,7 @@ public class PlayedCardsController {
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
-        for (Joker joker : gameModel.getActiveJokerObList()) {
+        for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
     }
