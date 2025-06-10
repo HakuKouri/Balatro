@@ -16,9 +16,7 @@ import javafx.scene.layout.ColumnConstraints;
 import java.io.IOException;
 
 public class CardViewController {
-
-    @FXML
-    private ColumnConstraints imageColumn;
+    //region FXML
     @FXML
     private AnchorPane price_AnchorPane;
     @FXML
@@ -29,15 +27,13 @@ public class CardViewController {
     private AnchorPane card_AnchorPane;
     @FXML
     private ImageView cardImage;
-
     @FXML
     private Label priceLabel;
-
     @FXML
     private Label buyLabel;
-
     @FXML
     private Label sellLabel;
+    //endregion
 
     //region Properties
     private final ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
@@ -45,6 +41,12 @@ public class CardViewController {
     private final StringProperty cardType = new SimpleStringProperty("");
     private final BooleanProperty isSelected = new SimpleBooleanProperty(false);
     //endregion
+
+    //region const Strings
+    private final String buyAndUse = "Buy\n& Use";
+    private final String sell = "Sell $%d";
+    //
+
 
     //region Getter Setter
     public Card getCard() {
@@ -107,6 +109,9 @@ public class CardViewController {
 
         buyLabel.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
+        sellLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            return isInShop() && getCardType() == "Tarot" ? String.format(buyAndUse, card.get().getMaxCost()) : sell;
+        }));
     }
 
     public void setData(Card card) {

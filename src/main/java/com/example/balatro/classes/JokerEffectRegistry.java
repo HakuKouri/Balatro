@@ -3,6 +3,7 @@ package com.example.balatro.classes;
 import com.example.balatro.Balatro;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
+import javafx.beans.binding.Bindings;
 import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.util.HashMap;
@@ -235,34 +236,84 @@ public class JokerEffectRegistry {
         //UNIQUE
         effectMap.put("ACROBAT_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ACROBAT_EFFECT");
+            //TODO Joker Animation
+            if(context.getHandsPlayed() == 0) {
+                context.getBestHand().multMult(3);
+            }
         });
 
         effectMap.put("ANCIENT_JOKER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ANCIENT_JOKER_EFFECT");
+            //TODO Joker Trigger Animation
+            int index = context.getRand().nextInt(4);
+            switch (index) {
+                case 0:
+                    self.setSuitFilter(Suit.HEARTS);
+                    break;
+                case 1:
+                    self.setSuitFilter(Suit.CLUBS);
+                    break;
+                case 2:
+                    self.setSuitFilter(Suit.DIAMONDS);
+                    break;
+                case 3:
+                    self.setSuitFilter(Suit.SPADES);
+                    break;
+            }
         });
 
         effectMap.put("BARON_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BARON_EFFECT");
+            //TODO Einzel Trigger Animation pro König in der Hand
+            int countKings = (int) context.getHandCards().stream().filter(x -> x.getRank() == "King").count();
+            for (int i = 0; i < countKings; i++) {
+                context.getBestHand().multMult(1.5);
+            }
         });
 
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
+            //TODO Einzel Trigger Animation pro Joker
+            int uncommonCount = (int) context.getActiveJokerMap().values().stream().filter(cardViewController -> ((Joker)cardViewController.getCard()).getRarity() == "Uncommon"). count();
+            for (int i = 0; i < uncommonCount; i++) {
+                context.getBestHand().multMult(1.5);
+            }
         });
 
         effectMap.put("BLACKBOARD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BLACKBOARD_EFFECT");
+            //TODO Joker Animation
+            int blackCount = (int) context.getHandCards().stream().filter(card ->
+                    card.getSuit() == Suit.SPADES ||
+                    card.getSuit() == Suit.CLUBS ||
+                    card.getEnhancement().getEnhancementName() == "Wild Card").count();
+            if(blackCount == context.getHandCards().size()) {
+                context.getBestHand().multMult(3);
+            }
         });
 
         effectMap.put("BLOODSTONE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BLOODSTONE_EFFECT");
+            //TODO Joker Trigger Animation
+            for (PlayingCard c : cards) {
+                if (c.getSuit() == Suit.HEARTS && context.getRand().nextBoolean()) {
+                    context.getBestHand().multMult(1.5);
+                }
+            }
         });
 
         effectMap.put("BLUEPRINT_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BLUEPRINT_EFFECT");
+            //TODO Joker Effect
         });
 
         effectMap.put("BOOTSTRAPS_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BOOTSTRAPS_EFFECT");
+            //TODO Bind Desription
+            //self.cardDescriptionProperty().bind(Bindings.createStringBinding(() -> String.format(self.getCardDescription(), 2 * context.getMoney() / 5),self.cardDescription,context.moneyProperty()));
+            //self.multValueProperty().bind(Bindings.createDoubleBinding(() -> {
+            //    return (double) ((context.getMoney() / 5) * 2);
+            //}));
         });
 
         effectMap.put("BRAINSTORM_EFFECT", (context, self, cards, params) -> {

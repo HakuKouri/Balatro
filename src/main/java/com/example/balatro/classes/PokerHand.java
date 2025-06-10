@@ -115,7 +115,7 @@ public class PokerHand {
         setMulti(getMulti() + multiplier);
     }
 
-    public void multMult(int i) {
+    public void multMult(double i) {
         setMulti(getMulti() * i);
     }
 

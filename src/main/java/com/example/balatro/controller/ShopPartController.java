@@ -106,7 +106,7 @@ public class ShopPartController {
     private void addCardClickEvent(StackPane stackPane, Map<AnchorPane,CardViewController> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node source = (Node) event.getTarget();
-            System.out.println("Clicked: " + source);
+            //System.out.println("Clicked: " + source);
 
             if(source instanceof ImageView) {
                 System.out.println("ImageView clicked");

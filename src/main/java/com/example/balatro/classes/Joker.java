@@ -20,8 +20,16 @@ public class Joker extends Card {
     private final List<JokerEffectTrigger> triggers = new ArrayList<>();
     private final StringProperty params = new SimpleStringProperty("");
 
+    //Test Variablen
+    private final ObjectProperty<Suit> suitFilter = new SimpleObjectProperty<>(Suit.NO_SUIT);
+    private final StringProperty valueFilter = new SimpleStringProperty("");
+    private final DoubleProperty multValue = new SimpleDoubleProperty(0);
+    private final DoubleProperty chipValue = new SimpleDoubleProperty(0);
+
+    //region Constructor
     public Joker() {
     }
+    //endregion
 
     // ==== Trigger Check ====
     public void tryActivate(JokerTrigger currentTrigger, GameModel gameModel, List<PlayingCard> playedCards) {
@@ -133,6 +141,56 @@ public class Joker extends Card {
     public void setParams(String params) {
         this.params.set(params);
     }
+
+    //Test Getter Setter
+    public Suit getSuitFilter() {
+        return suitFilter.get();
+    }
+
+    public ObjectProperty<Suit> suitFilterProperty() {
+        return suitFilter;
+    }
+
+    public void setSuitFilter(Suit suitFilter) {
+        this.suitFilter.set(suitFilter);
+    }
+
+    public String getValueFilter() {
+        return valueFilter.get();
+    }
+
+    public StringProperty valueFilterProperty() {
+        return valueFilter;
+    }
+
+    public void setValueFilter(String valueFilter) {
+        this.valueFilter.set(valueFilter);
+    }
+
+    public double getMultValue() {
+        return multValue.get();
+    }
+
+    public DoubleProperty multValueProperty() {
+        return multValue;
+    }
+
+    public void setMultValue(double multValue) {
+        this.multValue.set(multValue);
+    }
+
+    public double getChipValue() {
+        return chipValue.get();
+    }
+
+    public DoubleProperty chipValueProperty() {
+        return chipValue;
+    }
+
+    public void setChipValue(double chipValue) {
+        this.chipValue.set(chipValue);
+    }
+
 
     //region Functions
     public void setJoker(Joker joker) {

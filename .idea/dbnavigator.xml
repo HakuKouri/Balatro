@@ -40,13 +40,18 @@ select effect_keys from jokercards group by effect_keys]]></console>
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" object-ref="schemas/main/tables/Enhancements" />
+      <object connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" object-ref="schemas/main/tables/JokerCards" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="163831f7-bfe1-4c39-bd55-96ff2253c667" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Enhancements" active-filter-id="" />
+    <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.Enhancements" active-filter-id="7d846c15-3724-4a47-80f4-e18a5db3d238">
+      <filter id="7d846c15-3724-4a47-80f4-e18a5db3d238" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards_dg_tmp" active-filter-id="" />
     <filter-actions connection-id="163831f7-bfe1-4c39-bd55-96ff2253c667" dataset="main.JokerCards" active-filter-id="57100021-af84-4ffd-af72-045869582749">
       <filter id="57100021-af84-4ffd-af72-045869582749" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
