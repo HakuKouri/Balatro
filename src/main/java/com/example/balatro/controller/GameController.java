@@ -169,6 +169,10 @@ public class GameController
     private static final GameModel gameModel = Balatro.getGameModel();
     //endregion
 
+    public StackPane getJokerStackPane() {
+        return spaceJoker;
+    }
+
     //UI HANDLER
     public void initialize(){
         instance = this;

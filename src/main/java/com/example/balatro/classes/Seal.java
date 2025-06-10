@@ -1,49 +1,49 @@
 package com.example.balatro.classes;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Seal
 {
-    private int id;
-    private String sealImageUrl;
-    private String sealName;
-    private String sealEffect;
+    private final IntegerProperty id = new SimpleIntegerProperty();
+    private final StringProperty sealImageUrl = new SimpleStringProperty("");
+    private final StringProperty sealName = new SimpleStringProperty("");
+    private final StringProperty sealEffect = new SimpleStringProperty("");
 
-    public int getId()
-    {
+    //Getter Setter
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
         return id;
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
+    public String getSealImageUrl() {
+        return sealImageUrl.get();
     }
 
-    public String getSealImageUrl()
-    {
+    public StringProperty sealImageUrlProperty() {
         return sealImageUrl;
     }
 
-    public void setSealImageUrl(String sealImageUrl)
-    {
-        this.sealImageUrl = sealImageUrl;
+    public String getSealName() {
+        return sealName.get();
     }
 
-    public String getSealName()
-    {
+    public StringProperty sealNameProperty() {
         return sealName;
     }
 
-    public void setSealName(String sealName)
-    {
-        this.sealName = sealName;
+    public String getSealEffect() {
+        return sealEffect.get();
     }
 
-    public String getSealEffect()
-    {
+    public StringProperty sealEffectProperty() {
         return sealEffect;
     }
 
-    public void setSealEffect(String sealEffect)
-    {
-        this.sealEffect = sealEffect;
-    }
+    //Functions
 }

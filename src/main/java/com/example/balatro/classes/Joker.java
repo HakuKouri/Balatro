@@ -3,6 +3,7 @@ package com.example.balatro.classes;
 import com.example.balatro.Balatro;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
@@ -206,6 +207,8 @@ public class Joker extends Card {
         setJokerType(joker.getJokerType());
         setTriggers(joker.getTriggers());
         setParams(joker.getParams());
+
+
     }
     //endregion
 

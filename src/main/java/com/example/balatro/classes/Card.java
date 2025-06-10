@@ -2,10 +2,7 @@ package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -18,8 +15,11 @@ public class Card extends ImageView
     protected StringProperty cardImageUrl = new SimpleStringProperty("");
     protected StringProperty cardDescription = new SimpleStringProperty("");
     protected IntegerProperty cardCost = new SimpleIntegerProperty(0);
-    protected IntegerProperty maxCost = new SimpleIntegerProperty(0);
+    protected DoubleProperty maxCost = new SimpleDoubleProperty(0);
     protected IntegerProperty editionCost = new SimpleIntegerProperty(0);
+    private final DoubleProperty sellValue = new SimpleDoubleProperty(0);
+    private final DoubleProperty additionalSellValue = new SimpleDoubleProperty(0);
+
     //endregion
 
     //region Constructor
@@ -35,7 +35,12 @@ public class Card extends ImageView
             cardCost.add(editionCost).intValue(),
                 cardCostProperty(), editionCostProperty())
         );
+
+        sellValueProperty().bind(Bindings.createDoubleBinding(() -> {
+            return Math.floor(getMaxCost() / 2.0 + getAdditionalSellValue());
+        }, maxCostProperty(), additionalSellValueProperty()));
     }
+
     //endregion
 
     //region Getter Setter
@@ -111,11 +116,11 @@ public class Card extends ImageView
         this.cardCost.set(cost);
     }
 
-    public int getMaxCost() {
+    public double getMaxCost() {
         return maxCost.get();
     }
 
-    public IntegerProperty maxCostProperty() {
+    public DoubleProperty maxCostProperty() {
         return maxCost;
     }
 
@@ -130,6 +135,24 @@ public class Card extends ImageView
     public void setEditionCost(int editionCost) {
         this.editionCost.set(editionCost);
     }
+
+    public double getSellValue() {
+        return sellValue.get();
+    }
+
+    public DoubleProperty sellValueProperty() {
+        return sellValue;
+    }
+
+    public double getAdditionalSellValue() {
+        return additionalSellValue.get();
+    }
+
+    public DoubleProperty additionalSellValueProperty() {
+        return additionalSellValue;
+    }
+
+
     //endregion
 
     //region Functions

@@ -1,13 +1,20 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
+import com.example.balatro.controller.GameController;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JokerEffectRegistry {
     private static final Map<String, JokerEffect> effectMap = new HashMap<>();
@@ -326,110 +333,215 @@ public class JokerEffectRegistry {
 
         effectMap.put("BURGLAR_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BURGLAR_EFFECT");
+            //TODO Joker Animation
+            context.handsPlayedProperty().set(context.getHandsPlayed() + 3);
+            context.discardsProperty().set(0);
         });
 
         effectMap.put("BURNT_JOKER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BURNT_JOKER_EFFECT");
+            if(context.isFirstDiscard()) {
+                //TODO Level Up PokerHand
+            }
         });
 
         effectMap.put("CARD_SHARP_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: CARD_SHARP_EFFECT");
+            if (context.getPokerHandsPlayedThisRound().contains(context.getBestHand())) {
+                context.getBestHand().multMult(3);
+            }
         });
 
         effectMap.put("CERTIFICATE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: CERTIFICATE_EFFECT");
+            //TODO Joker Trigger Effect
+            PlayingCard card = new PlayingCard(context.getRand().nextInt(12), context.getRand().nextInt(4));
+            card.setSeal(context.getAllSealList().get(context.getRand().nextInt(context.getAllSealList().size())));
+            context.addCardToDeckFull(card);
+            context.getHandCards().add(card);
         });
 
         effectMap.put("DAGGER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DAGGER_EFFECT");
+            //TODO Joker Trigger Effekt
+            List<Node> children = GameController.getInstance().getJokerStackPane().getChildren();
+            for (int i = 0; i < children.size(); i++) {
+                AnchorPane pane = (AnchorPane) children.get(i);
+                CardViewController controller = context.getActiveJokerMap().get(pane);
+                Card card = controller.getCard();
+
+                if ("Ceremonial Dagger".equals(card.getCardName())) {
+                    if (i < children.size() - 1);
+                    System.out.println("Hat Nachfolger: ");
+                    self.setMultValue(self.getMultValue() + context.getActiveJokerMap().get(children.get(i+1)).getCard().getSellValue());
+                    context.getActiveJokerMap().remove(children.get(i+1));
+                    break;
+                }
+            }
         });
 
         effectMap.put("DIET_COLA_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DIET_COLA_EFFECT");
+            //TODO Joker Trigger Animation
+            context.getTagQueue().add(context.getAllTagList().get(17));
         });
 
         effectMap.put("DNA_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DNA_EFFECT");
+            //TODO Joker Trigger Animation
+            if (context.isFirstHand() && context.getPlayedCards().size() == 1) {
+                PlayingCard card = context.getPlayedCards().get(0);
+                context.getDeckFull().add(card);
+                context.getHandCards().add(card);
+            }
         });
 
         effectMap.put("DRIVERS_LICENSE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DRIVERS_LICENSE_EFFECT");
+            //TODO Joker Trigger Animation
+            if(context.getDeckFull().stream().filter(card -> card.getEnhancement().getEnhancementName() != "").count() >= 16) {
+                context.getBestHand().multMult(3);
+            }
         });
 
         effectMap.put("EIGHTBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: EIGHTBALL_EFFECT");
+            //TODO Joker Trigger Animation
+            for (PlayingCard c : cards) {
+                if(c.getValue() == 8 && context.getRand().nextInt(4) == 0) {
+                    context.getConsumableList().add(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
+                }
+            }
         });
 
         effectMap.put("EROSION_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: EROSION_EFFECT");
+            //TODO Joker Trigger Animation
+            if(context.getDeckFull().size() < 52)
+                context.getBestHand().addMult((52 - context.getDeckFull().size()) * 4);
         });
 
         effectMap.put("FLOWERPOT_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: FLOWERPOT_EFFECT");
+            //TODO Joker Trigger Animation
+            int wildCards = 0;
+            Map<Suit, Integer> suitCount = new HashMap<>();
+            for (PlayingCard c : cards) {
+                suitCount.put(c.getSuit(), 0);
+                if(c.getEnhancement().getEnhancementName() == "Wild Card") {
+                    wildCards++;
+                }
+            }
+            if(suitCount.size() + wildCards >= 4) {
+                context.getBestHand().multMult(3);
+            }
         });
 
         effectMap.put("GIFT_CARD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: GIFT_CARD_EFFECT");
+            //TODO Joker Trigger Animation
+            for(CardViewController c : context.getActiveJokerMap().values().stream().collect(Collectors.toList())){
+                c.getCard().additionalSellValueProperty().add(1);
+            }
+            for(var c : context.getConsumableList()) {
+                c.additionalSellValueProperty().add(1);
+            }
         });
 
         effectMap.put("HALLUCINATION_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: HALLUCINATION_EFFECT");
+            //TODO Joker Trigger Animation
+            if (context.getRand().nextInt(2) == 0) {
+                context.getConsumableList().add(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
+            }
         });
 
         effectMap.put("HANGING_CHAD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: HANGING_CHAD_EFFECT");
+            //TODO Retrigger
         });
 
         effectMap.put("HOLOGRAM_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: HOLOGRAM_EFFECT");
+            //TODO Joker Trigger Animation
+            self.setMultValue(self.getMultValue() + .25);
         });
 
         effectMap.put("ICECREAM_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ICECREAM_EFFECT");
+            //TODO Joker Trigger Animation
+            //TODO Joker Effekt
+
         });
 
         effectMap.put("INVISIBLE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: INVISIBLE_EFFECT");
+            //TODO Joker Effekt
         });
 
         effectMap.put("LOYALTY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: LOYALTY_EFFECT");
+            //TODO Joker Effekt
         });
 
         effectMap.put("LUCHADOR_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: LUCHADOR_EFFECT");
-        });
-
-        effectMap.put("MATADOR_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MATADOR_EFFECT");
-        });
-
-        effectMap.put("MERRY_BUY_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MERRY_BUY_EFFECT");
-        });
-
-        effectMap.put("MERRY_SELL_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MERRY_SELL_EFFECT");
-        });
-
-        effectMap.put("MIDAS_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MIDAS_EFFECT");
-        });
-
-        effectMap.put("MINE_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MINE_EFFECT");
-        });
-
-        effectMap.put("MISPRINT_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: MISPRINT_EFFECT");
+            context.setBoss_disable_flag(context.getBoss_disable_flag() + 1);
         });
 
         effectMap.put("MADNESS_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MADNESS_EFFECT");
+            //TODO Joker Trigger Effekt
+            if(context.getActiveBlind().getBlindId() < 2) {
+                List<AnchorPane> list = context.getActiveJokerMap().keySet().stream().filter(c -> context.getActiveJokerMap().get(c).getCard().getCardName() != "Madness").collect(Collectors.toList());
+                //TODO Destroy Joker Animation
+                context.getActiveJokerMap().remove(list.get(context.getRand().nextInt(list.size())));
+                self.setMultValue(self.getMultValue() + .5);
+            }
+        });
+
+        effectMap.put("MATADOR_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MATADOR_EFFECT");
+            context.addMoney(8);
+        });
+
+        effectMap.put("MERRY_BUY_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MERRY_BUY_EFFECT");
+            context.setMaxDiscards(context.getMaxDiscards() + 3);
+            context.setHands(context.getHands() - 1);
+        });
+
+        effectMap.put("MERRY_SELL_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MERRY_SELL_EFFECT");
+            context.setMaxDiscards(context.getMaxDiscards() - 3);
+            context.setHands(context.getHands() + 1);
+        });
+
+        effectMap.put("MIDAS_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MIDAS_EFFECT");
+            //TODO Joker Trigger Effekt
+            for (PlayingCard c : cards) {
+                if(context.getAll_face_flag() > 0 || c.getValue() >= 10)
+                    c.setEnhancement(context.getAllEnhancementList().get(6));
+            }
+        });
+
+        effectMap.put("MINE_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MINE_EFFECT");
+            //TODO Joker Trigger Effekt
+            //TODO Retrigger
+        });
+
+        effectMap.put("MISPRINT_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: MISPRINT_EFFECT");
+            //TODO Joker Trigger Effekt
+            context.getBestHand().addMult(context.getRand().nextInt(24));
         });
 
         effectMap.put("OBELISK_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: OBELISK_EFFECT");
+            //TODO Joker Trigger Effekt
+
         });
 
         effectMap.put("PERKEO_EFFECT", (context, self, cards, params) -> {

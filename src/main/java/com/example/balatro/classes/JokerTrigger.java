@@ -12,6 +12,7 @@ public enum JokerTrigger {
         SHOP_ENTERED,
         SHOP_REROLL,
         SHOP_EXITED,
+        BOSS_TRIGGERED,
         BOSS_DEFEATED,
         PLANET_PLAYED,
         BOOSTER_OPENED,

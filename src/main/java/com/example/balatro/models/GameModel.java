@@ -1,5 +1,6 @@
 package com.example.balatro.models;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.controller.CardViewController;
 import javafx.beans.property.*;
@@ -13,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameModel {
-
     //region ATTRIBUTES
     //region Lists of All Data (Tag, Blind, Joker, Tarot. Planet, Booster, Voucher, PokerHand)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
@@ -27,6 +27,7 @@ public class GameModel {
     private final List<PokerHand> allPokerHandList = SqlHandler.getAllPokerHands();
     private final List<Edition> allEditionList = SqlHandler.getAllEditions();
     private final List<Enhancement> allEnhancementList = SqlHandler.getAllEnhancements();
+    private final List<Seal> allSealList = SqlHandler.getAllSeals();
     //endregion
 
     //region Run Lists
@@ -86,6 +87,12 @@ public class GameModel {
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
+    //endregion
+
+    //region Background Run Variables
+    private final BooleanProperty firstHand = new SimpleBooleanProperty(true);
+    private final BooleanProperty firstDiscard = new SimpleBooleanProperty(true);
+    private final ObservableList<PokerHand> playedPokerHandsThisRound = FXCollections.observableArrayList();
     //endregion
 
     //region UI VAR
@@ -155,6 +162,8 @@ public class GameModel {
     private int all_face_flag = 0;
     //endregion
 
+    //endregion
+
     //region CONSTRUCTOR
     public GameModel() {
         scoredPoints.addListener((observable, oldValue, newValue) -> {
@@ -169,12 +178,16 @@ public class GameModel {
     //region GETTER SETTER
 
     //region All Data Lists
-    public List<PokerHand> getAllHandList() {
+    public List<PokerHand> getAllPokerHandList() {
         return allPokerHandList;
     }
 
     public List<Tag> getAllTagList() {
         return allTagList;
+    }
+    public Tag getTag(int index) {
+        Tag tag = allTagList.get(index);
+        return tag;
     }
 
     public List<Blind> getAllBlindsList() {
@@ -197,10 +210,6 @@ public class GameModel {
         return allPlanetList;
     }
 
-    public List<PokerHand> getAllPokerHandList() {
-        return allPokerHandList;
-    }
-
     public List<Joker> getAllJokerList() {
         return allJokerList;
     }
@@ -217,6 +226,9 @@ public class GameModel {
         return allEnhancementList;
     }
 
+    public List<Seal> getAllSealList() {
+        return allSealList;
+    }
     //endregion
 
     //region Full Deck
@@ -752,6 +764,29 @@ public class GameModel {
 
     public IntegerProperty maxInterestProperty() {
         return maxInterest;
+    }
+
+    //endregion
+
+    //region Background Run Variables
+    public boolean isFirstHand() {
+        return firstHand.get();
+    }
+
+    public BooleanProperty firstHandProperty() {
+        return firstHand;
+    }
+
+    public boolean isFirstDiscard() {
+        return firstDiscard.get();
+    }
+
+    public BooleanProperty firstDiscardProperty() {
+        return firstDiscard;
+    }
+
+    public ObservableList<PokerHand> getPokerHandsPlayedThisRound() {
+        return playedPokerHandsThisRound;
     }
 
     //endregion

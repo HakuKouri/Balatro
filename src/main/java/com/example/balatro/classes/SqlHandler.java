@@ -638,6 +638,33 @@ public class SqlHandler {
 
     }
 
+    public static List<Seal> getAllSeals() {
+       // (id, appearance, seal, effect)
+        List<Seal> seals = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            //(id, appearance, enhancement, effect)
+            String statementString = "SELECT * FROM Seals";
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                Seal seal = new Seal();
+
+                seal.setId(rs.getInt(1));
+                seal.setSealImageUrl(rs.getString(2));
+                seal.setSealName(rs.getString(3));
+                seal.setSealEffect(rs.getString(4));
+
+                seals.add(seal);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return seals;
+
+    }
 
     public static List<PokerHand> getAllPokerHands() {
         List<PokerHand> pokerHands = new ArrayList<>();
