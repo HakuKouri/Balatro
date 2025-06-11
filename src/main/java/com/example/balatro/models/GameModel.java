@@ -3,6 +3,7 @@ package com.example.balatro.models;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.controller.CardViewController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -74,6 +75,7 @@ public class GameModel {
 
     //region Collected Consumables
     private final ObservableList<Card> consumableList = FXCollections.observableArrayList();
+    private ObservableMap<AnchorPane, CardViewController> consumableMap = FXCollections.observableHashMap();
     //endregion
 
     //region RUN INFO VAR
@@ -93,6 +95,7 @@ public class GameModel {
     private final BooleanProperty firstHand = new SimpleBooleanProperty(true);
     private final BooleanProperty firstDiscard = new SimpleBooleanProperty(true);
     private final ObservableList<PokerHand> playedPokerHandsThisRound = FXCollections.observableArrayList();
+    private IntegerProperty beanValue = new SimpleIntegerProperty(0);
     //endregion
 
     //region UI VAR
@@ -115,6 +118,8 @@ public class GameModel {
     //endregion
 
     //region Voucher Flags
+    private final BooleanProperty overstockVoucher = new SimpleBooleanProperty(false);
+    private final BooleanProperty overstockPlusVoucher = new SimpleBooleanProperty(false);
     private final BooleanProperty TarotMerchantVoucher = new SimpleBooleanProperty(false);
     private final BooleanProperty TarotTycoonVoucher = new SimpleBooleanProperty(false);
     private final BooleanProperty PlanetMerchantVoucher = new SimpleBooleanProperty(false);
@@ -172,6 +177,8 @@ public class GameModel {
 //            System.out.println("Compare result: " + newValue.compareTo(getScoreToReach()));
             pointsReachedProperty().set(newValue.compareTo(getScoreToReach()) > -1);
         });
+
+        maxHandsProperty().bind(Bindings.createIntegerBinding(() -> 4 + getBeanValue(), beanValueProperty()));
     }
     //endregion
 
@@ -604,6 +611,13 @@ public class GameModel {
         return consumableList;
     }
 
+    public ObservableMap<AnchorPane, CardViewController> getConsumableMap() {
+        return consumableMap;
+    }
+
+    public void setConsumableMap(ObservableMap<AnchorPane, CardViewController> consumableMap) {
+        this.consumableMap = consumableMap;
+    }
     //endregion
 
     //region RUN INFO VAR
@@ -789,6 +803,18 @@ public class GameModel {
         return playedPokerHandsThisRound;
     }
 
+    public int getBeanValue() {
+        return beanValue.get();
+    }
+
+    public IntegerProperty beanValueProperty() {
+        return beanValue;
+    }
+
+    public void setBeanValue(int beanValue) {
+        this.beanValue.set(beanValue);
+    }
+
     //endregion
 
     //region UI VAR
@@ -930,6 +956,22 @@ public class GameModel {
     //endregion
 
     //region Voucher Flags
+    public boolean isOverstockVoucher() {
+        return overstockVoucher.get();
+    }
+
+    public BooleanProperty overstockVoucherProperty() {
+        return overstockVoucher;
+    }
+
+    public boolean isOverstockPlusVoucher() {
+        return overstockPlusVoucher.get();
+    }
+
+    public BooleanProperty overstockVoucherPlusProperty() {
+        return overstockPlusVoucher;
+    }
+
     public boolean isTarotMerchantVoucher() {
         return TarotMerchantVoucher.get();
     }

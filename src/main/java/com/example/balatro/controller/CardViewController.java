@@ -4,14 +4,12 @@ import com.example.balatro.Balatro;
 import com.example.balatro.classes.Card;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 
 import java.io.IOException;
 
@@ -39,7 +37,7 @@ public class CardViewController {
     private final ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
     private final BooleanProperty inShop = new SimpleBooleanProperty(false);
     private final StringProperty cardType = new SimpleStringProperty("");
-    private final BooleanProperty isSelected = new SimpleBooleanProperty(false);
+    private final BooleanProperty selected = new SimpleBooleanProperty(false);
     //endregion
 
     //region const Strings
@@ -85,27 +83,33 @@ public class CardViewController {
         this.cardType.set(cardType);
     }
 
-    public boolean isIsSelected() {
-        return isSelected.get();
+    public boolean isSelected() {
+        return selected.get();
     }
 
-    public BooleanProperty isSelectedProperty() {
-        return isSelected;
+    public BooleanProperty selectedProperty() {
+        return selected;
     }
 
-    public void setIsSelected(boolean isSelected) {
-        isSelectedProperty().set(isSelected);
+    public void setSelected(boolean selected) {
+        selectedProperty().set(selected);
     }
 
     //endregion
 
     public void initialize() {
         price_AnchorPane.visibleProperty().bind(inShopProperty());
-        buy_AnchorPane.visibleProperty().bind(isSelectedProperty());
-        sell_AnchorPane.visibleProperty().bind(isSelectedProperty());
+        buy_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                        isSelected() && isInShop(),
+                selectedProperty(), inShopProperty()
+        ));
+        sell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                        isSelected() && !isInShop(),
+                selectedProperty(), inShopProperty()
+        ));
 
-        price_AnchorPane.managedProperty().bind(price_AnchorPane.visibleProperty());
-        buy_AnchorPane.managedProperty().bind(buy_AnchorPane.visibleProperty());
+        //price_AnchorPane.managedProperty().bind(price_AnchorPane.visibleProperty());
+        //buy_AnchorPane.managedProperty().bind(buy_AnchorPane.visibleProperty());
 
         buyLabel.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
@@ -117,7 +121,7 @@ public class CardViewController {
     public void setData(Card card) {
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
         this.card.set(card);
-        priceLabel.setText( "$ " + card.getMaxCost());
+        priceLabel.setText( "$ " + (int)card.getMaxCost());
 
         if (card.getCardImageUrl() != null) {
             cardImage.setImage(card.getImage());
@@ -131,13 +135,17 @@ public class CardViewController {
     }
 
     public static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
+        createCardNode(card,map,false);
+    }
+
+    public static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map, boolean inShop) {
         try {
             FXMLLoader loader = new FXMLLoader(CardViewController.class.getResource("/com/example/balatro/card.fxml"));
             AnchorPane cardPane = loader.load();
             CardViewController controller = loader.getController();
 
             controller.setData(card);
-            controller.setInShop(true);
+            controller.setInShop(inShop);
             map.put(cardPane,controller);
         } catch (IOException e) {
             e.printStackTrace();

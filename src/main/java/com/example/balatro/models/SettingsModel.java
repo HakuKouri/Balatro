@@ -1,13 +1,8 @@
 package com.example.balatro.models;
 
-import com.example.balatro.Balatro;
-import javafx.beans.Observable;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 
 import javax.swing.*;
@@ -57,10 +52,10 @@ public class SettingsModel {
     private final IntegerProperty gameVolume = new SimpleIntegerProperty(50);
     //endregion
 
-    public static ScreenState current;
-    private static GraphicsEnvironment env =
+    private static ScreenState current;
+    private static final GraphicsEnvironment env =
             GraphicsEnvironment.getLocalGraphicsEnvironment();
-    private static GraphicsDevice ev = env.getDefaultScreenDevice();
+    private static final GraphicsDevice ev = env.getDefaultScreenDevice();
 
 
     //region Constructor
@@ -369,7 +364,7 @@ public class SettingsModel {
         }
     }
 
-    public void changeWindow(ScreenState applied, JFrame frame) {
+    private void changeWindow(ScreenState applied, JFrame frame) {
 
         if (applied == ScreenState.fullscreen && current != ScreenState.fullscreen) {
             if (ev.isFullScreenSupported()) {

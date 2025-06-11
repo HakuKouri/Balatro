@@ -1,23 +1,18 @@
 package com.example.balatro.controller;
 
-import com.almasb.fxgl.achievement.Achievement;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -93,7 +88,7 @@ public class ShopPartController {
                 AnchorPane anchorPane = change.getKey();
                 CardViewController controller = map.get(anchorPane);
                 anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
-                controller.isIsSelected() ? -50.0 : 0.0  ,controller.isSelectedProperty()));
+                controller.isSelected() ? -50.0 : 0.0  ,controller.selectedProperty()));
                 stackPane.getChildren().addAll(anchorPane);
             }
             if (change.wasRemoved()) {
@@ -117,7 +112,7 @@ public class ShopPartController {
                 System.out.println("Image Height: " + ((ImageView) source).getFitHeight());
                 System.out.println("Image Width: " + ((ImageView) source).getFitWidth());
 
-                controller.setIsSelected(!controller.isIsSelected());
+                controller.setSelected(!controller.isSelected());
             } else {
                 Node currentNode = source;
                 if(source.getParent() instanceof Label) {
@@ -153,7 +148,7 @@ public class ShopPartController {
         itemMap.clear();
         for (int i = 0; i < maxItems; i++) {
             //CardViewController.createCardNode(getRandomCard(),itemMap);
-            createCardNode(getRandomCard(),itemMap);
+            CardViewController.createCardNode(getRandomCard(), itemMap,true);
         }
     }
 
@@ -244,11 +239,11 @@ public class ShopPartController {
     //region Voucher
     private void drawVoucher() {
         voucherMap.clear();
-        createCardNode(getRandomVoucher(), voucherMap);
+        CardViewController.createCardNode(getRandomVoucher(), voucherMap, true);
     }
 
     public void addVoucher() {
-        createCardNode(getRandomVoucher(), voucherMap);
+        CardViewController.createCardNode(getRandomVoucher(), voucherMap);
     }
 
     private Card getRandomVoucher() {
@@ -265,7 +260,7 @@ public class ShopPartController {
     private void drawBooster() {
         boosterMap.clear();
         for (int i = 0; i < maxBoosters; i++) {
-            createCardNode(getRandomBooster(), boosterMap);
+            CardViewController.createCardNode(getRandomBooster(), boosterMap, true);
         }
     }
 
@@ -325,22 +320,6 @@ public class ShopPartController {
                     pos = i * width - cards/2*width + i * 10;
                 }
         stackPane.getChildren().get(i).setTranslateX(pos);
-        }
-    }
-
-    private void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/balatro/card.fxml"));
-            AnchorPane cardPane = loader.load();
-
-            CardViewController controller = loader.getController();
-            controller.setData(card);
-            controller.setInShop(true);
-
-            map.put(cardPane,controller);
-        } catch (IOException e) {
-            e.printStackTrace();
-            //return new Label("Error loading card");
         }
     }
 }

@@ -6,14 +6,14 @@ import com.example.balatro.controller.GameController;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableMap;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JokerEffectRegistry {
@@ -36,10 +36,14 @@ public class JokerEffectRegistry {
 
         effectMap.put("ADD_MULT_VALUE", (context, self, cards, params) -> {
             System.out.println("Trigger: ADD_MULT_VALUE");
+            //TODO Joker Trigger Animation
+
+            self.setMultValue(self.getMultValue() + Double.parseDouble(((String)params.get("multiplier")).split(" ")[0].substring(1)));
         });
 
         effectMap.put("ADD_STONE_CARD", (context, self, cards, params) -> {
             System.out.println("Trigger: ADD_STONE_CARD");
+            //TODO Joker Trigger Animation
             PlayingCard stoneCard = PlayingCard.createRandomPlayingCard();
             stoneCard.setEnhancement(gameModel.getAllEnhancementList().get(5));
             gameModel.addCardToDeckFull(stoneCard);
@@ -47,10 +51,18 @@ public class JokerEffectRegistry {
 
         effectMap.put("BEAN_SET_VALUE", (context, self, cards, params) -> {
             System.out.println("Trigger: BEAN_SET_VALUE");
+            self.setOtherValue(5);
+            context.setBeanValue(context.getBeanValue() + 5);
         });
 
         effectMap.put("BEAN_SUB_VALUE", (context, self, cards, params) -> {
             System.out.println("Trigger: BEAN_SUB_VALUE");
+            self.setOtherValue(self.getOtherValue() - 1);
+            context.setBeanValue(context.getBeanValue() - 1);
+            if(self.getOtherValue() <= 0) {
+                AnchorPane pane = context.getActiveJokerMap().keySet().stream().filter(j -> context.getActiveJokerMap().get(j).getCard() == self).findFirst().get();
+                context.getActiveJokerMap().remove(pane);
+            }
         });
 
         effectMap.put("BUS_HAND_CHECK", (context, self, cards, params) -> {
@@ -546,54 +558,105 @@ public class JokerEffectRegistry {
 
         effectMap.put("PERKEO_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: PERKEO_EFFECT");
+            //TODO Joker Trigger Effekt
+            Card copy = context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size()));
+            copy.setEdition(context.getAllEditionList().get(4));
+            context.getConsumableList().add(copy);
         });
 
         effectMap.put("PHOTOGRAPH_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: PHOTOGRAPH_EFFECT");
-        });
+            //TODO Joker Trigger Effekt
+            PlayingCard firstFace = context.getPlayedCards().stream().filter(c -> c.getValue() >= 10).findFirst().get();
+            if(firstFace == null) return;
 
-        effectMap.put("RESERVED_PARKING_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: RESERVED_PARKING_EFFECT");
+            for (PlayingCard c : cards) {
+                if(c == firstFace) context.getBestHand().multMult(2);
+            }
         });
 
         effectMap.put("RAISED_FIST_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RAISED_FIST_EFFECT");
+            //TODO Joker Trigger Effekt
+
+            PlayingCard lowestCard = context.getHandCards().stream().min(Comparator.comparing(PlayingCard::getValue)).get();
+            if(lowestCard == null) return;
+            context.getBestHand().addMult(lowestCard.getValue());
+        });
+
+        effectMap.put("RESERVED_PARKING_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: RESERVED_PARKING_EFFECT");
+            //TODO Joker Trigger Effekt
+
+            for (PlayingCard c : context.getHandCards()) {
+                int chance = context.getDouble_chance_flag() > 0 ? 2 - 1 : 2;
+                if (context.getRand().nextInt(chance) == 0) {
+                    context.addMoney(1);
+                }
+            }
         });
 
         effectMap.put("RIFF_RAFF_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
+            //TODO Joker Trigger Effekt
+            List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").collect(Collectors.toList());
+            for (int i = 0; i < 2 && context.getActiveJokerMap().size() < context.getMaxJokers(); i++) {
+                createCardNode(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())), context.getActiveJokerMap());
+            }
         });
 
         effectMap.put("RUNNER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RUNNER_EFFECT");
-        });
-
-        effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: STUNTMAN_BUY_EFFECT");
-        });
-
-        effectMap.put("STUNTMAN_SALE_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: STUNTMAN_SALE_EFFECT");
-        });
-
-        effectMap.put("SQUARE_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: SQUARE_EFFECT");
-        });
-
-        effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: SEANCE_EFFECT");
+            //TODO Joker Trigger Effekt
+            if(context.getBestHand().getName() == "Straight") self.setChipValue(self.getChipValue() + 15);
         });
 
         effectMap.put("SEEING_DOUBLE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SEEING_DOUBLE_EFFECT");
+            //TODO Joker Trigger Effekt
+            Map<Suit, Integer> suitCount = new HashMap<>();
+            for (PlayingCard c : cards) {
+                suitCount.put(c.getSuit(), 0);
+            }
+            if(suitCount.containsKey(Suit.CLUBS) && suitCount.size() > 1) {
+                context.getBestHand().multMult(2);
+            }
         });
 
         effectMap.put("SELTZER_TRIGGER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SELTZER_TRIGGER_EFFECT");
+            //TODO Retrigger
+
         });
 
         effectMap.put("SELTZER_REDUCE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SELTZER_REDUCE_EFFECT");
+            //TODO Joker Trigger Effekt
+            //TODO andere Variable für Wert
+        });
+
+        effectMap.put("SQUARE_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: SQUARE_EFFECT");
+            //TODO Joker Trigger Effekt
+            if(context.getPlayedCards().size() == 4)
+                self.setChipValue(self.getChipValue() + 4);
+        });
+
+        effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: STUNTMAN_BUY_EFFECT");
+            //TODO Joker Trigger Effekt
+            context.setHandSize(context.getHandSize() - 2);
+        });
+
+        effectMap.put("STUNTMAN_SALE_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: STUNTMAN_SALE_EFFECT");
+            context.setHandSize(context.getHandSize() + 2);
+        });
+
+        effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: SEANCE_EFFECT");
+            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getMaxConsumables())
+                context.getConsumableList().add(context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size())));
         });
 
 
@@ -734,5 +797,21 @@ public class JokerEffectRegistry {
 
     public static JokerEffect getEffect(String effectKey) {
         return effectMap.get(effectKey);
+    }
+
+    private static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
+        try {
+            FXMLLoader loader = new FXMLLoader(JokerEffectRegistry.class.getResource("/com/example/balatro/card.fxml"));
+            AnchorPane cardPane = loader.load();
+
+            CardViewController controller = loader.getController();
+            controller.setData(card);
+            controller.setInShop(true);
+
+            map.put(cardPane,controller);
+        } catch (IOException e) {
+            e.printStackTrace();
+            //return new Label("Error loading card");
+        }
     }
 }

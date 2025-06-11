@@ -21,12 +21,20 @@ public class Seal
         return id;
     }
 
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
     public String getSealImageUrl() {
         return sealImageUrl.get();
     }
 
     public StringProperty sealImageUrlProperty() {
         return sealImageUrl;
+    }
+
+    public void setSealImageUrl(String sealImageUrl) {
+        this.sealImageUrl.set(sealImageUrl);
     }
 
     public String getSealName() {
@@ -36,6 +44,10 @@ public class Seal
     public StringProperty sealNameProperty() {
         return sealName;
     }
+    public void setSealName(String sealName) {
+        this.sealName.set(sealName);
+    }
+
 
     public String getSealEffect() {
         return sealEffect.get();
@@ -45,5 +57,13 @@ public class Seal
         return sealEffect;
     }
 
+
+    public void setSealEffect(String sealEffect) {
+        this.sealEffect.set(sealEffect);
+    }
+
     //Functions
+    public void setSeal(Seal seal) {
+
+    }
 }

@@ -26,6 +26,7 @@ public class Joker extends Card {
     private final StringProperty valueFilter = new SimpleStringProperty("");
     private final DoubleProperty multValue = new SimpleDoubleProperty(0);
     private final DoubleProperty chipValue = new SimpleDoubleProperty(0);
+    private final DoubleProperty otherValue = new SimpleDoubleProperty(0);
 
     //region Constructor
     public Joker() {
@@ -192,6 +193,17 @@ public class Joker extends Card {
         this.chipValue.set(chipValue);
     }
 
+    public double getOtherValue() {
+        return otherValue.get();
+    }
+
+    public DoubleProperty otherValueProperty() {
+        return otherValue;
+    }
+
+    public void setOtherValue(double otherValue) {
+        this.otherValue.set(otherValue);
+    }
 
     //region Functions
     public void setJoker(Joker joker) {

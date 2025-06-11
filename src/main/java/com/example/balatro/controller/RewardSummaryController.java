@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class RewardSummaryController {
         });
     }
 
-    public void setRewards(List<Joker> jokers ) {
+    private void setRewards(List<Joker> jokers ) {
         //clear Rewards
         while(rewardVBox.getChildren().size() > 2) {
             rewardVBox.getChildren().remove(2);
@@ -147,6 +148,8 @@ public class RewardSummaryController {
         gameModel.addMoney(reward);
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
+        gameModel.setScoredPoints(BigDecimal.valueOf(0));
+
         reward = 0;
         GameController.getInstance().restockShop();
     }

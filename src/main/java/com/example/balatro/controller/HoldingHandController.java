@@ -134,7 +134,7 @@ public class HoldingHandController {
 
         if(hands.isEmpty()) gameModel.getBestHand().setHand(new PokerHand());
 
-        for (PokerHand pokerHand : gameModel.getAllHandList()) {
+        for (PokerHand pokerHand : gameModel.getAllPokerHandList()) {
             if(hands.contains(pokerHand.getName())) {
                 System.out.println(pokerHand.getName());
                 int points = pokerHand.getChips() * pokerHand.getMulti();

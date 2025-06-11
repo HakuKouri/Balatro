@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -281,7 +282,9 @@ public class GameController
         //endregion
 
         //region Joker Space Bind
-        gameModel.getActiveJokerMap().addListener((MapChangeListener<? super AnchorPane, ? super CardViewController>) change -> {
+        gameModel.getActiveJokerMap().addListener(
+                (MapChangeListener<? super AnchorPane, ? super CardViewController>)
+                        change -> {
                 if(change.wasAdded()) {
                     spaceJoker.getChildren().addAll(change.getKey());
                 }
@@ -289,20 +292,25 @@ public class GameController
                     spaceJoker.getChildren().removeAll(change.getKey());
                 }
 
-            moveCards();
+                UIController.moveCards(spaceJoker);
         });
-        /*gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    spaceJoker.getChildren().addAll(change.getAddedSubList());
-                }
-                if(change.wasRemoved()) {
-                    spaceJoker.getChildren().removeAll(change.getRemoved());
-                }
-            }
-            moveCards();
-        });*/
         //endregion
+
+        //region Joker Space Bind
+        gameModel.getConsumableMap().addListener(
+                (MapChangeListener<? super AnchorPane, ? super CardViewController>)
+                        change -> {
+                            if(change.wasAdded()) {
+                                spaceConsumable.getChildren().addAll(change.getKey());
+                            }
+                            if(change.wasRemoved()) {
+                                spaceConsumable.getChildren().removeAll(change.getKey());
+                            }
+
+                            UIController.moveCards(spaceConsumable);
+                        });
+        //endregion
+
 
         //region Run Info Binds
         handsLabel.textProperty().bind(Bindings.createStringBinding(() ->
@@ -359,8 +367,8 @@ public class GameController
 
         //holdingHand_GrowRow.percentHeightProperty().bind(Bindings.createDoubleBinding(() -> gameModel.isHandButtonVisibility() ? 20.0 : 30.0, gameModel.handButtonVisibilityProperty()));
 
-        if(true) {
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(0), gameModel.getActiveJokerMap());
+        if(false) {
+            CardViewController.createCardNode(gameModel.getAllJokerList().get(79), gameModel.getActiveJokerMap());
             CardViewController.createCardNode(gameModel.getAllJokerList().get(1), gameModel.getActiveJokerMap());
             CardViewController.createCardNode(gameModel.getAllJokerList().get(2), gameModel.getActiveJokerMap());
             CardViewController.createCardNode(gameModel.getAllJokerList().get(3), gameModel.getActiveJokerMap());
@@ -369,28 +377,29 @@ public class GameController
 
             for (AnchorPane pane : gameModel.getActiveJokerMap().keySet()) {
                 CardViewController controller = gameModel.getActiveJokerMap().get(pane);
-                controller.setInShop(false);
                 System.out.println("Card instance: " + (controller.getCard() instanceof Joker));
                 pane.setOnMouseClicked(mouseEvent -> {
                     System.out.println(controller.getCard());
-                    controller.isSelectedProperty().set(!controller.isIsSelected());
+
+                    controller.selectedProperty().set(!controller.isSelected());
                 });
             }
-            moveCards();
-//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(0));
-//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(3));
-//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(4));
-//            gameModel.getActiveJokerObList().add(gameModel.getAllJokerList().get(5));
-//
-//            for (Joker joker : gameModel.getActiveJokerObList()) {
-//                joker.setFitHeight(Balatro.getSettings().getCardHeight());
-//            }
+            UIController.moveCards(spaceJoker);
+
         }
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            gameModel.setMoney(0);
+            for (int i = 0; i < gameModel.getAllJokerList().size() && i < 16; i++) {
+                CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
+            }
         });
+
+        UIController.addCardClickEvent(spaceJoker,gameModel.getActiveJokerMap());
+        UIController.addCardClickEvent(spaceConsumable,gameModel.getConsumableMap());
+
     }
+
+
 
     //SETTING UP GAME
     private void setPlayingDeck() {
@@ -498,28 +507,110 @@ public class GameController
         System.out.printf("Buy item: ");
         System.out.println(controller.getCard());
         if(controller.getCard().getCardType() == "Joker") {
-            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
-            controller.isSelectedProperty().set(false);
+            controller.selectedProperty().set(false);
             controller.inShopProperty().set(false);
-            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
             gameModel.getActiveJokerMap().put(pane, controller);
             shopController.getItemMap().remove(pane);
-            System.out.println("Joker Space Height: " + ((AnchorPane)spaceJoker.getParent()).getHeight());
-            pane.setOnMouseClicked(mouseEvent -> {
-                System.out.println(controller.getCard());
-                controller.isSelectedProperty().set(!controller.isIsSelected());
-            });
-
         } else if(controller.getCard().getCardType() == "Tarot") {
             System.out.printf("Tarot");
+            controller.selectedProperty().set(false);
+            controller.inShopProperty().set(false);
+            gameModel.getConsumableMap().put(pane, controller);
+            shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "Planet") {
             System.out.printf("Planet");
+            controller.selectedProperty().set(false);
+            controller.inShopProperty().set(false);
+            gameModel.getConsumableMap().put(pane, controller);
+            shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "Spectral") {
             System.out.printf("Spectral");
+            controller.selectedProperty().set(false);
+            controller.inShopProperty().set(false);
+            gameModel.getConsumableMap().put(pane, controller);
+            shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "PlayingCard") {
             System.out.printf("PlayingCard");
+            controller.selectedProperty().set(false);
+            controller.inShopProperty().set(false);
+            gameModel.addCardToDeckFull((PlayingCard) controller.getCard());
+            shopController.getItemMap().remove(pane);
+        } else if(controller.getCard().getCardType() == "Voucher") {
+            System.out.printf("Voucher");
+            setVoucherFlag(controller.getCard());
         }
+
         System.out.println();
+    }
+
+    private void setVoucherFlag(Card card) {
+        switch (card.getCardName()){
+            case "Overstock": gameModel.overstockVoucherProperty().set(true);
+                break;
+            case "Clearance Sale": gameModel.clearanceSaleVoucherProperty().set(true);
+                break;
+            case "Hone": gameModel.honeVoucherProperty().set(true);
+                break;
+            case "Reroll Surplus": gameModel.rerollSurplusVoucherProperty().set(true);
+                break;
+            case "Crystal Ball": gameModel.crystalBallVoucherProperty().set(true);
+                break;
+            case "Telescope": gameModel.telescopeVoucherProperty().set(true);
+                break;
+            case "Grabber": gameModel.grabberVoucherProperty().set(true);
+                break;
+            case "Wasteful": gameModel.wastefulVoucherProperty().set(true);
+                break;
+            case "Tarot Merchant": gameModel.tarotMerchantVoucherProperty().set(true);
+                break;
+            case "Planet Merchant": gameModel.planetMerchantVoucherProperty().set(true);
+                break;
+            case "Seed Money": gameModel.seedMoneyVoucherProperty().set(true);
+                break;
+            case "Blank": gameModel.blankVoucherProperty().set(true);
+                break;
+            case "Magic Trick": gameModel.magicTrickVoucherProperty().set(true);
+                break;
+            case "Hieroglyph": gameModel.hieroglyphVoucherProperty().set(true);
+                break;
+            case "Director's Cut": gameModel.directorsCutVoucherProperty().set(true);
+                break;
+            case "Paint Brush": gameModel.paintBrushVoucherProperty().set(true);
+                break;
+            case "Overstock Plus": gameModel.overstockVoucherPlusProperty().set(true);
+                break;
+            case "Liquidation": gameModel.liquidationVoucherProperty().set(true);
+                break;
+            case "Glow Up": gameModel.glowUpVoucherProperty().set(true);
+                break;
+            case "Reroll Glut": gameModel.rerollGlutVoucherProperty().set(true);
+                break;
+            case "Omen Globe": gameModel.omenGlobeVoucherProperty().set(true);
+                break;
+            case "Observatory": gameModel.observatoryVoucherProperty().set(true);
+                break;
+            case "Nacho Tong": gameModel.nachoTongVoucherProperty().set(true);
+                break;
+            case "Recyclomancy": gameModel.recyclomancyVoucherProperty().set(true);
+                break;
+            case "Tarot Tycoon": gameModel.tarotTycoonVoucherProperty().set(true);
+                break;
+            case "Planet Tycoon": gameModel.planetTycoonVoucherProperty().set(true);
+                break;
+            case "Money Tree": gameModel.moneyTreeVoucherProperty().set(true);
+                break;
+            case "Antimatter": gameModel.antimatterVoucherProperty().set(true);
+                break;
+            case "Illusion": gameModel.illusionVoucherProperty().set(true);
+                break;
+            case "Petroglyph": gameModel.petroglyphVoucherProperty().set(true);
+                break;
+            case "Retcon": gameModel.retconVoucherProperty().set(true);
+                break;
+            case "Palette": gameModel.paletteVoucherProperty().set(true);
+                break;
+
+        }
     }
 
     //UI
@@ -533,27 +624,9 @@ public class GameController
         transition.play();
     }
 
-    public void moveCards() {
+    /*public void moveCards() {
         double cardWidth = 200;
-        double lastPos = 700;
-
-//        int cards = spaceJoker.getChildren().size();
-//        double pos = 0;
-//        for(int i = 0; i < cards; i++) {
-//            if(cards > 5) {
-//                spaceJoker.setAlignment(Pos.CENTER_LEFT);
-//                pos = i * lastPos / (cards - 1);
-//            } else {
-//                spaceJoker.setAlignment(Pos.CENTER);
-//                if(cards%2==0) {
-//                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
-//                } else {
-//                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
-//                }
-//            }
-//            spaceJoker.getChildren().get(i).setTranslateX(pos);
-//        }
-
+        double lastPos = spaceJoker.getWidth()-cardWidth;
         int cards = spaceJoker.getChildren().size();
         double pos = 0;
 
@@ -562,16 +635,16 @@ public class GameController
                 spaceJoker.setAlignment(Pos.CENTER_LEFT);
                 pos = i * lastPos / (cards - 1);
             } else {
+                spaceJoker.setAlignment(Pos.CENTER);
                 if (cards % 2 == 0) {
                     pos = cardWidth / 2 + i * cardWidth - cards / 2 * cardWidth + i * 10;
                 } else {
                     pos = i * cardWidth - cards / 2 * cardWidth + i * 10;
                 }
-
             }
             spaceJoker.getChildren().get(i).setTranslateX(pos);
         }
-    }
+    }*/
 
     private void configurePlaceHolder(AnchorPane anchorPane) {
         anchorPane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .53);

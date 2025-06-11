@@ -1,6 +1,7 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ public class Card extends ImageView
     protected StringProperty cardDescription = new SimpleStringProperty("");
     protected IntegerProperty cardCost = new SimpleIntegerProperty(0);
     protected DoubleProperty maxCost = new SimpleDoubleProperty(0);
+    protected ObjectProperty<Edition> edition = new SimpleObjectProperty<>(new Edition());
     protected IntegerProperty editionCost = new SimpleIntegerProperty(0);
     private final DoubleProperty sellValue = new SimpleDoubleProperty(0);
     private final DoubleProperty additionalSellValue = new SimpleDoubleProperty(0);
@@ -122,6 +124,18 @@ public class Card extends ImageView
 
     public DoubleProperty maxCostProperty() {
         return maxCost;
+    }
+
+    public Edition getEdition() {
+        return edition.get();
+    }
+
+    public ObjectProperty<Edition> editionProperty() {
+        return edition;
+    }
+
+    public void setEdition(Edition edition) {
+        this.edition.set(edition);
     }
 
     public int getEditionCost() {

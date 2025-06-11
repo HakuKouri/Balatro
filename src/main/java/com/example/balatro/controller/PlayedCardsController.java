@@ -33,14 +33,14 @@ public class PlayedCardsController {
                     playedCards_StackPane.getChildren().removeAll(change.getRemoved());
                 }
             }
-            moveCards();
+            UIController.moveCards(playedCards_StackPane);
         });
     }
 
     public void addSelectedCards(Runnable onComplete) {
         gameModel.getPlayedCards().addAll(gameModel.getSelectedCards());
         gameModel.getSelectedCards().clear();
-        moveCards();
+        UIController.moveCards(playedCards_StackPane);
 
         List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCards(), gameModel.getBestHand().getName());
         for(PlayingCard card : gameModel.getPlayedCards()) {
@@ -103,7 +103,6 @@ public class PlayedCardsController {
 
         if(gameModel.isPointsReached()) {
             gameModel.setRewardVisibility(true);
-            gameModel.setScoredPoints(BigDecimal.valueOf(0));
             gameModel.getHandCards().clear();
 
             triggerJokers(JokerTrigger.END_OF_ROUND, gameModel.getPlayedCards());
@@ -121,28 +120,6 @@ public class PlayedCardsController {
 
     public void removeAllCards() {
         gameModel.getPlayedCards().clear();
-    }
-
-    public void moveCards() {
-        int cardWidth = 140;
-        int lastPos = 570;
-
-        int cards = gameModel.getPlayedCards().size();
-        int pos = 0;
-        for(int i = 0; i < cards; i++) {
-            if(cards > 5) {
-                playedCards_StackPane.setAlignment(Pos.CENTER_LEFT);
-                pos = i * lastPos / (cards - 1);
-            } else {
-                playedCards_StackPane.setAlignment(Pos.CENTER);
-                if(cards%2==0) {
-                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
-                } else {
-                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
-                }
-            }
-            gameModel.getPlayedCards().get(i).setTranslateX(pos);
-        }
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {

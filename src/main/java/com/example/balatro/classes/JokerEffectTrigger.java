@@ -3,8 +3,8 @@ package com.example.balatro.classes;
 import java.util.List;
 
 public class JokerEffectTrigger {
-    private JokerTrigger trigger;        // Enum statt String
-    private List<String> effectKeys;     // Effekte als Strings oder evtl. Enum später
+    private final JokerTrigger trigger;        // Enum statt String
+    private final List<String> effectKeys;     // Effekte als Strings oder evtl. Enum später
 
     public JokerEffectTrigger(JokerTrigger trigger, List<String> effectKeys) {
         this.trigger = trigger;
