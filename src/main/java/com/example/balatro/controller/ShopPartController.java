@@ -38,35 +38,35 @@ public class ShopPartController {
     private final GameModel gameModel = Balatro.getGameModel();
     private CardViewController selectedCardViewController;
 
-    private ObservableMap<AnchorPane,CardViewController> itemMap = FXCollections.observableHashMap();
-    private ObservableMap<AnchorPane,CardViewController> boosterMap = FXCollections.observableHashMap();
-    private ObservableMap<AnchorPane,CardViewController> voucherMap = FXCollections.observableHashMap();
+    private ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableHashMap();
+    private ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableHashMap();
+    private ObservableMap<CardViewController, AnchorPane> voucherMap = FXCollections.observableHashMap();
 
     private int maxItems = 2;
     private int maxBoosters = 2;
 
     //region Getter Setter
-    public ObservableMap<AnchorPane, CardViewController> getItemMap() {
+    public ObservableMap<CardViewController, AnchorPane> getItemMap() {
         return itemMap;
     }
 
-    public void setItemMap(ObservableMap<AnchorPane, CardViewController> itemMap) {
+    public void setItemMap(ObservableMap<CardViewController, AnchorPane> itemMap) {
         this.itemMap = itemMap;
     }
 
-    public ObservableMap<AnchorPane, CardViewController> getBoosterMap() {
+    public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
         return boosterMap;
     }
 
-    public void setBoosterMap(ObservableMap<AnchorPane, CardViewController> boosterMap) {
+    public void setBoosterMap(ObservableMap<CardViewController, AnchorPane> boosterMap) {
         this.boosterMap = boosterMap;
     }
 
-    public ObservableMap<AnchorPane, CardViewController> getVoucherMap() {
+    public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
         return voucherMap;
     }
 
-    public void setVoucherMap(ObservableMap<AnchorPane, CardViewController> voucherMap) {
+    public void setVoucherMap(ObservableMap<CardViewController, AnchorPane> voucherMap) {
         this.voucherMap = voucherMap;
     }
 
@@ -82,23 +82,23 @@ public class ShopPartController {
         addCardClickEvent(voucherArea, voucherMap);
     }
 
-    private void bindStackPane(ObservableMap<AnchorPane,CardViewController> map, StackPane stackPane) {
-        map.addListener((MapChangeListener<? super AnchorPane, ? super CardViewController>) change -> {
+    private void bindStackPane(ObservableMap<CardViewController, AnchorPane> map, StackPane stackPane) {
+        map.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
             if (change.wasAdded()) {
-                AnchorPane anchorPane = change.getKey();
-                CardViewController controller = map.get(anchorPane);
+                AnchorPane anchorPane = change.getValueAdded();
+                CardViewController controller = change.getKey();
                 anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
                 controller.isSelected() ? -50.0 : 0.0  ,controller.selectedProperty()));
                 stackPane.getChildren().addAll(anchorPane);
             }
             if (change.wasRemoved()) {
-                stackPane.getChildren().removeAll(change.getKey());
+                stackPane.getChildren().removeAll(change.getValueRemoved());
             }
             moveItems(stackPane,200);
         });
     }
 
-    private void addCardClickEvent(StackPane stackPane, Map<AnchorPane,CardViewController> map) {
+    private void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node source = (Node) event.getTarget();
             //System.out.println("Clicked: " + source);
@@ -108,7 +108,7 @@ public class ShopPartController {
                 AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
                 System.out.println("CardPane Height: " + cardPane.getHeight());
                 System.out.println("CardPane Width: " + cardPane.getWidth());
-                CardViewController controller = map.get(cardPane);
+                CardViewController controller = CardViewController.getCardViewController(map, cardPane);
                 System.out.println("Image Height: " + ((ImageView) source).getFitHeight());
                 System.out.println("Image Width: " + ((ImageView) source).getFitWidth());
 
@@ -125,7 +125,7 @@ public class ShopPartController {
                     if (Objects.equals(currentNode.getId(), "buyLabel")) {
                         System.out.println("BuyLabel clicked");
                         AnchorPane cardPane = (AnchorPane) currentNode.getParent().getParent().getParent();
-                        CardViewController controller = map.get(cardPane);
+                        CardViewController controller = CardViewController.getCardViewController(map,cardPane);
                         GameController.getInstance().buyItem(cardPane, controller);
                     }
                 }

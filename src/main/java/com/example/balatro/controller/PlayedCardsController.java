@@ -3,11 +3,11 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
-import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -20,8 +20,6 @@ public class PlayedCardsController {
     public StackPane playedCards_StackPane;
 
     private final GameModel gameModel = Balatro.getGameModel();
-
-    private int gameSpeed = 1;
 
     public void initialize() {
         gameModel.getPlayedCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
@@ -40,7 +38,6 @@ public class PlayedCardsController {
     public void addSelectedCards(Runnable onComplete) {
         gameModel.getPlayedCards().addAll(gameModel.getSelectedCards());
         gameModel.getSelectedCards().clear();
-        UIController.moveCards(playedCards_StackPane);
 
         List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCards(), gameModel.getBestHand().getName());
         for(PlayingCard card : gameModel.getPlayedCards()) {
@@ -57,15 +54,13 @@ public class PlayedCardsController {
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
             //Löse Joker Trigger aus
-            System.out.println("Before Joker: " + gameModel.getBestHand().getMulti());
             triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
-            System.out.println("After Joker: " + gameModel.getBestHand().getMulti());
 
             //Rechne Punkte zusammen
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
             gameModel.getBestHand().setHand(new PokerHand());
 
-            countPoints();
+            pointsReached();
 
             if(onComplete != null) onComplete.run();
             return;
@@ -73,30 +68,27 @@ public class PlayedCardsController {
 
         PlayingCard card = cards.get(index);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(0), new KeyValue(card.rotateProperty(), 0)),
-                new KeyFrame(Duration.millis((double) 4 /gameSpeed), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 8 /gameSpeed), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 12 /gameSpeed), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 16 /gameSpeed), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 20 /gameSpeed), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 24 /gameSpeed), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 28 /gameSpeed), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 32 /gameSpeed), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 36 /gameSpeed), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 40 /gameSpeed), new KeyValue(card.rotateProperty(), 0)));
+        Timeline timeline = UIController.timeline(card);
+
         timeline.setCycleCount(3);
         timeline.setDelay(Duration.seconds(0.2));
 
         timeline.setOnFinished(event -> {
             gameModel.getBestHand().chipsProperty().set(card.getValue() + gameModel.getBestHand().getChips());
+
+            // Joker triggern (fügen ihre Animationen hinzu)
             triggerJokers(JokerTrigger.ON_CARD_SCORED, List.of(card));
-            animateSelectedCards(cards, index + 1, onComplete);
+
+            // Danach alle Jokeranimationen sequentiell ausführen, dann nächste Karte
+            UIController.playAnimations(() -> {
+                animateSelectedCards(cards, index + 1, onComplete);
+            });
         });
 
         timeline.play();
     }
 
-    private void countPoints() {
+    private void pointsReached() {
         //TODO ADD EDITION, TRIGGER
 
         System.out.println("Points Reached? (Played Cards): " + gameModel.isPointsReached());
@@ -127,4 +119,7 @@ public class PlayedCardsController {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
     }
+
+
+
 }

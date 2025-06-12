@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameController
 {
@@ -153,7 +154,7 @@ public class GameController
     private List<BlindBoxPanelController> blindPanelControllerList;
     //endregion
 
-    //region
+    //region Placeholder
     private AnchorPane shop = null;
     private AnchorPane reward = null;
     //endregion
@@ -225,6 +226,7 @@ public class GameController
             throw new RuntimeException(e);
         }
 
+        UIController.setupUiController();
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
@@ -282,14 +284,22 @@ public class GameController
         //endregion
 
         //region Joker Space Bind
+//        gameModel.getActiveJokerObList().addListener((ListChangeListener<? super Joker>) change -> {
+//            if(change.wasAdded()) {
+//                spaceJoker.getChildren().addAll(change.getAddedSubList());
+//            }
+//            if(change.wasRemoved()) {
+//                spaceJoker.getChildren().removeAll(change.getAddedSubList());
+//            }
+//        });
         gameModel.getActiveJokerMap().addListener(
-                (MapChangeListener<? super AnchorPane, ? super CardViewController>)
+                (MapChangeListener<? super CardViewController, ? super AnchorPane>)
                         change -> {
                 if(change.wasAdded()) {
-                    spaceJoker.getChildren().addAll(change.getKey());
+                    spaceJoker.getChildren().addAll(change.getValueAdded());
                 }
                 if(change.wasRemoved()) {
-                    spaceJoker.getChildren().removeAll(change.getKey());
+                    spaceJoker.getChildren().removeAll(change.getValueRemoved());
                 }
 
                 UIController.moveCards(spaceJoker);
@@ -298,13 +308,13 @@ public class GameController
 
         //region Joker Space Bind
         gameModel.getConsumableMap().addListener(
-                (MapChangeListener<? super AnchorPane, ? super CardViewController>)
+                (MapChangeListener<? super CardViewController, ? super AnchorPane>)
                         change -> {
                             if(change.wasAdded()) {
-                                spaceConsumable.getChildren().addAll(change.getKey());
+                                spaceConsumable.getChildren().addAll(change.getValueAdded());
                             }
                             if(change.wasRemoved()) {
-                                spaceConsumable.getChildren().removeAll(change.getKey());
+                                spaceConsumable.getChildren().removeAll(change.getValueRemoved());
                             }
 
                             UIController.moveCards(spaceConsumable);
@@ -375,8 +385,10 @@ public class GameController
             CardViewController.createCardNode(gameModel.getAllJokerList().get(4), gameModel.getActiveJokerMap());
             CardViewController.createCardNode(gameModel.getAllJokerList().get(5), gameModel.getActiveJokerMap());
 
-            for (AnchorPane pane : gameModel.getActiveJokerMap().keySet()) {
-                CardViewController controller = gameModel.getActiveJokerMap().get(pane);
+            for (AnchorPane pane : gameModel.getActiveJokerMap().values()) {
+                CardViewController controller = gameModel.getActiveJokerMap().keySet()
+                        .stream()
+                        .filter(cardViewController -> gameModel.getActiveJokerMap().get(cardViewController) == pane).collect(Collectors.toList()).get(0);
                 System.out.println("Card instance: " + (controller.getCard() instanceof Joker));
                 pane.setOnMouseClicked(mouseEvent -> {
                     System.out.println(controller.getCard());
@@ -509,25 +521,25 @@ public class GameController
         if(controller.getCard().getCardType() == "Joker") {
             controller.selectedProperty().set(false);
             controller.inShopProperty().set(false);
-            gameModel.getActiveJokerMap().put(pane, controller);
+            gameModel.getActiveJokerMap().put(controller, pane);
             shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "Tarot") {
             System.out.printf("Tarot");
             controller.selectedProperty().set(false);
             controller.inShopProperty().set(false);
-            gameModel.getConsumableMap().put(pane, controller);
+            gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "Planet") {
             System.out.printf("Planet");
             controller.selectedProperty().set(false);
             controller.inShopProperty().set(false);
-            gameModel.getConsumableMap().put(pane, controller);
+            gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "Spectral") {
             System.out.printf("Spectral");
             controller.selectedProperty().set(false);
             controller.inShopProperty().set(false);
-            gameModel.getConsumableMap().put(pane, controller);
+            gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(pane);
         } else if(controller.getCard().getCardType() == "PlayingCard") {
             System.out.printf("PlayingCard");

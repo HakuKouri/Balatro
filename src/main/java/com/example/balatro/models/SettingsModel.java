@@ -249,6 +249,7 @@ public class SettingsModel {
             properties.loadFromXML(new FileInputStream(rootPath));
 
             //Game
+            System.out.println("Settings Gamespeed: " + Integer.parseInt(properties.getProperty("game speed")));
             gameSpeedProperty().set(Integer.parseInt(properties.getProperty("game speed")));
             playDiscardOrderProperty().set(Boolean.parseBoolean(properties.getProperty("hand button order")));
             screenShakeProperty().set(Integer.parseInt(properties.getProperty("screen shake")));

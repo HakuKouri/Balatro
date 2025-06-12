@@ -70,12 +70,12 @@ public class GameModel {
 
     //region ACTIVE JOKERS
     private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
-    private final ObservableMap<AnchorPane, CardViewController> activeJokerMap = FXCollections.observableHashMap();
+    private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableHashMap();
     //endregion
 
     //region Collected Consumables
     private final ObservableList<Card> consumableList = FXCollections.observableArrayList();
-    private ObservableMap<AnchorPane, CardViewController> consumableMap = FXCollections.observableHashMap();
+    private ObservableMap<CardViewController, AnchorPane> consumableMap = FXCollections.observableHashMap();
     //endregion
 
     //region RUN INFO VAR
@@ -584,14 +584,14 @@ public class GameModel {
         return rocketJokers;
     }
 
-    public ObservableMap<AnchorPane, CardViewController> getActiveJokerMap() {
+    public ObservableMap<CardViewController, AnchorPane> getActiveJokerMap() {
         return activeJokerMap;
     }
 
     public List<Joker> getActiveJokerList() {
         System.out.println("getActiveJokerList");
 
-        List<Joker> jokers = activeJokerMap.values().stream()
+        List<Joker> jokers = activeJokerMap.keySet().stream()
                 .map(CardViewController::getCard)       // holt die Card aus dem Controller
                 .filter(card -> card instanceof Joker)  // prüft ob es ein Joker ist
                 .map(card -> (Joker) card)              // castet auf Joker
@@ -611,11 +611,11 @@ public class GameModel {
         return consumableList;
     }
 
-    public ObservableMap<AnchorPane, CardViewController> getConsumableMap() {
+    public ObservableMap<CardViewController, AnchorPane> getConsumableMap() {
         return consumableMap;
     }
 
-    public void setConsumableMap(ObservableMap<AnchorPane, CardViewController> consumableMap) {
+    public void setConsumableMap(ObservableMap<CardViewController, AnchorPane> consumableMap) {
         this.consumableMap = consumableMap;
     }
     //endregion

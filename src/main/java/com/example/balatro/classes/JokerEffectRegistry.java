@@ -3,8 +3,10 @@ package com.example.balatro.classes;
 import com.example.balatro.Balatro;
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.controller.GameController;
+import com.example.balatro.controller.UIController;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +62,14 @@ public class JokerEffectRegistry {
             self.setOtherValue(self.getOtherValue() - 1);
             context.setBeanValue(context.getBeanValue() - 1);
             if(self.getOtherValue() <= 0) {
-                AnchorPane pane = context.getActiveJokerMap().keySet().stream().filter(j -> context.getActiveJokerMap().get(j).getCard() == self).findFirst().get();
+                AnchorPane pane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+//                        context.getActiveJokerMap().values()
+//
+//
+//                        .stream()
+//                        .filter(j ->
+//                                j.getCard() == self)
+//                        .findFirst().get();
                 context.getActiveJokerMap().remove(pane);
             }
         });
@@ -155,6 +164,8 @@ public class JokerEffectRegistry {
 
         effectMap.put("MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_ADD");
+            Timeline timeline = UIController.timeline(self);
+            timeline.play();
             System.out.println("Multiplier: " + ((String)params.get("multiplier")).split(" ")[0].substring(1));
             context.getBestHand().addMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
         });
@@ -237,9 +248,16 @@ public class JokerEffectRegistry {
 
         effectMap.put("SUIT_MULT_ADD", (context, self, cards, params) -> {
             if(cards.get(0).getSuit() == getSuit(params.get("suit").toString())) {
-                String rawMultiplier = (String) params.get("multiplier");
-                int value = Integer.parseInt(rawMultiplier.replace(" Mult", ""));
-                context.getBestHand().addMult(value);
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.timeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    String rawMultiplier = (String) params.get("multiplier");
+                    int value = Integer.parseInt(rawMultiplier.replace(" Mult", ""));
+                    context.getBestHand().addMult(value);
+                });
+
+                UIController.addToAnimationList(timeline);
             }
         });
 
@@ -293,7 +311,7 @@ public class JokerEffectRegistry {
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
             //TODO Einzel Trigger Animation pro Joker
-            int uncommonCount = (int) context.getActiveJokerMap().values().stream().filter(cardViewController -> ((Joker)cardViewController.getCard()).getRarity() == "Uncommon"). count();
+            int uncommonCount = (int) context.getActiveJokerMap().keySet().stream().filter(cardViewController -> ((Joker)cardViewController.getCard()).getRarity() == "Uncommon"). count();
             for (int i = 0; i < uncommonCount; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -379,13 +397,16 @@ public class JokerEffectRegistry {
             List<Node> children = GameController.getInstance().getJokerStackPane().getChildren();
             for (int i = 0; i < children.size(); i++) {
                 AnchorPane pane = (AnchorPane) children.get(i);
-                CardViewController controller = context.getActiveJokerMap().get(pane);
+                CardViewController controller = context.getActiveJokerMap().keySet()
+                        .stream()
+                        .filter(cvc -> cvc.getCard() == self)
+                        .collect(Collectors.toList()).get(0);
                 Card card = controller.getCard();
 
                 if ("Ceremonial Dagger".equals(card.getCardName())) {
                     if (i < children.size() - 1);
                     System.out.println("Hat Nachfolger: ");
-                    self.setMultValue(self.getMultValue() + context.getActiveJokerMap().get(children.get(i+1)).getCard().getSellValue());
+                    self.setMultValue(self.getMultValue() + controller.getCard().getSellValue());
                     context.getActiveJokerMap().remove(children.get(i+1));
                     break;
                 }
@@ -452,7 +473,7 @@ public class JokerEffectRegistry {
         effectMap.put("GIFT_CARD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: GIFT_CARD_EFFECT");
             //TODO Joker Trigger Animation
-            for(CardViewController c : context.getActiveJokerMap().values().stream().collect(Collectors.toList())){
+            for(CardViewController c : context.getActiveJokerMap().keySet().stream().collect(Collectors.toList())){
                 c.getCard().additionalSellValueProperty().add(1);
             }
             for(var c : context.getConsumableList()) {
@@ -505,7 +526,9 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: MADNESS_EFFECT");
             //TODO Joker Trigger Effekt
             if(context.getActiveBlind().getBlindId() < 2) {
-                List<AnchorPane> list = context.getActiveJokerMap().keySet().stream().filter(c -> context.getActiveJokerMap().get(c).getCard().getCardName() != "Madness").collect(Collectors.toList());
+                List<AnchorPane> list = context.getActiveJokerMap().values()
+                        .stream()
+                        .filter(c -> CardViewController.getCardViewController(context.getActiveJokerMap(),c).getCard().getCardName() != "Madness").collect(Collectors.toList());
                 //TODO Destroy Joker Animation
                 context.getActiveJokerMap().remove(list.get(context.getRand().nextInt(list.size())));
                 self.setMultValue(self.getMultValue() + .5);
@@ -601,7 +624,7 @@ public class JokerEffectRegistry {
             //TODO Joker Trigger Effekt
             List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").collect(Collectors.toList());
             for (int i = 0; i < 2 && context.getActiveJokerMap().size() < context.getMaxJokers(); i++) {
-                createCardNode(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())), context.getActiveJokerMap());
+                CardViewController.createCardNode(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())), context.getActiveJokerMap());
             }
         });
 

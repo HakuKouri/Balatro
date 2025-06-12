@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class CardViewController {
     //region FXML
@@ -134,11 +135,11 @@ public class CardViewController {
         return cardImage.getImage().getUrl();
     }
 
-    public static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
+    public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map) {
         createCardNode(card,map,false);
     }
 
-    public static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map, boolean inShop) {
+    public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map, boolean inShop) {
         try {
             FXMLLoader loader = new FXMLLoader(CardViewController.class.getResource("/com/example/balatro/card.fxml"));
             AnchorPane cardPane = loader.load();
@@ -146,11 +147,21 @@ public class CardViewController {
 
             controller.setData(card);
             controller.setInShop(inShop);
-            map.put(cardPane,controller);
+            map.put(controller,cardPane);
         } catch (IOException e) {
             e.printStackTrace();
             //return new Label("Error loading card");
         }
+    }
+
+    public static CardViewController getCardViewController(Map<CardViewController,AnchorPane> map, AnchorPane pane) {
+        System.out.println("getCardViewController");
+        return map.keySet().stream().filter(cardViewController -> map.get(cardViewController).equals(pane)).findFirst().get();
+    }
+
+    public static AnchorPane getCardAnchorPane(Map<CardViewController,AnchorPane> map, Card card) {
+        CardViewController controller = map.keySet().stream().filter( cardViewController -> cardViewController.getCard() == card).findFirst().get();
+        return map.get(controller);
     }
 
 
