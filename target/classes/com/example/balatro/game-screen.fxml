@@ -405,17 +405,17 @@
                   <RowConstraints percentHeight="90.0" vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                </rowConstraints>
+               <AnchorPane GridPane.columnIndex="1">
+                  <children>
+                     <StackPane fx:id="spaceConsumable" styleClass="spot" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  </children>
+               </AnchorPane>
                <AnchorPane>
                   <children>
                      <StackPane fx:id="spaceJoker" styleClass="spot" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   </children>
                </AnchorPane>
                <Label fx:id="jokerCountLabel" text="0/5" textFill="WHITE" GridPane.rowIndex="1" />
-               <AnchorPane GridPane.columnIndex="1">
-                  <children>
-                     <StackPane fx:id="spaceConsumable" styleClass="spot" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  </children>
-               </AnchorPane>
                <Label fx:id="consumableCountLabel" text="0/2" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </GridPane>
          </AnchorPane>

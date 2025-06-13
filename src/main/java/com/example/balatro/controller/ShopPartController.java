@@ -73,9 +73,9 @@ public class ShopPartController {
     //endregion
 
     public void initialize() {
-        bindStackPane(itemMap, shopArea);
-        bindStackPane(boosterMap, boosterArea);
-        bindStackPane(voucherMap, voucherArea);
+        UIController.bindStackPane(itemMap, shopArea);
+        UIController.bindStackPane(boosterMap, boosterArea);
+        UIController.bindStackPane(voucherMap, voucherArea);
 
         addCardClickEvent(shopArea, itemMap);
         addCardClickEvent(boosterArea, boosterMap);
@@ -230,7 +230,7 @@ public class ShopPartController {
     }
 
     private Card getRandomPlayingCard() {
-        PlayingCard playingCard = new PlayingCard(1,1);
+        PlayingCard playingCard = new PlayingCard(gameModel.getRand().nextInt(14),4);
         return playingCard;
     }
 

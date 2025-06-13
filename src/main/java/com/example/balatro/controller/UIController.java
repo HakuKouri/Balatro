@@ -1,13 +1,15 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Card;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -22,7 +24,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class UIController {
 
@@ -30,66 +31,84 @@ public class UIController {
     private static List<Animation> animationList = new ArrayList<>();
 
     public static void setupUiController() {
-        System.out.println("UI gamespeed: " + Balatro.getSettings().getGameSpeed());
         gameSpeed.bind( Balatro.getSettings().gameSpeedProperty());
     }
 
     public static void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
             Node source = (Node) event.getTarget();
-            //System.out.println("Clicked: " + source);
+            AnchorPane anchorPane = null;
+            CardViewController cardViewController = null;
 
             if (source instanceof ImageView) {
-                System.out.println("ImageView clicked");
-                AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
-                System.out.println("CardPane Height: " + cardPane.getHeight());
-                System.out.println("CardPane Width: " + cardPane.getWidth());
-                CardViewController controller = map.keySet().stream().filter(cardViewController -> map.get(cardViewController).equals(stackPane)).findFirst().get();
-                System.out.println("Image Height: " + ((ImageView) source).getFitHeight());
-                System.out.println("Image Width: " + ((ImageView) source).getFitWidth());
-
-                controller.setSelected(!controller.isSelected());
+                anchorPane = (AnchorPane) source.getParent().getParent().getParent();
+                cardViewController = CardViewController.getCardViewController(map,anchorPane);
+                cardViewController.setSelected(!cardViewController.isSelected());
             } else {
                 Node currentNode = source;
                 if (source.getParent() instanceof Label) {
-                    System.out.println("LabeledText clicked");
                     currentNode = source.getParent();
                 }
 
                 if (currentNode instanceof Label) {
-                    System.out.println("Label clicked");
-                    if (Objects.equals(currentNode.getId(), "buyLabel")) {
+                    anchorPane = (AnchorPane) currentNode.getParent().getParent().getParent();
+                    cardViewController = CardViewController.getCardViewController(map,anchorPane);
+
+                    if (currentNode.getId().equals("buyLabel")) {
                         System.out.println("BuyLabel clicked");
-                        AnchorPane cardPane = (AnchorPane) currentNode.getParent().getParent().getParent();
-                        CardViewController controller = map.keySet().stream().filter(cardViewController -> map.get(cardViewController).equals(cardPane)).findFirst().get();
-                        GameController.getInstance().buyItem(cardPane, controller);
+                        GameController.getInstance().buyItem(anchorPane, cardViewController);
+                    } else if(currentNode.getId().equals("sellLabel")) {
+                        System.out.println("SellLabel clicked");
+                        GameController.getInstance().sellItem(anchorPane,cardViewController,map);
                     }
                 }
             }
         });
     }
 
-    public static void moveCards(StackPane stackPane) {
-        double cardWidth = 200;
-        System.out.println("Joker Space Width: " + ((AnchorPane)stackPane.getParent()).getWidth());
-        double lastPos = stackPane.getWidth() - cardWidth - 10;
+    public static void bindStackPane(ObservableMap<CardViewController, AnchorPane> map, StackPane stackPane) {
+        map.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
+            if (change.wasAdded()) {
+                AnchorPane anchorPane = change.getValueAdded();
+                CardViewController controller = change.getKey();
+                anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
+                        controller.isSelected() ? -50.0 : 0.0  ,controller.selectedProperty()));
+                stackPane.getChildren().addAll(anchorPane);
+            }
+            if (change.wasRemoved()) {
+                stackPane.getChildren().removeAll(change.getValueRemoved());
+            }
+            moveCards(stackPane);
+        });
+    }
 
+    public static void moveCards(StackPane stackPane) {
         int cards = stackPane.getChildren().size();
-        double pos = 0;
+        if (cards == 0) return;
+
+        if(cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
+        else          stackPane.setAlignment(Pos.CENTER);
+
+        double cardWidth = 200;
+        double paneWidth = stackPane.getWidth();
+        double margin = 10;
+        double availableSpace = paneWidth - cardWidth * cards;
+        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
+        System.out.println(spacing);
+        double pos;
+        double centerIndex = (cards - 1) / 2.0;
+
         for(int i = 0; i < cards; i++) {
             if(cards > 5) {
-                stackPane.setAlignment(Pos.CENTER_LEFT);
-                pos = i * lastPos / (cards - 1);
+                pos = margin + i * (cardWidth + spacing);
             } else {
-                stackPane.setAlignment(Pos.CENTER);
-                if(cards%2==0) {
-                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
-                } else {
-                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
-                }
+                pos = (i - centerIndex) * (cardWidth - cards * 4);
             }
             stackPane.getChildren().get(i).setTranslateX(pos);
+
         }
+
     }
 
     public static Timeline timeline(Node card) {

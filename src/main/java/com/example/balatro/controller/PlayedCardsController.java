@@ -91,8 +91,6 @@ public class PlayedCardsController {
     private void pointsReached() {
         //TODO ADD EDITION, TRIGGER
 
-        System.out.println("Points Reached? (Played Cards): " + gameModel.isPointsReached());
-
         if(gameModel.isPointsReached()) {
             gameModel.setRewardVisibility(true);
             gameModel.getHandCards().clear();

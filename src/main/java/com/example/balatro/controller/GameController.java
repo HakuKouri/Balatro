@@ -12,12 +12,10 @@ import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -401,7 +399,7 @@ public class GameController
         }
         //TEST BUTTON
         testButton.setOnAction(event -> {
-            for (int i = 0; i < gameModel.getAllJokerList().size() && i < 16; i++) {
+            for (int i = 0; i < gameModel.getAllJokerList().size() && i < 7; i++) {
                 CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
             }
         });
@@ -507,8 +505,6 @@ public class GameController
 
     public void addMoney(int reward) {
         gameModel.setMoney(gameModel.getMoney() + reward);
-
-        gameModel.setShopVisibility(true);
     }
 
     public void restockShop() {
@@ -550,6 +546,7 @@ public class GameController
         } else if(controller.getCard().getCardType() == "Voucher") {
             System.out.printf("Voucher");
             setVoucherFlag(controller.getCard());
+            shopController.getVoucherMap().remove(pane);
         }
 
         System.out.println();
@@ -679,4 +676,8 @@ public class GameController
         new Thread(sleeper).start();
     }
 
+    public void sellItem(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
+        addMoney((int) cardViewController.getCard().getSellValue());
+        map.remove(cardViewController, anchorPane);
+    }
 }

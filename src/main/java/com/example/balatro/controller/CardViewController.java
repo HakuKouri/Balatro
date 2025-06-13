@@ -115,7 +115,7 @@ public class CardViewController {
         buyLabel.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
         sellLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            return isInShop() && getCardType() == "Tarot" ? String.format(buyAndUse, card.get().getMaxCost()) : sell;
+            return isInShop() && getCardType() == "Tarot" ? String.format(buyAndUse, card.get().getMaxCost()) : String.format(sell, (int)card.get().getSellValue());
         }));
     }
 
