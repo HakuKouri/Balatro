@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 public class ShopPartController {
 
     @FXML
-    private AnchorPane rotatedLabel_AnchorPane;
-    @FXML
     private Label rotatedLabel;
     @FXML
     private AnchorPane shopAnchorPane;
@@ -36,7 +34,6 @@ public class ShopPartController {
 
     private final GameController gameController = GameController.getInstance();
     private final GameModel gameModel = Balatro.getGameModel();
-    private CardViewController selectedCardViewController;
 
     private ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableHashMap();
     private ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableHashMap();
@@ -77,60 +74,9 @@ public class ShopPartController {
         UIController.bindStackPane(boosterMap, boosterArea);
         UIController.bindStackPane(voucherMap, voucherArea);
 
-        addCardClickEvent(shopArea, itemMap);
-        addCardClickEvent(boosterArea, boosterMap);
-        addCardClickEvent(voucherArea, voucherMap);
-    }
-
-    private void bindStackPane(ObservableMap<CardViewController, AnchorPane> map, StackPane stackPane) {
-        map.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
-            if (change.wasAdded()) {
-                AnchorPane anchorPane = change.getValueAdded();
-                CardViewController controller = change.getKey();
-                anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
-                controller.isSelected() ? -50.0 : 0.0  ,controller.selectedProperty()));
-                stackPane.getChildren().addAll(anchorPane);
-            }
-            if (change.wasRemoved()) {
-                stackPane.getChildren().removeAll(change.getValueRemoved());
-            }
-            moveItems(stackPane,200);
-        });
-    }
-
-    private void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
-        stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            Node source = (Node) event.getTarget();
-            //System.out.println("Clicked: " + source);
-
-            if(source instanceof ImageView) {
-                System.out.println("ImageView clicked");
-                AnchorPane cardPane = (AnchorPane) source.getParent().getParent().getParent();
-                System.out.println("CardPane Height: " + cardPane.getHeight());
-                System.out.println("CardPane Width: " + cardPane.getWidth());
-                CardViewController controller = CardViewController.getCardViewController(map, cardPane);
-                System.out.println("Image Height: " + ((ImageView) source).getFitHeight());
-                System.out.println("Image Width: " + ((ImageView) source).getFitWidth());
-
-                controller.setSelected(!controller.isSelected());
-            } else {
-                Node currentNode = source;
-                if(source.getParent() instanceof Label) {
-                    System.out.println("LabeledText clicked");
-                    currentNode = source.getParent();
-                }
-
-                if(currentNode instanceof Label) {
-                    System.out.println("Label clicked");
-                    if (Objects.equals(currentNode.getId(), "buyLabel")) {
-                        System.out.println("BuyLabel clicked");
-                        AnchorPane cardPane = (AnchorPane) currentNode.getParent().getParent().getParent();
-                        CardViewController controller = CardViewController.getCardViewController(map,cardPane);
-                        GameController.getInstance().buyItem(cardPane, controller);
-                    }
-                }
-            }
-        });
+        UIController.addCardClickEvent(shopArea, itemMap);
+        UIController.addCardClickEvent(boosterArea, boosterMap);
+        UIController.addCardClickEvent(voucherArea, voucherMap);
     }
 
     public void restockShop() {
@@ -147,7 +93,6 @@ public class ShopPartController {
     private void drawItems() {
         itemMap.clear();
         for (int i = 0; i < maxItems; i++) {
-            //CardViewController.createCardNode(getRandomCard(),itemMap);
             CardViewController.createCardNode(getRandomCard(), itemMap,true);
         }
     }
@@ -225,7 +170,7 @@ public class ShopPartController {
     private Card getRandomSpectral() {
         Spectral spectral = new Spectral();
         int spectralChance = gameModel.getRand().nextInt(18);
-
+        spectral.setSpectral(gameModel.getAllSpectralList().get(spectralChance));
         return spectral;
     }
 
@@ -253,7 +198,7 @@ public class ShopPartController {
     }
 
     private void removeFromVoucher(Voucher voucher) {
-        voucherArea.getChildren().remove(voucher);
+        voucherMap.remove(voucher);
     }
     //endregion
 
@@ -307,20 +252,6 @@ public class ShopPartController {
         else booster.setBooster(gameModel.getAllBoosterList().get(31));
 
         return booster;
-    }
-
-    private void moveItems(StackPane stackPane, double width) {
-        int cards = stackPane.getChildren().size();
-        double pos = 0;
-
-        for(int i = 0; i < cards; i++) {
-                if(cards%2==0) {
-                    pos = width/2 + i * width - cards/2*width + i * 10;
-                } else {
-                    pos = i * width - cards/2*width + i * 10;
-                }
-        stackPane.getChildren().get(i).setTranslateX(pos);
-        }
     }
 }
 

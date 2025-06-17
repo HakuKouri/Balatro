@@ -1,10 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -12,18 +9,22 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class UIController {
 
@@ -36,7 +37,6 @@ public class UIController {
 
     public static void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-
             Node source = (Node) event.getTarget();
             AnchorPane anchorPane = null;
             CardViewController cardViewController = null;
@@ -60,7 +60,8 @@ public class UIController {
                         GameController.getInstance().buyItem(anchorPane, cardViewController);
                     } else if(currentNode.getId().equals("sellLabel")) {
                         System.out.println("SellLabel clicked");
-                        GameController.getInstance().sellItem(anchorPane,cardViewController,map);
+                        if(cardViewController.isInShop()) GameController.getInstance().buyAndUse(cardViewController);
+                        else GameController.getInstance().sellItem(anchorPane,cardViewController,map);
                     }
                 }
             }
@@ -111,7 +112,8 @@ public class UIController {
 
     }
 
-    public static Timeline timeline(Node card) {
+    //region Animation
+    public static Timeline cardWiggleTimeline(Node card) {
         System.out.println("Game Speed: " + gameSpeed.get());
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(0), new KeyValue(card.rotateProperty(), 0)),
                 new KeyFrame(Duration.millis((double) 4 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
@@ -128,6 +130,32 @@ public class UIController {
         timeline.setCycleCount(3);
         timeline.setDelay(Duration.seconds(0.2));
 
+        return timeline;
+    }
+
+    public static TranslateTransition cardMoveTime(Node card) {
+        Scene scene = card.getScene();
+        double targetX = scene.getWidth() + 300;
+        double targetY = scene.getHeight() / 2;
+
+        // Aktuelle Position der Karte relativ zur Szene
+        Bounds bounds = card.localToScene(card.getBoundsInLocal());
+        double currentX = bounds.getMinX() + bounds.getWidth() / 2;
+        double currentY = bounds.getMinY() + bounds.getHeight() / 2;
+
+        // Differenz berechnen
+        double deltaX = targetX - currentX;
+        double deltaY = targetY - currentY;
+
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(.1), card);
+        transition.setByX(deltaX);
+        transition.setByY(deltaY);
+
+        return transition;
+    }
+
+    public static Timeline delayTimeline() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {}));
         return timeline;
     }
 
@@ -179,5 +207,19 @@ public class UIController {
 
     public static void clear() {
         animationList.clear();
+    }
+
+    //endregion
+
+
+    //UI
+    public static void animateBox(Node node, boolean bool) {
+        int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(.2), node);
+
+        transition.setToY(bool ? up : Balatro.getSettings().getWindowHeight());
+        transition.setInterpolator(Interpolator.LINEAR);
+
+        transition.play();
     }
 }

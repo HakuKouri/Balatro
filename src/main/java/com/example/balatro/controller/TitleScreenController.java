@@ -52,7 +52,7 @@ public class TitleScreenController
     private NewGameMenuController newGameMenuController;
     private OptionScreenController optionScreenController;
     private GridPane newGameGrid;
-    private TabPane optionsTabPane;
+    private AnchorPane optionsTabPane;
     //endregion
 
     //region Global Variables

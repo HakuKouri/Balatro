@@ -139,4 +139,11 @@ public class PokerHand {
     }
 
 
+    public void addChips(int planetChips) {
+        setChips(getChips() + planetChips);
+    }
+
+    public void addLevel() {
+        levelProperty().set(getLevel() + 1);
+    }
 }

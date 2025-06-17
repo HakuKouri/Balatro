@@ -16,8 +16,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import static com.example.balatro.controller.GameController.delay;
-
 public class Balatro extends Application
 {
     //region Primary Stage
@@ -48,6 +46,8 @@ public class Balatro extends Application
     private final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
     private static final FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
     public static AnchorPane mainPane;
+
+
     //endregion
 
     @Override

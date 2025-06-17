@@ -1,10 +1,13 @@
 package com.example.balatro.controller;
 
+import com.almasb.fxgl.ui.UI;
 import com.example.balatro.Balatro;
+import com.example.balatro.classes.Planet;
 import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -18,8 +21,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
+import java.sql.Time;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
@@ -134,7 +141,7 @@ public class HoldingHandController {
 
         if(hands.isEmpty()) gameModel.getBestHand().setHand(new PokerHand());
 
-        for (PokerHand pokerHand : gameModel.getAllPokerHandList()) {
+        for (PokerHand pokerHand : gameModel.getPokerHandList()) {
             if(hands.contains(pokerHand.getName())) {
                 System.out.println(pokerHand.getName());
                 int points = pokerHand.getChips() * pokerHand.getMulti();
@@ -215,5 +222,48 @@ public class HoldingHandController {
             gameModel.decrementDiscards();
         }
     }
+
+    public void playPlanet(CardViewController cardViewController) {
+        Planet planet = (Planet) cardViewController.getCard();
+
+        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).findFirst().get();
+
+        gameModel.getBestHand().setHand(hand);
+
+        Timeline multTimeline = UIController.cardWiggleTimeline(planet);
+
+        multTimeline.setCycleCount(3);
+        multTimeline.setOnFinished( event -> {
+            hand.addMult(planet.getPlanetMultiplier());
+            gameModel.getBestHand().addMult(planet.getPlanetMultiplier());
+        });
+        Timeline chipsTimeline = UIController.cardWiggleTimeline(planet);
+        chipsTimeline.setCycleCount(3);
+        chipsTimeline.setOnFinished( event -> {
+            hand.addChips(planet.getPlanetChips());
+            gameModel.getBestHand().addChips(planet.getPlanetChips());
+        });
+
+        Timeline levelTimeline = UIController.cardWiggleTimeline(planet);
+        levelTimeline.setCycleCount(3);
+        levelTimeline.setOnFinished( event -> {
+            hand.addLevel();
+            gameModel.getBestHand().addLevel();
+        });
+
+        UIController.addToAnimationList(multTimeline);
+        UIController.addToAnimationList(chipsTimeline);
+        UIController.addToAnimationList(levelTimeline);
+        UIController.addToAnimationList(UIController.delayTimeline());
+
+        holdingHand_StackPane.getChildren().add(cardViewController.getCard());
+
+        UIController.playAnimations(() -> {
+            holdingHand_StackPane.getChildren().clear();
+            gameModel.getBestHand().setHand(new PokerHand());
+            gameModel.setShopVisibility(true);
+        });
+    }
+
 
 }

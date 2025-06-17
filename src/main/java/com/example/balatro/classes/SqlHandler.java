@@ -20,7 +20,7 @@ public class SqlHandler {
     private static final String StakesTableColumns = " (id, stakeStickerUrl, stakeChipUrl, stakeName, stakeEffect, unlocks)";
     private static final String JokerCardsTableColumns = " (id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act, triggers, effect_keys, params)";
     private static final String TarotCardsTableColumns = " (id, tarotImage, tarotName, tarotDescription)";
-    private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, pokerHand, handBaseScore, secret)";
+    private static final String PlanetCardsTableColumns = " (id, planetImage, planetName, additions, chips, multiplier, pokerHand, handBaseScore, secret)";
     private static final String SpectralCardsTableColumns = " (id, spectralImage, spectralName, spectralEffect)";
     private static final String VoucherCardsTableColumns = " (id, voucherImageUrl, voucherName, voucherEffect, upgradeFrom, upgradeVoucherUnlocked, note)";
     private static final String TagsTableColumns = " (id, tagIcon, tagName, tagBenefit, tagNote, minAnte)";
@@ -504,6 +504,7 @@ public class SqlHandler {
 
         try {
             Statement statement = connection.createStatement();
+            //
             String statementString = "SELECT * FROM PlanetCards";
             ResultSet rs = statement.executeQuery(statementString);
 
@@ -516,9 +517,11 @@ public class SqlHandler {
                 planet.setCardName(rs.getString(3));
                 planet.setCardCost(3);
                 planet.setPlanetAddition(rs.getString(4));
-                planet.setPlanetPokerHand(rs.getString(5));
-                planet.setPlanetHandBaseScore(rs.getString(6));
-                planet.setSecret(!Objects.equals(rs.getString(6), "0"));
+                planet.planetChipsProperty().set(rs.getInt(5));
+                planet.planetMultiplierProperty().set(rs.getInt(6));
+                planet.setPlanetPokerHand(rs.getString(7));
+                planet.setPlanetHandBaseScore(rs.getString(8));
+                planet.setSecret(rs.getBoolean(9));
 
                 planets.add(planet);
             }

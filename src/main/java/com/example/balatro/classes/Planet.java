@@ -1,10 +1,7 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -32,6 +29,8 @@ public class Planet extends Card
     }};
 
     private final StringProperty planetAddition = new SimpleStringProperty("");
+    private final IntegerProperty planetChips = new SimpleIntegerProperty(0);
+    private final IntegerProperty planetMultiplier = new SimpleIntegerProperty(0);
     private final StringProperty planetPokerHand = new SimpleStringProperty("");
     private final StringProperty planetHandBaseScore = new SimpleStringProperty("");
     private final BooleanProperty secret = new SimpleBooleanProperty(false);
@@ -65,6 +64,30 @@ public class Planet extends Card
 
     public void setPlanetAddition(String planetAddition) {
         this.planetAddition.set(planetAddition);
+    }
+
+    public int getPlanetChips() {
+        return planetChips.get();
+    }
+
+    public IntegerProperty planetChipsProperty() {
+        return planetChips;
+    }
+
+    public void setPlanetChips(int planetChips) {
+        this.planetChips.set(planetChips);
+    }
+
+    public int getPlanetMultiplier() {
+        return planetMultiplier.get();
+    }
+
+    public IntegerProperty planetMultiplierProperty() {
+        return planetMultiplier;
+    }
+
+    public void setPlanetMultiplier(int planetMultiplier) {
+        this.planetMultiplier.set(planetMultiplier);
     }
 
     public String getPlanetPokerHand() {
@@ -112,6 +135,8 @@ public class Planet extends Card
         setCardCost(planet.getCardCost());
         setCardType(planet.getCardType());
         setPlanetAddition(planet.getPlanetAddition());
+        setPlanetChips(planet.getPlanetChips());
+        setPlanetMultiplier(planet.getPlanetMultiplier());
         setPlanetPokerHand(planet.getPlanetPokerHand());
         setPlanetHandBaseScore(planet.getPlanetHandBaseScore());
         setSecret(planet.isSecret());

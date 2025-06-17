@@ -4,8 +4,6 @@ import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.StackPane;
@@ -62,13 +60,22 @@ public class PlayedCardsController {
 
             pointsReached();
 
-            if(onComplete != null) onComplete.run();
+            if(onComplete != null) {
+                for(PlayingCard card : gameModel.getPlayedCards()) {
+                    Animation animation = UIController.cardMoveTime(card);
+                    animation.setDelay(Duration.seconds(.2));
+                    UIController.addToAnimationList(animation);
+                }
+                UIController.addToAnimationList(UIController.delayTimeline());
+                UIController.playAnimations(() -> onComplete.run());
+
+            }
             return;
         }
 
         PlayingCard card = cards.get(index);
 
-        Timeline timeline = UIController.timeline(card);
+        Timeline timeline = UIController.cardWiggleTimeline(card);
 
         timeline.setCycleCount(3);
         timeline.setDelay(Duration.seconds(0.2));

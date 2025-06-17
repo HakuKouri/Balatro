@@ -44,7 +44,7 @@ public class CardViewController {
     //region const Strings
     private final String buyAndUse = "Buy\n& Use";
     private final String sell = "Sell $%d";
-    //
+    //endregion
 
 
     //region Getter Setter
@@ -105,12 +105,9 @@ public class CardViewController {
                 selectedProperty(), inShopProperty()
         ));
         sell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && !isInShop(),
-                selectedProperty(), inShopProperty()
+                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")),
+                selectedProperty(), cardTypeProperty(), cardTypeProperty()
         ));
-
-        //price_AnchorPane.managedProperty().bind(price_AnchorPane.visibleProperty());
-        //buy_AnchorPane.managedProperty().bind(buy_AnchorPane.visibleProperty());
 
         buyLabel.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));

@@ -42,6 +42,7 @@ public class GameModel {
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
+    private final List<PokerHand> pokerHandList = getAllPokerHandList();
     //endregion
 
     //region GAME SETTINGS VAR
@@ -89,6 +90,7 @@ public class GameModel {
     private final IntegerProperty handsPlayed = new SimpleIntegerProperty(0);
     private final IntegerProperty handsDiscarded = new SimpleIntegerProperty(0);
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
+    private final Card lastConsumableUsed = new Card();
     //endregion
 
     //region Background Run Variables
@@ -236,6 +238,11 @@ public class GameModel {
     public List<Seal> getAllSealList() {
         return allSealList;
     }
+
+    public List<PokerHand> getPokerHandList() {
+        return pokerHandList;
+    }
+
     //endregion
 
     //region Full Deck
@@ -780,6 +787,7 @@ public class GameModel {
         return maxInterest;
     }
 
+
     //endregion
 
     //region Background Run Variables
@@ -813,6 +821,14 @@ public class GameModel {
 
     public void setBeanValue(int beanValue) {
         this.beanValue.set(beanValue);
+    }
+
+    public Card getLastConsumableUsed() {
+        return lastConsumableUsed;
+    }
+
+    public void setLastConsumableUsed(Card lastConsumableUsed) {
+        lastConsumableUsed.setCard(lastConsumableUsed);
     }
 
     //endregion

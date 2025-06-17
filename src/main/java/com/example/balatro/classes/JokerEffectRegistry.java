@@ -7,12 +7,10 @@ import com.example.balatro.controller.UIController;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.io.IOException;
 import java.util.*;
@@ -164,7 +162,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_ADD");
-            Timeline timeline = UIController.timeline(self);
+            Timeline timeline = UIController.cardWiggleTimeline(self);
             timeline.play();
             System.out.println("Multiplier: " + ((String)params.get("multiplier")).split(" ")[0].substring(1));
             context.getBestHand().addMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
@@ -249,7 +247,7 @@ public class JokerEffectRegistry {
         effectMap.put("SUIT_MULT_ADD", (context, self, cards, params) -> {
             if(cards.get(0).getSuit() == getSuit(params.get("suit").toString())) {
                 AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
-                Timeline timeline = UIController.timeline(anchorPane);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
                     String rawMultiplier = (String) params.get("multiplier");
