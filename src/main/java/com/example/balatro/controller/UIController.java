@@ -20,7 +20,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,8 @@ public class UIController {
             CardViewController cardViewController = null;
 
             if (source instanceof ImageView) {
-                anchorPane = (AnchorPane) source.getParent().getParent().getParent();
+                anchorPane = getPaneById(source, "card_AnchorPane");
+
                 cardViewController = CardViewController.getCardViewController(map,anchorPane);
                 cardViewController.setSelected(!cardViewController.isSelected());
             } else {
@@ -52,16 +55,18 @@ public class UIController {
                 }
 
                 if (currentNode instanceof Label) {
-                    anchorPane = (AnchorPane) currentNode.getParent().getParent().getParent();
+                    anchorPane = getPaneById(currentNode, "card_AnchorPane");
                     cardViewController = CardViewController.getCardViewController(map,anchorPane);
-
                     if (currentNode.getId().equals("buyLabel")) {
                         System.out.println("BuyLabel clicked");
                         GameController.getInstance().buyItem(anchorPane, cardViewController);
-                    } else if(currentNode.getId().equals("sellLabel")) {
+                    } else if(currentNode.getId().equals("buyUseSell_Label")) {
                         System.out.println("SellLabel clicked");
                         if(cardViewController.isInShop()) GameController.getInstance().buyAndUse(cardViewController);
                         else GameController.getInstance().sellItem(anchorPane,cardViewController,map);
+                    } else if(currentNode.getId().equals("use_Label")) {
+                        System.out.println("UseLabel clicked");
+                        GameController.getInstance().useCard(anchorPane,cardViewController,map);
                     }
                 }
             }
@@ -73,8 +78,9 @@ public class UIController {
             if (change.wasAdded()) {
                 AnchorPane anchorPane = change.getValueAdded();
                 CardViewController controller = change.getKey();
-                anchorPane.translateYProperty().bind(Bindings.createDoubleBinding(() ->
-                        controller.isSelected() ? -50.0 : 0.0  ,controller.selectedProperty()));
+                controller.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    anchorPane.setTranslateY(newValue ? -50.0 : 0.0);
+                });
                 stackPane.getChildren().addAll(anchorPane);
             }
             if (change.wasRemoved()) {
@@ -96,7 +102,6 @@ public class UIController {
         double margin = 10;
         double availableSpace = paneWidth - cardWidth * cards;
         double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
-        System.out.println(spacing);
         double pos;
         double centerIndex = (cards - 1) / 2.0;
 
@@ -106,10 +111,25 @@ public class UIController {
             } else {
                 pos = (i - centerIndex) * (cardWidth - cards * 4);
             }
+            //System.out.println("Pos: " + pos + " in " + stackPane.getId());
+            //System.out.println("StackPane Width: " + stackPane.getWidth());
+            //System.out.println("Parent AnchorPane Width: " + ((AnchorPane)stackPane.getParent()).getWidth());
             stackPane.getChildren().get(i).setTranslateX(pos);
 
         }
 
+    }
+
+    private static AnchorPane getPaneById(Node node, String id) {
+        if(node.getId() != null && node.getId().equals(id)) {
+            return (AnchorPane) node;
+        }
+
+        Node parent = node.getParent();
+        if (parent == null) {
+            return null;
+        }
+        return getPaneById(parent, id);
     }
 
     //region Animation
@@ -154,6 +174,32 @@ public class UIController {
         return transition;
     }
 
+    public static TranslateTransition cardMoveToAnimation(Node card, String position) {
+        Scene scene = card.getScene();
+
+        double targetX = scene.getWidth() + 300;
+        double targetY = scene.getHeight() / 2;
+
+        if(position == "middle") {
+            targetX = scene.getWidth() / 2;
+            targetY = scene.getHeight() / 3 * 2;
+        }
+
+        // Aktuelle Position der Karte relativ zur Szene
+        Bounds bounds = card.localToScene(card.getBoundsInLocal());
+        double currentX = bounds.getMinX() + bounds.getWidth() / 2;
+        double currentY = bounds.getMinY() + bounds.getHeight() / 2;
+
+        // Differenz berechnen
+        double deltaX = targetX - currentX;
+        double deltaY = targetY - currentY;
+
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(.1), card);
+        transition.setByX(deltaX);
+        transition.setByY(deltaY);
+
+        return transition;
+    }
     public static Timeline delayTimeline() {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {}));
         return timeline;
@@ -222,4 +268,5 @@ public class UIController {
 
         transition.play();
     }
+
 }

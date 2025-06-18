@@ -12,7 +12,7 @@ public class checkHand {
         }
 
         // Karten nach Rang sortieren
-        cards.sort(Comparator.comparingInt(card -> card.getOrderPosition()));
+        cards.sort(Comparator.comparingInt(card -> card.getRankIndex()));
 
         // Häufigkeit der Kartenränge zählen
         Map<String, Integer> rankCount = new HashMap<>();
@@ -73,7 +73,7 @@ public class checkHand {
     }
 
     private static boolean isStraight(List<PlayingCard> cards) {
-        int[] values = cards.stream().mapToInt(PlayingCard::getOrderPosition).toArray();
+        int[] values = cards.stream().mapToInt(PlayingCard::getRankIndex).toArray();
         for (int i = 0; i < values.length - 1; i++) {
             if (values[i] + 1 != values[i + 1]) {
                     return false;

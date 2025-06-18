@@ -30,15 +30,24 @@ import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
-    public Label handCardsCounterLabel;
-    public Button playSelectedCardsButton;
-    public Button discardSelectedCardsButton;
-    public AnchorPane holdingHand_AnchorPane;
-    public AnchorPane holdHand_AnchorPane;
-    public StackPane holdingHand_StackPane;
-    public RowConstraints handButton_Column;
+    //region FXML
+    @FXML
+    private Label handCardsCounterLabel;
+    @FXML
+    private Button playSelectedCardsButton;
+    @FXML
+    private Button discardSelectedCardsButton;
+    @FXML
+    private AnchorPane holdingHand_AnchorPane;
+    @FXML
+    private AnchorPane holdHand_AnchorPane;
+    @FXML
+    private StackPane holdingHand_StackPane;
+    @FXML
+    private RowConstraints handButton_Column;
     @FXML
     private GridPane handButtonBox;
+    //endregion
 
     GameModel gameModel = Balatro.getGameModel();
 
@@ -94,27 +103,6 @@ public class HoldingHandController {
         return gameModel.getHandCards();
     }
 
-    public void moveCards() {
-        double cardWidth = 140;
-        double lastPos = holdHand_AnchorPane.getWidth() - cardWidth - 10;
-
-        int cards = holdingHand_StackPane.getChildren().size();
-        double pos = 0;
-        for(int i = 0; i < cards; i++) {
-            if(cards > 5) {
-                holdingHand_StackPane.setAlignment(Pos.CENTER_LEFT);
-                pos = i * lastPos / (cards - 1);
-            } else {
-                holdingHand_StackPane.setAlignment(Pos.CENTER);
-                if(cards%2==0) {
-                    pos = cardWidth/2 + i * cardWidth - cards/2*cardWidth + i * 5;
-                } else {
-                    pos = i * cardWidth - cards/2*cardWidth + i * 5;
-                }
-            }
-            holdingHand_StackPane.getChildren().get(i).setTranslateX(pos);
-        }
-    }
 
     //Drawing Cards
     public void drawCard() {
@@ -175,12 +163,12 @@ public class HoldingHandController {
 
         if(gameModel.isSortedByRank()) {
             tempCardList.sort(Comparator
-                    .comparingInt(PlayingCard::getOrderPosition)
+                    .comparingInt(PlayingCard::getRankIndex)
                     .thenComparingInt(PlayingCard::getSuitOrder));
         } else {
             tempCardList.sort(Comparator
                     .comparingInt(PlayingCard::getSuitOrder)
-                    .thenComparingInt(PlayingCard::getOrderPosition));
+                    .thenComparingInt(PlayingCard::getRankIndex));
         }
 
         Collections.reverse(tempCardList);
@@ -188,7 +176,8 @@ public class HoldingHandController {
         gameModel.getHandCards().clear();
         gameModel.getHandCards().addAll(tempCardList);
 
-        moveCards();
+        UIController.moveCards(holdingHand_StackPane);
+        //moveCards();
     }
 
     public void getHeight() {
@@ -202,7 +191,7 @@ public class HoldingHandController {
             gameModel.getHandCards().removeAll(getSelectedCards());
             GameController.getInstance().playSelectedCards();
 
-            if(gameModel.getActiveBlind().getBlindName() == "The Serpent")
+            if(Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))
                 drawCardToLimit(3);
             else
                 drawCardToLimit();
@@ -215,7 +204,7 @@ public class HoldingHandController {
             getHandCards().removeAll(getSelectedCards());
             getSelectedCards().clear();
 
-            if (gameModel.getActiveBlind().getBlindName() == "The Serpent")
+            if (Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))
                 drawCardToLimit(3);
             else
                 drawCardToLimit();
@@ -224,6 +213,7 @@ public class HoldingHandController {
     }
 
     public void playPlanet(CardViewController cardViewController) {
+        gameModel.setShopVisibility(false);
         Planet planet = (Planet) cardViewController.getCard();
 
         PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).findFirst().get();

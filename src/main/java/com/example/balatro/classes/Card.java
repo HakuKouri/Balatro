@@ -33,8 +33,9 @@ public class Card extends ImageView
             setPreserveRatio(true);
             //setFitWidth(getImage().getWidth());
         });
+
         maxCostProperty().bind(Bindings.createIntegerBinding(() ->
-            cardCost.add(editionCost).intValue(),
+                        getCardCost() + getEditionCost(),
                 cardCostProperty(), editionCostProperty())
         );
 

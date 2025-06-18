@@ -130,14 +130,14 @@ public class BlindBoxPanelController {
     }
 
     public void setTag(Tag tag) {
-        System.out.println("Set Tag");
+        //System.out.println("Set Tag");
         blindSkipController.setTag(tag);
     }
 
     public void setName(String test) {
-        System.out.println(lblBlindName.textProperty().isBound());
-        System.out.println(blind.get().getBlindName());
+        //System.out.println(lblBlindName.textProperty().isBound());
+        //System.out.println(blind.get().getBlindName());
         blind.get().setBlindName(test);
-        System.out.println(blind.get().getBlindName());
+        //System.out.println(blind.get().getBlindName());
     }
 }

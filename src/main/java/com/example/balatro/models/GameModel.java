@@ -596,17 +596,11 @@ public class GameModel {
     }
 
     public List<Joker> getActiveJokerList() {
-        System.out.println("getActiveJokerList");
-
         List<Joker> jokers = activeJokerMap.keySet().stream()
                 .map(CardViewController::getCard)       // holt die Card aus dem Controller
                 .filter(card -> card instanceof Joker)  // prüft ob es ein Joker ist
                 .map(card -> (Joker) card)              // castet auf Joker
                 .collect(Collectors.toList());               // Java 16+ oder collect(Collectors.toList())
-
-        for (Joker joker : jokers) {
-            System.out.println("joker: " + joker.getCardName());
-        }
         return jokers;
     }
 

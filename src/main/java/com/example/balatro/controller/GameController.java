@@ -1,8 +1,11 @@
 package com.example.balatro.controller;
 
+import com.almasb.fxgl.ui.UI;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Animation;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -201,8 +204,7 @@ public class GameController
 
             AnchorPane playedCards = loaderPlayedCards.load();
             playedCardsController = loaderPlayedCards.getController();
-            playedCards_StackPane.getChildren().add(playedCards);
-
+            playedCards_AnchorPane.getChildren().add(playedCards);
 
             shop = loaderShop.load();
             shopController = loaderShop.getController();
@@ -413,7 +415,6 @@ public class GameController
         playedCardsController.addSelectedCards(() -> {
             Platform.runLater(() -> {
                 gameModel.handButtonVisibilityProperty().set(true);
-                holdingHandController.moveCards();
                 gameModel.clearSelectedCards();
 
                 playedCardsController.removeAllCards();
@@ -715,7 +716,6 @@ public class GameController
                     }
                 }
                 break;
-
         }
     }
 
@@ -742,13 +742,14 @@ public class GameController
 
     public void buyAndUse(CardViewController cardViewController) {
         System.out.println("Buy & Use");
-        if(cardViewController.getCard().getCardType().equals("Booster")) {
+        Card card = cardViewController.getCard();
+        if(card.getCardType().equals("Booster")) {
 
-        } else if(cardViewController.getCard().getCardType().equals("Planet")) {
+        } else if(card.getCardType().equals("Planet")) {
             gameModel.setShopVisibility(false);
             holdingHandController.playPlanet(cardViewController);
             shopController.getItemMap().remove(cardViewController);
-        } else if(cardViewController.getCard().getCardType().equals("Tarot")) {
+        } else if(card.getCardType().equals("Tarot")) {
 
         }
     }
@@ -756,5 +757,58 @@ public class GameController
     public void sellItem(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
         addMoney((int) cardViewController.getCard().getSellValue());
         map.remove(cardViewController, anchorPane);
+    }
+
+    public void useCard(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
+        if(cardViewController.getCard().getCardType().equals("Tarot")) {}
+        else if(cardViewController.getCard().getCardType().equals("Planet")) {
+            playPlanet(cardViewController, map);
+        }
+        else if(cardViewController.getCard().getCardType().equals("Spectral")) {}
+    }
+
+    public void playPlanet(CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
+        gameModel.setShopVisibility(false);
+        Planet planet = (Planet) cardViewController.getCard();
+
+        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).findFirst().get();
+
+        gameModel.getBestHand().setHand(hand);
+
+        Animation moveAnimation = UIController.cardMoveToAnimation(map.get(cardViewController), "middle");
+
+        Timeline multTimeline = UIController.cardWiggleTimeline(planet);
+
+        multTimeline.setCycleCount(3);
+        multTimeline.setOnFinished( event -> {
+            hand.addMult(planet.getPlanetMultiplier());
+            gameModel.getBestHand().addMult(planet.getPlanetMultiplier());
+        });
+        Timeline chipsTimeline = UIController.cardWiggleTimeline(planet);
+        chipsTimeline.setCycleCount(3);
+        chipsTimeline.setOnFinished( event -> {
+            hand.addChips(planet.getPlanetChips());
+            gameModel.getBestHand().addChips(planet.getPlanetChips());
+        });
+
+        Timeline levelTimeline = UIController.cardWiggleTimeline(planet);
+        levelTimeline.setCycleCount(3);
+        levelTimeline.setOnFinished( event -> {
+            hand.addLevel();
+            gameModel.getBestHand().addLevel();
+        });
+
+        UIController.addToAnimationList(moveAnimation);
+        UIController.addToAnimationList(multTimeline);
+        UIController.addToAnimationList(chipsTimeline);
+        UIController.addToAnimationList(levelTimeline);
+        UIController.addToAnimationList(UIController.delayTimeline());
+
+
+        UIController.playAnimations(() -> {
+            map.remove(cardViewController);
+            gameModel.getBestHand().setHand(new PokerHand());
+            gameModel.setShopVisibility(true);
+        });
     }
 }

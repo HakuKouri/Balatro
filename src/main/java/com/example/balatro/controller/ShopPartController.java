@@ -155,21 +155,21 @@ public class ShopPartController {
 
     private Card getRandomTarot() {
         Tarot tarot = new Tarot();
-        int tarotChance = gameModel.getRand().nextInt(21);
+        int tarotChance = gameModel.getRand().nextInt(gameModel.getAllTarotList().size());
         tarot.setTarot(gameModel.getAllTarotList().get(tarotChance));
         return tarot;
     }
 
     private Card getRandomPlanet() {
         Planet planet = new Planet();
-        int planetChance = gameModel.getRand().nextInt(12);
+        int planetChance = gameModel.getRand().nextInt(gameModel.getAllPlanetList().size());
         planet.setPlanet(gameModel.getAllPlanetList().get(planetChance));
         return planet;
     }
 
     private Card getRandomSpectral() {
         Spectral spectral = new Spectral();
-        int spectralChance = gameModel.getRand().nextInt(18);
+        int spectralChance = gameModel.getRand().nextInt(gameModel.getAllSpectralList().size());
         spectral.setSpectral(gameModel.getAllSpectralList().get(spectralChance));
         return spectral;
     }
@@ -188,7 +188,7 @@ public class ShopPartController {
     }
 
     public void addVoucher() {
-        CardViewController.createCardNode(getRandomVoucher(), voucherMap);
+        CardViewController.createCardNode(getRandomVoucher(), voucherMap, true);
     }
 
     private Card getRandomVoucher() {

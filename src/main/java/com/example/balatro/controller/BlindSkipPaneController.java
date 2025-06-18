@@ -49,7 +49,7 @@ public class BlindSkipPaneController {
 
 
     public void onClickSkip(ActionEvent actionEvent) {
-        System.out.println("Skipped clicked");
+        //System.out.println("Skipped clicked");
         GameController.getInstance().skip(tag.get());
     }
 }

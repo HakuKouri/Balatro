@@ -83,7 +83,7 @@ public class PokerHandChecker {
     // Findet die höchste Karte (High Card)
     private static List<PlayingCard> getHighCard(List<PlayingCard> cards) {
         return cards.stream()
-                .sorted((card1, card2) -> Integer.compare(card2.getOrderPosition(), card1.getOrderPosition()))
+                .sorted((card1, card2) -> Integer.compare(card2.getRankIndex(), card1.getRankIndex()))
                 .limit(1)
                 .collect(Collectors.toList());
     }
@@ -92,8 +92,8 @@ public class PokerHandChecker {
     private static Map<Integer, List<PlayingCard>> groupCardsByValue(List<PlayingCard> cards) {
         Map<Integer, List<PlayingCard>> valueMap = new HashMap<>();
         for (PlayingCard card : cards) {
-            valueMap.putIfAbsent(card.getOrderPosition(), new ArrayList<>());
-            valueMap.get(card.getOrderPosition()).add(card);
+            valueMap.putIfAbsent(card.getRankIndex(), new ArrayList<>());
+            valueMap.get(card.getRankIndex()).add(card);
         }
         return valueMap;
     }

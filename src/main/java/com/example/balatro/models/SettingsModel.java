@@ -61,7 +61,7 @@ public class SettingsModel {
     //region Constructor
     public SettingsModel() {
         windowHeightProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("Window height: " + newVal);
+            //System.out.println("Window height: " + newVal);
             cardHeightProperty().set((double)newVal * 0.20138);
         });
     }
