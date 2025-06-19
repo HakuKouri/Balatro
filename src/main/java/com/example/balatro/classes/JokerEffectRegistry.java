@@ -138,6 +138,13 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_CHIPS_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_CHIPS_ADD");
+            if((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
+                System.out.println("Contains true");
+                gameModel.getBestHand().addChips((Integer) params.get("chips"));
+            } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
+                System.out.println("Contains false");
+                gameModel.getBestHand().addChips((Integer) params.get("chips"));
+            }
         });
 
         effectMap.put("HAND_MONEY_ADD", (context, self, cards, params) -> {
@@ -146,10 +153,27 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_ADD");
+            System.out.println("Param: " + (boolean) params.get("contains"));
+            System.out.println("Param Hand: " + params.get("hand"));
+            if((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
+                System.out.println("Contains true");
+                for (PokerHand hand : gameModel.getPossiblePokerHand()) {
+                    System.out.println(hand.getName());
+                }
+                gameModel.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+            } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
+                gameModel.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+            }
         });
 
         effectMap.put("HAND_MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_MULT");
+            if((boolean)params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
+                System.out.println("Contains true");
+                gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+            } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
+                gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+            }
         });
 
         effectMap.put("HAND_SIZE_ADD", (context, self, cards, params) -> {
@@ -165,7 +189,7 @@ public class JokerEffectRegistry {
             Timeline timeline = UIController.cardWiggleTimeline(self);
             timeline.play();
             System.out.println("Multiplier: " + ((String)params.get("multiplier")).split(" ")[0].substring(1));
-            context.getBestHand().addMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
+            context.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
         });
         effectMap.put("MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_MULT");
@@ -236,10 +260,6 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: SET_CHIPS");
         });
 
-        effectMap.put("SUB_MULT_VALUE", (context, self, cards, params) -> {
-            System.out.println("Trigger: SUB_MULT_VALUE");
-        });
-
         effectMap.put("SUIT_DISCARD_ADD_CHIPS", (context, self, cards, params) -> {
             System.out.println("Trigger: SUIT_DISCARD_ADD_CHIPS");
         });
@@ -300,7 +320,7 @@ public class JokerEffectRegistry {
         effectMap.put("BARON_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BARON_EFFECT");
             //TODO Einzel Trigger Animation pro König in der Hand
-            int countKings = (int) context.getHandCards().stream().filter(x -> x.getRank() == "King").count();
+            int countKings = (int) context.getHandCards().stream().filter(x -> Objects.equals(x.getRank(), "King")).count();
             for (int i = 0; i < countKings; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -309,7 +329,7 @@ public class JokerEffectRegistry {
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
             //TODO Einzel Trigger Animation pro Joker
-            int uncommonCount = (int) context.getActiveJokerMap().keySet().stream().filter(cardViewController -> ((Joker)cardViewController.getCard()).getRarity() == "Uncommon"). count();
+            int uncommonCount = (int) context.getActiveJokerMap().keySet().stream().filter(cardViewController -> Objects.equals(((Joker) cardViewController.getCard()).getRarity(), "Uncommon")). count();
             for (int i = 0; i < uncommonCount; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -321,7 +341,7 @@ public class JokerEffectRegistry {
             int blackCount = (int) context.getHandCards().stream().filter(card ->
                     card.getSuit() == Suit.SPADES ||
                     card.getSuit() == Suit.CLUBS ||
-                    card.getEnhancement().getEnhancementName() == "Wild Card").count();
+                            Objects.equals(card.getEnhancement().getEnhancementName(), "Wild Card")).count();
             if(blackCount == context.getHandCards().size()) {
                 context.getBestHand().multMult(3);
             }
@@ -834,5 +854,13 @@ public class JokerEffectRegistry {
             e.printStackTrace();
             //return new Label("Error loading card");
         }
+    }
+
+    private static int getIntegerFromParam(String param) {
+        return Integer.parseInt(param.split(" ")[0].substring(1));
+    }
+
+    private static double getDoubleFromParam(String param) {
+        return Double.parseDouble(param.split(" ")[0].substring(1));
     }
 }

@@ -1,11 +1,13 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.models.GameModel;
+
 import java.util.*;
 
 public class checkHand {
 
-    public static List<String> evaluateHands(List<PlayingCard> cards) {
-        List<String> possibleHands = new ArrayList<>();
+    public static List<PokerHand> evaluateHands(GameModel model, List<PlayingCard> cards) {
+        List<PokerHand> possibleHands = new ArrayList<>();
 
         if (cards == null || cards.isEmpty()) {
             return possibleHands; // Keine gültige Hand
@@ -30,44 +32,44 @@ public class checkHand {
 
             // Überprüfen der verschiedenen Handtypen und Hinzufügen der möglichen Hände
             if (isStraight && isFlush) {
-                possibleHands.add("Royal Flush");
+                possibleHands.add(model.getPokerHand("Royal Flush"));
             }
             if (isFlush && isStraight) {
-                possibleHands.add("Straight Flush");
+                possibleHands.add(model.getPokerHand("Straight Flush"));
             }
             if (rankCount.containsValue(3) && rankCount.containsValue(2)) {
-                possibleHands.add("Full House");
-                possibleHands.add("Two Pair");
+                possibleHands.add(model.getPokerHand("Full House"));
+                possibleHands.add(model.getPokerHand("Two Pair"));
             }
             if (isFlush) {
-                possibleHands.add("Flush");
+                possibleHands.add(model.getPokerHand("Flush"));
             }
             if (isStraight) {
-                possibleHands.add("Straight");
+                possibleHands.add(model.getPokerHand("Straight"));
             }
         }
         if (rankCount.containsValue(4)) {
-            possibleHands.add("Four of a Kind");
-            possibleHands.add("Three of a Kind");
-            possibleHands.add("One Pair");
+            possibleHands.add(model.getPokerHand("Four of a Kind"));
+            possibleHands.add(model.getPokerHand("Three of a Kind"));
+            possibleHands.add(model.getPokerHand("One Pair"));
         }
 
         if (rankCount.containsValue(3)) {
-            possibleHands.add("Three of a Kind");
-            if(!possibleHands.contains("One Pair"))
-                possibleHands.add("One Pair");
+            possibleHands.add(model.getPokerHand("Three of a Kind"));
+            if(!possibleHands.contains(model.getPokerHand("One Pair")))
+                possibleHands.add(model.getPokerHand("One Pair"));
         }
 
         if (rankCount.containsValue(2)) {
             long pairCount = rankCount.values().stream().filter(count -> count == 2).count();
             if (pairCount == 2) {
-                possibleHands.add("Two Pair");
+                possibleHands.add(model.getPokerHand("Two Pair"));
             }
-            if(!possibleHands.contains("One Pair"))
-                possibleHands.add("One Pair");
+            if(!possibleHands.contains(model.getPokerHand("One Pair")))
+                possibleHands.add(model.getPokerHand("One Pair"));
         }
 
-        possibleHands.add("High Card");
+        possibleHands.add(model.getPokerHand("High Card"));
 
         return possibleHands;
     }

@@ -52,7 +52,7 @@ public class PlayedCardsController {
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
             //Löse Joker Trigger aus
-            triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
+            triggerJokers(JokerTrigger.ALL_CARDS_SCORED, gameModel.getPlayedCards());
 
             //Rechne Punkte zusammen
             gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
@@ -62,7 +62,7 @@ public class PlayedCardsController {
 
             if(onComplete != null) {
                 for(PlayingCard card : gameModel.getPlayedCards()) {
-                    Animation animation = UIController.cardMoveTime(card);
+                    Animation animation = UIController.cardMoveToAnimation(card);
                     animation.setDelay(Duration.seconds(.2));
                     UIController.addToAnimationList(animation);
                 }
@@ -81,6 +81,7 @@ public class PlayedCardsController {
         timeline.setDelay(Duration.seconds(0.2));
 
         timeline.setOnFinished(event -> {
+            System.out.println("Card Value: " + card.getValue());
             gameModel.getBestHand().chipsProperty().set(card.getValue() + gameModel.getBestHand().getChips());
 
             // Joker triggern (fügen ihre Animationen hinzu)

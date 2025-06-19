@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -157,6 +158,7 @@ public class ShopPartController {
         Tarot tarot = new Tarot();
         int tarotChance = gameModel.getRand().nextInt(gameModel.getAllTarotList().size());
         tarot.setTarot(gameModel.getAllTarotList().get(tarotChance));
+        System.out.println("Tarot: " + tarot.getCardName());
         return tarot;
     }
 
@@ -164,6 +166,7 @@ public class ShopPartController {
         Planet planet = new Planet();
         int planetChance = gameModel.getRand().nextInt(gameModel.getAllPlanetList().size());
         planet.setPlanet(gameModel.getAllPlanetList().get(planetChance));
+        System.out.println("Planet: " + planet.getCardName());
         return planet;
     }
 
@@ -171,11 +174,13 @@ public class ShopPartController {
         Spectral spectral = new Spectral();
         int spectralChance = gameModel.getRand().nextInt(gameModel.getAllSpectralList().size());
         spectral.setSpectral(gameModel.getAllSpectralList().get(spectralChance));
+        System.out.println("Spectral: " + spectral.getSpectralName());
         return spectral;
     }
 
     private Card getRandomPlayingCard() {
         PlayingCard playingCard = new PlayingCard(gameModel.getRand().nextInt(14),4);
+        System.out.println("PlayingCard: " + playingCard.getCardName());
         return playingCard;
     }
 
@@ -251,6 +256,7 @@ public class ShopPartController {
         else if (boosterChance < 2235) booster.setBooster( gameModel.getAllBoosterList().get(30));
         else booster.setBooster(gameModel.getAllBoosterList().get(31));
 
+        System.out.println("Booster Name: " + booster.getCardName());
         return booster;
     }
 }

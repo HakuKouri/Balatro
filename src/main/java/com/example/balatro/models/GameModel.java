@@ -243,6 +243,10 @@ public class GameModel {
         return pokerHandList;
     }
 
+    public PokerHand getPokerHand(String handName) {
+        return getAllPokerHandList().stream().filter(pokerHand -> pokerHand.getName().equals(handName)).findFirst().orElse(null);
+    }
+
     //endregion
 
     //region Full Deck
@@ -378,14 +382,6 @@ public class GameModel {
     //region Possible Poker Hands
     public ObservableList<PokerHand> getPossiblePokerHand() {
         return possiblePokerHand;
-    }
-
-    public void addHandToPossibleList(PokerHand pokerHand) {
-        possiblePokerHand.add(pokerHand);
-    }
-
-    public void removeHandFromPossible(PokerHand pokerHand) {
-        possiblePokerHand.remove(pokerHand);
     }
     //endregion
 

@@ -412,6 +412,8 @@ public class GameController
             card.setClickAble(false);
         }
 
+        triggerJokers(JokerTrigger.AFTER_HAND_PLAYED, gameModel.getPlayedCards());
+
         playedCardsController.addSelectedCards(() -> {
             Platform.runLater(() -> {
                 gameModel.handButtonVisibilityProperty().set(true);
@@ -775,15 +777,15 @@ public class GameController
 
         gameModel.getBestHand().setHand(hand);
 
-        Animation moveAnimation = UIController.cardMoveToAnimation(map.get(cardViewController), "middle");
+        Animation moveAnimation = UIController.cardMoveToAnimation(map.get(cardViewController),"" ,"middle");
 
         Timeline multTimeline = UIController.cardWiggleTimeline(planet);
-
         multTimeline.setCycleCount(3);
         multTimeline.setOnFinished( event -> {
             hand.addMult(planet.getPlanetMultiplier());
             gameModel.getBestHand().addMult(planet.getPlanetMultiplier());
         });
+
         Timeline chipsTimeline = UIController.cardWiggleTimeline(planet);
         chipsTimeline.setCycleCount(3);
         chipsTimeline.setOnFinished( event -> {
@@ -810,5 +812,11 @@ public class GameController
             gameModel.getBestHand().setHand(new PokerHand());
             gameModel.setShopVisibility(true);
         });
+    }
+
+    private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
+        for (Joker joker : gameModel.getActiveJokerList()) {
+            joker.tryActivate(trigger, gameModel, playedCards);
+        }
     }
 }

@@ -30,8 +30,8 @@ public class PlayingCard extends Card
 
     public PlayingCard(int rank, int suit) {
         setCardType("PlayingCard");
-        rankProperty().bind(Bindings.createStringBinding(() -> rankArray[rankIndex.get()], rankProperty()));
-        valueProperty().bind(Bindings.createIntegerBinding(() -> valueArray[suitIndex.get()], valueProperty()));
+        rankProperty().bind(Bindings.createStringBinding(() -> rankArray[getRankIndex()], rankIndexProperty()));
+        valueProperty().bind(Bindings.createIntegerBinding(() -> valueArray[getRankIndex()], rankIndexProperty()));
         suitProperty().bind(Bindings.createObjectBinding(() -> Suit.values()[getSuitIndex()], suitProperty()));
 
         setRankIndex(rank);

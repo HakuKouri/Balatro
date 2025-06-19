@@ -79,7 +79,7 @@ public class HoldingHandController {
                     card.setSelected(true);
                     gameModel.addCardToSelectedCards(card);
                 }
-                setHandInfo(checkHand.evaluateHands(gameModel.getSelectedCards()));
+                setHandInfo(checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
             }
         });
         //endregion
@@ -124,13 +124,16 @@ public class HoldingHandController {
     }
 
     //Selecting Cards
-    private void setHandInfo(List<String> hands) {
+    private void setHandInfo(List<PokerHand> hands) {
         int maxPoints = 0;
 
         if(hands.isEmpty()) gameModel.getBestHand().setHand(new PokerHand());
 
+        gameModel.getPossiblePokerHand().clear();
+        gameModel.getPossiblePokerHand().addAll(hands);
+
         for (PokerHand pokerHand : gameModel.getPokerHandList()) {
-            if(hands.contains(pokerHand.getName())) {
+            if(hands.contains(pokerHand)) {
                 System.out.println(pokerHand.getName());
                 int points = pokerHand.getChips() * pokerHand.getMulti();
                 System.out.println("Possible Points: " + points);

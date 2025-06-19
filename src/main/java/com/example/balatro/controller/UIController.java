@@ -2,7 +2,6 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.MapChangeListener;
@@ -18,11 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -153,34 +149,17 @@ public class UIController {
         return timeline;
     }
 
-    public static TranslateTransition cardMoveTime(Node card) {
-        Scene scene = card.getScene();
-        double targetX = scene.getWidth() + 300;
-        double targetY = scene.getHeight() / 2;
-
-        // Aktuelle Position der Karte relativ zur Szene
-        Bounds bounds = card.localToScene(card.getBoundsInLocal());
-        double currentX = bounds.getMinX() + bounds.getWidth() / 2;
-        double currentY = bounds.getMinY() + bounds.getHeight() / 2;
-
-        // Differenz berechnen
-        double deltaX = targetX - currentX;
-        double deltaY = targetY - currentY;
-
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(.1), card);
-        transition.setByX(deltaX);
-        transition.setByY(deltaY);
-
-        return transition;
+    public static TranslateTransition cardMoveToAnimation(Node card) {
+        return cardMoveToAnimation(card,"", "");
     }
 
-    public static TranslateTransition cardMoveToAnimation(Node card, String position) {
+    public static TranslateTransition cardMoveToAnimation(Node card,String from, String to) {
         Scene scene = card.getScene();
 
         double targetX = scene.getWidth() + 300;
         double targetY = scene.getHeight() / 2;
 
-        if(position == "middle") {
+        if(to == "middle") {
             targetX = scene.getWidth() / 2;
             targetY = scene.getHeight() / 3 * 2;
         }
@@ -200,6 +179,7 @@ public class UIController {
 
         return transition;
     }
+
     public static Timeline delayTimeline() {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {}));
         return timeline;
