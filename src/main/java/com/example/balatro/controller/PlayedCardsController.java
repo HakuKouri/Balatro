@@ -54,22 +54,24 @@ public class PlayedCardsController {
             //Löse Joker Trigger aus
             triggerJokers(JokerTrigger.ALL_CARDS_SCORED, gameModel.getPlayedCards());
 
-            //Rechne Punkte zusammen
-            gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
-            gameModel.getBestHand().setHand(new PokerHand());
+            UIController.playAnimations(() -> {
+                //Rechne Punkte zusammen
+                gameModel.addToScoredPoints(BigDecimal.valueOf((long) gameModel.getBestHand().getMulti() * gameModel.getBestHand().getChips()));
+                gameModel.getBestHand().setHand(new PokerHand());
 
-            pointsReached();
+                pointsReached();
 
-            if(onComplete != null) {
-                for(PlayingCard card : gameModel.getPlayedCards()) {
-                    Animation animation = UIController.cardMoveToAnimation(card);
-                    animation.setDelay(Duration.seconds(.2));
-                    UIController.addToAnimationList(animation);
+                if(onComplete != null) {
+                    for(PlayingCard card : gameModel.getPlayedCards()) {
+                        Animation animation = UIController.cardMoveToAnimation(card);
+                        animation.setDelay(Duration.seconds(.2));
+                        UIController.addToAnimationList(animation);
+                    }
+                    UIController.addToAnimationList(UIController.delayTimeline());
+                    UIController.playAnimations(() -> onComplete.run());
+
                 }
-                UIController.addToAnimationList(UIController.delayTimeline());
-                UIController.playAnimations(() -> onComplete.run());
-
-            }
+            });
             return;
         }
 

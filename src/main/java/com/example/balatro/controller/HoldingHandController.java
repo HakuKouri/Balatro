@@ -180,11 +180,6 @@ public class HoldingHandController {
         gameModel.getHandCards().addAll(tempCardList);
 
         UIController.moveCards(holdingHand_StackPane);
-        //moveCards();
-    }
-
-    public void getHeight() {
-        System.out.println(holdingHand_AnchorPane.getHeight());
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {

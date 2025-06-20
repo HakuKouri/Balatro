@@ -19,10 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class UIController {
 
@@ -43,7 +40,28 @@ public class UIController {
                 anchorPane = getPaneById(source, "card_AnchorPane");
 
                 cardViewController = CardViewController.getCardViewController(map,anchorPane);
-                cardViewController.setSelected(!cardViewController.isSelected());
+
+                for (AnchorPane pane : map.values()) {
+                    System.out.println(pane);
+                }
+                if (!cardViewController.isSelected()) {
+                    cardViewController.setSelected(true);
+                    anchorPane.toFront();
+                } else {
+                    cardViewController.setSelected(false);
+                    for (Node pane : stackPane.getChildren()) {
+                        System.out.println(CardViewController.getCardViewController(map, (AnchorPane) pane).getCard().getCardName());
+                    }
+                    List<Node> sorted = new ArrayList<>(stackPane.getChildren());
+                    sorted.sort(Comparator.comparingDouble(Node::getTranslateX));
+                    stackPane.getChildren().setAll(sorted);
+
+
+                    moveCards(stackPane);
+                }
+                //cardViewController.setSelected(!cardViewController.isSelected());
+
+
             } else {
                 Node currentNode = source;
                 if (source.getParent() instanceof Label) {

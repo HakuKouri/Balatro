@@ -364,6 +364,9 @@ public class GameController
             for (int i = 0; i < gameModel.getAllJokerList().size() && i < 7; i++) {
                 CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
             }
+            for (Joker joker : gameModel.getActiveJokerList()) {
+                System.out.println(joker.getCardName());
+            }
         });
 
         UIController.addCardClickEvent(spaceJoker,gameModel.getActiveJokerMap());

@@ -71,7 +71,7 @@ public class GameModel {
 
     //region ACTIVE JOKERS
     private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
-    private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableHashMap();
+    private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region Collected Consumables

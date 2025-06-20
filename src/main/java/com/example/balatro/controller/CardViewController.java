@@ -114,7 +114,7 @@ public class CardViewController {
                 Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
 
         buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")),
+                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet") || getCard().getCardType().equals("Joker")),
                 selectedProperty(), cardTypeProperty(), cardTypeProperty()
         ));
         buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
@@ -142,8 +142,6 @@ public class CardViewController {
 
         if (card.getCardImageUrl() != null) {
             cardImage.setImage(card.getImage());
-            //cardImage.setFitHeight(Balatro.getSettings().getCardHeight());
-            //cardImage.setPreserveRatio(true);
         }
     }
 
@@ -166,14 +164,10 @@ public class CardViewController {
             map.put(controller,cardPane);
         } catch (IOException e) {
             e.printStackTrace();
-            //return new Label("Error loading card");
         }
     }
 
     public static CardViewController getCardViewController(Map<CardViewController,AnchorPane> map, AnchorPane pane) {
-        System.out.println("getCardViewController");
-        System.out.println("Map: " + map);
-        System.out.println("Card: ");
         return map.keySet()
                 .stream()
                 .filter(cardViewController ->

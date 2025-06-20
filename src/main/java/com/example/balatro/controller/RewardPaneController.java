@@ -31,10 +31,8 @@ public class RewardPaneController {
         }
         else countColumn.setPrefWidth(0);
 
-        System.out.println("MAX WIDTH BEFORE: " + imageColumn.getMaxWidth());
         tagImage.setVisible(tag);
         imageColumn.setMaxWidth(tag ? 50 : 0);
-        System.out.println("MAX WIDTH AFTER: " + imageColumn.getMaxWidth());
 
         effectLabel.setText(effect);
         moneyLabel.setText(money > 30 ? "$" + money : "$".repeat(money));

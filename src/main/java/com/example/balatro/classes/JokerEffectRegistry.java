@@ -138,12 +138,21 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_CHIPS_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_CHIPS_ADD");
-            if((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            if ((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
                 System.out.println("Contains true");
-                gameModel.getBestHand().addChips((Integer) params.get("chips"));
-            } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
+                timeline.setOnFinished(event -> {
+                    gameModel.getBestHand().addChips((Integer) params.get("chips"));
+                });
+                UIController.addToAnimationList(timeline);
+            } else if (Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
                 System.out.println("Contains false");
-                gameModel.getBestHand().addChips((Integer) params.get("chips"));
+                timeline.setOnFinished(event -> {
+                    gameModel.getBestHand().addChips((Integer) params.get("chips"));
+                });
+                UIController.addToAnimationList(timeline);
             }
         });
 
@@ -153,26 +162,39 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_ADD");
-            System.out.println("Param: " + (boolean) params.get("contains"));
-            System.out.println("Param Hand: " + params.get("hand"));
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
             if((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
                 System.out.println("Contains true");
-                for (PokerHand hand : gameModel.getPossiblePokerHand()) {
-                    System.out.println(hand.getName());
-                }
-                gameModel.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+                timeline.setOnFinished(event -> {
+                    gameModel.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+                });
+                UIController.addToAnimationList(timeline);
             } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
+                timeline.setOnFinished(event -> {
                 gameModel.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+                });
+                UIController.addToAnimationList(timeline);
             }
         });
 
         effectMap.put("HAND_MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_MULT");
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
             if((boolean)params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
                 System.out.println("Contains true");
-                gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+                timeline.setOnFinished(event -> {
+                    gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+                });
+                UIController.addToAnimationList(timeline);
             } else if(Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
-                gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+                timeline.setOnFinished(event -> {
+                    gameModel.getBestHand().multMult(getDoubleFromParam(params.get("multiplier").toString()));
+                });
+                UIController.addToAnimationList(timeline);
             }
         });
 
@@ -186,14 +208,26 @@ public class JokerEffectRegistry {
 
         effectMap.put("MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_ADD");
-            Timeline timeline = UIController.cardWiggleTimeline(self);
-            timeline.play();
-            System.out.println("Multiplier: " + ((String)params.get("multiplier")).split(" ")[0].substring(1));
-            context.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            timeline.setOnFinished(event -> {
+                context.getBestHand().addMult(getIntegerFromParam(params.get("multiplier").toString()));
+            });
+
+            UIController.addToAnimationList(timeline);
         });
         effectMap.put("MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_MULT");
-            context.getBestHand().multMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            timeline.setOnFinished(event -> {
+                context.getBestHand().multMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
+            });
+
+            UIController.addToAnimationList(timeline);
         });
 
         effectMap.put("MAIL_DISCARD", (context, self, cards, params) -> {
