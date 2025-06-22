@@ -325,15 +325,22 @@ public class JokerEffectRegistry {
         //UNIQUE
         effectMap.put("ACROBAT_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ACROBAT_EFFECT");
-            //TODO Joker Animation
+
             if(context.getHandsPlayed() == 0) {
-                context.getBestHand().multMult(3);
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    context.getBestHand().multMult(3);
+                });
+
+                UIController.addToAnimationList(timeline);
             }
         });
 
         effectMap.put("ANCIENT_JOKER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ANCIENT_JOKER_EFFECT");
-            //TODO Joker Trigger Animation
+
             int index = context.getRand().nextInt(4);
             switch (index) {
                 case 0:
@@ -349,6 +356,10 @@ public class JokerEffectRegistry {
                     self.setSuitFilter(Suit.SPADES);
                     break;
             }
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            UIController.addToAnimationList(timeline);
         });
 
         effectMap.put("BARON_EFFECT", (context, self, cards, params) -> {
@@ -398,7 +409,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("BOOTSTRAPS_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BOOTSTRAPS_EFFECT");
-            //TODO Bind Desription
+            //TODO Bind Description
             //self.cardDescriptionProperty().bind(Bindings.createStringBinding(() -> String.format(self.getCardDescription(), 2 * context.getMoney() / 5),self.cardDescription,context.moneyProperty()));
             //self.multValueProperty().bind(Bindings.createDoubleBinding(() -> {
             //    return (double) ((context.getMoney() / 5) * 2);
@@ -489,8 +500,8 @@ public class JokerEffectRegistry {
             }
         });
 
-        effectMap.put("EIGHTBALL_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: EIGHTBALL_EFFECT");
+        effectMap.put("EIGHT_BALL_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: EIGHT_BALL_EFFECT");
             //TODO Joker Trigger Animation
             for (PlayingCard c : cards) {
                 if(c.getValue() == 8 && context.getRand().nextInt(4) == 0) {
@@ -552,8 +563,8 @@ public class JokerEffectRegistry {
             self.setMultValue(self.getMultValue() + .25);
         });
 
-        effectMap.put("ICECREAM_EFFECT", (context, self, cards, params) -> {
-            System.out.println("Trigger: ICECREAM_EFFECT");
+        effectMap.put("ICE_CREAM_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: ICE_CREAM_EFFECT");
             //TODO Joker Trigger Animation
             //TODO Joker Effekt
 
@@ -652,11 +663,19 @@ public class JokerEffectRegistry {
 
         effectMap.put("RAISED_FIST_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RAISED_FIST_EFFECT");
-            //TODO Joker Trigger Effekt
 
             PlayingCard lowestCard = context.getHandCards().stream().min(Comparator.comparing(PlayingCard::getValue)).get();
+
             if(lowestCard == null) return;
-            context.getBestHand().addMult(lowestCard.getValue());
+
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            timeline.setOnFinished(event -> {
+                context.getBestHand().addMult(lowestCard.getValue());
+            });
+
+            UIController.addToAnimationList(timeline);
         });
 
         effectMap.put("RESERVED_PARKING_EFFECT", (context, self, cards, params) -> {
@@ -666,6 +685,7 @@ public class JokerEffectRegistry {
             for (PlayingCard c : context.getHandCards()) {
                 int chance = context.getDouble_chance_flag() > 0 ? 2 - 1 : 2;
                 if (context.getRand().nextInt(chance) == 0) {
+
                     context.addMoney(1);
                 }
             }
@@ -682,8 +702,17 @@ public class JokerEffectRegistry {
 
         effectMap.put("RUNNER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RUNNER_EFFECT");
-            //TODO Joker Trigger Effekt
-            if(context.getBestHand().getName() == "Straight") self.setChipValue(self.getChipValue() + 15);
+
+            if(context.getBestHand().getName() == "Straight") {
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    self.setChipValue(self.getChipValue() + 15);
+                });
+
+                UIController.addToAnimationList(timeline);
+            }
         });
 
         effectMap.put("SEEING_DOUBLE_EFFECT", (context, self, cards, params) -> {
@@ -712,26 +741,44 @@ public class JokerEffectRegistry {
 
         effectMap.put("SQUARE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SQUARE_EFFECT");
-            //TODO Joker Trigger Effekt
-            if(context.getPlayedCards().size() == 4)
-                self.setChipValue(self.getChipValue() + 4);
+
+            if(context.getPlayedCards().size() == 4) {
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    self.setChipValue(self.getChipValue() + 4);
+                });
+
+                UIController.addToAnimationList(timeline);
+            }
         });
 
         effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_BUY_EFFECT");
-            //TODO Joker Trigger Effekt
+
             context.setHandSize(context.getHandSize() - 2);
         });
 
         effectMap.put("STUNTMAN_SALE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_SALE_EFFECT");
+
             context.setHandSize(context.getHandSize() + 2);
         });
 
         effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SEANCE_EFFECT");
-            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getMaxConsumables())
-                context.getConsumableList().add(context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size())));
+
+            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getMaxConsumables()) {
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    context.getConsumableList().add(context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size())));
+                });
+
+                UIController.addToAnimationList(timeline);
+            }
         });
 
 
@@ -857,7 +904,7 @@ public class JokerEffectRegistry {
         });
         //endregion
 
-        // weitere Effekte hier registrieren...
+        // weitere Effekte hier registrieren …
     }
 
     private static Suit getSuit(String suitString) {
