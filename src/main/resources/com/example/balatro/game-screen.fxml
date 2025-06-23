@@ -388,7 +388,7 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="2.0" vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints percentHeight="2.0" vgrow="SOMETIMES" />

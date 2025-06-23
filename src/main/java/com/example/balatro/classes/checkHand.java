@@ -1,5 +1,6 @@
 package com.example.balatro.classes;
 
+import com.example.balatro.Balatro;
 import com.example.balatro.models.GameModel;
 
 import java.util.*;
@@ -28,12 +29,9 @@ public class checkHand {
         boolean isStraight = isStraight(cards); // Prüfen auf eine gerade Reihenfolge
         boolean isRoyal = isRoyal(cards); // Prüfen auf Royal Flush
 
-        if(cards.size() == 5) {
+        if(cards.size() == (model.getFour_finger_flag() > 0 ? 4 : 5)) {
 
             // Überprüfen der verschiedenen Handtypen und Hinzufügen der möglichen Hände
-            if (isStraight && isFlush) {
-                possibleHands.add(model.getPokerHand("Royal Flush"));
-            }
             if (isFlush && isStraight) {
                 possibleHands.add(model.getPokerHand("Straight Flush"));
             }

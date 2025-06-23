@@ -544,6 +544,21 @@ public class JokerEffectRegistry {
             }
         });
 
+        effectMap.put("HALF_JOKER_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: HALF_JOKER_EFFECT");
+
+            if (cards.size() <= 3) {
+                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+                timeline.setOnFinished(event -> {
+                    context.getBestHand().addMult(20);
+                });
+
+                UIController.addToAnimationList(timeline);
+            }
+        });
+
         effectMap.put("HALLUCINATION_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: HALLUCINATION_EFFECT");
             //TODO Joker Trigger Animation
@@ -752,6 +767,21 @@ public class JokerEffectRegistry {
 
                 UIController.addToAnimationList(timeline);
             }
+        });
+
+        effectMap.put("STENCIL_EFFECT", (context, self, cards, params) -> {
+            System.out.println("Trigger: STENCIL_EFFECT");
+
+            int emptySpace = context.getMaxJokers() - context.getActiveJokerMap().size() + 1;
+
+            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
+
+            timeline.setOnFinished(event -> {
+                context.getBestHand().multMult(emptySpace);
+            });
+
+            UIController.addToAnimationList(timeline);
         });
 
         effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {

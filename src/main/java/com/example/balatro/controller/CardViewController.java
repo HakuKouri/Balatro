@@ -159,6 +159,7 @@ public class CardViewController {
             AnchorPane cardPane = loader.load();
             CardViewController controller = loader.getController();
 
+            cardPane.getStyleClass().add("card");
             controller.setData(card);
             controller.setInShop(inShop);
             map.put(controller,cardPane);

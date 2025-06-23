@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
+    public AnchorPane button_anchorpane;
     //region FXML
     @FXML
     private Label handCardsCounterLabel;
@@ -91,6 +92,7 @@ public class HoldingHandController {
 
         //Hand Control Buttons
         handButtonBox.visibleProperty().bind(gameModel.handButtonVisibilityProperty());
+        handButtonBox.managedProperty().bind(gameModel.handButtonVisibilityProperty());
         playSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
         discardSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
     }
@@ -198,7 +200,7 @@ public class HoldingHandController {
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getDiscards() > 0) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getDiscards() > -1000) {
             getHandCards().removeAll(getSelectedCards());
             getSelectedCards().clear();
 

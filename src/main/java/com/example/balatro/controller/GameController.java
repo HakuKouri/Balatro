@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 
 public class GameController
 {
-    public RowConstraints holdingHand_GrowRow;
     //region FXML
+    public RowConstraints holdingHand_GrowRow;
     @FXML
     private AnchorPane playedCards_AnchorPane;
     @FXML
@@ -269,7 +269,16 @@ public class GameController
         //endregion
 
         //region Hand Info Bind
-        infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
+        //infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
+
+        infoHandName.textProperty().bind(Bindings.createStringBinding(() -> {
+            String best = gameModel.getBestHand().getName();
+
+            boolean royal ="Straight Flush".equals(best) && gameModel.getSelectedCards().stream().anyMatch(karte -> "Ace".equals(karte.getRank()));
+
+            System.out.println("Royal Cards: " + royal);
+            return royal ? "Royal Flush" : best;
+        },gameModel.getBestHand().nameProperty(), gameModel.getPlayedCards()));
         infoHandLevel.textProperty().bind(
                 Bindings.when(gameModel.getBestHand().levelProperty().greaterThan(0))
                         .then(Bindings.concat("lv. ", gameModel.getBestHand().levelProperty().asString()))
@@ -277,6 +286,7 @@ public class GameController
         infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
         infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
         //endregion
+
 
         UIController.bindStackPane(gameModel.getActiveJokerMap(), spaceJoker);
         UIController.bindStackPane(gameModel.getConsumableMap(), spaceConsumable);
@@ -360,20 +370,22 @@ public class GameController
         }
 
         //TEST BUTTON
+        //JOKER 15
         testButton.setOnAction(event -> {
-            for (int i = 0; i < gameModel.getAllJokerList().size() && i < 7; i++) {
+            for (int i = 17; i < gameModel.getAllJokerList().size() && i < 18; i++) {
                 CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
+
             }
             for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());
+                triggerJokers(JokerTrigger.ON_BUY,new ArrayList<>());
             }
+
         });
 
         UIController.addCardClickEvent(spaceJoker,gameModel.getActiveJokerMap());
         UIController.addCardClickEvent(spaceConsumable,gameModel.getConsumableMap());
     }
-
-
 
     //SETTING UP GAME
     private void setPlayingDeck() {
@@ -478,33 +490,27 @@ public class GameController
     public void buyItem(AnchorPane pane, CardViewController controller) {
         System.out.printf("Buy item: ");
         System.out.println(controller.getCard());
+
+        controller.selectedProperty().set(false);
+        controller.inShopProperty().set(false);
+
         if(controller.getCard().getCardType() == "Joker") {
-            controller.selectedProperty().set(false);
-            controller.inShopProperty().set(false);
             gameModel.getActiveJokerMap().put(controller, pane);
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Tarot") {
             System.out.printf("Tarot");
-            controller.selectedProperty().set(false);
-            controller.inShopProperty().set(false);
             gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Planet") {
             System.out.printf("Planet");
-            controller.selectedProperty().set(false);
-            controller.inShopProperty().set(false);
             gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Spectral") {
             System.out.printf("Spectral");
-            controller.selectedProperty().set(false);
-            controller.inShopProperty().set(false);
             gameModel.getConsumableMap().put(controller, pane);
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "PlayingCard") {
             System.out.printf("PlayingCard");
-            controller.selectedProperty().set(false);
-            controller.inShopProperty().set(false);
             gameModel.addCardToDeckFull((PlayingCard) controller.getCard());
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Voucher") {
@@ -513,7 +519,8 @@ public class GameController
             shopController.getVoucherMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Booster") {
             System.out.printf("Booster");
-            gameModel.setShopVisibility(false);
+            shopController.getBoosterMap().remove(controller);
+            //gameModel.setShopVisibility(false);
             //do stuff
             //gameModel.setShopVisibility(true);
         }

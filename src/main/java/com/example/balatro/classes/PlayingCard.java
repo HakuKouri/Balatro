@@ -14,14 +14,14 @@ public class PlayingCard extends Card
     private String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
     private int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
 
-    private StringProperty rank = new SimpleStringProperty("");
-    private IntegerProperty rankIndex = new SimpleIntegerProperty(0);
-    private ObjectProperty<Suit> suit =  new SimpleObjectProperty<>(Suit.NO_SUIT);
-    private IntegerProperty suitIndex = new SimpleIntegerProperty(0);
-    private IntegerProperty value = new SimpleIntegerProperty(0);
-    private ObjectProperty<Seal> seal = new SimpleObjectProperty<>(new Seal());
-    private ObjectProperty<Enhancement> enhancement = new SimpleObjectProperty<>(new Enhancement());
-    private ObjectProperty<Edition> edition =  new SimpleObjectProperty<>(new Edition());
+    private final StringProperty rank = new SimpleStringProperty("");
+    private final IntegerProperty rankIndex = new SimpleIntegerProperty(0);
+    private final ObjectProperty<Suit> suit =  new SimpleObjectProperty<>(Suit.NO_SUIT);
+    private final IntegerProperty suitIndex = new SimpleIntegerProperty(0);
+    private final IntegerProperty value = new SimpleIntegerProperty(0);
+    private final ObjectProperty<Seal> seal = new SimpleObjectProperty<>(new Seal());
+    private final ObjectProperty<Enhancement> enhancement = new SimpleObjectProperty<>(new Enhancement());
+    private final ObjectProperty<Edition> edition =  new SimpleObjectProperty<>(new Edition());
 
     private boolean clickAble = false;
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
@@ -52,11 +52,13 @@ public class PlayingCard extends Card
         getEnhancement().setId(-1);
         getEdition().setId(-1);
 
-        setFitHeight(Balatro.getSettings().getCardHeight());
+        getStyleClass().add("playingCard");
+        setFitHeight(200);
         setPreserveRatio(true);
 
         selected.addListener((observable, oldValue, newValue) -> {
             // Only if completed
+
             if (newValue)
                 this.setTranslateY(-20);
             else

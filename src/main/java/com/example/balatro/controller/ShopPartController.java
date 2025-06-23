@@ -257,9 +257,19 @@ public class ShopPartController {
         else booster.setBooster(gameModel.getAllBoosterList().get(31));
 
         System.out.println("Booster Name: " + booster.getCardName());
+        System.out.println("Booster Size: " + booster.getBoosterSize());
         return booster;
     }
+
+    public void addArcanaBooster() {
+        for (Booster booster : gameModel.getAllBoosterList()) {
+            CardViewController.createCardNode(booster, boosterMap, true);
+        }
+    }
 }
+
+
+
 
 //private void drawItems() {
 //    cardNodes.clear();
