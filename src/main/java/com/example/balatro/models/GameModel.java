@@ -69,6 +69,11 @@ public class GameModel {
     private final StringProperty stakeChipImageUrl = new SimpleStringProperty("file:src/main/resources/com/images/Stakechips/stake_chip_1.png");
     //endregion
 
+    //region SHOP VARIABLES
+    private final IntegerProperty maxItems = new SimpleIntegerProperty(2);
+    private final IntegerProperty shopDiscount =  new SimpleIntegerProperty(0);
+    //endregion
+
     //region ACTIVE JOKERS
     private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
     private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableMap(new LinkedHashMap<>());
@@ -572,6 +577,25 @@ public class GameModel {
     public void decreaseHandSizeBy(int sub) {
         handSize.set(handSize.get() + sub);
     }
+    //endregion
+
+    //region SHOP GS
+    public int getMaxItems() {
+        return maxItems.get();
+    }
+
+    public IntegerProperty maxItemsProperty() {
+        return maxItems;
+    }
+
+    public int getShopDiscount() {
+        return shopDiscount.get();
+    }
+
+    public IntegerProperty shopDiscountProperty() {
+        return shopDiscount;
+    }
+
     //endregion
 
     //region ACTIVE JOKER GS

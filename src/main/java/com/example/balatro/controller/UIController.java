@@ -27,89 +27,165 @@ public class UIController {
     private static List<Animation> animationList = new ArrayList<>();
 
     public static void setupUiController() {
-        gameSpeed.bind( Balatro.getSettings().gameSpeedProperty());
+        gameSpeed.bind(Balatro.getSettings().gameSpeedProperty());
     }
 
+    /*
+    * Diese Methode bindet MouseClick events an StackPanes,
+    * um zu erkennen, welches Label geklickt worden sind
+    */
     public static void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
         stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node source = (Node) event.getTarget();
             AnchorPane anchorPane = null;
             CardViewController cardViewController = null;
 
-            if (source instanceof ImageView) {
-                anchorPane = getPaneById(source, "card_AnchorPane");
+            Node currentNode = source;
+            // Falls das Textfeld eines Labels geklickt wurde
+            if (source.getParent() instanceof Label) {
+                currentNode = source.getParent();
+            }
 
-                cardViewController = CardViewController.getCardViewController(map,anchorPane);
+            //Führe bestimmte Aktionen aus anhand des geklickten Labels
+            if (currentNode instanceof Label) {
+                anchorPane = getPaneById(currentNode, "card_AnchorPane");
+                cardViewController = CardViewController.getCardViewController(map, anchorPane);
 
-                for (AnchorPane pane : map.values()) {
-                    System.out.println(pane);
-                }
-                if (!cardViewController.isSelected()) {
-                    cardViewController.setSelected(true);
-                    anchorPane.toFront();
-                } else {
-                    cardViewController.setSelected(false);
-                    for (Node pane : stackPane.getChildren()) {
-                        System.out.println(CardViewController.getCardViewController(map, (AnchorPane) pane).getCard().getCardName());
-                    }
-                    List<Node> sorted = new ArrayList<>(stackPane.getChildren());
-                    sorted.sort(Comparator.comparingDouble(Node::getTranslateX));
-                    stackPane.getChildren().setAll(sorted);
-
-
-                    moveCards(stackPane);
-                }
-                //cardViewController.setSelected(!cardViewController.isSelected());
-
-
-            } else {
-                Node currentNode = source;
-                if (source.getParent() instanceof Label) {
-                    currentNode = source.getParent();
-                }
-
-                if (currentNode instanceof Label) {
-                    anchorPane = getPaneById(currentNode, "card_AnchorPane");
-                    cardViewController = CardViewController.getCardViewController(map,anchorPane);
-                    if (currentNode.getId().equals("buyLabel")) {
+                switch (currentNode.getId()) {
+                    case "buyLabel":
                         System.out.println("BuyLabel clicked");
                         GameController.getInstance().buyItem(anchorPane, cardViewController);
-                    } else if(currentNode.getId().equals("buyUseSell_Label")) {
+                        break;
+                    case "buyUseSell_Label":
                         System.out.println("SellLabel clicked");
-                        if(cardViewController.isInShop()) GameController.getInstance().buyAndUse(cardViewController);
-                        else GameController.getInstance().sellItem(anchorPane,cardViewController,map);
-                    } else if(currentNode.getId().equals("use_Label")) {
+                        if (cardViewController.isInShop())
+                            GameController.getInstance().buyAndUse(cardViewController);
+                        else
+                            GameController.getInstance().sellItem(anchorPane, cardViewController, map);
+                        break;
+                    case "use_Label":
                         System.out.println("UseLabel clicked");
-                        GameController.getInstance().useCard(anchorPane,cardViewController,map);
-                    }
+                        GameController.getInstance().useCard(anchorPane, cardViewController, map);
+                        break;
                 }
             }
         });
     }
 
+    /*
+    * Diese Methode bindet visuelle Effekte an eine StackPane
+    * z.B. selected oder Drag and Drop
+    */
     public static void bindStackPane(ObservableMap<CardViewController, AnchorPane> map, StackPane stackPane) {
         map.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
+
             if (change.wasAdded()) {
                 AnchorPane anchorPane = change.getValueAdded();
                 CardViewController controller = change.getKey();
-                controller.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    anchorPane.setTranslateY(newValue ? -50.0 : 0.0);
+
+                // (1) Auswahl-Visualisierung
+                controller.selectedProperty().addListener((observable, oldVal, isSelected) -> {
+                    anchorPane.setTranslateY(isSelected ? -50.0 : 0.0);
                 });
-                stackPane.getChildren().addAll(anchorPane);
+
+                // (2) Drag + Click Unterscheidung vorbereiten
+                final double[] pressX = new double[1];
+                final double[] pressY = new double[1];
+                final Delta dragDelta = new Delta();
+
+                // (3) Maus gedrückt
+                anchorPane.setOnMousePressed(e -> {
+                    dragDelta.x = e.getSceneX() - anchorPane.getTranslateX();
+                    dragDelta.y = e.getSceneY() - anchorPane.getTranslateY();
+
+                    pressX[0] = e.getScreenX();
+                    pressY[0] = e.getScreenY();
+
+                    anchorPane.toFront(); // Karte optisch nach vorne holen
+                });
+
+                // (4) Maus gezogen
+                anchorPane.setOnMouseDragged(e -> {
+                    anchorPane.setTranslateX(e.getSceneX() - dragDelta.x);
+                    anchorPane.setTranslateY(e.getSceneY() - dragDelta.y);
+
+                    // Während des Drags: Andere Karten visuell umsortieren
+                    snapAnchorPaneToNewIndex(stackPane,anchorPane);
+
+                    moveCards(stackPane, anchorPane);// Visuelles Neulayout
+                    anchorPane.toFront();
+                });
+
+                // (5) Maus losgelassen – Click oder Drag?
+                anchorPane.setOnMouseReleased(e -> {
+                    double dx = Math.abs(e.getScreenX() - pressX[0]);
+                    double dy = Math.abs(e.getScreenY() - pressY[0]);
+
+                    // (5a) Click (kleine Bewegung)
+                    if (dx < 5 && dy < 5) {
+                        for(CardViewController cardViewController : map.keySet())
+                            if(cardViewController != controller) cardViewController.setSelected(false);
+                        controller.setSelected(!controller.isSelected());
+                        anchorPane.toFront();
+                        return;
+                    }
+
+                    // (5b) Drag & Snap
+                    snapAnchorPaneToNewIndex(stackPane, anchorPane);
+                    moveCards(stackPane); // visuelles Neulayout
+                });
+
+                // (6) Karte der StackPane hinzufügen
+                if (!stackPane.getChildren().contains(anchorPane)) {
+                    stackPane.getChildren().add(anchorPane);
+                }
             }
+
+            // (7) Karte wurde entfernt
             if (change.wasRemoved()) {
-                stackPane.getChildren().removeAll(change.getValueRemoved());
+                stackPane.getChildren().remove(change.getValueRemoved());
             }
+
+            // (8) Immer Layout aktualisieren
             moveCards(stackPane);
         });
     }
+
+    /**
+     * Diese Methode bestimmt, an welche Position im StackPane
+     * die gezogene Karte eingefügt werden soll (Snapping-Logik).
+     */
+    private static void snapAnchorPaneToNewIndex(StackPane stackPane, AnchorPane anchorPane) {
+        List<Node> children = new ArrayList<>(stackPane.getChildren());
+        children.remove(anchorPane);
+
+        double draggedX = anchorPane.getTranslateX();
+        int insertIndex = 0;
+
+        for (int i = 0; i < children.size(); i++) {
+            if (draggedX > children.get(i).getTranslateX()) {
+                insertIndex = i + 1;
+            }
+        }
+
+        children.add(insertIndex, anchorPane);
+        stackPane.getChildren().setAll(children);
+    }
+
+    /**
+     * Kleine Klasse zur Speicherung der relativen Drag-Position.
+     */
+    private static class Delta {
+        double x, y;
+    }
+
 
     public static void moveCards(StackPane stackPane) {
         int cards = stackPane.getChildren().size();
         if (cards == 0) return;
 
-        if(cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
-        else          stackPane.setAlignment(Pos.CENTER);
+        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
+        else stackPane.setAlignment(Pos.CENTER);
 
         double cardWidth = 200;
         double paneWidth = stackPane.getWidth();
@@ -119,23 +195,53 @@ public class UIController {
         double pos;
         double centerIndex = (cards - 1) / 2.0;
 
-        for(int i = 0; i < cards; i++) {
-            if(cards > 5) {
+        for (int i = 0; i < cards; i++) {
+            if (cards > 5) {
                 pos = margin + i * (cardWidth + spacing);
             } else {
                 pos = (i - centerIndex) * (cardWidth - cards * 4);
             }
-            //System.out.println("Pos: " + pos + " in " + stackPane.getId());
-            //System.out.println("StackPane Width: " + stackPane.getWidth());
-            //System.out.println("Parent AnchorPane Width: " + ((AnchorPane)stackPane.getParent()).getWidth());
+
             stackPane.getChildren().get(i).setTranslateX(pos);
 
+            for (AnchorPane pane : Balatro.getGameModel().getActiveJokerMap().values()) {
+                if(CardViewController.getCardViewController(Balatro.getGameModel().getActiveJokerMap(), pane).isSelected()) {
+                    pane.setTranslateY(-50);
+                } else pane.setTranslateY(0);
+            }
         }
+    }
 
+    public static void moveCards(StackPane stackPane, Node exclude) {
+        int cards = stackPane.getChildren().size();
+        if (cards == 0) return;
+
+        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
+        else stackPane.setAlignment(Pos.CENTER);
+
+        double cardWidth = 200;
+        double paneWidth = stackPane.getWidth();
+        double margin = 10;
+        double availableSpace = paneWidth - cardWidth * cards;
+        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
+        double centerIndex = (cards - 1) / 2.0;
+
+        for (int i = 0; i < cards; i++) {
+            Node node = stackPane.getChildren().get(i);
+            if (node == exclude) continue; // Ziehende Karte bleibt wo sie ist
+
+            double pos;
+            if (cards > 5) {
+                pos = margin + i * (cardWidth + spacing);
+            } else {
+                pos = (i - centerIndex) * (cardWidth - cards * 4);
+            }
+            node.setTranslateX(pos);
+        }
     }
 
     private static AnchorPane getPaneById(Node node, String id) {
-        if(node.getId() != null && node.getId().equals(id)) {
+        if (node.getId() != null && node.getId().equals(id)) {
             return (AnchorPane) node;
         }
 
@@ -150,16 +256,16 @@ public class UIController {
     public static Timeline cardWiggleTimeline(Node card) {
         System.out.println("Game Speed: " + gameSpeed.get());
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(0), new KeyValue(card.rotateProperty(), 0)),
-                new KeyFrame(Duration.millis((double) 4 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 8 /gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 12 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 16 /gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 20 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 24 /gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 28 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 32 /gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
-                new KeyFrame(Duration.millis((double) 36 /gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
-                new KeyFrame(Duration.millis((double) 40 /gameSpeed.get()), new KeyValue(card.rotateProperty(), 0)));
+                new KeyFrame(Duration.millis((double) 4 / gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis((double) 8 / gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis((double) 12 / gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis((double) 16 / gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis((double) 20 / gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis((double) 24 / gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis((double) 28 / gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis((double) 32 / gameSpeed.get()), new KeyValue(card.rotateProperty(), 10)),
+                new KeyFrame(Duration.millis((double) 36 / gameSpeed.get()), new KeyValue(card.rotateProperty(), -10)),
+                new KeyFrame(Duration.millis((double) 40 / gameSpeed.get()), new KeyValue(card.rotateProperty(), 0)));
 
         timeline.setCycleCount(3);
         timeline.setDelay(Duration.seconds(0.2));
@@ -168,16 +274,16 @@ public class UIController {
     }
 
     public static TranslateTransition cardMoveToAnimation(Node card) {
-        return cardMoveToAnimation(card,"", "");
+        return cardMoveToAnimation(card, "", "");
     }
 
-    public static TranslateTransition cardMoveToAnimation(Node card,String from, String to) {
+    public static TranslateTransition cardMoveToAnimation(Node card, String from, String to) {
         Scene scene = card.getScene();
 
         double targetX = scene.getWidth() + 300;
         double targetY = scene.getHeight() / 2;
 
-        if(to == "middle") {
+        if (to == "middle") {
             targetX = scene.getWidth() / 2;
             targetY = scene.getHeight() / 3 * 2;
         }
@@ -199,7 +305,8 @@ public class UIController {
     }
 
     public static Timeline delayTimeline() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {}));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        }));
         return timeline;
     }
 

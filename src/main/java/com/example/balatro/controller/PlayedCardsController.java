@@ -52,6 +52,13 @@ public class PlayedCardsController {
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
             //Löse Joker Trigger aus
+            for(PlayingCard card : gameModel.getHandCards()) {
+                if(card.getEnhancement().getEnhancementName().equals("Steel Card")) {
+                    gameModel.getBestHand().multMult(1.5);
+                    triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCards());
+                }
+            }
+
             triggerJokers(JokerTrigger.ALL_CARDS_SCORED, gameModel.getPlayedCards());
 
             UIController.playAnimations(() -> {
@@ -105,6 +112,12 @@ public class PlayedCardsController {
             gameModel.setRewardVisibility(true);
             gameModel.getHandCards().clear();
 
+            for(PlayingCard card : gameModel.getHandCards()) {
+                if (card.getEnhancement().getEnhancementName().equals("Gold Card")) {
+                    gameModel.addMoney(3);
+                    triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCards());
+                }
+            }
             triggerJokers(JokerTrigger.END_OF_ROUND, gameModel.getPlayedCards());
 
             if(gameModel.getActiveBlind().getBlindId() > 1) {

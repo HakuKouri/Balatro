@@ -643,6 +643,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: MINE_EFFECT");
             //TODO Joker Trigger Effekt
             //TODO Retrigger
+
         });
 
         effectMap.put("MISPRINT_EFFECT", (context, self, cards, params) -> {

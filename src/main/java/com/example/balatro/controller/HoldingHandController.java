@@ -30,16 +30,14 @@ import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
-    public AnchorPane button_anchorpane;
     //region FXML
+    public AnchorPane button_anchorpane;
     @FXML
     private Label handCardsCounterLabel;
     @FXML
     private Button playSelectedCardsButton;
     @FXML
     private Button discardSelectedCardsButton;
-    @FXML
-    private AnchorPane holdingHand_AnchorPane;
     @FXML
     private AnchorPane holdHand_AnchorPane;
     @FXML
@@ -70,18 +68,8 @@ public class HoldingHandController {
             Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
 
             if (source instanceof PlayingCard) {
-                // Wenn das geklickte Element eine PlayingCard ist
-                PlayingCard card = (PlayingCard) source;
-                if(card.isSelected()) {
-                    card.setSelected(false);
-                    gameModel.removeCardFromSelectedCards(card);
-                }
-                else if(gameModel.getSelectedCards().size() < 5){
-                    card.setSelected(true);
-                    gameModel.addCardToSelectedCards(card);
-                }
-                setHandInfo(checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
-            }
+                handMouseClick((PlayingCard) source);
+              }
         });
         //endregion
 
@@ -95,6 +83,20 @@ public class HoldingHandController {
         handButtonBox.managedProperty().bind(gameModel.handButtonVisibilityProperty());
         playSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
         discardSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
+    }
+
+    private void handMouseClick(PlayingCard card) {
+        // Wenn das geklickte Element eine PlayingCard ist
+        if(card.isSelected()) {
+            card.setSelected(false);
+            gameModel.removeCardFromSelectedCards(card);
+        }
+        else if(gameModel.getSelectedCards().size() < 5){
+            card.setSelected(true);
+            gameModel.addCardToSelectedCards(card);
+        }
+        setHandInfo(checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
+
     }
 
     public List<PlayingCard> getSelectedCards() {
@@ -114,25 +116,29 @@ public class HoldingHandController {
         gameModel.getDeckToPlay().remove(0);
         sort();
     }
+
     public void drawCardToLimit() {
-        while (gameModel.getHandCards().size() < gameModel.handSizeProperty().get() && !gameModel.getDeckToPlay().isEmpty()) {
-            drawCard();
-        }
+        drawCardToLimit(gameModel.handSizeProperty().get() - gameModel.getHandCards().size());
     }
+
     public void drawCardToLimit(int cardCount) {
-        for (int i = 0; i < cardCount  && !gameModel.getDeckToPlay().isEmpty() ; i++) {
+        int draws = Math.min(cardCount, gameModel.getDeckToPlay().size());
+        for (int i = 0; i < draws; i++) {
             drawCard();
         }
     }
 
     //Selecting Cards
     private void setHandInfo(List<PokerHand> hands) {
+        if(hands.isEmpty()) {
+            gameModel.getBestHand().setHand(new PokerHand());
+            gameModel.getPossiblePokerHand().clear();
+            return;
+        }
         int maxPoints = 0;
 
-        if(hands.isEmpty()) gameModel.getBestHand().setHand(new PokerHand());
-
-        gameModel.getPossiblePokerHand().clear();
-        gameModel.getPossiblePokerHand().addAll(hands);
+        PokerHand bestHand = null;
+        gameModel.getPossiblePokerHand().setAll(hands);
 
         for (PokerHand pokerHand : gameModel.getPokerHandList()) {
             if(hands.contains(pokerHand)) {
@@ -141,14 +147,18 @@ public class HoldingHandController {
                 System.out.println("Possible Points: " + points);
                 if(maxPoints < points) {
                     maxPoints = points;
-                    gameModel.getBestHand().setHand(pokerHand);
+                    bestHand = pokerHand;
                 }
             }
+        }
+
+        if(bestHand != null) {
+            gameModel.getBestHand().setHand(bestHand);
         }
         System.out.println("Best Hand: " + gameModel.getBestHand().getName());
     }
 
-    //Button Funktions
+    //Button Functions
     public void sortRank() {
         gameModel.setSortedByRank(true);
         sort();
@@ -160,11 +170,10 @@ public class HoldingHandController {
     }
 
     public void sort() {
-        List<PlayingCard> tempCardList = new ArrayList<>();
-        for(var card : gameModel.getHandCards()) {
-            if(card != null)
-                tempCardList.add(card);
-        }
+        List<PlayingCard> tempCardList = gameModel.getHandCards()
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         if(gameModel.isSortedByRank()) {
             tempCardList.sort(Comparator
@@ -211,49 +220,4 @@ public class HoldingHandController {
             gameModel.decrementDiscards();
         }
     }
-
-    public void playPlanet(CardViewController cardViewController) {
-        gameModel.setShopVisibility(false);
-        Planet planet = (Planet) cardViewController.getCard();
-
-        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).findFirst().get();
-
-        gameModel.getBestHand().setHand(hand);
-
-        Timeline multTimeline = UIController.cardWiggleTimeline(planet);
-
-        multTimeline.setCycleCount(3);
-        multTimeline.setOnFinished( event -> {
-            hand.addMult(planet.getPlanetMultiplier());
-            gameModel.getBestHand().addMult(planet.getPlanetMultiplier());
-        });
-        Timeline chipsTimeline = UIController.cardWiggleTimeline(planet);
-        chipsTimeline.setCycleCount(3);
-        chipsTimeline.setOnFinished( event -> {
-            hand.addChips(planet.getPlanetChips());
-            gameModel.getBestHand().addChips(planet.getPlanetChips());
-        });
-
-        Timeline levelTimeline = UIController.cardWiggleTimeline(planet);
-        levelTimeline.setCycleCount(3);
-        levelTimeline.setOnFinished( event -> {
-            hand.addLevel();
-            gameModel.getBestHand().addLevel();
-        });
-
-        UIController.addToAnimationList(multTimeline);
-        UIController.addToAnimationList(chipsTimeline);
-        UIController.addToAnimationList(levelTimeline);
-        UIController.addToAnimationList(UIController.delayTimeline());
-
-        holdingHand_StackPane.getChildren().add(cardViewController.getCard());
-
-        UIController.playAnimations(() -> {
-            holdingHand_StackPane.getChildren().clear();
-            gameModel.getBestHand().setHand(new PokerHand());
-            gameModel.setShopVisibility(true);
-        });
-    }
-
-
 }

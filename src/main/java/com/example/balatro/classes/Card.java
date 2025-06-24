@@ -1,6 +1,7 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.fasterxml.jackson.core.json.JsonGeneratorImpl;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -10,15 +11,16 @@ import javafx.scene.image.ImageView;
 public class Card extends ImageView
 {
     //region Properties
-    protected IntegerProperty cardId = new SimpleIntegerProperty(-1);
-    protected StringProperty cardType = new SimpleStringProperty("");
-    protected StringProperty cardName = new SimpleStringProperty("");
-    protected StringProperty cardImageUrl = new SimpleStringProperty("");
-    protected StringProperty cardDescription = new SimpleStringProperty("");
-    protected IntegerProperty cardCost = new SimpleIntegerProperty(0);
-    protected DoubleProperty maxCost = new SimpleDoubleProperty(0);
-    protected ObjectProperty<Edition> edition = new SimpleObjectProperty<>(new Edition());
-    protected IntegerProperty editionCost = new SimpleIntegerProperty(0);
+    protected final IntegerProperty cardId = new SimpleIntegerProperty(-1);
+    protected final StringProperty cardType = new SimpleStringProperty("");
+    protected final StringProperty cardName = new SimpleStringProperty("");
+    protected final StringProperty cardImageUrl = new SimpleStringProperty("");
+    protected final StringProperty cardDescription = new SimpleStringProperty("");
+    protected final IntegerProperty cardCost = new SimpleIntegerProperty(0);
+    protected final DoubleProperty maxCost = new SimpleDoubleProperty(0);
+    protected final ObjectProperty<Edition> edition = new SimpleObjectProperty<>(new Edition());
+    protected final IntegerProperty editionCost = new SimpleIntegerProperty(0);
+    protected final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
     private final DoubleProperty sellValue = new SimpleDoubleProperty(0);
     private final DoubleProperty additionalSellValue = new SimpleDoubleProperty(0);
 
@@ -38,6 +40,8 @@ public class Card extends ImageView
                         getCardCost() + getEditionCost(),
                 cardCostProperty(), editionCostProperty())
         );
+
+
 
         sellValueProperty().bind(Bindings.createDoubleBinding(() -> {
             return Math.floor(getMaxCost() / 2.0 + getAdditionalSellValue());
@@ -149,6 +153,14 @@ public class Card extends ImageView
 
     public void setEditionCost(int editionCost) {
         this.editionCost.set(editionCost);
+    }
+
+    public int getBuyPrice() {
+        return buyPrice.get();
+    }
+
+    public IntegerProperty buyPriceProperty() {
+        return buyPrice;
     }
 
     public double getSellValue() {

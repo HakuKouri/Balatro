@@ -372,7 +372,7 @@ public class GameController
         //TEST BUTTON
         //JOKER 15
         testButton.setOnAction(event -> {
-            for (int i = 17; i < gameModel.getAllJokerList().size() && i < 18; i++) {
+            for (int i = 0; i < gameModel.getAllJokerList().size() && i < 6; i++) {
                 CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
 
             }
@@ -531,8 +531,10 @@ public class GameController
     private void setVoucherFlag(Card card) {
         switch (card.getCardName()){
             case "Overstock": gameModel.overstockVoucherProperty().set(true);
+                gameModel.maxItemsProperty().set(3);
                 break;
             case "Clearance Sale": gameModel.clearanceSaleVoucherProperty().set(true);
+                gameModel.shopDiscountProperty().set(25);
                 break;
             case "Hone": gameModel.honeVoucherProperty().set(true);
                 break;
@@ -759,7 +761,7 @@ public class GameController
 
         } else if(card.getCardType().equals("Planet")) {
             gameModel.setShopVisibility(false);
-            holdingHandController.playPlanet(cardViewController);
+            playPlanet(cardViewController, shopController.getItemMap());
             shopController.getItemMap().remove(cardViewController);
         } else if(card.getCardType().equals("Tarot")) {
 

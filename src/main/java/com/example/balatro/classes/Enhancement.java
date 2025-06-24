@@ -7,6 +7,14 @@ public class Enhancement
     private String enhancementName;
     private String enhancementEffect;
 
+    public Enhancement() {
+        setId(-1);
+        setEnhancementImageUrl("");
+        setEnhancementName("");
+        setEnhancementEffect("");
+    }
+
+
     public int getId()
     {
         return id;

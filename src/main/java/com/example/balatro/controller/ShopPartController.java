@@ -132,6 +132,7 @@ public class ShopPartController {
             card = getRandomSpectral();
         }
 
+        card.maxCostProperty();
         return card;
     }
 
@@ -261,11 +262,6 @@ public class ShopPartController {
         return booster;
     }
 
-    public void addArcanaBooster() {
-        for (Booster booster : gameModel.getAllBoosterList()) {
-            CardViewController.createCardNode(booster, boosterMap, true);
-        }
-    }
 }
 
 

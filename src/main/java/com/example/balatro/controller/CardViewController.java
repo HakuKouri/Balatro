@@ -45,6 +45,7 @@ public class CardViewController {
     private final BooleanProperty inShop = new SimpleBooleanProperty(false);
     private final StringProperty cardType = new SimpleStringProperty("");
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
+    private final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
     //endregion
 
     //region const Strings
@@ -102,6 +103,14 @@ public class CardViewController {
         selectedProperty().set(selected);
     }
 
+    public int getBuyPrice() {
+        return buyPrice.get();
+    }
+
+    public IntegerProperty buyPriceProperty() {
+        return buyPrice;
+    }
+
     //endregion
 
     public void initialize() {
@@ -111,13 +120,28 @@ public class CardViewController {
                 selectedProperty(), inShopProperty()
         ));
         buy_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
-                Balatro.getGameModel().getMoney() < getCard().getMaxCost(),Balatro.getGameModel().moneyProperty(),getCard().maxCostProperty()));
+                Balatro.getGameModel().getMoney() < buyPrice.get(),Balatro.getGameModel().moneyProperty(),buyPriceProperty()));
 
         buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
                         isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet") || getCard().getCardType().equals("Joker")),
                 selectedProperty(), cardTypeProperty(), cardTypeProperty()
         ));
-        buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
+        buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
+                Balatro.getGameModel().getMoney() < buyPrice.get(),Balatro.getGameModel().moneyProperty(),buyPriceProperty()));
+
+
+        use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
+                selectedProperty(),cardTypeProperty(),cardTypeProperty(),inShopProperty()
+        ));
+        use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
+
+
+        //buyPriceProperty().bind(Bindings.createIntegerBinding(() ->
+        //                (int) Math.round(card.get().getMaxCost() * Balatro.getGameModel().getShopDiscount() / 100)
+        //        , card.get().maxCostProperty(), Balatro.getGameModel().shopDiscountProperty()));
+
+        /*buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
             String text;
 
             if(isInShop()) {
@@ -126,23 +150,41 @@ public class CardViewController {
                 text = String.format(sell, (int)getCard().getSellValue());
             }
             return text;
-        }, inShopProperty(),getCard().cardTypeProperty()));
+        }, inShopProperty(),getCard().cardTypeProperty()));*/
 
-        use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
-                selectedProperty(),cardTypeProperty(),cardTypeProperty(),inShopProperty()
-        ));
-        use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
+        /*priceLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            String text = "$ " + buyPrice.get();
+            return text;
+        }, buyPriceProperty()));*/
     }
 
     public void setData(Card card) {
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
         this.card.set(card);
-        priceLabel.setText( "$ " + (int)card.getMaxCost());
 
         if (card.getCardImageUrl() != null) {
             cardImage.setImage(card.getImage());
         }
+
+        buyPrice.bind(Bindings.createIntegerBinding(() ->
+                        (int) Math.round(card.getMaxCost() * Balatro.getGameModel().getShopDiscount() / 100.0),
+                card.maxCostProperty(),
+                Balatro.getGameModel().shopDiscountProperty()));
+
+        buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
+                    if (isInShop()) {
+                        return buyAndUse;
+                    } else {
+                        return String.format(sell, Math.round(card.getSellValue()));
+                    }
+                }, inShopProperty(), card.cardTypeProperty()));
+
+        priceLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                "$ " + buyPrice.get(), buyPriceProperty()));
+
+        System.out.println("Card Cost: " + card.getCardCost());
+        System.out.println("Card max. Cost: " + card.getMaxCost());
+        System.out.println("Buy Price: " + card.getBuyPrice());
     }
 
     public String getImageUrl() {
