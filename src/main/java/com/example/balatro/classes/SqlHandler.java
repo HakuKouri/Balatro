@@ -484,11 +484,12 @@ public class SqlHandler {
                 voucher.setCardImageUrl(rs.getString(2));
                 voucher.setCardName(rs.getString(3));
                 voucher.setCardCost(10);
+                voucher.setCardType("Voucher");
                 voucher.setVoucherEffect(rs.getString(4));
                 voucher.setVoucherUpgradeFrom(rs.getString(5));
                 voucher.setVoucherUnlockCondition(rs.getString(6));
                 voucher.setVoucherNotes(rs.getString(7));
-                voucher.setCardType("Voucher");
+                voucher.availableProperty().set(rs.getBoolean(8));
 
                 vouchers.add(voucher);
             }

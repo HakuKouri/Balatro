@@ -1,6 +1,5 @@
 package com.example.balatro.models;
 
-import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.controller.CardViewController;
 import javafx.beans.binding.Bindings;
@@ -43,6 +42,7 @@ public class GameModel {
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
     private final List<PokerHand> pokerHandList = getAllPokerHandList();
+    private final List<Voucher> broughtVoucher = new ArrayList<>();
     //endregion
 
     //region GAME SETTINGS VAR
@@ -71,7 +71,9 @@ public class GameModel {
 
     //region SHOP VARIABLES
     private final IntegerProperty maxItems = new SimpleIntegerProperty(2);
-    private final IntegerProperty shopDiscount =  new SimpleIntegerProperty(0);
+    private final DoubleProperty shopPrices =  new SimpleDoubleProperty(1);
+    private final DoubleProperty editionChanceMultiplier = new SimpleDoubleProperty(1);
+    private final IntegerProperty rerollPrice  = new SimpleIntegerProperty(5);
     //endregion
 
     //region ACTIVE JOKERS
@@ -199,10 +201,6 @@ public class GameModel {
     public List<Tag> getAllTagList() {
         return allTagList;
     }
-    public Tag getTag(int index) {
-        Tag tag = allTagList.get(index);
-        return tag;
-    }
 
     public List<Blind> getAllBlindsList() {
         return allBlindsList;
@@ -276,8 +274,6 @@ public class GameModel {
     //endregion
 
     //region Deck to Play with
-
-
     public ObservableList<PlayingCard> getDeckToPlay() {
         return deckToPlay;
     }
@@ -482,26 +478,6 @@ public class GameModel {
         return handCards;
     }
 
-    public void addCardToHandCards(PlayingCard card) {
-        handCards.add(card);
-    }
-
-    public void addManyCardsToHandCards(List<PlayingCard> cards) {
-        handCards.addAll(cards);
-    }
-
-    public void removeCardFromHandCards(PlayingCard card) {
-        handCards.remove(card);
-    }
-
-    public void removeManyCardsFromHandCards(List<PlayingCard> cards) {
-        handCards.removeAll(cards);
-    }
-
-    public void clearHandCards() {
-        handCards.clear();
-    }
-
     //Selected Cards
     public ObservableList<PlayingCard> getSelectedCards() {
         return selectedCards;
@@ -517,27 +493,6 @@ public class GameModel {
 
     public void clearSelectedCards() {
         selectedCards.clear();
-    }
-
-    //Selected Cards Counter
-    public int getSelectedCardCounter() {
-        return selectedCardCounter.get();
-    }
-
-    public IntegerProperty selectedCardCounterProperty() {
-        return selectedCardCounter;
-    }
-
-    public void setSelectedCardCounter(int selectedCardCounter) {
-        this.selectedCardCounter.set(selectedCardCounter);
-    }
-
-    public void incrementSelectedCardCounter() {
-        selectedCardCounter.set(selectedCardCounter.get() + 1);
-    }
-
-    public void decrementSelectedCardCounter() {
-        selectedCardCounter.set(selectedCardCounter.get() - 1);
     }
 
     //Sort Holding Hand Cards
@@ -588,12 +543,28 @@ public class GameModel {
         return maxItems;
     }
 
-    public int getShopDiscount() {
-        return shopDiscount.get();
+    public double getShopPrices() {
+        return shopPrices.get();
     }
 
-    public IntegerProperty shopDiscountProperty() {
-        return shopDiscount;
+    public DoubleProperty shopPricesProperty() {
+        return shopPrices;
+    }
+
+    public double getEditionChanceMultiplier() {
+        return editionChanceMultiplier.get();
+    }
+
+    public DoubleProperty editionChanceMultiplierProperty() {
+        return editionChanceMultiplier;
+    }
+
+    public int getRerollPrice() {
+        return rerollPrice.get();
+    }
+
+    public IntegerProperty rerollPriceProperty() {
+        return rerollPrice;
     }
 
     //endregion
@@ -719,6 +690,8 @@ public class GameModel {
         setMoney(getMoney() + money);
     }
 
+    public void subMoney(int money) { setMoney(getMoney() - money); }
+
     //Aktueller Ante
 
     public int getAnte() {
@@ -801,6 +774,9 @@ public class GameModel {
         return maxInterest;
     }
 
+    public List<Voucher> getBroughtVoucher() {
+        return broughtVoucher;
+    }
 
     //endregion
 

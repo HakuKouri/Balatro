@@ -2,7 +2,6 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.Card;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -115,17 +114,22 @@ public class CardViewController {
 
     public void initialize() {
         price_AnchorPane.visibleProperty().bind(inShopProperty());
+
         buy_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
                         isSelected() && isInShop(),
                 selectedProperty(), inShopProperty()
         ));
+
         buy_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < buyPrice.get(),Balatro.getGameModel().moneyProperty(),buyPriceProperty()));
 
         buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet") || getCard().getCardType().equals("Joker")),
+                        isSelected()
+                                && ((getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet"))
+                                || (!isInShop() && getCard().getCardType().equals("Joker"))),
                 selectedProperty(), cardTypeProperty(), cardTypeProperty()
         ));
+
         buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getMoney() < buyPrice.get(),Balatro.getGameModel().moneyProperty(),buyPriceProperty()));
 
@@ -134,28 +138,8 @@ public class CardViewController {
                 isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
                 selectedProperty(),cardTypeProperty(),cardTypeProperty(),inShopProperty()
         ));
+
         use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
-
-
-        //buyPriceProperty().bind(Bindings.createIntegerBinding(() ->
-        //                (int) Math.round(card.get().getMaxCost() * Balatro.getGameModel().getShopDiscount() / 100)
-        //        , card.get().maxCostProperty(), Balatro.getGameModel().shopDiscountProperty()));
-
-        /*buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
-            String text;
-
-            if(isInShop()) {
-                text = buyAndUse;
-            } else {
-                text = String.format(sell, (int)getCard().getSellValue());
-            }
-            return text;
-        }, inShopProperty(),getCard().cardTypeProperty()));*/
-
-        /*priceLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            String text = "$ " + buyPrice.get();
-            return text;
-        }, buyPriceProperty()));*/
     }
 
     public void setData(Card card) {
@@ -167,15 +151,15 @@ public class CardViewController {
         }
 
         buyPrice.bind(Bindings.createIntegerBinding(() ->
-                        (int) Math.round(card.getMaxCost() * Balatro.getGameModel().getShopDiscount() / 100.0),
+                        Math.max((int) Math.round(card.getMaxCost() * Balatro.getGameModel().getShopPrices()),1) ,
                 card.maxCostProperty(),
-                Balatro.getGameModel().shopDiscountProperty()));
+                Balatro.getGameModel().shopPricesProperty()));
 
         buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
                     if (isInShop()) {
                         return buyAndUse;
                     } else {
-                        return String.format(sell, Math.round(card.getSellValue()));
+                        return String.format(sell, Math.max(Math.round(card.getSellValue()),1));
                     }
                 }, inShopProperty(), card.cardTypeProperty()));
 
@@ -185,10 +169,6 @@ public class CardViewController {
         System.out.println("Card Cost: " + card.getCardCost());
         System.out.println("Card max. Cost: " + card.getMaxCost());
         System.out.println("Buy Price: " + card.getBuyPrice());
-    }
-
-    public String getImageUrl() {
-        return cardImage.getImage().getUrl();
     }
 
     public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map) {

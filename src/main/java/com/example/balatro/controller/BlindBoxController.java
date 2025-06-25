@@ -95,6 +95,9 @@ public class BlindBoxController {
         return panelControllerList;
     }
 
+    public void rerollBoss() {
+        //TODO BOSS BLIND REROLL
+    }
 }
 
 

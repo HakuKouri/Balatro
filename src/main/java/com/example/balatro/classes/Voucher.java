@@ -1,9 +1,7 @@
 package com.example.balatro.classes;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.example.balatro.Balatro;
+import javafx.beans.property.*;
 
 public class Voucher extends Card
 {
@@ -12,6 +10,7 @@ public class Voucher extends Card
     private final StringProperty voucherUpgradeFrom = new SimpleStringProperty("");
     private final StringProperty voucherUnlockCondition = new SimpleStringProperty("");
     private final StringProperty voucherNotes = new SimpleStringProperty("");
+    private final BooleanProperty available =  new SimpleBooleanProperty(false);
     //endregion
 
     //region Constructor
@@ -68,6 +67,15 @@ public class Voucher extends Card
     public void setVoucherNotes(String voucherNotes) {
         this.voucherNotes.set(voucherNotes);
     }
+
+    public boolean isAvailable() {
+        return available.get();
+    }
+
+    public BooleanProperty availableProperty() {
+        return available;
+    }
+
     //endregion
 
     //region Functions
@@ -81,7 +89,13 @@ public class Voucher extends Card
         setVoucherUpgradeFrom(voucher.getVoucherUpgradeFrom());
         setVoucherUnlockCondition(voucher.getVoucherUnlockCondition());
         setVoucherNotes(voucher.getVoucherNotes());
-        setCardType(voucher.getCardType());
+        availableProperty().set(voucher.isAvailable());
+    }
+
+    public static void resetVoucher() {
+        for (Voucher voucher : Balatro.getGameModel().getAllVoucherList()) {
+            voucher.availableProperty().set(voucher.getCardId() >= 17);
+        }
     }
     //endregion
 }

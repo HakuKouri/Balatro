@@ -76,7 +76,7 @@ public class PlayedCardsController {
                     }
                     UIController.addToAnimationList(UIController.delayTimeline());
                     UIController.playAnimations(() -> onComplete.run());
-
+                    GameController.getInstance().shuffleDeck();
                 }
             });
             return;

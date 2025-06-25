@@ -1,6 +1,5 @@
 package com.example.balatro.controller;
 
-import com.almasb.fxgl.ui.UI;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
@@ -10,6 +9,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -36,6 +36,8 @@ public class GameController
     //region Phase Display
     @FXML
     private AnchorPane chooseBlind_AnchorPane;
+    @FXML
+    private Button rerollBossBlind_Button;
     @FXML
     private AnchorPane shopSign_AnchorPane;
     @FXML
@@ -238,7 +240,11 @@ public class GameController
             UIController.animateBox(blindBox_AnchorPane, newValue);
         });
         chooseBlind_AnchorPane.visibleProperty().bind(gameModel.blindsVisibilityProperty());
+        rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.isDirectorsCutVoucher(), gameModel.blindsVisibilityProperty()));
+        rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getMoney() < 10, gameModel.moneyProperty()));
         //endregion
+
+
 
         //region Bind Shop
         gameModel.shopVisibilityProperty().addListener((obs, oldValue, newValue) -> {
@@ -394,7 +400,7 @@ public class GameController
                 gameModel.getDeckFull().add(new PlayingCard(j,i));
             }
         }
-        gameModel.getDeckToPlay().addAll(gameModel.getDeckFull());
+        gameModel.getDeckToPlay().setAll(gameModel.getDeckFull());
         Collections.shuffle(gameModel.getDeckToPlay(), new Random());
     }
 
@@ -493,6 +499,7 @@ public class GameController
 
         controller.selectedProperty().set(false);
         controller.inShopProperty().set(false);
+        gameModel.subMoney(controller.getBuyPrice());
 
         if(controller.getCard().getCardType() == "Joker") {
             gameModel.getActiveJokerMap().put(controller, pane);
@@ -532,72 +539,134 @@ public class GameController
         switch (card.getCardName()){
             case "Overstock": gameModel.overstockVoucherProperty().set(true);
                 gameModel.maxItemsProperty().set(3);
+                activeVoucherUpgrade(0);
                 break;
             case "Clearance Sale": gameModel.clearanceSaleVoucherProperty().set(true);
-                gameModel.shopDiscountProperty().set(25);
+                gameModel.shopPricesProperty().set(0.75);
+                activeVoucherUpgrade(1);
                 break;
             case "Hone": gameModel.honeVoucherProperty().set(true);
+                gameModel.editionChanceMultiplierProperty().set(2);
+                activeVoucherUpgrade(2);
                 break;
             case "Reroll Surplus": gameModel.rerollSurplusVoucherProperty().set(true);
+                gameModel.rerollPriceProperty().set(3);
+                activeVoucherUpgrade(3);
                 break;
             case "Crystal Ball": gameModel.crystalBallVoucherProperty().set(true);
+                gameModel.maxConsumablesProperty().set(3);
+                activeVoucherUpgrade(4);
                 break;
             case "Telescope": gameModel.telescopeVoucherProperty().set(true);
+            //TODO BOOSTER PACK OPENER
+                activeVoucherUpgrade(5);
                 break;
             case "Grabber": gameModel.grabberVoucherProperty().set(true);
+                gameModel.maxHandsProperty().set(gameModel.getMaxHands() + 1);
+                activeVoucherUpgrade(6);
                 break;
             case "Wasteful": gameModel.wastefulVoucherProperty().set(true);
+                gameModel.setMaxDiscards(gameModel.getMaxDiscards() + 1);
+                activeVoucherUpgrade(7);
                 break;
             case "Tarot Merchant": gameModel.tarotMerchantVoucherProperty().set(true);
+                activeVoucherUpgrade(8);
                 break;
             case "Planet Merchant": gameModel.planetMerchantVoucherProperty().set(true);
+                activeVoucherUpgrade(9);
                 break;
             case "Seed Money": gameModel.seedMoneyVoucherProperty().set(true);
+                gameModel.maxInterestProperty().set(10);
+                activeVoucherUpgrade(10);
                 break;
             case "Blank": gameModel.blankVoucherProperty().set(true);
+                activeVoucherUpgrade(11);
                 break;
             case "Magic Trick": gameModel.magicTrickVoucherProperty().set(true);
+                activeVoucherUpgrade(12);
                 break;
             case "Hieroglyph": gameModel.hieroglyphVoucherProperty().set(true);
+                gameModel.anteProperty().set(gameModel.getAnte() - 1);
+                gameModel.maxHandsProperty().set(gameModel.getMaxHands() - 1);
+                activeVoucherUpgrade(13);
                 break;
             case "Director's Cut": gameModel.directorsCutVoucherProperty().set(true);
+                //TODO REROLL BOSS BUTTON EINFÜGEN + ANTE RESET
+                activeVoucherUpgrade(14);
                 break;
             case "Paint Brush": gameModel.paintBrushVoucherProperty().set(true);
+                gameModel.setHandSize(gameModel.getHandSize() + 1);
+                activeVoucherUpgrade(15);
                 break;
             case "Overstock Plus": gameModel.overstockVoucherPlusProperty().set(true);
+                gameModel.maxItemsProperty().set(4);
+                upgradeBrought(16);
                 break;
             case "Liquidation": gameModel.liquidationVoucherProperty().set(true);
+                gameModel.shopPricesProperty().set(0.5);
+                upgradeBrought(17);
                 break;
             case "Glow Up": gameModel.glowUpVoucherProperty().set(true);
+                gameModel.editionChanceMultiplierProperty().set(2);
+                upgradeBrought(18);
                 break;
             case "Reroll Glut": gameModel.rerollGlutVoucherProperty().set(true);
+                gameModel.rerollPriceProperty().set(1);
+                upgradeBrought(19);
                 break;
             case "Omen Globe": gameModel.omenGlobeVoucherProperty().set(true);
+                upgradeBrought(20);
                 break;
             case "Observatory": gameModel.observatoryVoucherProperty().set(true);
+                upgradeBrought(21);
                 break;
             case "Nacho Tong": gameModel.nachoTongVoucherProperty().set(true);
+                gameModel.maxHandsProperty().set(gameModel.getMaxHands() + 1);
+                upgradeBrought(22);
                 break;
             case "Recyclomancy": gameModel.recyclomancyVoucherProperty().set(true);
+                gameModel.setMaxDiscards(gameModel.getMaxDiscards() + 1);
+                upgradeBrought(23);
                 break;
             case "Tarot Tycoon": gameModel.tarotTycoonVoucherProperty().set(true);
+                upgradeBrought(24);
                 break;
             case "Planet Tycoon": gameModel.planetTycoonVoucherProperty().set(true);
+                upgradeBrought(25);
                 break;
             case "Money Tree": gameModel.moneyTreeVoucherProperty().set(true);
+                gameModel.maxInterestProperty().set(20);
+                upgradeBrought(26);
                 break;
             case "Antimatter": gameModel.antimatterVoucherProperty().set(true);
+                gameModel.maxJokersProperty().set(gameModel.getMaxJokers() + 1);
+                upgradeBrought(27);
                 break;
             case "Illusion": gameModel.illusionVoucherProperty().set(true);
+                upgradeBrought(28);
                 break;
             case "Petroglyph": gameModel.petroglyphVoucherProperty().set(true);
+                gameModel.anteProperty().set(gameModel.getAnte() - 1);
+                gameModel.setMaxDiscards(gameModel.getMaxDiscards() - 1);
+                upgradeBrought(29);
                 break;
             case "Retcon": gameModel.retconVoucherProperty().set(true);
+                upgradeBrought(30);
                 break;
             case "Palette": gameModel.paletteVoucherProperty().set(true);
+                gameModel.handSizeProperty().set(gameModel.getHandSize() + 1);
+                upgradeBrought(31);
                 break;
-
         }
+    }
+
+    private void activeVoucherUpgrade(int index) {
+        gameModel.getAllVoucherList().get(index).availableProperty().set(false);
+        gameModel.getAllVoucherList().get(index + 16).availableProperty().set(true);
+    }
+
+    private void upgradeBrought(int index) {
+        gameModel.getAllVoucherList().get(index).availableProperty().set(false);
     }
 
     public void playTarot(CardViewController cardViewController) {
@@ -740,6 +809,11 @@ public class GameController
         anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .3);
     }
 
+    public void rerollBossBlind(ActionEvent actionEvent) {
+        blindBoxController.rerollBoss();
+    }
+
+
     //BACKGROUND HANDLER
     public static void delay(long millis, Runnable continuation) {
         Task<Void> sleeper = new Task<Void>() {
@@ -830,5 +904,11 @@ public class GameController
         for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
+    }
+
+
+    public void shuffleDeck() {
+        gameModel.getDeckToPlay().setAll(gameModel.getDeckFull());
+        Collections.shuffle(gameModel.getDeckToPlay(), new Random());
     }
 }

@@ -41,11 +41,20 @@
             <RowConstraints minHeight="10.0" percentHeight="2.9" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <AnchorPane fx:id="chooseBlind_AnchorPane" GridPane.rowIndex="1">
-            <Label alignment="CENTER" text="Choose your next Blind" textFill="WHITE" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
-               <font>
-                  <Font size="50.0" />
-               </font>
-            </Label>
+            <VBox layoutX="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label alignment="CENTER" text="Choose your next Blind" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="50.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane>
+                     <children>
+                        <Button fx:id="rerollBossBlind_Button" mnemonicParsing="false" onAction="#rerollBossBlind" text="Reroll Boss \n $10" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
          </AnchorPane>
          <AnchorPane fx:id="pickedBlind_AnchorPane" maxHeight="405.0" GridPane.rowIndex="1">
             <styleClass>

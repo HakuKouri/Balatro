@@ -199,7 +199,8 @@ public class ShopPartController {
 
     private Card getRandomVoucher() {
         Voucher voucher = new Voucher();
-        voucher.setVoucher(gameModel.getAllVoucherList().get(gameModel.getRand().nextInt(gameModel.getAllVoucherList().size())));
+        List<Voucher> availableVoucher = gameModel.getAllVoucherList().stream().filter(Voucher::isAvailable).collect(Collectors.toList());
+        voucher.setVoucher(availableVoucher.get(gameModel.getRand().nextInt(availableVoucher.size())));
         return voucher;
     }
 
