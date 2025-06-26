@@ -1,18 +1,14 @@
 package com.example.balatro.controller;
 
-import com.almasb.fxgl.ui.UI;
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Planet;
 import com.example.balatro.classes.PokerHand;
 import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.classes.checkHand;
 import com.example.balatro.models.GameModel;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,11 +17,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
-import java.sql.Time;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class HoldingHandController {
@@ -75,7 +68,7 @@ public class HoldingHandController {
 
         //Card Count Label
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getHandCards().size() + "/" + gameModel.getHandSize(), gameModel.getHandCards()
+                gameModel.getHandCards().size() + "/" + gameModel.getMaxHandSize(), gameModel.getHandCards()
         ));
 
         //Hand Control Buttons
@@ -110,19 +103,19 @@ public class HoldingHandController {
 
     //Drawing Cards
     public void drawCard() {
-        PlayingCard cardToDraw = gameModel.getDeckToPlay().get(0);
+        PlayingCard cardToDraw = gameModel.getCurrentRound().getDeckToPlay().get(0);
         cardToDraw.setClickAble(true);
         gameModel.getHandCards().add(cardToDraw);
-        gameModel.getDeckToPlay().remove(0);
+        gameModel.getCurrentRound().getDeckToPlay().remove(0);
         sort();
     }
 
     public void drawCardToLimit() {
-        drawCardToLimit(gameModel.handSizeProperty().get() - gameModel.getHandCards().size());
+        drawCardToLimit(gameModel.maxHandSizeProperty().get() - gameModel.getHandCards().size());
     }
 
     public void drawCardToLimit(int cardCount) {
-        int draws = Math.min(cardCount, gameModel.getDeckToPlay().size());
+        int draws = Math.min(cardCount, gameModel.getCurrentRound().getDeckToPlay().size());
         for (int i = 0; i < draws; i++) {
             drawCard();
         }
@@ -194,7 +187,7 @@ public class HoldingHandController {
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getHands() > 0) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getHands() > 0) {
             gameModel.setHandButtonVisibility(false);
             gameModel.getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
             gameModel.getHandCards().removeAll(getSelectedCards());
@@ -204,12 +197,12 @@ public class HoldingHandController {
                 drawCardToLimit(3);
             else
                 drawCardToLimit();
-            gameModel.decrementHands();
+            gameModel.getCurrentRound().decrementHands();
         }
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getDiscards() > -1000) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getDiscards() > -1000) {
             getHandCards().removeAll(getSelectedCards());
             getSelectedCards().clear();
 
@@ -217,7 +210,7 @@ public class HoldingHandController {
                 drawCardToLimit(3);
             else
                 drawCardToLimit();
-            gameModel.decrementDiscards();
+            gameModel.getCurrentRound().decrementDiscards();
         }
     }
 }

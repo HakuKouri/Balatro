@@ -21,10 +21,10 @@ public class RunInfoController {
     private final GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-        handsLabel.textProperty().bind(gameModel.handsProperty().asString());
-        discardsLabel.textProperty().bind(gameModel.discardsProperty().asString());
-        moneyLabel.textProperty().bind(gameModel.moneyProperty().asString());
-        anteLabel.textProperty().bind(gameModel.anteProperty().asString("%d/8"));
-        roundLabel.textProperty().bind(gameModel.roundProperty().asString());
+        handsLabel.textProperty().bind(gameModel.getCurrentRound().handsProperty().asString());
+        discardsLabel.textProperty().bind(gameModel.getCurrentRound().discardsProperty().asString());
+        moneyLabel.textProperty().bind(gameModel.getRunState().moneyProperty().asString());
+        anteLabel.textProperty().bind(gameModel.getRunState().anteProperty().asString("%d/8"));
+        roundLabel.textProperty().bind(gameModel.getRunState().roundProperty().asString());
     }
 }

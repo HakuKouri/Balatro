@@ -55,7 +55,7 @@ public class RewardSummaryController {
             throw new RuntimeException(e);
         }
         rewardBlindChip.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
-        rewardBlindStake.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+        rewardBlindStake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
         rewardBlindScore.textProperty().bind(gameModel.scoreToReachProperty().asString());
         rewardBlindReward.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),
@@ -84,8 +84,8 @@ public class RewardSummaryController {
         }
 
         //remaining Hands Reward
-        if(gameModel.getHands() > 0) {
-            rewardVBox.getChildren().add(createRewardPane(gameModel.getHands(), "Remaining Hands ($1 each)", gameModel.getHands(),true));
+        if(gameModel.getCurrentRound().getHands() > 0) {
+            rewardVBox.getChildren().add(createRewardPane(gameModel.getCurrentRound().getHands(), "Remaining Hands ($1 each)", gameModel.getCurrentRound().getHands(),true));
         }
 
         //Satellite Reward
@@ -106,9 +106,9 @@ public class RewardSummaryController {
 
         //Delayed Gratification Reward
         List<Joker> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Delayed Gratification")).collect(Collectors.toList());
-        if(!delayedGrafList.isEmpty() && gameModel.getDiscards() == gameModel.getMaxDiscards()) {
+        if(!delayedGrafList.isEmpty() && gameModel.getCurrentRound().getDiscards() == gameModel.getRunState().getMaxDiscards()) {
             for(Joker joker : delayedGrafList) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getDiscards(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getCurrentRound().getDiscards(), false));
             }
         }
 
@@ -116,7 +116,7 @@ public class RewardSummaryController {
         List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).collect(Collectors.toList());
         if(!cloud9List.isEmpty()) {
             for(Joker joker : cloud9List) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getRunState().getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
             }
         }
 
@@ -137,15 +137,15 @@ public class RewardSummaryController {
         }
 
         //Interest Reward
-        if(gameModel.getMoney() >= 5) {
-            int interestReward = gameModel.getMoney() / 5;
-            rewardVBox.getChildren().add(createRewardPane(interestReward, "1 interest per $5 (" + gameModel.getMaxInterest() + " max)", Math.min(gameModel.getMaxInterest(), interestReward), false));
+        if(gameModel.getRunState().getMoney() >= 5) {
+            int interestReward = gameModel.getRunState().getMoney() / 5;
+            rewardVBox.getChildren().add(createRewardPane(interestReward, "1 interest per $5 (" + gameModel.getShopModel().getMaxInterest() + " max)", Math.min(gameModel.getShopModel().getMaxInterest(), interestReward), false));
         }
     }
 
     public void cashOut(ActionEvent actionEvent) {
         gameModel.getActiveBlind().setBlind(new Blind());
-        gameModel.addMoney(reward);
+        gameModel.getRunState().addMoney(reward);
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
         gameModel.setScoredPoints(BigDecimal.valueOf(0));

@@ -3,6 +3,7 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.VoucherState;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -29,8 +30,6 @@ public class GameController
     @FXML
     private AnchorPane playedCards_AnchorPane;
     @FXML
-    private AnchorPane deckCover_AnchorPane;
-    @FXML
     private ImageView shopImageView;
 
     //region Phase Display
@@ -45,19 +44,9 @@ public class GameController
     //endregion
 
     @FXML
-    private AnchorPane roundScore_AnchorPane;
-    @FXML
-    private AnchorPane handInfo_AnchorPane;
-    @FXML
-    private AnchorPane runInfo_AnchorPane;
-    @FXML
     private AnchorPane holdingHand_AnchorPane;
     @FXML
-    private StackPane playedCards_StackPane;
-    @FXML
     private AnchorPane gameScreenAnchor;
-    @FXML
-    private HBox jokerConsumeHBox;
     @FXML
     private Label cardsInDeckLabel;
     @FXML
@@ -106,8 +95,6 @@ public class GameController
     //region to beat elements
     @FXML
     private Label toBeatEffect;
-    @FXML
-    private GridPane toBeat;
     @FXML
     private ImageView toBeatImage;
     @FXML
@@ -240,8 +227,8 @@ public class GameController
             UIController.animateBox(blindBox_AnchorPane, newValue);
         });
         chooseBlind_AnchorPane.visibleProperty().bind(gameModel.blindsVisibilityProperty());
-        rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.isDirectorsCutVoucher(), gameModel.blindsVisibilityProperty()));
-        rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getMoney() < 10, gameModel.moneyProperty()));
+        rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.DIRECTORS_CUT), gameModel.blindsVisibilityProperty()));
+        rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getRunState().getMoney() < 10, gameModel.getRunState().moneyProperty()));
         //endregion
 
 
@@ -263,11 +250,11 @@ public class GameController
         //endregion
 
         //region Deck CoverBind
-        deckCover_ImageView.imageProperty().bind(gameModel.getChosenDeck().imageProperty());
+        deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
         //endregion
 
         //region Points Scored Bind
-        stakeImageView.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+        stakeImageView.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
 
         pointsScoredLabel.textProperty().bind(
                 Bindings.createStringBinding( () -> gameModel.getScoredPoints().toString(),
@@ -300,15 +287,15 @@ public class GameController
 
         //region Run Info Binds
         handsLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getHands()), gameModel.handsProperty()));
+                String.valueOf(gameModel.getCurrentRound().getHands()), gameModel.getCurrentRound().handsProperty()));
         discardsLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getDiscards()), gameModel.discardsProperty()));
+                String.valueOf(gameModel.getCurrentRound().getDiscards()), gameModel.getCurrentRound().discardsProperty()));
         moneyLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                "$" + gameModel.getMoney(), gameModel.moneyProperty()));
+                "$" + gameModel.getRunState().getMoney(), gameModel.getRunState().moneyProperty()));
         anteLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getAnte() + "/8", gameModel.anteProperty()));
+                gameModel.getRunState().getAnte() + "/8", gameModel.getRunState().anteProperty()));
         roundLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getRound()), gameModel.roundProperty()));
+                String.valueOf(gameModel.getRunState().getRound()), gameModel.getRunState().roundProperty()));
         //endregion
 
         /*bottomRow.prefHeightProperty().bind(Bindings.createIntegerBinding(() ->
@@ -329,9 +316,9 @@ public class GameController
                 gameModel.scoreToReachProperty()
         ));
 
-        toBeatImage.imageProperty().bind(gameModel.activeBlindProperty().get().imageProperty());
+        toBeatImage.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
 
-        toBeatStake.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+        toBeatStake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
 
         toBeatReward.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),
@@ -341,7 +328,7 @@ public class GameController
 
         //region Card count Labels Bind
         cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
-            gameModel.getDeckToPlay().size() + "/" + gameModel.getDeckFull().size(), gameModel.getDeckToPlay()
+            gameModel.getCurrentRound().getDeckToPlay().size() + "/" + gameModel.getRunState().getDeckFull().size(), gameModel.getCurrentRound().getDeckToPlay()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 gameModel.getActiveJokerObList().size() + "/" + gameModel.getMaxJokers(), gameModel.getActiveJokerObList()
@@ -397,11 +384,11 @@ public class GameController
     private void setPlayingDeck() {
         for(int i = 0; i < 4; i++ ){
             for(int j = 0; j < 13; j++){
-                gameModel.getDeckFull().add(new PlayingCard(j,i));
+                gameModel.getRunState().getDeckFull().add(new PlayingCard(j,i));
             }
         }
-        gameModel.getDeckToPlay().setAll(gameModel.getDeckFull());
-        Collections.shuffle(gameModel.getDeckToPlay(), new Random());
+        gameModel.getCurrentRound().getDeckToPlay().setAll(gameModel.getRunState().getDeckFull());
+        Collections.shuffle(gameModel.getCurrentRound().getDeckToPlay(), new Random());
     }
 
     public void createBlindList() {
@@ -451,13 +438,13 @@ public class GameController
         createBlindList();
         createTagList();
 
-        gameModel.getChosenDeck().setDeck(gameSetup.getChosenDeck());
-        gameModel.getChosenStake().setStake(gameSetup.getChosenStake());
-        gameModel.setHands(4);
-        gameModel.setDiscards(3);
-        gameModel.setAnte(1);
-        gameModel.setRound(0);
-        gameModel.setMoney(4);
+        gameModel.getRunState().getChosenDeck().setDeck(gameSetup.getChosenDeck());
+        gameModel.getRunState().getChosenStake().setStake(gameSetup.getChosenStake());
+        gameModel.getRunState().setMaxHands(4);
+        gameModel.getRunState().setMaxDiscards(3);
+        gameModel.getRunState().setAnte(1);
+        gameModel.getRunState().setRound(0);
+        gameModel.getRunState().setMoney(4);
 
         Planet.resetUniquePlanets();
 
@@ -482,11 +469,11 @@ public class GameController
     public void skip(Tag tag) {
         tag.setFitHeight(50);
         gameModel.getTagQueue().add(tag);
-        gameModel.setRound(gameModel.getRound() + 1);
+        gameModel.getRunState().setRound(gameModel.getRunState().getRound() + 1);
     }
 
     public void addMoney(int reward) {
-        gameModel.setMoney(gameModel.getMoney() + reward);
+        gameModel.getRunState().setMoney(gameModel.getRunState().getMoney() + reward);
     }
 
     public void restockShop() {
@@ -499,7 +486,7 @@ public class GameController
 
         controller.selectedProperty().set(false);
         controller.inShopProperty().set(false);
-        gameModel.subMoney(controller.getBuyPrice());
+        gameModel.getRunState().subMoney(controller.getBuyPrice());
 
         if(controller.getCard().getCardType() == "Joker") {
             gameModel.getActiveJokerMap().put(controller, pane);
@@ -518,7 +505,7 @@ public class GameController
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "PlayingCard") {
             System.out.printf("PlayingCard");
-            gameModel.addCardToDeckFull((PlayingCard) controller.getCard());
+            gameModel.getRunState().addCardToDeckFull((PlayingCard) controller.getCard());
             shopController.getItemMap().remove(controller);
         } else if(controller.getCard().getCardType() == "Voucher") {
             System.out.printf("Voucher");
@@ -537,124 +524,124 @@ public class GameController
 
     private void setVoucherFlag(Card card) {
         switch (card.getCardName()){
-            case "Overstock": gameModel.overstockVoucherProperty().set(true);
-                gameModel.maxItemsProperty().set(3);
+            case "Overstock": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.OVERSTOCK, true);
+                gameModel.getShopModel().maxItemsProperty().set(3);
                 activeVoucherUpgrade(0);
                 break;
-            case "Clearance Sale": gameModel.clearanceSaleVoucherProperty().set(true);
-                gameModel.shopPricesProperty().set(0.75);
+            case "Clearance Sale": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.CLEARANCE_SALE, true);
+                gameModel.getShopModel().shopPricesProperty().set(0.75);
                 activeVoucherUpgrade(1);
                 break;
-            case "Hone": gameModel.honeVoucherProperty().set(true);
-                gameModel.editionChanceMultiplierProperty().set(2);
+            case "Hone": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.HONE, true);
+                gameModel.getShopModel().editionChanceMultiplierProperty().set(2);
                 activeVoucherUpgrade(2);
                 break;
-            case "Reroll Surplus": gameModel.rerollSurplusVoucherProperty().set(true);
-                gameModel.rerollPriceProperty().set(3);
+            case "Reroll Surplus": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.REROLL_SURPLUS, true);
+                gameModel.getShopModel().rerollPriceProperty().set(3);
                 activeVoucherUpgrade(3);
                 break;
-            case "Crystal Ball": gameModel.crystalBallVoucherProperty().set(true);
+            case "Crystal Ball": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.CRYSTAL_BALL, true);
                 gameModel.maxConsumablesProperty().set(3);
                 activeVoucherUpgrade(4);
                 break;
-            case "Telescope": gameModel.telescopeVoucherProperty().set(true);
+            case "Telescope": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.TELESCOPE, true);
             //TODO BOOSTER PACK OPENER
                 activeVoucherUpgrade(5);
                 break;
-            case "Grabber": gameModel.grabberVoucherProperty().set(true);
-                gameModel.maxHandsProperty().set(gameModel.getMaxHands() + 1);
+            case "Grabber": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.GRABBER, true);
+                gameModel.getRunState().maxHandsProperty().set(gameModel.getRunState().getMaxHands() + 1);
                 activeVoucherUpgrade(6);
                 break;
-            case "Wasteful": gameModel.wastefulVoucherProperty().set(true);
-                gameModel.setMaxDiscards(gameModel.getMaxDiscards() + 1);
+            case "Wasteful": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.WASTEFUL, true);
+                gameModel.getRunState().setMaxDiscards(gameModel.getRunState().getMaxDiscards() + 1);
                 activeVoucherUpgrade(7);
                 break;
-            case "Tarot Merchant": gameModel.tarotMerchantVoucherProperty().set(true);
+            case "Tarot Merchant": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.TAROT_MERCHANT, true);
                 activeVoucherUpgrade(8);
                 break;
-            case "Planet Merchant": gameModel.planetMerchantVoucherProperty().set(true);
+            case "Planet Merchant": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PLANET_MERCHANT, true);
                 activeVoucherUpgrade(9);
                 break;
-            case "Seed Money": gameModel.seedMoneyVoucherProperty().set(true);
-                gameModel.maxInterestProperty().set(10);
+            case "Seed Money": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.SEED_MONEY, true);
+                gameModel.getShopModel().maxInterestProperty().set(10);
                 activeVoucherUpgrade(10);
                 break;
-            case "Blank": gameModel.blankVoucherProperty().set(true);
+            case "Blank": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.BLANK, true);
                 activeVoucherUpgrade(11);
                 break;
-            case "Magic Trick": gameModel.magicTrickVoucherProperty().set(true);
+            case "Magic Trick": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.MAGIC_TRICK, true);
                 activeVoucherUpgrade(12);
                 break;
-            case "Hieroglyph": gameModel.hieroglyphVoucherProperty().set(true);
-                gameModel.anteProperty().set(gameModel.getAnte() - 1);
-                gameModel.maxHandsProperty().set(gameModel.getMaxHands() - 1);
+            case "Hieroglyph": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.HIEROGLYPH, true);
+                gameModel.getRunState().anteProperty().set(gameModel.getRunState().getAnte() - 1);
+                gameModel.getRunState().maxHandsProperty().set(gameModel.getRunState().getMaxHands() - 1);
                 activeVoucherUpgrade(13);
                 break;
-            case "Director's Cut": gameModel.directorsCutVoucherProperty().set(true);
+            case "Director's Cut": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.DIRECTORS_CUT, true);
                 //TODO REROLL BOSS BUTTON EINFÜGEN + ANTE RESET
                 activeVoucherUpgrade(14);
                 break;
-            case "Paint Brush": gameModel.paintBrushVoucherProperty().set(true);
-                gameModel.setHandSize(gameModel.getHandSize() + 1);
+            case "Paint Brush": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PAINTBRUSH, true);
+                gameModel.setMaxHandSize(gameModel.getMaxHandSize() + 1);
                 activeVoucherUpgrade(15);
                 break;
-            case "Overstock Plus": gameModel.overstockVoucherPlusProperty().set(true);
-                gameModel.maxItemsProperty().set(4);
+            case "Overstock Plus": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.OVERSTOCK_PLUS, true);
+                gameModel.getShopModel().maxItemsProperty().set(4);
                 upgradeBrought(16);
                 break;
-            case "Liquidation": gameModel.liquidationVoucherProperty().set(true);
-                gameModel.shopPricesProperty().set(0.5);
+            case "Liquidation": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.LIQUIDATION, true);
+                gameModel.getShopModel().shopPricesProperty().set(0.5);
                 upgradeBrought(17);
                 break;
-            case "Glow Up": gameModel.glowUpVoucherProperty().set(true);
-                gameModel.editionChanceMultiplierProperty().set(2);
+            case "Glow Up": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.GLOW_UP, true);
+                gameModel.getShopModel().editionChanceMultiplierProperty().set(2);
                 upgradeBrought(18);
                 break;
-            case "Reroll Glut": gameModel.rerollGlutVoucherProperty().set(true);
-                gameModel.rerollPriceProperty().set(1);
+            case "Reroll Glut": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.REROLL_GLUT, true);
+                gameModel.getShopModel().rerollPriceProperty().set(1);
                 upgradeBrought(19);
                 break;
-            case "Omen Globe": gameModel.omenGlobeVoucherProperty().set(true);
+            case "Omen Globe": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.OMEN_GLOBE, true);
                 upgradeBrought(20);
                 break;
-            case "Observatory": gameModel.observatoryVoucherProperty().set(true);
+            case "Observatory": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.OBSERVATORY, true);
                 upgradeBrought(21);
                 break;
-            case "Nacho Tong": gameModel.nachoTongVoucherProperty().set(true);
-                gameModel.maxHandsProperty().set(gameModel.getMaxHands() + 1);
+            case "Nacho Tong": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.NACHO_TONG, true);
+                gameModel.getRunState().maxHandsProperty().set(gameModel.getRunState().getMaxHands() + 1);
                 upgradeBrought(22);
                 break;
-            case "Recyclomancy": gameModel.recyclomancyVoucherProperty().set(true);
-                gameModel.setMaxDiscards(gameModel.getMaxDiscards() + 1);
+            case "Recyclomancy": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.RECYCLOMANCY, true);
+                gameModel.getRunState().setMaxDiscards(gameModel.getRunState().getMaxDiscards() + 1);
                 upgradeBrought(23);
                 break;
-            case "Tarot Tycoon": gameModel.tarotTycoonVoucherProperty().set(true);
+            case "Tarot Tycoon": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.TAROT_TYCOON, true);
                 upgradeBrought(24);
                 break;
-            case "Planet Tycoon": gameModel.planetTycoonVoucherProperty().set(true);
+            case "Planet Tycoon": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PLANET_TYCOON, true);
                 upgradeBrought(25);
                 break;
-            case "Money Tree": gameModel.moneyTreeVoucherProperty().set(true);
-                gameModel.maxInterestProperty().set(20);
+            case "Money Tree": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.MONEY_TREE, true);
+                gameModel.getShopModel().maxInterestProperty().set(20);
                 upgradeBrought(26);
                 break;
-            case "Antimatter": gameModel.antimatterVoucherProperty().set(true);
+            case "Antimatter": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.ANTIMATTER, true);
                 gameModel.maxJokersProperty().set(gameModel.getMaxJokers() + 1);
                 upgradeBrought(27);
                 break;
-            case "Illusion": gameModel.illusionVoucherProperty().set(true);
+            case "Illusion": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.ILLUSION, true);
                 upgradeBrought(28);
                 break;
-            case "Petroglyph": gameModel.petroglyphVoucherProperty().set(true);
-                gameModel.anteProperty().set(gameModel.getAnte() - 1);
-                gameModel.setMaxDiscards(gameModel.getMaxDiscards() - 1);
+            case "Petroglyph": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PETROGLYPH, true);
+                gameModel.getRunState().anteProperty().set(gameModel.getRunState().getAnte() - 1);
+                gameModel.getRunState().setMaxDiscards(gameModel.getRunState().getMaxDiscards() - 1);
                 upgradeBrought(29);
                 break;
-            case "Retcon": gameModel.retconVoucherProperty().set(true);
+            case "Retcon": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.RETCON, true);
                 upgradeBrought(30);
                 break;
-            case "Palette": gameModel.paletteVoucherProperty().set(true);
-                gameModel.handSizeProperty().set(gameModel.getHandSize() + 1);
+            case "Palette": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PALETTE, true);
+                gameModel.maxHandSizeProperty().set(gameModel.getMaxHandSize() + 1);
                 upgradeBrought(31);
                 break;
         }
@@ -722,7 +709,7 @@ public class GameController
                     }
                 break;
             case 10:
-                gameModel.addMoney(gameModel.getMoney());
+                gameModel.getRunState().addMoney(gameModel.getRunState().getMoney());
                 break;
             case 11://TODO WHEEL OF FORTUNE
                 break;
@@ -738,7 +725,7 @@ public class GameController
             case 13:
                 if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
                     for (PlayingCard card : gameModel.getSelectedCards()) {
-                        gameModel.removeCardFromDeckFull(card);
+                        gameModel.getRunState().removeCardFromDeckFull(card);
                         //TODO REMOVE CARDS FROM HOLDING ODER PLAYED
                     }
                 break;
@@ -749,7 +736,7 @@ public class GameController
                 }
                 break;
             case 15:
-                gameModel.addMoney(gameModel.getActiveJokerMap().keySet().stream().mapToInt(i -> (int) i.getCard().getSellValue()).sum());
+                gameModel.getRunState().addMoney(gameModel.getActiveJokerMap().keySet().stream().mapToInt(i -> (int) i.getCard().getSellValue()).sum());
                 break;
             case 16:
                 //GOLD
@@ -908,7 +895,7 @@ public class GameController
 
 
     public void shuffleDeck() {
-        gameModel.getDeckToPlay().setAll(gameModel.getDeckFull());
-        Collections.shuffle(gameModel.getDeckToPlay(), new Random());
+        gameModel.getCurrentRound().getDeckToPlay().setAll(gameModel.getRunState().getDeckFull());
+        Collections.shuffle(gameModel.getCurrentRound().getDeckToPlay(), new Random());
     }
 }

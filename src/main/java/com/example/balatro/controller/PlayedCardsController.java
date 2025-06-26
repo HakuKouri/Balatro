@@ -70,6 +70,7 @@ public class PlayedCardsController {
 
                 if(onComplete != null) {
                     for(PlayingCard card : gameModel.getPlayedCards()) {
+                        card.setSelected(false);
                         Animation animation = UIController.cardMoveToAnimation(card);
                         animation.setDelay(Duration.seconds(.2));
                         UIController.addToAnimationList(animation);
@@ -114,18 +115,18 @@ public class PlayedCardsController {
 
             for(PlayingCard card : gameModel.getHandCards()) {
                 if (card.getEnhancement().getEnhancementName().equals("Gold Card")) {
-                    gameModel.addMoney(3);
+                    gameModel.getRunState().addMoney(3);
                     triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCards());
                 }
             }
             triggerJokers(JokerTrigger.END_OF_ROUND, gameModel.getPlayedCards());
 
             if(gameModel.getActiveBlind().getBlindId() > 1) {
-                gameModel.setAnte((gameModel.getAnte() + 1));
+                gameModel.getRunState().setAnte((gameModel.getRunState().getAnte() + 1));
             }
 
-            gameModel.setHands(gameModel.getMaxHands());
-            gameModel.setDiscards(gameModel.getMaxDiscards());
+            gameModel.getCurrentRound().setHands(gameModel.getRunState().getMaxHands());
+            gameModel.getCurrentRound().setDiscards(gameModel.getRunState().getMaxDiscards());
         } else {
             gameModel.setHandButtonVisibility(true);
         }

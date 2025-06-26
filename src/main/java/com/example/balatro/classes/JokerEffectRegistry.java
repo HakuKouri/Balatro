@@ -6,6 +6,7 @@ import com.example.balatro.controller.GameController;
 import com.example.balatro.controller.UIController;
 import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.JokerState;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +47,7 @@ public class JokerEffectRegistry {
             //TODO Joker Trigger Animation
             PlayingCard stoneCard = PlayingCard.createRandomPlayingCard();
             stoneCard.setEnhancement(gameModel.getAllEnhancementList().get(5));
-            gameModel.addCardToDeckFull(stoneCard);
+            gameModel.getRunState().addCardToDeckFull(stoneCard);
         });
 
         effectMap.put("BEAN_SET_VALUE", (context, self, cards, params) -> {
@@ -326,7 +327,7 @@ public class JokerEffectRegistry {
         effectMap.put("ACROBAT_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: ACROBAT_EFFECT");
 
-            if(context.getHandsPlayed() == 0) {
+            if(context.getRunState().getHandsPlayed() == 0) {
                 AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
@@ -427,20 +428,20 @@ public class JokerEffectRegistry {
         effectMap.put("BURGLAR_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BURGLAR_EFFECT");
             //TODO Joker Animation
-            context.handsPlayedProperty().set(context.getHandsPlayed() + 3);
-            context.discardsProperty().set(0);
+            context.getRunState().handsPlayedProperty().set(context.getRunState().getHandsPlayed() + 3);
+            context.getCurrentRound().discardsProperty().set(0);
         });
 
         effectMap.put("BURNT_JOKER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BURNT_JOKER_EFFECT");
-            if(context.isFirstDiscard()) {
+            if(context.getCurrentRound().isFirstDiscard()) {
                 //TODO Level Up PokerHand
             }
         });
 
         effectMap.put("CARD_SHARP_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: CARD_SHARP_EFFECT");
-            if (context.getPokerHandsPlayedThisRound().contains(context.getBestHand())) {
+            if (context.getCurrentRound().getPokerHandsPlayedThisRound().contains(context.getBestHand())) {
                 context.getBestHand().multMult(3);
             }
         });
@@ -450,7 +451,7 @@ public class JokerEffectRegistry {
             //TODO Joker Trigger Effect
             PlayingCard card = new PlayingCard(context.getRand().nextInt(12), context.getRand().nextInt(4));
             card.setSeal(context.getAllSealList().get(context.getRand().nextInt(context.getAllSealList().size())));
-            context.addCardToDeckFull(card);
+            context.getRunState().addCardToDeckFull(card);
             context.getHandCards().add(card);
         });
 
@@ -485,9 +486,9 @@ public class JokerEffectRegistry {
         effectMap.put("DNA_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DNA_EFFECT");
             //TODO Joker Trigger Animation
-            if (context.isFirstHand() && context.getPlayedCards().size() == 1) {
+            if (context.getCurrentRound().isFirstHand() && context.getPlayedCards().size() == 1) {
                 PlayingCard card = context.getPlayedCards().get(0);
-                context.getDeckFull().add(card);
+                context.getRunState().getDeckFull().add(card);
                 context.getHandCards().add(card);
             }
         });
@@ -495,7 +496,7 @@ public class JokerEffectRegistry {
         effectMap.put("DRIVERS_LICENSE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DRIVERS_LICENSE_EFFECT");
             //TODO Joker Trigger Animation
-            if(context.getDeckFull().stream().filter(card -> card.getEnhancement().getEnhancementName() != "").count() >= 16) {
+            if(context.getRunState().getDeckFull().stream().filter(card -> card.getEnhancement().getEnhancementName() != "").count() >= 16) {
                 context.getBestHand().multMult(3);
             }
         });
@@ -513,8 +514,8 @@ public class JokerEffectRegistry {
         effectMap.put("EROSION_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: EROSION_EFFECT");
             //TODO Joker Trigger Animation
-            if(context.getDeckFull().size() < 52)
-                context.getBestHand().addMult((52 - context.getDeckFull().size()) * 4);
+            if(context.getRunState().getDeckFull().size() < 52)
+                context.getBestHand().addMult((52 - context.getRunState().getDeckFull().size()) * 4);
         });
 
         effectMap.put("FLOWERPOT_EFFECT", (context, self, cards, params) -> {
@@ -597,7 +598,8 @@ public class JokerEffectRegistry {
 
         effectMap.put("LUCHADOR_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: LUCHADOR_EFFECT");
-            context.setBoss_disable_flag(context.getBoss_disable_flag() + 1);
+            //TODO EINMALIGER BOSS DISABLE
+            context.getJokerState().incrementJoker(JokerState.JokerType.BOSS_DISABLE_FLAG);
         });
 
         effectMap.put("MADNESS_EFFECT", (context, self, cards, params) -> {
@@ -615,26 +617,26 @@ public class JokerEffectRegistry {
 
         effectMap.put("MATADOR_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MATADOR_EFFECT");
-            context.addMoney(8);
+            context.getRunState().addMoney(8);
         });
 
         effectMap.put("MERRY_BUY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MERRY_BUY_EFFECT");
-            context.setMaxDiscards(context.getMaxDiscards() + 3);
-            context.setHands(context.getHands() - 1);
+            context.getRunState().setMaxDiscards(context.getRunState().getMaxDiscards() + 3);
+            context.setMaxHandSize(context.getMaxHandSize() - 1);
         });
 
         effectMap.put("MERRY_SELL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MERRY_SELL_EFFECT");
-            context.setMaxDiscards(context.getMaxDiscards() - 3);
-            context.setHands(context.getHands() + 1);
+            context.getRunState().setMaxDiscards(context.getRunState().getMaxDiscards() - 3);
+            context.setMaxHandSize(context.getMaxHandSize() + 1);
         });
 
         effectMap.put("MIDAS_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MIDAS_EFFECT");
             //TODO Joker Trigger Effekt
             for (PlayingCard c : cards) {
-                if(context.getAll_face_flag() > 0 || c.getValue() >= 10)
+                if(context.getJokerState().hasJoker(JokerState.JokerType.ALL_FACE_FLAG) > 0 || c.getValue() >= 10)
                     c.setEnhancement(context.getAllEnhancementList().get(6));
             }
         });
@@ -699,10 +701,9 @@ public class JokerEffectRegistry {
             //TODO Joker Trigger Effekt
 
             for (PlayingCard c : context.getHandCards()) {
-                int chance = context.getDouble_chance_flag() > 0 ? 2 - 1 : 2;
-                if (context.getRand().nextInt(chance) == 0) {
-
-                    context.addMoney(1);
+                int chance = context.getRand().nextInt(1,3) + context.getJokerState().hasJoker(JokerState.JokerType.DOUBLE_CHANCE_FLAG);
+                if (chance >= 2) {
+                    context.getRunState().addMoney(1);
                 }
             }
         });
@@ -788,13 +789,13 @@ public class JokerEffectRegistry {
         effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_BUY_EFFECT");
 
-            context.setHandSize(context.getHandSize() - 2);
+            context.setMaxHandSize(context.getMaxHandSize() - 2);
         });
 
         effectMap.put("STUNTMAN_SALE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_SALE_EFFECT");
 
-            context.setHandSize(context.getHandSize() + 2);
+            context.setMaxHandSize(context.getMaxHandSize() + 2);
         });
 
         effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
@@ -816,122 +817,122 @@ public class JokerEffectRegistry {
         //region FLAGS
         effectMap.put("SET_CLOUD9_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_CLOUD9_FLAG");
-            context.setCloud9_flag(context.getCloud9_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.CLOUD9_FLAG);
         });
 
         effectMap.put("UNSET_CLOUD9_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_CLOUD9_FLAG");
-            context.setCloud9_flag(context.getCloud9_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.CLOUD9_FLAG);
         });
 
         effectMap.put("SET_DOUBLE_CHANCE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_DOUBLE_CHANCE_FLAG");
-            context.setDouble_chance_flag(context.getDouble_chance_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.DOUBLE_CHANCE_FLAG);
         });
 
         effectMap.put("UNSET_DOUBLE_CHANCE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_DOUBLE_CHANCE_FLAG");
-            context.setDouble_chance_flag(context.getDouble_chance_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.DOUBLE_CHANCE_FLAG);
         });
 
         effectMap.put("SET_MOON_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_MOON_FLAG");
-            context.setMoon_flag(context.getMoon_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.MOON_FLAG);
         });
 
         effectMap.put("UNSET_MOON_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_MOON_FLAG");
-            context.setMoon_flag(context.getMoon_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.MOON_FLAG);
         });
 
         effectMap.put("SET_ASTRONOMER_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_ASTRONOMER_FLAG");
-            context.setAstronomer_flag(context.getAstronomer_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.ASTRONOMER_FLAG);
         });
 
         effectMap.put("UNSET_ASTRONOMER_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_ASTRONOMER_FLAG");
-            context.setAstronomer_flag(context.getAstronomer_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.ASTRONOMER_FLAG);
         });
 
         effectMap.put("SET_BONES_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_BONES_FLAG");
-            context.setBones_flag(context.getBones_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.BONES_FLAG);
         });
 
         effectMap.put("UNSET_BONES_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_BONES_FLAG");
-            context.setBones_flag(context.getBones_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.ASTRONOMER_FLAG);
         });
 
         effectMap.put("SET_BOSS_DISABLE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: SET_BOSS_DISABLE_FLAG");
-            context.setBoss_disable_flag(context.getBoss_disable_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.BOSS_DISABLE_FLAG);
         });
 
         effectMap.put("UNSET_BOSS_DISABLE_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: UNSET_BOSS_DISABLE_FLAG");
-            context.setBoss_disable_flag(context.getBoss_disable_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.BOSS_DISABLE_FLAG);
         });
 
         effectMap.put("GRATI_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: GRATI_SET_FLAG");
-            context.setGrati_flag(context.getGrati_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.GRATI_FLAG);
         });
 
         effectMap.put("GRATI_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: GRATI_UNSET_FLAG");
-            context.setGrati_flag(context.getGrati_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.GRATI_FLAG);
         });
 
         effectMap.put("FOUR_FINGER_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FOUR_FINGER_SET_FLAG");
-            context.setFour_finger_flag(context.getFour_finger_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.FOUR_FINGER_FLAG);
         });
 
         effectMap.put("FOUR_FINGER_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FOUR_FINGER_UNSET_FLAG");
-            context.setFour_finger_flag(context.getFour_finger_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.FOUR_FINGER_FLAG);
         });
 
         effectMap.put("FREE_ROLL_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FREE_ROLL_SET_FLAG");
-            context.setFree_roll_flag(context.getFree_roll_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.FREE_ROLL_FLAG);
         });
 
         effectMap.put("FREE_ROLL_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: FREE_ROLL_UNSET_FLAG");
-            context.setFree_roll_flag(context.getFree_roll_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.FREE_ROLL_FLAG);
         });
 
         effectMap.put("DEPT_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: DEPT_SET_FLAG");
-            context.setDebt_flag(context.getDebt_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.DEBT_FLAG);
         });
 
         effectMap.put("DEPT_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: DEPT_UNSET_FLAG");
-            context.setDebt_flag(context.getDebt_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.DEBT_FLAG);
         });
 
         effectMap.put("ALL_COUNT_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_COUNT_SET_FLAG");
-            context.setAll_count_flag(context.getAll_count_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.ALL_COUNT_FLAG);
         });
 
         effectMap.put("ALL_COUNT_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_COUNT_UNSET_FLAG");
-            context.setAll_count_flag(context.getAll_count_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.ALL_COUNT_FLAG);
         });
 
         effectMap.put("ALL_FACE_SET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_FACE_SET_FLAG");
-            context.setAll_face_flag(context.getAll_face_flag() + 1);
+            context.getJokerState().incrementJoker(JokerState.JokerType.ALL_FACE_FLAG);
         });
 
         effectMap.put("ALL_FACE_UNSET_FLAG", (context, self, cards, params) -> {
             System.out.println("Trigger: ALL_FACE_UNSET_FLAG");
-            context.setAll_face_flag(context.getAll_face_flag() - 1);
+            context.getJokerState().decrementJoker(JokerState.JokerType.ALL_FACE_FLAG);
         });
         //endregion
 

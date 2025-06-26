@@ -61,7 +61,7 @@ public class BlindBoxPanelController {
         imageViewBlindChip.imageProperty().bind(blind.get().imageProperty());
         //effectText_label.textProperty().bind(blind.get().blindDescriptionProperty());
 
-        imageViewStakeImage.imageProperty().bind(gameModel.getChosenStake().imageProperty());
+        imageViewStakeImage.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
 
         lblEarn.textProperty().bind(Bindings.createStringBinding(
                 () -> "$".repeat(Math.max(0, blind.get().getBlindReward())),
@@ -118,7 +118,7 @@ public class BlindBoxPanelController {
 
     public void play() {
        gameModel.setActiveBlind(blind.get());
-       gameModel.setRound(gameModel.getRound() + 1);
+       gameModel.getRunState().setRound(gameModel.getRunState().getRound() + 1);
        gameModel.setHandButtonVisibility(true);
        gameModel.setBlindsVisibility(false);
        gameModel.pickedBlindVisibilityProperty().set(true);

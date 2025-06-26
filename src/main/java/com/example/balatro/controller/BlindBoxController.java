@@ -62,20 +62,20 @@ public class BlindBoxController {
             bigBlindController.setBossPanel(false);
             bossBlindController.setBossPanel(true);
 
-            gameModel.anteProperty().addListener((obs, oldAnte, newAnte) -> {
-                smallBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3));
-                smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                smallBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() - 1 ) * 2));
+            gameModel.getRunState().anteProperty().addListener((obs, oldAnte, newAnte) -> {
+                smallBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getRunState().getAnte() - 1) * 3));
+                smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                smallBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getRunState().getAnte() - 1 ) * 2));
 
-                bigBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 1));
-                bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                bigBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getAnte() -1 ) * 2 + 1));
+                bigBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getRunState().getAnte() - 1) * 3 + 1));
+                bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                bigBlindController.setTag(gameModel.getRunTags().isEmpty() ? new Tag() : gameModel.getRunTags().get((gameModel.getRunState().getAnte() -1 ) * 2 + 1));
 
-                bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getAnte() - 1) * 3 + 2));
-                bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
+                bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getRunState().getAnte() - 1) * 3 + 2));
+                bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
             });
 
-            gameModel.roundProperty().addListener((obs, oldValue, newValue) -> {
+            gameModel.getRunState().roundProperty().addListener((obs, oldValue, newValue) -> {
                 smallBlindPanel.setDisable(newValue.intValue()%3 != 0);
                 bigBlindPanel.setDisable(newValue.intValue()%3 != 1 && newValue.intValue() != 0);
                 bossBlindPanel.setDisable(newValue.intValue()%3 != 2 && newValue.intValue() != 0);

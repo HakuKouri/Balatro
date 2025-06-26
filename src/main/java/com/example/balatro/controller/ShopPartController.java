@@ -3,19 +3,14 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
 import com.example.balatro.models.GameModel;
-import javafx.beans.binding.Bindings;
+import com.example.balatro.models.VoucherState;
 import javafx.collections.*;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -102,10 +97,10 @@ public class ShopPartController {
         Card card = new Card();
 
         double jokerWeight = 20;
-        double tarotWeight = gameModel.isTarotTycoonVoucher() ? 32 : gameModel.isTarotMerchantVoucher() ? 9.6 : 4;
-        double planetWeight = gameModel.isPlanetTycoonVoucher() ? 32 : gameModel.isPlanetMerchantVoucher() ? 9.6 : 4;
-        double playingCardWeight = gameModel.isMagicTrickVoucher() ? 4 : 0;
-        double spectralCardWeight = gameModel.getChosenDeck().getDeckName() == "Ghost Deck" ? 2 : 0 ;
+        double tarotWeight = gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.TAROT_TYCOON) ? 32 : gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.TAROT_MERCHANT) ? 9.6 : 4;
+        double planetWeight = gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.PLANET_TYCOON) ? 32 : gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.PLANET_MERCHANT) ? 9.6 : 4;
+        double playingCardWeight = gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.MAGIC_TRICK) ? 4 : 0;
+        double spectralCardWeight = gameModel.getRunState().getChosenDeck().getDeckName() == "Ghost Deck" ? 2 : 0 ;
 
         double maxWeight = jokerWeight + tarotWeight + planetWeight + playingCardWeight + spectralCardWeight;
 
