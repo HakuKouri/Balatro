@@ -466,7 +466,7 @@
    </GridPane>
    <AnchorPane fx:id="placeHolderShop" prefHeight="560.0" prefWidth="720.0" />
    <AnchorPane fx:id="placeHolderReward" prefHeight="560.0" prefWidth="720.0" />
-   <AnchorPane fx:id="blindBox_AnchorPane" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="placeHolderBlinds" prefHeight="560.0" prefWidth="720.0" />
    <VBox layoutX="1644.0" layoutY="367.0">
       <Button fx:id="testButton" mnemonicParsing="false" text="Button" />
       <ImageView fx:id="testImageView" fitHeight="190.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">

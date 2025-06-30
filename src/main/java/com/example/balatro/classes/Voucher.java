@@ -1,10 +1,20 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
+import com.example.balatro.interfaces.PurchasableCard;
+import com.example.balatro.models.GameModel;
 import javafx.beans.property.*;
+import javafx.scene.layout.AnchorPane;
 
-public class Voucher extends Card
-{
+public class Voucher extends Card implements PurchasableCard {
+
+    @Override
+    public void onPurchase(GameModel model, AnchorPane pane) {
+        //TODO
+        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    }
+
     //region Properties
     private final StringProperty voucherEffect = new SimpleStringProperty("");
     private final StringProperty voucherUpgradeFrom = new SimpleStringProperty("");

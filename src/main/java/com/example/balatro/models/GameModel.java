@@ -2,7 +2,6 @@ package com.example.balatro.models;
 
 import com.example.balatro.classes.*;
 import com.example.balatro.controller.CardViewController;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,7 +48,7 @@ public class GameModel {
     private final RoundState currentRound = new RoundState();
     public RoundState getCurrentRound() {
         return currentRound;
-    };
+    }
 
     private final ShopModel shopModel = new ShopModel();
     public ShopModel getShopModel() {
@@ -103,7 +102,7 @@ public class GameModel {
     //endregion
 
     //region Background Run Variables
-    private IntegerProperty beanValue = new SimpleIntegerProperty(0);
+    private final IntegerProperty beanValue = new SimpleIntegerProperty(0);
     //endregion
 
     //region UI VAR
@@ -245,7 +244,7 @@ public class GameModel {
     }
 
     public void removeNextTagFromTagQueue() {
-        tagQueue.remove(0);
+        tagQueue.removeFirst();
     }
     //endregion
 
@@ -314,7 +313,7 @@ public class GameModel {
         return handChips;
     }
 
-    //Multiplyer
+    //Multiplier
     public double getHandMultiplier() {
         return handMultiplier.get();
     }
@@ -326,7 +325,7 @@ public class GameModel {
     //endregion
 
     //region HOLDING HAND GS
-    //Handcards
+    //Hand Cards
     public ObservableList<PlayingCard> getHandCards() {
         return handCards;
     }
@@ -388,7 +387,7 @@ public class GameModel {
     public List<Joker> getActiveJokerList() {
         List<Joker> jokers = activeJokerMap.keySet().stream()
                 .map(CardViewController::getCard)       // holt die Card aus dem Controller
-                .filter(card -> card instanceof Joker)  // prüft ob es ein Joker ist
+                .filter(card -> card instanceof Joker)  // prüft, ob es ein Joker ist
                 .map(card -> (Joker) card)              // castet auf Joker
                 .collect(Collectors.toList());               // Java 16+ oder collect(Collectors.toList())
         return jokers;

@@ -68,7 +68,7 @@ public class HoldingHandController {
 
         //Card Count Label
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getHandCards().size() + "/" + gameModel.getMaxHandSize(), gameModel.getHandCards()
+                gameModel.getHandCards().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCards()
         ));
 
         //Hand Control Buttons
@@ -111,7 +111,7 @@ public class HoldingHandController {
     }
 
     public void drawCardToLimit() {
-        drawCardToLimit(gameModel.maxHandSizeProperty().get() - gameModel.getHandCards().size());
+        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCards().size());
     }
 
     public void drawCardToLimit(int cardCount) {

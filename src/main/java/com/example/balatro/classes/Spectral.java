@@ -1,12 +1,20 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
+import com.example.balatro.interfaces.PurchasableCard;
+import com.example.balatro.models.GameModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 
-public class Spectral extends Card
-{
+public class Spectral extends Card implements PurchasableCard {
+
+    @Override
+    public void onPurchase(GameModel model, AnchorPane pane) {
+        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    }
     private final StringProperty spectralImageUrl = new SimpleStringProperty("");
     private final StringProperty spectralName = new SimpleStringProperty("");
     private final StringProperty spectralEffect = new SimpleStringProperty("");

@@ -1,17 +1,22 @@
 package com.example.balatro.classes;
 
-import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
 import com.example.balatro.interfaces.JokerEffect;
+import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Joker extends Card {
+public class Joker extends Card implements PurchasableCard {
+    @Override
+    public void onPurchase(GameModel model, AnchorPane pane) {
+        model.getActiveJokerMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    }
+
     private final StringProperty rarity = new SimpleStringProperty("");
     private final StringProperty unlockRequirement = new SimpleStringProperty("");
     private final StringProperty actTiming = new SimpleStringProperty("");
@@ -219,9 +224,9 @@ public class Joker extends Card {
         setJokerType(joker.getJokerType());
         setTriggers(joker.getTriggers());
         setParams(joker.getParams());
-
-
     }
+
+
     //endregion
 
 }

@@ -623,13 +623,13 @@ public class JokerEffectRegistry {
         effectMap.put("MERRY_BUY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MERRY_BUY_EFFECT");
             context.getRunState().setMaxDiscards(context.getRunState().getMaxDiscards() + 3);
-            context.setMaxHandSize(context.getMaxHandSize() - 1);
+            context.getRunState().setMaxHandSize(context.getRunState().getMaxHandSize() - 1);
         });
 
         effectMap.put("MERRY_SELL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: MERRY_SELL_EFFECT");
             context.getRunState().setMaxDiscards(context.getRunState().getMaxDiscards() - 3);
-            context.setMaxHandSize(context.getMaxHandSize() + 1);
+            context.getRunState().setMaxHandSize(context.getRunState().getMaxHandSize() + 1);
         });
 
         effectMap.put("MIDAS_EFFECT", (context, self, cards, params) -> {
@@ -712,7 +712,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
             List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").collect(Collectors.toList());
-            for (int i = 0; i < 2 && context.getActiveJokerMap().size() < context.getMaxJokers(); i++) {
+            for (int i = 0; i < 2 && context.getActiveJokerMap().size() < context.getRunState().getMaxJokers(); i++) {
                 CardViewController.createCardNode(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())), context.getActiveJokerMap());
             }
         });
@@ -774,7 +774,7 @@ public class JokerEffectRegistry {
         effectMap.put("STENCIL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STENCIL_EFFECT");
 
-            int emptySpace = context.getMaxJokers() - context.getActiveJokerMap().size() + 1;
+            int emptySpace = context.getRunState().getMaxJokers() - context.getActiveJokerMap().size() + 1;
 
             AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
@@ -789,19 +789,19 @@ public class JokerEffectRegistry {
         effectMap.put("STUNTMAN_BUY_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_BUY_EFFECT");
 
-            context.setMaxHandSize(context.getMaxHandSize() - 2);
+            context.getRunState().setMaxHandSize(context.getRunState().getMaxHandSize() - 2);
         });
 
         effectMap.put("STUNTMAN_SALE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STUNTMAN_SALE_EFFECT");
 
-            context.setMaxHandSize(context.getMaxHandSize() + 2);
+            context.getRunState().setMaxHandSize(context.getRunState().getMaxHandSize() + 2);
         });
 
         effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SEANCE_EFFECT");
 
-            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getMaxConsumables()) {
+            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getRunState().getMaxConsumables()) {
                 AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 

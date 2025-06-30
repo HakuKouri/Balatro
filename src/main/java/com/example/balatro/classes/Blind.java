@@ -11,7 +11,7 @@ public class Blind extends ImageView
     private final StringProperty blindImageUrl = new SimpleStringProperty();
     private final StringProperty blindName = new SimpleStringProperty();
     private final StringProperty blindDescription = new SimpleStringProperty();
-    private final StringProperty blindMinimumAnte = new SimpleStringProperty();
+    private final IntegerProperty blindMinimumAnte = new SimpleIntegerProperty();
     private final StringProperty blindScoreMultiplier = new SimpleStringProperty();
     private final IntegerProperty blindReward = new SimpleIntegerProperty();
     private final BooleanProperty blindSkipped = new SimpleBooleanProperty();
@@ -26,7 +26,7 @@ public class Blind extends ImageView
         blindImageUrl.set("");
         blindName.set("default");
         blindDescription.set("");
-        blindMinimumAnte.set("-1");
+        blindMinimumAnte.set(-1);
         blindScoreMultiplier.set("0");
         blindReward.set(0);
         blindSkipped.set(false);
@@ -96,15 +96,15 @@ public class Blind extends ImageView
         this.blindDescription.set(blindDescription);
     }
 
-    public String getBlindMinimumAnte() {
+    public int getBlindMinimumAnte() {
         return blindMinimumAnte.get();
     }
 
-    public StringProperty blindMinimumAnteProperty() {
+    public IntegerProperty blindMinimumAnteProperty() {
         return blindMinimumAnte;
     }
 
-    public void setBlindMinimumAnte(String blindMinimumAnte) {
+    public void setBlindMinimumAnte(int blindMinimumAnte) {
         this.blindMinimumAnte.set(blindMinimumAnte);
     }
 

@@ -1,8 +1,12 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
+import com.example.balatro.interfaces.PurchasableCard;
+import com.example.balatro.models.GameModel;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +15,13 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Planet extends Card
-{
+public class Planet extends Card implements PurchasableCard {
+
+    @Override
+    public void onPurchase(GameModel model, AnchorPane pane) {
+        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    }
+
     private static Map<String, Boolean> uniquePlanetPlayed = new HashMap<>() {{
         put("Pluto", false);
         put("Mercury", false);

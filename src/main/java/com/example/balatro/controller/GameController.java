@@ -2,6 +2,8 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
+import com.example.balatro.enums.SlideDirection;
+import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.VoucherState;
 import javafx.animation.Animation;
@@ -107,7 +109,7 @@ public class GameController
 
     //region Placeholder
     @FXML
-    private AnchorPane blindBox_AnchorPane;
+    private AnchorPane placeHolderBlinds;
     @FXML
     private AnchorPane placeHolderShop;
     @FXML
@@ -123,7 +125,7 @@ public class GameController
     //endregion
 
     //region FXMLLOADER
-    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop-part.fxml"));
+    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop.fxml"));
     private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
@@ -131,12 +133,10 @@ public class GameController
     //endregion
 
     //region CONTROLLER
-    private ShopPartController shopController;
-    private RewardSummaryController rewardSummarController;
+    private ShopController shopController;
     private HoldingHandController holdingHandController;
     private PlayedCardsController playedCardsController;
     private BlindBoxController blindBoxController;
-    private List<BlindBoxPanelController> blindPanelControllerList;
     //endregion
 
     //region Placeholder
@@ -173,44 +173,61 @@ public class GameController
         gameScreenAnchor.setMaxWidth(width);
         gameScreenAnchor.setMaxHeight(height);
 
-        gameModel.getRunBlinds().addAll(gameModel.getAllBlindsList());
+        loadFXMLParts();
 
-        //LOAD / READY PLACEHOLDER
-        try {
-            //region Blind Box
-            AnchorPane blindBox = loaderBlindBox.load();
-            blindBoxController = loaderBlindBox.getController();
-
-            blindBox_AnchorPane.getChildren().add(blindBox);
-            blindPanelControllerList = blindBoxController.setBlindPanels();
-            configurePlaceHolder(blindBox_AnchorPane);
-            //endregion
-
-            //region Place Holder
-            AnchorPane holdingHand = loaderHoldingHand.load();
-            holdingHandController = loaderHoldingHand.getController();
-            holdingHand_AnchorPane.getChildren().add(holdingHand);
-
-            AnchorPane playedCards = loaderPlayedCards.load();
-            playedCardsController = loaderPlayedCards.getController();
-            playedCards_AnchorPane.getChildren().add(playedCards);
-
-            shop = loaderShop.load();
-            shopController = loaderShop.getController();
-            placeHolderShop.getChildren().add(shop);
-            configurePlaceHolder(placeHolderShop);
-
-            reward = loaderReward.load();
-            rewardSummarController = loaderReward.getController();
-            placeHolderReward.getChildren().add(reward);
-            configurePlaceHolder(placeHolderReward);
-            //endregion
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
         UIController.setupUiController();
+
+        //Binding der AnchorPanes mit Visibility und Animation
+        UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), placeHolderShop, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.rewardVisibilityProperty(), placeHolderReward, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), placeHolderBlinds, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), chooseBlind_AnchorPane, SlideDirection.UP);
+        UIController.bindAnimatedVisibility(gameModel.pickedBlindVisibilityProperty(), pickedBlind_AnchorPane, SlideDirection.UP);
+        UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), shopSign_AnchorPane, SlideDirection.UP);
+
+
+        //Blind Box
+        rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.DIRECTORS_CUT), gameModel.blindsVisibilityProperty()));
+        rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getRunState().getMoney() < 10, gameModel.getRunState().moneyProperty()));
+
+
+        //Binding von Stack Panes für Inhalt und Click Events
+        UIController.bindStackPane(gameModel.getActiveJokerMap(), spaceJoker);
+        UIController.bindStackPane(gameModel.getConsumableMap(), spaceConsumable);
+        UIController.addCardClickEvent(spaceJoker,gameModel.getActiveJokerMap());
+        UIController.addCardClickEvent(spaceConsumable,gameModel.getConsumableMap());
+
+
+        //Binding der Gameinfo Labels
+        UIController.bindBlindToBeatInfo(blindToBeat_Label, toBeatEffect,toBeatImage,toBeatStake,toBeatScore,toBeatReward,gameModel);
+        UIController.bindScoredPointsInfo(stakeImageView, pointsScoredLabel, gameModel);
+        UIController.bindHandInfo(infoHandName,infoHandLevel,infoHandChips,infoHandMulti,gameModel);
+        UIController.bindRunInfo(handsLabel,discardsLabel,moneyLabel,anteLabel,roundLabel,gameModel);
+
+
+        //region Card count Labels Bind
+        cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
+            gameModel.getCurrentRound().getDeckToPlay().size() + "/" + gameModel.getRunState().getDeckFull().size(), gameModel.getCurrentRound().getDeckToPlay()
+        ));
+        jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getActiveJokerObList().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerObList()
+        ));
+        consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getConsumableList().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableList()
+        ));
+        //endregion
+
+        //Shop
+        shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
+            return width * 0.186;
+        }));
+
+        //Deck CoverBind
+        deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
+
+        pickedBlind_AnchorPane.setMaxHeight(height * 0.26);
+
         gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
             while (change.next()) {
                 if(change.wasAdded()) {
@@ -221,124 +238,6 @@ public class GameController
                 }
             }
         });
-
-        //region Bind Blind Box
-        gameModel.blindsVisibilityProperty().addListener((obs, oldValue, newValue) -> {
-            UIController.animateBox(blindBox_AnchorPane, newValue);
-        });
-        chooseBlind_AnchorPane.visibleProperty().bind(gameModel.blindsVisibilityProperty());
-        rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.DIRECTORS_CUT), gameModel.blindsVisibilityProperty()));
-        rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getRunState().getMoney() < 10, gameModel.getRunState().moneyProperty()));
-        //endregion
-
-
-
-        //region Bind Shop
-        gameModel.shopVisibilityProperty().addListener((obs, oldValue, newValue) -> {
-            UIController.animateBox(placeHolderShop, newValue);
-        });
-        shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
-            return width * 0.186;
-        }));
-        shopSign_AnchorPane.visibleProperty().bind(gameModel.shopVisibilityProperty());
-        //endregion
-
-        //region Bind Reward
-        gameModel.rewardVisibilityProperty().addListener((obs, oldValue, newValue) -> {
-            UIController.animateBox(placeHolderReward, newValue);
-        });
-        //endregion
-
-        //region Deck CoverBind
-        deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
-        //endregion
-
-        //region Points Scored Bind
-        stakeImageView.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
-
-        pointsScoredLabel.textProperty().bind(
-                Bindings.createStringBinding( () -> gameModel.getScoredPoints().toString(),
-                gameModel.scoredPointsProperty()));
-        //endregion
-
-        //region Hand Info Bind
-        //infoHandName.textProperty().bind(gameModel.getBestHand().nameProperty());
-
-        infoHandName.textProperty().bind(Bindings.createStringBinding(() -> {
-            String best = gameModel.getBestHand().getName();
-
-            boolean royal ="Straight Flush".equals(best) && gameModel.getSelectedCards().stream().anyMatch(karte -> "Ace".equals(karte.getRank()));
-
-            System.out.println("Royal Cards: " + royal);
-            return royal ? "Royal Flush" : best;
-        },gameModel.getBestHand().nameProperty(), gameModel.getPlayedCards()));
-        infoHandLevel.textProperty().bind(
-                Bindings.when(gameModel.getBestHand().levelProperty().greaterThan(0))
-                        .then(Bindings.concat("lv. ", gameModel.getBestHand().levelProperty().asString()))
-                        .otherwise("lv."));
-        infoHandChips.textProperty().bind(Bindings.convert(gameModel.getBestHand().chipsProperty()));
-        infoHandMulti.textProperty().bind(Bindings.convert(gameModel.getBestHand().multiProperty()));
-        //endregion
-
-
-        UIController.bindStackPane(gameModel.getActiveJokerMap(), spaceJoker);
-        UIController.bindStackPane(gameModel.getConsumableMap(), spaceConsumable);
-
-
-        //region Run Info Binds
-        handsLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getCurrentRound().getHands()), gameModel.getCurrentRound().handsProperty()));
-        discardsLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getCurrentRound().getDiscards()), gameModel.getCurrentRound().discardsProperty()));
-        moneyLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                "$" + gameModel.getRunState().getMoney(), gameModel.getRunState().moneyProperty()));
-        anteLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getRunState().getAnte() + "/8", gameModel.getRunState().anteProperty()));
-        roundLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(gameModel.getRunState().getRound()), gameModel.getRunState().roundProperty()));
-        //endregion
-
-        /*bottomRow.prefHeightProperty().bind(Bindings.createIntegerBinding(() ->
-                gameModel.isHandButtonVisibility() ? 350 : 220,
-                gameModel.handButtonVisibilityProperty()));*/
-
-        //region to Beat Bind
-        pickedBlind_AnchorPane.visibleProperty().bind(gameModel.pickedBlindVisibilityProperty());
-        pickedBlind_AnchorPane.setMaxHeight(height * 0.26);
-
-        toBeatEffect.textProperty().bind(Bindings.createStringBinding(() -> {
-            return gameModel.activeBlindProperty().get().getBlindId() < 2 ? "" : gameModel.activeBlindProperty().get().getBlindDescription();
-        }));
-        blindToBeat_Label.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
-
-        toBeatScore.textProperty().bind(Bindings.createStringBinding(() ->
-                        String.valueOf(gameModel.getScoreToReach()),
-                gameModel.scoreToReachProperty()
-        ));
-
-        toBeatImage.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
-
-        toBeatStake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
-
-        toBeatReward.textProperty().bind(Bindings.createStringBinding(
-                () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),
-                gameModel.getActiveBlind().blindRewardProperty()
-        ));
-        //endregion
-
-        //region Card count Labels Bind
-        cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
-            gameModel.getCurrentRound().getDeckToPlay().size() + "/" + gameModel.getRunState().getDeckFull().size(), gameModel.getCurrentRound().getDeckToPlay()
-        ));
-        jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getActiveJokerObList().size() + "/" + gameModel.getMaxJokers(), gameModel.getActiveJokerObList()
-        ));
-        consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getConsumableList().size() + "/" + gameModel.getMaxConsumables(), gameModel.getConsumableList()
-        ));
-        //endregion
-
-        //holdingHand_GrowRow.percentHeightProperty().bind(Bindings.createDoubleBinding(() -> gameModel.isHandButtonVisibility() ? 20.0 : 30.0, gameModel.handButtonVisibilityProperty()));
 
         if(false) {
             CardViewController.createCardNode(gameModel.getAllJokerList().get(79), gameModel.getActiveJokerMap());
@@ -375,9 +274,42 @@ public class GameController
             }
 
         });
+    }
 
-        UIController.addCardClickEvent(spaceJoker,gameModel.getActiveJokerMap());
-        UIController.addCardClickEvent(spaceConsumable,gameModel.getConsumableMap());
+    private void loadFXMLParts() {
+        //Place Holder
+        try {
+            //Holding Hand
+            AnchorPane holdingHand = loaderHoldingHand.load();
+            holdingHandController = loaderHoldingHand.getController();
+            holdingHand_AnchorPane.getChildren().add(holdingHand);
+
+            //Played Cards
+            AnchorPane playedCards = loaderPlayedCards.load();
+            playedCardsController = loaderPlayedCards.getController();
+            playedCards_AnchorPane.getChildren().add(playedCards);
+
+            //Blind Box
+            AnchorPane blindBox = loaderBlindBox.load();
+            blindBoxController = loaderBlindBox.getController();
+            placeHolderBlinds.getChildren().add(blindBox);
+            UIController.configurePlaceHolder(placeHolderBlinds);
+
+            //Shop
+            shop = loaderShop.load();
+            shopController = loaderShop.getController();
+            placeHolderShop.getChildren().add(shop);
+            UIController.configurePlaceHolder(placeHolderShop);
+            shopController.setOnNextRoundCallback(this::nextRound);
+
+            //Reward
+            reward = loaderReward.load();
+            placeHolderReward.getChildren().add(reward);
+            UIController.configurePlaceHolder(placeHolderReward);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //SETTING UP GAME
@@ -391,26 +323,6 @@ public class GameController
         Collections.shuffle(gameModel.getCurrentRound().getDeckToPlay(), new Random());
     }
 
-    public void createBlindList() {
-        for (int i = 0; i <= 8; i++) {
-            for (int j = 0; j < 3; j++) {
-                if(j == 0)
-                    gameModel.getRunBlinds().add(gameModel.getAllBlindsList().get(0));
-                else if(j == 1)
-                    gameModel.getRunBlinds().add(gameModel.getAllBlindsList().get(1));
-                else
-                    gameModel.getRunBlinds().add(gameModel.getAllBlindsList().get(gameModel.getRand().nextInt(gameModel.getAllBlindsList().size() - 2 + 1) + 1));
-            }
-        }
-    }
-
-    private void createTagList() {
-        for (int i = 0; i <= 8; i++) {
-            for (int j = 0; j < 3; j++) {
-                gameModel.getRunTags().add(gameModel.getAllTagList().get(gameModel.getRand().nextInt(gameModel.getAllTagList().size())));
-            }
-        }
-    }
 
     //PLAYING CARD HANDLER
     public void playSelectedCards() {
@@ -435,8 +347,6 @@ public class GameController
     //GAME HANDLER
     public void startNewGame(GameSetup gameSetup) {
         gameModel.setRand(new Random());
-        createBlindList();
-        createTagList();
 
         gameModel.getRunState().getChosenDeck().setDeck(gameSetup.getChosenDeck());
         gameModel.getRunState().getChosenStake().setStake(gameSetup.getChosenStake());
@@ -488,26 +398,14 @@ public class GameController
         controller.inShopProperty().set(false);
         gameModel.getRunState().subMoney(controller.getBuyPrice());
 
-        if(controller.getCard().getCardType() == "Joker") {
-            gameModel.getActiveJokerMap().put(controller, pane);
-            shopController.getItemMap().remove(controller);
-        } else if(controller.getCard().getCardType() == "Tarot") {
-            System.out.printf("Tarot");
-            gameModel.getConsumableMap().put(controller, pane);
-            shopController.getItemMap().remove(controller);
-        } else if(controller.getCard().getCardType() == "Planet") {
-            System.out.printf("Planet");
-            gameModel.getConsumableMap().put(controller, pane);
-            shopController.getItemMap().remove(controller);
-        } else if(controller.getCard().getCardType() == "Spectral") {
-            System.out.printf("Spectral");
-            gameModel.getConsumableMap().put(controller, pane);
-            shopController.getItemMap().remove(controller);
-        } else if(controller.getCard().getCardType() == "PlayingCard") {
-            System.out.printf("PlayingCard");
-            gameModel.getRunState().addCardToDeckFull((PlayingCard) controller.getCard());
-            shopController.getItemMap().remove(controller);
-        } else if(controller.getCard().getCardType() == "Voucher") {
+
+        Card card = controller.getCard();
+        if (card instanceof PurchasableCard) {
+            ((PurchasableCard) card).onPurchase(gameModel, pane);
+        }
+
+        //TODO
+        if(controller.getCard().getCardType() == "Voucher") {
             System.out.printf("Voucher");
             setVoucherFlag(controller.getCard());
             shopController.getVoucherMap().remove(controller);
@@ -541,7 +439,7 @@ public class GameController
                 activeVoucherUpgrade(3);
                 break;
             case "Crystal Ball": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.CRYSTAL_BALL, true);
-                gameModel.maxConsumablesProperty().set(3);
+                gameModel.getRunState().maxConsumablesProperty().set(3);
                 activeVoucherUpgrade(4);
                 break;
             case "Telescope": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.TELESCOPE, true);
@@ -582,7 +480,7 @@ public class GameController
                 activeVoucherUpgrade(14);
                 break;
             case "Paint Brush": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PAINTBRUSH, true);
-                gameModel.setMaxHandSize(gameModel.getMaxHandSize() + 1);
+                gameModel.getRunState().setMaxHandSize(gameModel.getRunState().getMaxHandSize() + 1);
                 activeVoucherUpgrade(15);
                 break;
             case "Overstock Plus": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.OVERSTOCK_PLUS, true);
@@ -626,7 +524,7 @@ public class GameController
                 upgradeBrought(26);
                 break;
             case "Antimatter": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.ANTIMATTER, true);
-                gameModel.maxJokersProperty().set(gameModel.getMaxJokers() + 1);
+                gameModel.getRunState().maxJokersProperty().set(gameModel.getRunState().getMaxJokers() + 1);
                 upgradeBrought(27);
                 break;
             case "Illusion": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.ILLUSION, true);
@@ -641,7 +539,7 @@ public class GameController
                 upgradeBrought(30);
                 break;
             case "Palette": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.PALETTE, true);
-                gameModel.maxHandSizeProperty().set(gameModel.getMaxHandSize() + 1);
+                gameModel.getRunState().maxHandSizeProperty().set(gameModel.getRunState().getMaxHandSize() + 1);
                 upgradeBrought(31);
                 break;
         }
@@ -659,7 +557,7 @@ public class GameController
     public void playTarot(CardViewController cardViewController) {
         switch (cardViewController.getCard().getCardId()) {
             case 1:
-                if(gameModel.getConsumableMap().size() < gameModel.getMaxConsumables())
+                if(gameModel.getConsumableMap().size() < gameModel.getRunState().getMaxConsumables())
                     CardViewController.createCardNode(gameModel.getLastConsumableUsed(), gameModel.getConsumableMap());
                 break;
             case 2:
@@ -669,7 +567,7 @@ public class GameController
                     }
                 break;
             case 3:
-                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getMaxConsumables(); i++) {
+                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getRunState().getMaxConsumables(); i++) {
                     CardViewController.createCardNode(gameModel.getAllPlanetList().get(gameModel.getRand().nextInt(gameModel.getAllPlanetList().size())), gameModel.getConsumableMap());
                 }
                 break;
@@ -680,7 +578,7 @@ public class GameController
                     }
                 break;
             case 5:
-                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getMaxConsumables(); i++) {
+                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getRunState().getMaxConsumables(); i++) {
                     CardViewController.createCardNode(gameModel.getAllTarotList().get(gameModel.getRand().nextInt(gameModel.getAllTarotList().size())), gameModel.getConsumableMap());
                 }
                 break;
@@ -775,7 +673,7 @@ public class GameController
                 }
                 break;
             case 21:
-                if(gameModel.getActiveJokerMap().size() < gameModel.getMaxJokers()) {
+                if(gameModel.getActiveJokerMap().size() < gameModel.getRunState().getMaxJokers()) {
                     CardViewController.createCardNode(gameModel.getAllJokerList().get(gameModel.getRand().nextInt(gameModel.getAllJokerList().size())), gameModel.getActiveJokerMap());
                 }
                 break;
@@ -789,12 +687,6 @@ public class GameController
         }
     }
 
-    private void configurePlaceHolder(AnchorPane anchorPane) {
-        anchorPane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .53);
-        anchorPane.setPrefHeight(Balatro.getSettings().getWindowHeight() * .72);
-        anchorPane.setLayoutX(Balatro.getSettings().getWindowWidth() * .26);
-        anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .3);
-    }
 
     public void rerollBossBlind(ActionEvent actionEvent) {
         blindBoxController.rerollBoss();

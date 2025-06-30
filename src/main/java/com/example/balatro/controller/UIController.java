@@ -1,8 +1,13 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.enums.SlideDirection;
+import com.example.balatro.models.GameModel;
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
@@ -30,7 +35,80 @@ public class UIController {
         gameSpeed.bind(Balatro.getSettings().gameSpeedProperty());
     }
 
-    /*
+    public static void bindGameUi(GameController gameController) {
+
+    }
+
+
+    public static void bindHandInfo(Label name, Label level, Label chips, Label multi, GameModel model) {
+        name.textProperty().bind(Bindings.createStringBinding(() -> {
+            String best = model.getBestHand().getName();
+            boolean isRoyal = "Straight Flush".equals(best) &&
+                    model.getSelectedCards().stream().anyMatch(card -> "Ace".equals(card.getRank()));
+            return isRoyal ? "Royal Flush" : best;
+        }, model.getBestHand().nameProperty(), model.getPlayedCards()));
+
+        level.textProperty().bind(
+                Bindings.when(model.getBestHand().levelProperty().greaterThan(0))
+                        .then(Bindings.concat("lv. ", model.getBestHand().levelProperty().asString()))
+                        .otherwise("lv."));
+        chips.textProperty().bind(Bindings.convert(model.getBestHand().chipsProperty()));
+        multi.textProperty().bind(Bindings.convert(model.getBestHand().multiProperty()));
+    }
+
+    public static void bindRunInfo(Label hands, Label discards, Label money, Label ante, Label round, GameModel gameModel) {
+        hands.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getCurrentRound().getHands()), gameModel.getCurrentRound().handsProperty()));
+        discards.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getCurrentRound().getDiscards()), gameModel.getCurrentRound().discardsProperty()));
+        money.textProperty().bind(Bindings.createStringBinding(() ->
+                "$" + gameModel.getRunState().getMoney(), gameModel.getRunState().moneyProperty()));
+        ante.textProperty().bind(Bindings.createStringBinding(() ->
+                gameModel.getRunState().getAnte() + "/8", gameModel.getRunState().anteProperty()));
+        round.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(gameModel.getRunState().getRound()), gameModel.getRunState().roundProperty()));
+    }
+
+    public static void bindBlindToBeatInfo(Label name, Label effect, ImageView blind, ImageView stake, Label score, Label reward, GameModel gameModel) {
+        name.textProperty().bind(gameModel.activeBlindProperty().get().blindNameProperty());
+
+        effect.textProperty().bind(Bindings.createStringBinding(() -> {
+            return gameModel.activeBlindProperty().get().getBlindId() < 2 ? "" : gameModel.activeBlindProperty().get().getBlindDescription();
+        }));
+
+        blind.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
+
+        stake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
+
+        score.textProperty().bind(Bindings.createStringBinding(() ->
+                        String.valueOf(gameModel.getScoreToReach()),
+                gameModel.scoreToReachProperty()
+        ));
+
+        reward.textProperty().bind(Bindings.createStringBinding(
+                () -> "$".repeat(Math.max(0, gameModel.getActiveBlind().getBlindReward())),
+                gameModel.getActiveBlind().blindRewardProperty()
+        ));
+    }
+
+    public static void bindScoredPointsInfo(ImageView stake, Label score, GameModel gameModel) {
+        stake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
+
+        score.textProperty().bind(
+                Bindings.createStringBinding( () -> gameModel.getScoredPoints().toString(),
+                        gameModel.scoredPointsProperty()));
+    }
+
+
+    //Sizing
+    public static void configurePlaceHolder(AnchorPane anchorPane) {
+        anchorPane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .53);
+        anchorPane.setPrefHeight(Balatro.getSettings().getWindowHeight() * .72);
+        anchorPane.setLayoutX(Balatro.getSettings().getWindowWidth() * .26);
+        anchorPane.setLayoutY(Balatro.getSettings().getWindowHeight() * .3);
+    }
+
+    /**
     * Diese Methode bindet MouseClick events an StackPanes,
     * um zu erkennen, welches Label geklickt worden sind
     */
@@ -72,7 +150,7 @@ public class UIController {
         });
     }
 
-    /*
+    /**
     * Diese Methode bindet visuelle Effekte an eine StackPane
     * z.B. selected oder Drag and Drop
     */
@@ -364,14 +442,29 @@ public class UIController {
 
 
     //UI
-    public static void animateBox(Node node, boolean bool) {
-        int up = Objects.equals(node.getId(), "blindBox") ? 50 : 0;
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(.2), node);
+    public static void bindAnimatedVisibility(BooleanProperty visibilityProperty, Node node, SlideDirection direction) {
+        visibilityProperty.addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                node.setVisible(true);
+                animateSlide(node, true, direction, null); // Einblenden ohne Callback
+            } else {
+                animateSlide(node, false, direction, () -> node.setVisible(false)); // Erst Animation, dann ausblenden
+            }
+        });
+    }
 
-        transition.setToY(bool ? up : Balatro.getSettings().getWindowHeight());
-        transition.setInterpolator(Interpolator.LINEAR);
+    public static void animateSlide(Node node, boolean visible, SlideDirection direction, Runnable after) {
+        double screenHeight = Balatro.getSettings().getWindowHeight();
+        double toY = visible ? 0 : (direction == SlideDirection.DOWN ? screenHeight : -screenHeight * 0.5);
+
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.3), node);
+        transition.setToY(toY);
+        transition.setInterpolator(Interpolator.EASE_BOTH);
+
+        if (after != null) {
+            transition.setOnFinished(event -> after.run());
+        }
 
         transition.play();
     }
-
 }

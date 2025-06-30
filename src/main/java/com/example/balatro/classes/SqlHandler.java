@@ -147,7 +147,7 @@ public class SqlHandler {
                     ps.setString(2, ((Blind) listItem).getBlindImageUrl());
                     ps.setString(3, ((Blind) listItem).getBlindName());
                     ps.setString(4, ((Blind) listItem).getBlindDescription());
-                    ps.setString(5, ((Blind) listItem).getBlindMinimumAnte());
+                    ps.setInt(5, ((Blind) listItem).getBlindMinimumAnte());
                     ps.setString(6, ((Blind) listItem).getBlindScoreMultiplier());
                     ps.setString(7, String.valueOf(((Blind) listItem).getBlindReward()));
                     ps.executeUpdate();
@@ -364,7 +364,7 @@ public class SqlHandler {
                 blind.setBlindImageUrl(rs.getString(2));
                 blind.setBlindName(rs.getString(3));
                 blind.setBlindDescription(rs.getString(4));
-                blind.setBlindMinimumAnte(rs.getString(5));
+                blind.setBlindMinimumAnte(rs.getInt(5));
                 blind.setBlindScoreMultiplier(rs.getString(6));
                 blind.setBlindReward(Integer.parseInt(rs.getString(7).substring(1)));
                 blind.setColorScheme(Color.valueOf(rs.getString(8)));

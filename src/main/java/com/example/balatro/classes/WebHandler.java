@@ -147,7 +147,7 @@ public class WebHandler
                     blind.setBlindImageUrl("src\\main\\resources\\com\\images\\Blinds\\blind_" + blind.getBlindId() + ".gif");
                     blind.setBlindName(cells.get(1).text());
                     blind.setBlindDescription(cells.get(2).text());
-                    blind.setBlindMinimumAnte(cells.get(3).text());
+                    blind.setBlindMinimumAnte(cells.get(3).text().indexOf(1));
                     blind.setBlindScoreMultiplier(cells.get(4).text());
                     blind.setBlindReward(Integer.parseInt(cells.get(5).text().substring(0,1)));
                 }

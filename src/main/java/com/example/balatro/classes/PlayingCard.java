@@ -1,16 +1,24 @@
 package com.example.balatro.classes;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.CardViewController;
+import com.example.balatro.interfaces.PurchasableCard;
+import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Objects;
 
-public class PlayingCard extends Card
-{
+public class PlayingCard extends Card implements PurchasableCard {
+
+    @Override
+    public void onPurchase(GameModel model, AnchorPane pane) {
+        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    }
     private String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};
     private int[] valueArray = {2,3,4,5,6,7,8,9,10,10,10,10,11};
 

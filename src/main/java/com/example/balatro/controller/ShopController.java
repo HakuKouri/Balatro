@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class ShopPartController {
+public class ShopController {
 
     @FXML
     private Label rotatedLabel;
@@ -28,51 +28,44 @@ public class ShopPartController {
     @FXML
     private StackPane boosterArea;
 
-    private final GameController gameController = GameController.getInstance();
     private final GameModel gameModel = Balatro.getGameModel();
 
-    private ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableHashMap();
-    private ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableHashMap();
-    private ObservableMap<CardViewController, AnchorPane> voucherMap = FXCollections.observableHashMap();
+    private Runnable onNextRoundCallback;
+
 
     private int maxItems = 2;
     private int maxBoosters = 2;
 
     //region Getter Setter
-    public ObservableMap<CardViewController, AnchorPane> getItemMap() {
-        return itemMap;
+    public void setOnNextRoundCallback(Runnable callback) {
+        this.onNextRoundCallback = callback;
     }
 
-    public void setItemMap(ObservableMap<CardViewController, AnchorPane> itemMap) {
-        this.itemMap = itemMap;
+    public ObservableMap<CardViewController, AnchorPane> getItemMap() {
+        return gameModel.getShopModel().getItemMap();
     }
 
     public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
-        return boosterMap;
+        return gameModel.getShopModel().getBoosterMap();
     }
 
-    public void setBoosterMap(ObservableMap<CardViewController, AnchorPane> boosterMap) {
-        this.boosterMap = boosterMap;
-    }
+
 
     public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
-        return voucherMap;
+        return gameModel.getShopModel().getVoucherMap();
     }
 
-    public void setVoucherMap(ObservableMap<CardViewController, AnchorPane> voucherMap) {
-        this.voucherMap = voucherMap;
-    }
 
     //endregion
 
     public void initialize() {
-        UIController.bindStackPane(itemMap, shopArea);
-        UIController.bindStackPane(boosterMap, boosterArea);
-        UIController.bindStackPane(voucherMap, voucherArea);
+        UIController.bindStackPane(getItemMap(), shopArea);
+        UIController.bindStackPane(getBoosterMap(), boosterArea);
+        UIController.bindStackPane(getVoucherMap(), voucherArea);
 
-        UIController.addCardClickEvent(shopArea, itemMap);
-        UIController.addCardClickEvent(boosterArea, boosterMap);
-        UIController.addCardClickEvent(voucherArea, voucherMap);
+        UIController.addCardClickEvent(shopArea, getItemMap());
+        UIController.addCardClickEvent(boosterArea, getVoucherMap());
+        UIController.addCardClickEvent(voucherArea, getVoucherMap());
     }
 
     public void restockShop() {
@@ -87,9 +80,9 @@ public class ShopPartController {
 
     //region Items
     private void drawItems() {
-        itemMap.clear();
+        getItemMap().clear();
         for (int i = 0; i < maxItems; i++) {
-            CardViewController.createCardNode(getRandomCard(), itemMap,true);
+            CardViewController.createCardNode(getRandomCard(), getItemMap(),true);
         }
     }
 
@@ -184,12 +177,12 @@ public class ShopPartController {
 
     //region Voucher
     private void drawVoucher() {
-        voucherMap.clear();
-        CardViewController.createCardNode(getRandomVoucher(), voucherMap, true);
+        getVoucherMap().clear();
+        CardViewController.createCardNode(getRandomVoucher(), getVoucherMap(), true);
     }
 
     public void addVoucher() {
-        CardViewController.createCardNode(getRandomVoucher(), voucherMap, true);
+        CardViewController.createCardNode(getRandomVoucher(), getVoucherMap(), true);
     }
 
     private Card getRandomVoucher() {
@@ -200,19 +193,22 @@ public class ShopPartController {
     }
 
     private void removeFromVoucher(Voucher voucher) {
-        voucherMap.remove(voucher);
+        getVoucherMap().remove(voucher);
     }
     //endregion
 
     private void drawBooster() {
-        boosterMap.clear();
+        getBoosterMap().clear();
         for (int i = 0; i < maxBoosters; i++) {
-            CardViewController.createCardNode(getRandomBooster(), boosterMap, true);
+            CardViewController.createCardNode(getRandomBooster(), getBoosterMap(), true);
         }
     }
 
-    public void nextRound() {
-        gameController.nextRound();
+    @FXML
+    private void handleNextRoundButtonClick() {
+        if (onNextRoundCallback != null) {
+            onNextRoundCallback.run();
+        }
     }
 
     public Booster getRandomBooster() {

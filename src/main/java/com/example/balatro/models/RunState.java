@@ -1,9 +1,6 @@
 package com.example.balatro.models;
 
-import com.example.balatro.classes.Deck;
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.Stake;
-import com.example.balatro.classes.Voucher;
+import com.example.balatro.classes.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -20,6 +17,8 @@ public class RunState {
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
 
     private final ObservableList<PlayingCard> deckFull = FXCollections.observableArrayList();
+    private final ObservableList<Blind> bossBlindsBeaten = FXCollections.observableArrayList();
+
     private final List<Voucher> broughtVoucher = new ArrayList<>();
     private final IntegerProperty maxHandSize = new SimpleIntegerProperty(8);
     private final IntegerProperty maxHands = new SimpleIntegerProperty(4);
@@ -76,6 +75,10 @@ public class RunState {
 
     public void removeCardFromDeckFull(PlayingCard card) {
         deckFull.remove(card);
+    }
+
+    public ObservableList<Blind> getBossBlindsBeaten() {
+        return bossBlindsBeaten;
     }
 
     public List<Voucher> getBroughtVoucher() {
