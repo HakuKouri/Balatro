@@ -2,6 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.Card;
+import com.example.balatro.classes.Tarot;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -130,14 +131,27 @@ public class CardViewController {
                 selectedProperty(), cardTypeProperty(), cardTypeProperty()
         ));
 
-        buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
-                Balatro.getGameModel().getRunState().getMoney() < buyPrice.get(),Balatro.getGameModel().getRunState().moneyProperty(),buyPriceProperty()));
+        buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if(isInShop()) {
+                return Balatro.getGameModel().getRunState().getMoney() < buyPrice.get();
+            }
+            else if(getCard() instanceof Tarot) return !((Tarot) getCard()).canPlay(Balatro.getGameModel());
+
+            return true;
+
+        },Balatro.getGameModel().getRunState().moneyProperty(),
+                buyPriceProperty()));
 
 
         use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
+                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
                 selectedProperty(),cardTypeProperty(),cardTypeProperty(),inShopProperty()
         ));
+
+        use_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if(getCard() instanceof Tarot) return !((Tarot) getCard()).canPlay(Balatro.getGameModel());
+            return true;
+        }  ));
 
         use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
     }

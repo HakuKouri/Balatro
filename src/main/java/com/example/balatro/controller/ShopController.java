@@ -2,6 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.classes.*;
+import com.example.balatro.enums.TarotEffect;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.VoucherState;
 import javafx.collections.*;
@@ -147,6 +148,7 @@ public class ShopController {
         Tarot tarot = new Tarot();
         int tarotChance = gameModel.getRand().nextInt(gameModel.getAllTarotList().size());
         tarot.setTarot(gameModel.getAllTarotList().get(tarotChance));
+        tarot.setEffect(TarotEffect.values()[tarot.getCardId() -1]);
         System.out.println("Tarot: " + tarot.getCardName());
         return tarot;
     }

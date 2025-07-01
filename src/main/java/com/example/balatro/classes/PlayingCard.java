@@ -17,6 +17,7 @@ public class PlayingCard extends Card implements PurchasableCard {
 
     @Override
     public void onPurchase(GameModel model, AnchorPane pane) {
+        //TODO zum Deck hinzufügen
         model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
     }
     private String[] rankArray = {"Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"};

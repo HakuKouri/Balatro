@@ -555,135 +555,9 @@ public class GameController
     }
 
     public void playTarot(CardViewController cardViewController) {
-        switch (cardViewController.getCard().getCardId()) {
-            case 1:
-                if(gameModel.getConsumableMap().size() < gameModel.getRunState().getMaxConsumables())
-                    CardViewController.createCardNode(gameModel.getLastConsumableUsed(), gameModel.getConsumableMap());
-                break;
-            case 2:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(7));
-                    }
-                break;
-            case 3:
-                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getRunState().getMaxConsumables(); i++) {
-                    CardViewController.createCardNode(gameModel.getAllPlanetList().get(gameModel.getRand().nextInt(gameModel.getAllPlanetList().size())), gameModel.getConsumableMap());
-                }
-                break;
-            case 4:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(1));
-                    }
-                break;
-            case 5:
-                for (int i = gameModel.getConsumableMap().size(); i < gameModel.getRunState().getMaxConsumables(); i++) {
-                    CardViewController.createCardNode(gameModel.getAllTarotList().get(gameModel.getRand().nextInt(gameModel.getAllTarotList().size())), gameModel.getConsumableMap());
-                }
-                break;
-            case 6:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(0));
-                    }
-                break;
-            case 7:
-                if(gameModel.getSelectedCards().size() == 1)
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(2));
-                    }
-                break;
-            case 8:
-                if(gameModel.getSelectedCards().size() == 1)
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(4));
-                    }
-                break;
-            case 9:
-                if(gameModel.getSelectedCards().size() == 1)
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(3));
-                    }
-                break;
-            case 10:
-                gameModel.getRunState().addMoney(gameModel.getRunState().getMoney());
-                break;
-            case 11://TODO WHEEL OF FORTUNE
-                break;
-            case 12:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        //TODO CARD VALUE IMAGE ANPASSEN
-                        card.setValue(card.getValue() + 1);
-                        if(card.getValue() == 12)
-                            card.setValue(2);
-                    }
-                break;
-            case 13:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty())
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        gameModel.getRunState().removeCardFromDeckFull(card);
-                        //TODO REMOVE CARDS FROM HOLDING ODER PLAYED
-                    }
-                break;
-            case 14:
-                if(gameModel.getSelectedCards().size() < 3 && !gameModel.getSelectedCards().isEmpty()) {
-                    gameModel.getSelectedCards().get(0).setCard(gameModel.getSelectedCards().get(1));
-                    //TODO IMAGE CHANGE
-                }
-                break;
-            case 15:
-                gameModel.getRunState().addMoney(gameModel.getActiveJokerMap().keySet().stream().mapToInt(i -> (int) i.getCard().getSellValue()).sum());
-                break;
-            case 16:
-                //GOLD
-                if(gameModel.getSelectedCards().size() == 1)
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(6));
-                    }
-                break;
-            case 17:
-                //STONE
-                if(gameModel.getSelectedCards().size() == 1)
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setEnhancement(gameModel.getAllEnhancementList().get(5));
-                    }
-                break;
-            case 18:
-                //DIAMONDS
-                if(gameModel.getSelectedCards().size() < 3) {
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setSuit(Suit.DIAMONDS);
-                    }
-                }
-                break;
-            case 19:
-                if(gameModel.getSelectedCards().size() < 3) {
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setSuit(Suit.CLUBS);
-                    }
-                }
-                break;
-            case 20:
-                if(gameModel.getSelectedCards().size() < 3) {
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setSuit(Suit.HEARTS);
-                    }
-                }
-                break;
-            case 21:
-                if(gameModel.getActiveJokerMap().size() < gameModel.getRunState().getMaxJokers()) {
-                    CardViewController.createCardNode(gameModel.getAllJokerList().get(gameModel.getRand().nextInt(gameModel.getAllJokerList().size())), gameModel.getActiveJokerMap());
-                }
-                break;
-            case 22:
-                if (gameModel.getSelectedCards().size() < 3) {
-                    for (PlayingCard card : gameModel.getSelectedCards()) {
-                        card.setSuit(Suit.SPADES);
-                    }
-                }
-                break;
+        Card card = cardViewController.getCard();
+        if(card instanceof Tarot) {
+            ((Tarot) card).play(gameModel);
         }
     }
 
@@ -717,7 +591,7 @@ public class GameController
             playPlanet(cardViewController, shopController.getItemMap());
             shopController.getItemMap().remove(cardViewController);
         } else if(card.getCardType().equals("Tarot")) {
-
+            playTarot(cardViewController);
         }
     }
 
@@ -727,7 +601,9 @@ public class GameController
     }
 
     public void useCard(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
-        if(cardViewController.getCard().getCardType().equals("Tarot")) {}
+        if(cardViewController.getCard().getCardType().equals("Tarot")) {
+            playTarot(cardViewController);
+        }
         else if(cardViewController.getCard().getCardType().equals("Planet")) {
             playPlanet(cardViewController, map);
         }
