@@ -20,21 +20,14 @@ public class PlayedCardsController {
     private final GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-        gameModel.getPlayedCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    playedCards_StackPane.getChildren().addAll(change.getAddedSubList());
-                }
-                if(change.wasRemoved()) {
-                    playedCards_StackPane.getChildren().removeAll(change.getRemoved());
-                }
-            }
-            UIController.moveCards(playedCards_StackPane);
-        });
+        UIController.bindStackPane(gameModel.getPlayedCards(), playedCards_StackPane);
     }
 
     public void addSelectedCards(Runnable onComplete) {
         gameModel.getPlayedCards().addAll(gameModel.getSelectedCards());
+        for (PlayingCard card : gameModel.getSelectedCards()) {
+            card.setSelected(false);
+        }
         gameModel.getSelectedCards().clear();
 
         List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCards(), gameModel.getBestHand().getName());

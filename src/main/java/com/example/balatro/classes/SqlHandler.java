@@ -29,7 +29,7 @@ public class SqlHandler {
     private static final String SealsTableColumns = " (id, appearance, seal, effect)";
     private static final String LanguagesTableColumns = " (id, languageName, text, notes)";
     private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
-    private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect)";
+    private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect, cardDrawn, cardsToChoose)";
     private static final String PokerHandsTableColumns = " (pokerHandId, pokerHandName, pokerHandChips, pokerHandMulti)";
 
     static {
@@ -383,7 +383,7 @@ public class SqlHandler {
 
         try {
             Statement statement = connection.createStatement();
-            //(id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect)
+            //(id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect, cardDrawn, cardsToChoose)
             String statementString = "SELECT * FROM Boosters";
             ResultSet rs = statement.executeQuery(statementString);
 
@@ -397,6 +397,8 @@ public class SqlHandler {
                 booster.setCardType("Booster");
                 booster.setBoosterSize(rs.getString(5));
                 booster.setBoosterEffect(rs.getString(6));
+                booster.setBoosterSizeValue(rs.getInt(7));
+                booster.setBoosterChoiceValue(rs.getInt(8));
 
                 boosters.add(booster);
             }
@@ -577,7 +579,7 @@ public class SqlHandler {
                 spectral.setCardImageUrl(rs.getString(2));
                 spectral.setCardName(rs.getString(3));
                 spectral.setCardCost(3);
-                spectral.setSpectralEffect(rs.getString(4));
+                spectral.setCardDescription(rs.getString(4));
 
                 spectrals.add(spectral);
             }

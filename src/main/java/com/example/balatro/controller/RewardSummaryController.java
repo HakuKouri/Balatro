@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class RewardSummaryController {
 
@@ -89,7 +88,7 @@ public class RewardSummaryController {
         }
 
         //Satellite Reward
-        List<Joker> satelliteJokers = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Satellite")).collect(Collectors.toList());
+        List<Joker> satelliteJokers = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Satellite")).toList();
         if(!satelliteJokers.isEmpty()) {
             for(Joker joker : satelliteJokers) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), Planet.getUniquePlanetsPlayedCount(), false));
@@ -97,7 +96,7 @@ public class RewardSummaryController {
         }
 
         //Rocker Reward
-        List<Joker> rocketList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Rocket")).collect(Collectors.toList());
+        List<Joker> rocketList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Rocket")).toList();
         if(!rocketList.isEmpty()) {
             for(Joker joker : rocketList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getRocketJokers().get(joker).get(), false));
@@ -105,7 +104,7 @@ public class RewardSummaryController {
         }
 
         //Delayed Gratification Reward
-        List<Joker> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Delayed Gratification")).collect(Collectors.toList());
+        List<Joker> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Delayed Gratification")).toList();
         if(!delayedGrafList.isEmpty() && gameModel.getCurrentRound().getDiscards() == gameModel.getRunState().getMaxDiscards()) {
             for(Joker joker : delayedGrafList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getCurrentRound().getDiscards(), false));
@@ -113,7 +112,7 @@ public class RewardSummaryController {
         }
 
         //Cloud 9 Reward
-        List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).collect(Collectors.toList());
+        List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).toList();
         if(!cloud9List.isEmpty()) {
             for(Joker joker : cloud9List) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getRunState().getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
@@ -121,7 +120,7 @@ public class RewardSummaryController {
         }
 
         //Golden Joker Reward
-        List<Joker> goldenJokerList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Golden Joker")).collect(Collectors.toList());
+        List<Joker> goldenJokerList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Golden Joker")).toList();
         if(!goldenJokerList.isEmpty()) {
             for(Joker joker : goldenJokerList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), 4, false));
@@ -129,7 +128,7 @@ public class RewardSummaryController {
         }
 
         //Boss Beat Tag Reward
-        List<Tag> tagList = gameModel.getTagQueue().stream().filter(x -> Objects.equals(x.getTagName(), "Investment")).collect(Collectors.toList());
+        List<Tag> tagList = gameModel.getTagQueue().stream().filter(x -> Objects.equals(x.getTagName(), "Investment")).toList();
         if(!tagList.isEmpty() && gameModel.getActiveBlind().getBlindId() > 1) {
             for(Tag tag : tagList) {
                 rewardVBox.getChildren().add(createRewardPane(0, tag.getTagBenefit(), 25,true));

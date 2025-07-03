@@ -1,8 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Card;
-import com.example.balatro.classes.Tarot;
+import com.example.balatro.classes.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -46,13 +45,13 @@ public class CardViewController {
     private final StringProperty cardType = new SimpleStringProperty("");
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
     private final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
+    private Map<CardViewController, AnchorPane> inMap;
     //endregion
 
     //region const Strings
     private final String buyAndUse = "Buy\n& Use";
     private final String sell = "Sell $%d";
     //endregion
-
 
     //region Getter Setter
     public Card getCard() {
@@ -63,20 +62,12 @@ public class CardViewController {
         return card;
     }
 
-    public void setCard(Card card) {
-        this.card.set(card);
-    }
-
     public boolean isInShop() {
         return inShop.get();
     }
 
     public BooleanProperty inShopProperty() {
         return inShop;
-    }
-
-    public void setInShop(boolean inShop) {
-        this.inShop.set(inShop);
     }
 
     public String getCardType() {
@@ -87,20 +78,12 @@ public class CardViewController {
         return cardType;
     }
 
-    public void setCardType(String cardType) {
-        this.cardType.set(cardType);
-    }
-
     public boolean isSelected() {
         return selected.get();
     }
 
     public BooleanProperty selectedProperty() {
         return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        selectedProperty().set(selected);
     }
 
     public int getBuyPrice() {
@@ -111,54 +94,109 @@ public class CardViewController {
         return buyPrice;
     }
 
+    public String getBuyAndUse() {
+        return buyAndUse;
+    }
+
+    public String getSell() {
+        return sell;
+    }
+
+    public Map<CardViewController, AnchorPane> getInMap() {
+        return inMap;
+    }
+
+    public void setInMap(Map<CardViewController, AnchorPane> inMap) {
+        this.inMap = inMap;
+    }
+
     //endregion
 
     public void initialize() {
+        //TODO Booster Drawn Attribute label visibility anpassen
+        bindVisibility();
+        bindDisabled();
+
+        buyLabel.setOnMouseClicked(event -> {
+            System.out.println("BuyLabel clicked");
+            GameController.getInstance().buyItem(card_AnchorPane,this);
+        });
+
+        buyUseSell_AnchorPane.setOnMouseClicked(event -> {
+            System.out.println("BuyUseSell clicked");
+            if(isInShop())
+                GameController.getInstance().buyAndUse(this);
+            else
+                GameController.getInstance().sellItem(card_AnchorPane, this, getInMap());
+        });
+
+        use_AnchorPane.setOnMouseClicked(event -> {
+            System.out.println("use_clicked");
+            GameController.getInstance().useItem(card_AnchorPane,this);
+        });
+
+        selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(card.get() instanceof Tarot)
+                System.out.println(((Tarot)card.get()).canPlay(Balatro.getGameModel()));
+        });
+    }
+
+    //Funktionen
+    private void bindDisabled() {
+        buy_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
+                Balatro.getGameModel().getRunState().getMoney() < buyPrice.get(), Balatro.getGameModel().getRunState().moneyProperty(), buyPriceProperty()));
+
+        buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                    boolean cannotPlay = !(getCard() instanceof Tarot tarot && tarot.canPlay(Balatro.getGameModel()));
+                    if (isInShop())
+                        return Balatro.getGameModel().getRunState().getMoney() < buyPrice.get() || cannotPlay;
+                    else return false;
+                },
+                selectedProperty(),               // falls Auswahl wechselt
+                cardProperty(),                   // falls Karte sich ändert
+                buyPriceProperty(),              // Preisänderung
+                Balatro.getGameModel().getRunState().moneyProperty(),  // Geld
+                Balatro.getGameModel().getSelectedCards(),             // Auswahlkarten
+                Balatro.getGameModel().getActiveJokerMap(),            // Joker (für bestimmte Tarot-Effekte)
+                Balatro.getGameModel().getConsumableMap()              // Consumables (z. B. The Fool)
+        ));
+
+        use_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+                    if (getCard() instanceof Tarot) return !((Tarot) getCard()).canPlay(Balatro.getGameModel());
+                    return true;
+                },
+                selectedProperty(),               // falls Auswahl wechselt
+                cardProperty(),                   // falls Karte sich ändert
+                buyPriceProperty(),              // Preisänderung
+                Balatro.getGameModel().getRunState().moneyProperty(),  // Geld
+                Balatro.getGameModel().getSelectedCards(),             // Auswahlkarten
+                Balatro.getGameModel().getActiveJokerMap(),            // Joker (für bestimmte Tarot-Effekte)
+                Balatro.getGameModel().getConsumableMap()              // Consumables (z. B. The Fool)
+        ));
+    }
+
+    private void bindVisibility() {
         price_AnchorPane.visibleProperty().bind(inShopProperty());
+
+        buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                        isSelected() && ((isTarot() || isPlanet()) || (!isInShop() && isJoker())), selectedProperty())
+        );
+
+        use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                        isSelected() && (isTarot() || isPlanet()) && !isInShop(),
+                selectedProperty(), cardTypeProperty(), cardTypeProperty(), inShopProperty()
+        ));
+        use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
 
         buy_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
                         isSelected() && isInShop(),
                 selectedProperty(), inShopProperty()
         ));
-
-        buy_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
-                Balatro.getGameModel().getRunState().getMoney() < buyPrice.get(),Balatro.getGameModel().getRunState().moneyProperty(),buyPriceProperty()));
-
-        buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected()
-                                && ((getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet"))
-                                || (!isInShop() && getCard().getCardType().equals("Joker"))),
-                selectedProperty(), cardTypeProperty(), cardTypeProperty()
-        ));
-
-        buyUseSell_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-            if(isInShop()) {
-                return Balatro.getGameModel().getRunState().getMoney() < buyPrice.get();
-            }
-            else if(getCard() instanceof Tarot) return !((Tarot) getCard()).canPlay(Balatro.getGameModel());
-
-            return true;
-
-        },Balatro.getGameModel().getRunState().moneyProperty(),
-                buyPriceProperty()));
-
-
-        use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && (getCard().getCardType().equals("Tarot") || getCard().getCardType().equals("Planet")) && !isInShop(),
-                selectedProperty(),cardTypeProperty(),cardTypeProperty(),inShopProperty()
-        ));
-
-        use_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
-            if(getCard() instanceof Tarot) return !((Tarot) getCard()).canPlay(Balatro.getGameModel());
-            return true;
-        }  ));
-
-        use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
     }
 
-    public void setData(Card card) {
+    public void initializeCardData(Card card) {
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
-        this.card.set(card);
+        this.card.setValue(card);
 
         if (card.getCardImageUrl() != null) {
             cardImage.setImage(card.getImage());
@@ -169,20 +207,24 @@ public class CardViewController {
                 card.maxCostProperty(),
                 Balatro.getGameModel().getShopModel().shopPricesProperty()));
 
-        buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() -> {
-                    if (isInShop()) {
-                        return buyAndUse;
-                    } else {
-                        return String.format(sell, Math.max(Math.round(card.getSellValue()),1));
-                    }
-                }, inShopProperty(), card.cardTypeProperty()));
+        buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() ->
+                isInShop() ? buyAndUse : String.format(sell, Math.max(Math.round(card.getSellValue()),1)),
+        inShopProperty(), card.sellValueProperty()));
 
         priceLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 "$ " + buyPrice.get(), buyPriceProperty()));
+    }
 
-        System.out.println("Card Cost: " + card.getCardCost());
-        System.out.println("Card max. Cost: " + card.getMaxCost());
-        System.out.println("Buy Price: " + card.getBuyPrice());
+    private boolean isJoker() {
+        return "Joker".equals(getCard().getCardType());
+    }
+
+    private boolean isTarot() {
+        return "Tarot".equals(getCard().getCardType());
+    }
+
+    private boolean isPlanet() {
+        return "Planet".equals(getCard().getCardType());
     }
 
     public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map) {
@@ -196,8 +238,10 @@ public class CardViewController {
             CardViewController controller = loader.getController();
 
             cardPane.getStyleClass().add("card");
-            controller.setData(card);
-            controller.setInShop(inShop);
+            controller.setInMap(map);
+            controller.initializeCardData(card);
+            controller.inShopProperty().set(inShop);
+
             map.put(controller,cardPane);
         } catch (IOException e) {
             e.printStackTrace();
@@ -205,17 +249,22 @@ public class CardViewController {
     }
 
     public static CardViewController getCardViewController(Map<CardViewController,AnchorPane> map, AnchorPane pane) {
-        return map.keySet()
-                .stream()
-                .filter(cardViewController ->
-                    map.get(cardViewController) == pane
-                )
-                .findFirst().get();
+        return map.entrySet().stream()
+                .filter(e -> e.getValue().equals(pane))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No CardViewController found"));
     }
 
     public static AnchorPane getCardAnchorPane(Map<CardViewController,AnchorPane> map, Card card) {
-        CardViewController controller = map.keySet().stream().filter( cardViewController -> cardViewController.getCard() == card).findFirst().get();
-        return map.get(controller);
+        return map.entrySet().stream()
+                .filter( e -> e.getKey().getCard().equals(card))
+                .findFirst()
+                .map(Map.Entry::getValue)
+                .orElseGet(() -> {
+                    System.out.println("Card not found in map: " + card.getCardName());
+                    return null;
+                });
     }
 
 }

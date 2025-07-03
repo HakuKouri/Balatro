@@ -17,7 +17,7 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
 
     @Override
     public boolean canPlay(GameModel model) {
-        return false;
+        return effect != null && effect.canPlay(model);
     }
 
     private final StringProperty tarotDescription = new SimpleStringProperty("");
@@ -52,8 +52,6 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
         setEffect(tarot.getEffect());
     }
 
-
-
     public void play(GameModel model) {
         System.out.println("Playing tarot");
         if(effect != null) {
@@ -61,8 +59,5 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
             effect.apply(model);
         }
     }
-
-
-
     //endregion
 }

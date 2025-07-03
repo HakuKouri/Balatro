@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.classes.PlayingCard;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.models.GameModel;
 import javafx.animation.*;
@@ -9,7 +10,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -200,10 +203,10 @@ public class UIController {
                     double dy = Math.abs(e.getScreenY() - pressY[0]);
 
                     // (5a) Click (kleine Bewegung)
-                    if (dx < 5 && dy < 5) {
+                    if (dx < 100 && dy < 100) {
                         for(CardViewController cardViewController : map.keySet())
-                            if(cardViewController != controller) cardViewController.setSelected(false);
-                        controller.setSelected(!controller.isSelected());
+                            if(cardViewController != controller) cardViewController.selectedProperty().set(false);
+                        controller.selectedProperty().set(!controller.isSelected());
                         anchorPane.toFront();
                         return;
                     }
@@ -225,6 +228,20 @@ public class UIController {
             }
 
             // (8) Immer Layout aktualisieren
+            moveCards(stackPane);
+        });
+    }
+
+    public static void bindStackPane(ObservableList<PlayingCard> playingCardsList, StackPane stackPane) {
+        playingCardsList.addListener((ListChangeListener<? super PlayingCard>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    stackPane.getChildren().addAll(change.getAddedSubList());
+                }
+                if(change.wasRemoved()) {
+                    stackPane.getChildren().removeAll(change.getRemoved());
+                }
+            }
             moveCards(stackPane);
         });
     }

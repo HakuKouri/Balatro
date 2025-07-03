@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.LinkedHashMap;
+
 public class ShopModel {
 
     //region VARIABLES
@@ -18,9 +20,9 @@ public class ShopModel {
     private final IntegerProperty rerollPrice  = new SimpleIntegerProperty(5);
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
-    private ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableHashMap();
-    private ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableHashMap();
-    private ObservableMap<CardViewController, AnchorPane> voucherMap = FXCollections.observableHashMap();
+    private final ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableMap(new LinkedHashMap<>());
+    private final ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableMap(new LinkedHashMap<>());
+    private final ObservableMap<CardViewController, AnchorPane> voucherMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region CONSTRUCTOR
@@ -72,25 +74,14 @@ public class ShopModel {
         return itemMap;
     }
 
-    public void setItemMap(ObservableMap<CardViewController, AnchorPane> itemMap) {
-        this.itemMap = itemMap;
-    }
-
     public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
         return boosterMap;
-    }
-
-    public void setBoosterMap(ObservableMap<CardViewController, AnchorPane> boosterMap) {
-        this.boosterMap = boosterMap;
     }
 
     public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
         return voucherMap;
     }
 
-    public void setVoucherMap(ObservableMap<CardViewController, AnchorPane> voucherMap) {
-        this.voucherMap = voucherMap;
-    }
 
     //endregion
 }

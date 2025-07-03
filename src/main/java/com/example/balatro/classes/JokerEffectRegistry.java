@@ -940,33 +940,17 @@ public class JokerEffectRegistry {
     }
 
     private static Suit getSuit(String suitString) {
-        switch (suitString) {
-            case "HEARTS": return Suit.HEARTS;
-            case "SPADES": return Suit.SPADES;
-            case "CLUBS": return Suit.CLUBS;
-            case "DIAMONDS": return Suit.DIAMONDS;
-        }
-        return Suit.NO_SUIT;
+        return switch (suitString) {
+            case "HEARTS" -> Suit.HEARTS;
+            case "SPADES" -> Suit.SPADES;
+            case "CLUBS" -> Suit.CLUBS;
+            case "DIAMONDS" -> Suit.DIAMONDS;
+            default -> Suit.NO_SUIT;
+        };
     }
 
     public static JokerEffect getEffect(String effectKey) {
         return effectMap.get(effectKey);
-    }
-
-    private static void createCardNode(Card card, ObservableMap<AnchorPane, CardViewController> map) {
-        try {
-            FXMLLoader loader = new FXMLLoader(JokerEffectRegistry.class.getResource("/com/example/balatro/card.fxml"));
-            AnchorPane cardPane = loader.load();
-
-            CardViewController controller = loader.getController();
-            controller.setData(card);
-            controller.setInShop(true);
-
-            map.put(cardPane,controller);
-        } catch (IOException e) {
-            e.printStackTrace();
-            //return new Label("Error loading card");
-        }
     }
 
     private static int getIntegerFromParam(String param) {

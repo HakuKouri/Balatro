@@ -18,7 +18,7 @@ public enum TarotEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableMap().size() < model.getRunState().getMaxConsumables();
+            return model.getConsumableMap().size() < model.getRunState().getMaxConsumables() && model.getLastConsumableUsed() != null;
         }
     },
 
@@ -75,7 +75,7 @@ public enum TarotEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getActiveJokerMap().size() < model.getRunState().getMaxJokers();
+            return model.getConsumableMap().size() <= model.getRunState().getMaxConsumables();
         }
 
     },

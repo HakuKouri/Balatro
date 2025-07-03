@@ -94,11 +94,14 @@ public class GameModel {
 
     //region Collected Consumables
     private final ObservableList<Card> consumableList = FXCollections.observableArrayList();
-    private ObservableMap<CardViewController, AnchorPane> consumableMap = FXCollections.observableHashMap();
+    private final ObservableMap<CardViewController, AnchorPane> consumableMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
+    //region Booster Map
+    private final ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableMap(new LinkedHashMap<>());
+
     //region RUN INFO VAR
-    private final Card lastConsumableUsed = new Card();
+    private final Card lastConsumableUsed = null;
     //endregion
 
     //region Background Run Variables
@@ -110,7 +113,8 @@ public class GameModel {
     private final BooleanProperty blindsVisibility = new SimpleBooleanProperty(true);
     private final BooleanProperty shopVisibility = new SimpleBooleanProperty(true);
     private final BooleanProperty rewardVisibility = new SimpleBooleanProperty(true);
-    private final BooleanProperty handButtonVisibility = new SimpleBooleanProperty(false);
+    private final BooleanProperty handButtonVisibility = new SimpleBooleanProperty(true);
+    private final BooleanProperty boosterOpeningVisibility = new SimpleBooleanProperty(true);
     //endregion
 
     //region POINTS VAR
@@ -404,10 +408,13 @@ public class GameModel {
     public ObservableMap<CardViewController, AnchorPane> getConsumableMap() {
         return consumableMap;
     }
+    //endregion
 
-    public void setConsumableMap(ObservableMap<CardViewController, AnchorPane> consumableMap) {
-        this.consumableMap = consumableMap;
+    //region Booster Map
+    public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
+        return boosterMap;
     }
+
     //endregion
 
     //region Background Run Variables
@@ -495,6 +502,18 @@ public class GameModel {
 
     public void setHandButtonVisibility(Boolean value) {
         handButtonVisibility.set(value);
+    }
+
+    public boolean isBoosterOpeningVisibility() {
+        return boosterOpeningVisibility.get();
+    }
+
+    public BooleanProperty boosterOpeningVisibilityProperty() {
+        return boosterOpeningVisibility;
+    }
+
+    public void setBoosterOpeningVisibility(Boolean value) {
+        boosterOpeningVisibility.set(value);
     }
 
     //endregion

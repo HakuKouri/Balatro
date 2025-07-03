@@ -27,10 +27,7 @@ public class Spectral extends Card implements PurchasableCard {
 
         setFitHeight(Balatro.getSettings().getCardHeight());
         setPreserveRatio(true);
-
     }
-
-
     //endregion
 
 
@@ -70,17 +67,15 @@ public class Spectral extends Card implements PurchasableCard {
     public void setSpectralEffect(String spectralEffect) {
         this.spectralEffect.set(spectralEffect);
     }
-
     //endregion
 
     //region Functions
     public void setSpectral(Spectral spectral) {
-        this.setCardId(spectral.getCardId());
-        this.setSpectralName(spectral.getSpectralName());
-        this.setSpectralImageUrl(spectral.getSpectralImageUrl());
+        setCardId(spectral.getCardId());
+        setCardName(spectral.getCardName());
+        setCardImageUrl(spectral.getCardImageUrl());
         setCardType(spectral.getCardType());
-        this.setSpectralEffect(spectral.getSpectralEffect());
-
+        setCardDescription(spectral.getCardDescription());
     }
     //endregion
 }
