@@ -1,8 +1,7 @@
 package com.example.balatro.enums;
 
-import com.example.balatro.classes.Joker;
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.Suit;
+import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.models.GameModel;
 
@@ -182,7 +181,7 @@ public enum TarotEffect {
         public void apply(GameModel model) {
             if (model.getSelectedCards().size() < 3 && !model.getSelectedCards().isEmpty())
                 for (PlayingCard card : model.getSelectedCards()) {
-                    model.getRunState().removeCardFromDeckFull(card);
+                    model.getRunState().getPlayingDeck().removeCard(card);
                     //TODO REMOVE CARDS FROM HOLDING ODER PLAYED
                 }
         }

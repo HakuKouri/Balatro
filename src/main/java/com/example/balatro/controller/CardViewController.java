@@ -1,7 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.*;
+import com.example.balatro.domain.card.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class CardViewController {
     private AnchorPane card_AnchorPane;
     @FXML
     private ImageView cardImage;
+    @FXML
+    private StackPane image_StackPane;
     //endregion
 
     //region Properties
@@ -116,7 +119,27 @@ public class CardViewController {
         //TODO Booster Drawn Attribute label visibility anpassen
         bindVisibility();
         bindDisabled();
+        bindMouseClickEvent();
+        bindText();
 
+        cardImage.imageProperty().bind(getCard().imageProperty());
+
+        card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
+
+
+        selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(card.get() instanceof Tarot)
+                System.out.println(((Tarot)card.get()).canPlay(Balatro.getGameModel()));
+        });
+
+        buyPrice.bind(Bindings.createIntegerBinding(() ->
+                        Math.max((int) Math.round(getCard().getMaxCost() * Balatro.getGameModel().getShopModel().getShopPrices()),1) ,
+                getCard().maxCostProperty(),
+                Balatro.getGameModel().getShopModel().shopPricesProperty()));
+    }
+
+    //Funktionen
+    private void bindMouseClickEvent() {
         buyLabel.setOnMouseClicked(event -> {
             System.out.println("BuyLabel clicked");
             GameController.getInstance().buyItem(card_AnchorPane,this);
@@ -134,14 +157,8 @@ public class CardViewController {
             System.out.println("use_clicked");
             GameController.getInstance().useItem(card_AnchorPane,this);
         });
-
-        selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(card.get() instanceof Tarot)
-                System.out.println(((Tarot)card.get()).canPlay(Balatro.getGameModel()));
-        });
     }
 
-    //Funktionen
     private void bindDisabled() {
         buy_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() ->
                 Balatro.getGameModel().getRunState().getMoney() < buyPrice.get(), Balatro.getGameModel().getRunState().moneyProperty(), buyPriceProperty()));
@@ -194,25 +211,30 @@ public class CardViewController {
         ));
     }
 
-    public void initializeCardData(Card card) {
-        card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
-        this.card.setValue(card);
-
-        if (card.getCardImageUrl() != null) {
-            cardImage.setImage(card.getImage());
-        }
-
-        buyPrice.bind(Bindings.createIntegerBinding(() ->
-                        Math.max((int) Math.round(card.getMaxCost() * Balatro.getGameModel().getShopModel().getShopPrices()),1) ,
-                card.maxCostProperty(),
-                Balatro.getGameModel().getShopModel().shopPricesProperty()));
-
+    private void bindText() {
         buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() ->
-                isInShop() ? buyAndUse : String.format(sell, Math.max(Math.round(card.getSellValue()),1)),
-        inShopProperty(), card.sellValueProperty()));
+                        isInShop() ? buyAndUse : String.format(sell, Math.max(Math.round(getCard().getSellValue()),1)),
+                inShopProperty(), getCard().sellValueProperty()));
 
         priceLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 "$ " + buyPrice.get(), buyPriceProperty()));
+    }
+
+    public void initializeCardData(Card card) {
+        while(image_StackPane.getChildren().size() > 1)
+            image_StackPane.getChildren().remove(image_StackPane.getChildren().getLast());
+
+        getCard().setCard(card);
+
+        if(card instanceof Joker) {
+            for(Sticker sticker : ((Joker) card).getStickers()) {
+                image_StackPane.getChildren().add(sticker);
+            }
+        }
+        if(card instanceof PlayingCard) {
+            if(((PlayingCard) card).getSeal().getSealId() > 0)
+                image_StackPane.getChildren().add(((PlayingCard) card).getSeal());
+        }
     }
 
     private boolean isJoker() {

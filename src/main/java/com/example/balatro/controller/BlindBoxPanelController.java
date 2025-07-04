@@ -1,8 +1,8 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Blind;
-import com.example.balatro.classes.Tag;
+import com.example.balatro.domain.rules.Blind;
+import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 public class BlindBoxPanelController {

@@ -453,7 +453,7 @@
                   <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <ImageView fx:id="deckCover_ImageView" fitHeight="250.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
                         <styleClass>
-                           <String fx:value="deck" />
+                           <String fx:value="selectableDeck" />
                            <String fx:value="spot" />
                         </styleClass>
                      </ImageView>

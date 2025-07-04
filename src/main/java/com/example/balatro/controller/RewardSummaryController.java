@@ -1,10 +1,10 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Blind;
-import com.example.balatro.classes.Joker;
-import com.example.balatro.classes.Planet;
-import com.example.balatro.classes.Tag;
+import com.example.balatro.domain.rules.Blind;
+import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.Planet;
+import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.RewardModel;
 import javafx.beans.binding.Bindings;
@@ -115,7 +115,7 @@ public class RewardSummaryController {
         List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).toList();
         if(!cloud9List.isEmpty()) {
             for(Joker joker : cloud9List) {
-                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getRunState().getDeckFull().stream().filter(x -> x.getValue() == 9).count(), false));
+                rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getRunState().getPlayingDeck().getFullDeck().stream().filter(x -> x.getValue() == 9).count(), false));
             }
         }
 

@@ -1,14 +1,13 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.models.GameModel;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;

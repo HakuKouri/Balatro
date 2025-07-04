@@ -1,7 +1,7 @@
 package com.example.balatro.interfaces;
 
-import com.example.balatro.classes.Joker;
-import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.models.GameModel;
 
 import java.util.List;

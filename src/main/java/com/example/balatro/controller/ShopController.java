@@ -1,7 +1,8 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.*;
+import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.util.CardGenerator;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.VoucherState;
 import javafx.beans.property.IntegerProperty;

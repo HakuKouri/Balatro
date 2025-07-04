@@ -1,7 +1,12 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.*;
+import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.game.GameSetup;
+import com.example.balatro.domain.rewards.Tag;
+import com.example.balatro.domain.rewards.VoucherHandler;
+import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
@@ -22,7 +27,6 @@ import javafx.scene.layout.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameController
 {
@@ -209,7 +213,7 @@ public class GameController
             for (AnchorPane pane : gameModel.getActiveJokerMap().values()) {
                 CardViewController controller = gameModel.getActiveJokerMap().keySet()
                         .stream()
-                        .filter(cardViewController -> gameModel.getActiveJokerMap().get(cardViewController) == pane).collect(Collectors.toList()).get(0);
+                        .filter(cardViewController -> gameModel.getActiveJokerMap().get(cardViewController) == pane).toList().getFirst();
                 System.out.println("Card instance: " + (controller.getCard() instanceof Joker));
                 pane.setOnMouseClicked(mouseEvent -> {
                     System.out.println(controller.getCard());
@@ -224,14 +228,14 @@ public class GameController
         //JOKER 15
         testButton.setOnAction(event -> {
             for (int i = 0; i < gameModel.getAllJokerList().size() && i < 6; i++) {
-                CardViewController.createCardNode(gameModel.getAllJokerList().get(i), gameModel.getActiveJokerMap());
-
+                Joker joker = gameModel.getAllJokerList().get(i);
+                joker.addSticker(gameModel.getStickerList().get(10));
+                CardViewController.createCardNode(joker, gameModel.getActiveJokerMap());
             }
             for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());
                 triggerJokers(JokerTrigger.ON_BUY,new ArrayList<>());
             }
-
         });
     }
 
@@ -306,7 +310,7 @@ public class GameController
 
         //region Card count Labels Bind
         cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getCurrentRound().getDeckToPlay().size() + "/" + gameModel.getRunState().getDeckFull().size(), gameModel.getCurrentRound().getDeckToPlay()
+                gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().playingDeckProperty(), gameModel.getRunState().getPlayingDeck().getFullDeck()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 gameModel.getActiveJokerObList().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerObList()
@@ -319,13 +323,17 @@ public class GameController
 
     //SETTING UP GAME
     private void setPlayingDeck() {
+        List<PlayingCard> cards = new ArrayList<>();
         for(int i = 0; i < 4; i++ ){
             for(int j = 0; j < 13; j++){
-                gameModel.getRunState().getDeckFull().add(new PlayingCard(j,i));
+                PlayingCard card = new PlayingCard(j,i);
+                card.setSeal(gameModel.getAllSealList().get(0));
+                System.out.println(card.getSeal().getSealName());
+                cards.add(card);
+
             }
         }
-        gameModel.getCurrentRound().getDeckToPlay().setAll(gameModel.getRunState().getDeckFull());
-        Collections.shuffle(gameModel.getCurrentRound().getDeckToPlay(), new Random());
+        gameModel.getRunState().getPlayingDeck().setFullDeck(cards);
     }
 
 
@@ -373,6 +381,7 @@ public class GameController
     public void startRound(BigDecimal score) {
         gameModel.setScoreToReach(score);
         gameModel.blindsVisibilityProperty().set(false);
+        gameModel.getRunState().getPlayingDeck().shuffleDeck();
         holdingHandController.drawCardToLimit();
     }
 
@@ -445,14 +454,16 @@ public class GameController
         else if(cardViewController.getCard().getCardType().equals("Planet")) {
             playPlanet(cardViewController, map);
         }
-        else if(cardViewController.getCard().getCardType().equals("Spectral")) {}
+        else if(cardViewController.getCard().getCardType().equals("Spectral")) {
+            System.out.println("Spectral Card");
+        }
     }
 
     public void playPlanet(CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
         gameModel.setShopVisibility(false);
         Planet planet = (Planet) cardViewController.getCard();
 
-        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).findFirst().get();
+        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).toList().getFirst();
 
         gameModel.getBestHand().setHand(hand);
 
@@ -502,11 +513,6 @@ public class GameController
         for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
-    }
-
-    public void shuffleDeck() {
-        gameModel.getCurrentRound().getDeckToPlay().setAll(gameModel.getRunState().getDeckFull());
-        Collections.shuffle(gameModel.getCurrentRound().getDeckToPlay(), new Random());
     }
 
     public void useItem(AnchorPane cardAnchorPane, CardViewController cardViewController) {

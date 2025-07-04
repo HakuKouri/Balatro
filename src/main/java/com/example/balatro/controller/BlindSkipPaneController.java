@@ -1,6 +1,6 @@
 package com.example.balatro.controller;
 
-import com.example.balatro.classes.Tag;
+import com.example.balatro.domain.rewards.Tag;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;

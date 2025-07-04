@@ -1,6 +1,10 @@
 package com.example.balatro.models;
 
-import com.example.balatro.classes.*;
+import com.example.balatro.domain.card.Voucher;
+import com.example.balatro.domain.deck.PlayingDeck;
+import com.example.balatro.domain.deck.SelectableDeck;
+import com.example.balatro.domain.rules.Blind;
+import com.example.balatro.domain.rules.Stake;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,11 +17,12 @@ import java.util.List;
 
 public class RunState {
     //region VARIABLES
-    private final ObjectProperty<Deck> chosenDeck = new SimpleObjectProperty<>(new Deck());
+    private final ObjectProperty<SelectableDeck> chosenDeck = new SimpleObjectProperty<>(new SelectableDeck());
     private final ObjectProperty<Stake> chosenStake = new SimpleObjectProperty<>(new Stake());
 
-    private final ObservableList<PlayingCard> deckFull = FXCollections.observableArrayList();
     private final ObservableList<Blind> bossBlindsBeaten = FXCollections.observableArrayList();
+
+    private final ObjectProperty<PlayingDeck>  playingDeck = new SimpleObjectProperty<>(new PlayingDeck());
 
     private final List<Voucher> broughtVoucher = new ArrayList<>();
     private final IntegerProperty maxHandSize = new SimpleIntegerProperty(8);
@@ -39,16 +44,16 @@ public class RunState {
     //endregion
 
     //region GETTER SETTER
-    public Deck getChosenDeck() {
+    public SelectableDeck getChosenDeck() {
         return chosenDeck.get();
     }
 
-    public ObjectProperty<Deck> chosenDeckProperty() {
+    public ObjectProperty<SelectableDeck> chosenDeckProperty() {
         return chosenDeck;
     }
 
-    public void setChosenDeck(Deck chosenDeck) {
-        this.chosenDeck.get().setDeck(chosenDeck);
+    public void setChosenDeck(SelectableDeck chosenSelectableDeck) {
+        this.chosenDeck.get().setDeck(chosenSelectableDeck);
     }
 
     //Chosen Stake
@@ -60,21 +65,12 @@ public class RunState {
         return chosenStake;
     }
 
-    public ObservableList<PlayingCard> getDeckFull() {
-        return deckFull;
+    public PlayingDeck getPlayingDeck() {
+        return playingDeck.get();
     }
 
-    public void setDeckFull(List<PlayingCard> deck) {
-        deckFull.clear();
-        deckFull.addAll(deck);
-    }
-
-    public void addCardToDeckFull(PlayingCard card) {
-        deckFull.add(card);
-    }
-
-    public void removeCardFromDeckFull(PlayingCard card) {
-        deckFull.remove(card);
+    public ObjectProperty<PlayingDeck> playingDeckProperty() {
+        return playingDeck;
     }
 
     public ObservableList<Blind> getBossBlindsBeaten() {

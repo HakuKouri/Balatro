@@ -74,7 +74,7 @@
             </VBox>
          </children>
       </AnchorPane>
-        <StackPane>
+        <StackPane fx:id="image_StackPane">
             <ImageView fx:id="cardImage" fitHeight="219.0" fitWidth="165.0" StackPane.alignment="CENTER" />
         </StackPane>
     </StackPane>

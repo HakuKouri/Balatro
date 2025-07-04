@@ -1,10 +1,10 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Deck;
-import com.example.balatro.classes.GameSetup;
-import com.example.balatro.classes.SqlHandler;
-import com.example.balatro.classes.Stake;
+import com.example.balatro.domain.deck.SelectableDeck;
+import com.example.balatro.domain.game.GameSetup;
+import com.example.balatro.data.SqlHandler;
+import com.example.balatro.domain.rules.Stake;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,27 +59,27 @@ public class NewGameMenuController
 
     private final ObjectProperty<Image> deckImage = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Deck> activeDeck = new SimpleObjectProperty<>();
-    private List<Deck> deckList;
+    private final ObjectProperty<SelectableDeck> activeDeck = new SimpleObjectProperty<>();
+    private List<SelectableDeck> selectableDeckList;
     private List<Stake> stakeList;
     private final IntegerProperty activeDeckIndex = new SimpleIntegerProperty(0);
     private final IntegerProperty activeStakeIndex = new SimpleIntegerProperty(0);
 
     //SET FIRST DECK AND FIRST STAKE IN SELECTION
     public void initialize() {
-        deckList = SqlHandler.getAllDecks();
+        selectableDeckList = SqlHandler.getAllDecks();
         stakeList = SqlHandler.getAllStakes();
 
         gridMenu.maxWidthProperty().bind(heightProperty());
         gridMenu.maxHeightProperty().bind(heightProperty());
 
         activeDeckIndex.addListener((observable, oldValue, newValue) -> {
-            activeDeck.set(deckList.get(activeDeckIndex.get()));
+            activeDeck.set(selectableDeckList.get(activeDeckIndex.get()));
         });
 
         heightProperty().set(Balatro.getSettings().getWindowHeight() * 0.88);
 
-        activeStakeIndex.set(deckList.get(activeDeckIndex.get()).getStageCleared());
+        activeStakeIndex.set(selectableDeckList.get(activeDeckIndex.get()).getStageCleared());
 
     }
 
@@ -163,13 +163,13 @@ public class NewGameMenuController
         if(up) activeDeckIndex.set(getActiveDeckIndex() + 1);
         else activeDeckIndex.set(getActiveDeckIndex() - 1);
 
-        if(getActiveDeckIndex() >= deckList.size()) {
+        if(getActiveDeckIndex() >= selectableDeckList.size()) {
             activeDeckIndex.set(0);
         } else if(getActiveDeckIndex() < 0) {
-            activeDeckIndex.set(deckList.size()-1);
+            activeDeckIndex.set(selectableDeckList.size()-1);
         }
 
-        activeStakeIndex.set(deckList.get(getActiveDeckIndex()).getStageCleared());
+        activeStakeIndex.set(selectableDeckList.get(getActiveDeckIndex()).getStageCleared());
         setDeck();
     }
 
@@ -177,10 +177,10 @@ public class NewGameMenuController
         if(up) activeStakeIndex.set(getActiveStakeIndex() + 1);
         else activeStakeIndex.set(getActiveStakeIndex() - 1);
 
-        if(getActiveStakeIndex() > deckList.get(getActiveDeckIndex()).getStageCleared()) {
+        if(getActiveStakeIndex() > selectableDeckList.get(getActiveDeckIndex()).getStageCleared()) {
             activeStakeIndex.set(0);
         } else if(getActiveStakeIndex() < 0) {
-            activeStakeIndex.set(deckList.get(getActiveDeckIndex()).getStageCleared());
+            activeStakeIndex.set(selectableDeckList.get(getActiveDeckIndex()).getStageCleared());
         }
 
         setStake();
@@ -190,18 +190,18 @@ public class NewGameMenuController
     //UI FUNCTIONS
     //DECK
     private void setDeckName() {
-        labelDeckName.setText(deckList.get(getActiveDeckIndex()).getDeckName());
+        labelDeckName.setText(selectableDeckList.get(getActiveDeckIndex()).getDeckName());
     }
 
     private void loadDeckImage() {
-        ImageView deckCover = new ImageView(new Image("file:"+deckList.get(getActiveDeckIndex()).getDeckCoverUrl()));
+        ImageView deckCover = new ImageView(new Image("file:"+ selectableDeckList.get(getActiveDeckIndex()).getDeckCoverUrl()));
         double deckImageHeight = Balatro.getSettings().getWindowHeight() * 0.2;
 
         deckCover.setFitHeight(deckImageHeight);
         deckCover.setPreserveRatio(true);
 
         stackPaneDeck.getChildren().add(deckCover);
-        if(deckList.get(getActiveDeckIndex()).getStageCleared() > 0) {
+        if(selectableDeckList.get(getActiveDeckIndex()).getStageCleared() > 0) {
             ImageView stakeChip = new ImageView(new Image("file:"+ stakeList.get(getActiveStakeIndex()).getStakeImageStickerUrl()));
             stakeChip.setFitHeight(deckImageHeight);
             stakeChip.setPreserveRatio(true);
@@ -210,12 +210,12 @@ public class NewGameMenuController
     }
 
     private void setDeckDescription() {
-        labelDeckEffect.setText(deckList.get(getActiveDeckIndex()).getDeckDescription());
+        labelDeckEffect.setText(selectableDeckList.get(getActiveDeckIndex()).getDeckDescription());
     }
 
     private void changeAvailableStakeLevel() {
         for(int i = 0; i < 7; i++) {
-            if(i <= deckList.get(getActiveDeckIndex()).getStageCleared())
+            if(i <= selectableDeckList.get(getActiveDeckIndex()).getStageCleared())
                 ((Rectangle)boxStakeLevel.getChildren().get(7-i)).setWidth(20);
             else
                 ((Rectangle)boxStakeLevel.getChildren().get(7-i)).setWidth(10);
@@ -272,7 +272,7 @@ public class NewGameMenuController
 
     public void startNewGame(ActionEvent actionEvent) {
         GameSetup gameSetup = new GameSetup();
-        gameSetup.setChosenDeck(deckList.get(getActiveDeckIndex()));
+        gameSetup.setChosenDeck(selectableDeckList.get(getActiveDeckIndex()));
         gameSetup.setChosenStake(stakeList.get(getActiveStakeIndex()));
 
         try {

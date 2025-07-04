@@ -18,4 +18,15 @@ module com.example.balatro {
 
     opens com.example.balatro to javafx.fxml;
     opens com.example.balatro.controller to javafx.fxml;
+    exports com.example.balatro.enums;
+    exports com.example.balatro.domain.card;
+    exports com.example.balatro.domain.deck;
+    exports com.example.balatro.domain.game;
+    exports com.example.balatro.domain.effects;
+    exports com.example.balatro.domain.util;
+    exports com.example.balatro.domain.rules;
+    exports com.example.balatro.data;
+    exports com.example.balatro.data.web;
+    exports com.example.balatro.domain.rewards;
+    exports com.example.balatro.models.settings;
 }

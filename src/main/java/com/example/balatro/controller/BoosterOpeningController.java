@@ -1,10 +1,10 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Booster;
-import com.example.balatro.classes.Card;
-import com.example.balatro.classes.CardGenerator;
-import com.example.balatro.classes.PlayingCard;
+import com.example.balatro.domain.card.Booster;
+import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.util.CardGenerator;
+import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -112,12 +112,12 @@ public class BoosterOpeningController {
 
         Set<Integer> generated = new LinkedHashSet<>();
         while (generated.size() < gameModel.getRunState().getMaxHandSize()) {
-            generated.add(gameModel.getRand().nextInt(gameModel.getRunState().getDeckFull().size()));
+            generated.add(gameModel.getRand().nextInt(gameModel.getRunState().getPlayingDeck().getFullSize()));
         }
 
         for(int index : generated) {
             //TODO choose Playing Cards (not clickable)
-            PlayingCard playingCard = gameModel.getRunState().getDeckFull().get(index);
+            PlayingCard playingCard = gameModel.getRunState().getPlayingDeck().getFullDeck().get(index);
             playingCard.setClickAble(true);
             playingCardsDrawn.add(playingCard);
         }

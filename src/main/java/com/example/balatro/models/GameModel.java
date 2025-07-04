@@ -1,7 +1,11 @@
 package com.example.balatro.models;
 
-import com.example.balatro.classes.*;
 import com.example.balatro.controller.CardViewController;
+import com.example.balatro.data.SqlHandler;
+import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.rewards.Tag;
+import com.example.balatro.domain.rules.Blind;
+import com.example.balatro.domain.rules.PokerHand;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +31,7 @@ public class GameModel {
     private final List<Edition> allEditionList = SqlHandler.getAllEditions();
     private final List<Enhancement> allEnhancementList = SqlHandler.getAllEnhancements();
     private final List<Seal> allSealList = SqlHandler.getAllSeals();
+    private final List<Sticker> stickerList = SqlHandler.getAllStickers();
     //endregion
 
 
@@ -84,7 +89,6 @@ public class GameModel {
 
     //region HOLDING HAND VAR
     private final BooleanProperty sortedByRank = new SimpleBooleanProperty(true);
-//    private final IntegerProperty maxHandSize = new SimpleIntegerProperty(8);
     //endregion
 
     //region ACTIVE JOKERS
@@ -196,6 +200,10 @@ public class GameModel {
 
     public PokerHand getPokerHand(String handName) {
         return getAllPokerHandList().stream().filter(pokerHand -> pokerHand.getName().equals(handName)).findFirst().orElse(null);
+    }
+
+    public List<Sticker> getStickerList() {
+        return stickerList;
     }
 
     //endregion

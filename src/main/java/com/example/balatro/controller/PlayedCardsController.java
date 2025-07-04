@@ -1,11 +1,14 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.*;
+import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.PlayingCard;
+import com.example.balatro.domain.game.PokerHandChecker;
+import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.models.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
-import javafx.collections.ListChangeListener;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -70,7 +73,6 @@ public class PlayedCardsController {
                     }
                     UIController.addToAnimationList(UIController.delayTimeline());
                     UIController.playAnimations(() -> onComplete.run());
-                    GameController.getInstance().shuffleDeck();
                 }
             });
             return;

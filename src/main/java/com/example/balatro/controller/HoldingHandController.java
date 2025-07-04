@@ -1,9 +1,9 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.PokerHand;
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.checkHand;
+import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.domain.card.PlayingCard;
+import com.example.balatro.domain.game.checkHand;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -103,10 +103,9 @@ public class HoldingHandController {
 
     //Drawing Cards
     public void drawCard() {
-        PlayingCard cardToDraw = gameModel.getCurrentRound().getDeckToPlay().get(0);
+        PlayingCard cardToDraw = gameModel.getRunState().getPlayingDeck().drawCard();
         cardToDraw.setClickAble(true);
         gameModel.getHandCards().add(cardToDraw);
-        gameModel.getCurrentRound().getDeckToPlay().remove(0);
         sort();
     }
 
@@ -115,7 +114,7 @@ public class HoldingHandController {
     }
 
     public void drawCardToLimit(int cardCount) {
-        int draws = Math.min(cardCount, gameModel.getCurrentRound().getDeckToPlay().size());
+        int draws = Math.min(cardCount, gameModel.getRunState().getPlayingDeck().getPlaySize());
         for (int i = 0; i < draws; i++) {
             drawCard();
         }

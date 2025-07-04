@@ -1,7 +1,7 @@
 package com.example.balatro;
 
-import com.example.balatro.classes.GameSetup;
-import com.example.balatro.classes.SqlHandler;
+import com.example.balatro.domain.game.GameSetup;
+import com.example.balatro.data.SqlHandler;
 import com.example.balatro.controller.GameController;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.SettingsModel;

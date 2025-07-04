@@ -1,8 +1,8 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.classes.Blind;
-import com.example.balatro.classes.Tag;
+import com.example.balatro.domain.rules.Blind;
+import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;

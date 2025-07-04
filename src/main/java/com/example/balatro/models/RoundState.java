@@ -1,7 +1,6 @@
 package com.example.balatro.models;
 
-import com.example.balatro.classes.PlayingCard;
-import com.example.balatro.classes.PokerHand;
+import com.example.balatro.domain.rules.PokerHand;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,12 +8,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Collections;
-import java.util.List;
-
 public class RoundState {
     //region VARIABLES
-    private final ObservableList<PlayingCard> deckToPlay = FXCollections.observableArrayList();
     private final BooleanProperty firstHand = new SimpleBooleanProperty(true);
     private final BooleanProperty firstDiscard = new SimpleBooleanProperty(true);
 
@@ -22,7 +17,6 @@ public class RoundState {
     private final IntegerProperty discards = new SimpleIntegerProperty(3);
 
     private final ObservableList<PokerHand> playedPokerHandsThisRound = FXCollections.observableArrayList();
-
     //endregion
 
     //region CONSTRUCTOR
@@ -30,27 +24,6 @@ public class RoundState {
     //endregion
 
     //region GETTER SETTER
-    public ObservableList<PlayingCard> getDeckToPlay() {
-        return deckToPlay;
-    }
-
-    public void setDeckToPlay(List<PlayingCard> deck) {
-        deckToPlay.clear();
-        deckToPlay.addAll(deck);
-    }
-
-    public void shuffleDeck() {
-        Collections.shuffle(deckToPlay);
-    }
-
-    public void addCardToDeckToPlay(PlayingCard card) {
-        deckToPlay.add(card);
-    }
-
-    public void addCardToDeckToPlay(PlayingCard card, int index) {
-        deckToPlay.add(index, card);
-    }
-
     public boolean isFirstHand() {
         return firstHand.get();
     }

@@ -1,12 +1,10 @@
 package com.example.balatro.models;
 
-import com.example.balatro.classes.Joker;
+import com.example.balatro.domain.card.Joker;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RewardModel {
