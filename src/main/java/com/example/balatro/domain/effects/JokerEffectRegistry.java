@@ -62,15 +62,7 @@ public class JokerEffectRegistry {
             self.setOtherValue(self.getOtherValue() - 1);
             context.setBeanValue(context.getBeanValue() - 1);
             if(self.getOtherValue() <= 0) {
-                AnchorPane pane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
-//                        context.getActiveJokerMap().values()
-//
-//
-//                        .stream()
-//                        .filter(j ->
-//                                j.getCard() == self)
-//                        .findFirst().get();
-                context.getActiveJokerMap().remove(pane);
+                context.getJokerManager().remove(self);
             }
         });
 
@@ -140,7 +132,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_CHIPS_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_CHIPS_ADD");
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             if ((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
@@ -164,7 +156,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_ADD");
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             if((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
@@ -183,7 +175,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("HAND_MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: HAND_MULT_MULT");
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             if((boolean)params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
@@ -210,7 +202,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("MULT_ADD", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_ADD");
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             timeline.setOnFinished(event -> {
@@ -221,7 +213,7 @@ public class JokerEffectRegistry {
         });
         effectMap.put("MULT_MULT", (context, self, cards, params) -> {
             System.out.println("Trigger: MULT_MULT");
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
 
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
@@ -302,7 +294,7 @@ public class JokerEffectRegistry {
 
         effectMap.put("SUIT_MULT_ADD", (context, self, cards, params) -> {
             if(cards.get(0).getSuit() == getSuit(params.get("suit").toString())) {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
@@ -329,7 +321,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: ACROBAT_EFFECT");
 
             if(context.getRunState().getHandsPlayed() == 0) {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
@@ -358,7 +350,7 @@ public class JokerEffectRegistry {
                     self.setSuitFilter(Suit.SPADES);
                     break;
             }
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             UIController.addToAnimationList(timeline);
@@ -376,7 +368,7 @@ public class JokerEffectRegistry {
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
             //TODO Einzel Trigger Animation pro Joker
-            int uncommonCount = (int) context.getActiveJokerMap().keySet().stream().filter(cardViewController -> Objects.equals(((Joker) cardViewController.getCard()).getRarity(), "Uncommon")). count();
+            int uncommonCount = (int) context.getJokerManager().getCardList().stream().filter(card -> "Uncommon".equals(((Joker)card).getRarity())).count();
             for (int i = 0; i < uncommonCount; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -459,23 +451,12 @@ public class JokerEffectRegistry {
         effectMap.put("DAGGER_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: DAGGER_EFFECT");
             //TODO Joker Trigger Effekt
-            List<Node> children = GameController.getInstance().getJokerStackPane().getChildren();
-            for (int i = 0; i < children.size(); i++) {
-                AnchorPane pane = (AnchorPane) children.get(i);
-                CardViewController controller = context.getActiveJokerMap().keySet()
-                        .stream()
-                        .filter(cvc -> cvc.getCard() == self)
-                        .collect(Collectors.toList()).get(0);
-                Card card = controller.getCard();
 
-                if ("Ceremonial Dagger".equals(card.getCardName())) {
-                    if (i < children.size() - 1);
-                    System.out.println("Hat Nachfolger: ");
-                    self.setMultValue(self.getMultValue() + controller.getCard().getSellValue());
-                    context.getActiveJokerMap().remove(children.get(i+1));
-                    break;
-                }
-            }
+            List<Card> jokerList = context.getJokerManager().getCardList();
+            int daggerIndex = jokerList.indexOf(self);
+            self.setMultValue(self.getMultValue() + jokerList.get(daggerIndex + 1).getSellValue());
+            context.getJokerManager().remove(jokerList.get(daggerIndex + 1));
+            
         });
 
         effectMap.put("DIET_COLA_EFFECT", (context, self, cards, params) -> {
@@ -507,7 +488,7 @@ public class JokerEffectRegistry {
             //TODO Joker Trigger Animation
             for (PlayingCard c : cards) {
                 if(c.getValue() == 8 && context.getRand().nextInt(4) == 0) {
-                    context.getConsumableList().add(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
+                    context.getConsumableManager().create(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
                 }
             }
         });
@@ -538,10 +519,10 @@ public class JokerEffectRegistry {
         effectMap.put("GIFT_CARD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: GIFT_CARD_EFFECT");
             //TODO Joker Trigger Animation
-            for(CardViewController c : context.getActiveJokerMap().keySet().stream().collect(Collectors.toList())){
+            for(CardViewController c : context.getJokerManager().getViewMap().keySet().stream().toList()){
                 c.getCard().additionalSellValueProperty().add(1);
             }
-            for(var c : context.getConsumableList()) {
+            for(var c : context.getConsumableManager().getCardList()) {
                 c.additionalSellValueProperty().add(1);
             }
         });
@@ -550,7 +531,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: HALF_JOKER_EFFECT");
 
             if (cards.size() <= 3) {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
@@ -565,7 +546,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: HALLUCINATION_EFFECT");
             //TODO Joker Trigger Animation
             if (context.getRand().nextInt(2) == 0) {
-                context.getConsumableList().add(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
+                context.getConsumableManager().create(context.getAllTarotList().get(context.getRand().nextInt(context.getAllTarotList().size())));
             }
         });
 
@@ -607,12 +588,12 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: MADNESS_EFFECT");
             //TODO Joker Trigger Effekt
             if(context.getActiveBlind().getBlindId() < 2) {
-                List<AnchorPane> list = context.getActiveJokerMap().values()
+                List<Card> list = context.getJokerManager().getCardList()
                         .stream()
-                        .filter(c -> CardViewController.getCardViewController(context.getActiveJokerMap(),c).getCard().getCardName() != "Madness").collect(Collectors.toList());
+                        .filter(c -> c.getCardName() != "Madness").toList();
                 //TODO Destroy Joker Animation
-                context.getActiveJokerMap().remove(list.get(context.getRand().nextInt(list.size())));
                 self.setMultValue(self.getMultValue() + .5);
+                context.getJokerManager().remove(list.get(context.getRand().nextInt(list.size())));
             }
         });
 
@@ -664,9 +645,9 @@ public class JokerEffectRegistry {
         effectMap.put("PERKEO_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: PERKEO_EFFECT");
             //TODO Joker Trigger Effekt
-            Card copy = context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size()));
+            Card copy = context.getConsumableManager().getCardList().get(context.getRand().nextInt(context.getConsumableManager().getCardList().size()));
             copy.setEdition(context.getAllEditionList().get(4));
-            context.getConsumableList().add(copy);
+            context.getConsumableManager().create(copy);
         });
 
         effectMap.put("PHOTOGRAPH_EFFECT", (context, self, cards, params) -> {
@@ -687,7 +668,7 @@ public class JokerEffectRegistry {
 
             if(lowestCard == null) return;
 
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             timeline.setOnFinished(event -> {
@@ -712,9 +693,9 @@ public class JokerEffectRegistry {
         effectMap.put("RIFF_RAFF_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
-            List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").collect(Collectors.toList());
-            for (int i = 0; i < 2 && context.getActiveJokerMap().size() < context.getRunState().getMaxJokers(); i++) {
-                CardViewController.createCardNode(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())), context.getActiveJokerMap());
+            List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
+            for (int i = 0; i < 2 && context.getJokerManager().getViewMap().size() < context.getRunState().getMaxJokers(); i++) {
+                context.getJokerManager().create(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())));
             }
         });
 
@@ -722,7 +703,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: RUNNER_EFFECT");
 
             if(context.getBestHand().getName() == "Straight") {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
@@ -761,7 +742,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: SQUARE_EFFECT");
 
             if(context.getPlayedCards().size() == 4) {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
@@ -775,9 +756,9 @@ public class JokerEffectRegistry {
         effectMap.put("STENCIL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STENCIL_EFFECT");
 
-            int emptySpace = context.getRunState().getMaxJokers() - context.getActiveJokerMap().size() + 1;
+            int emptySpace = context.getRunState().getMaxJokers() - context.getJokerManager().getViewMap().size() + 1;
 
-            AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             timeline.setOnFinished(event -> {
@@ -801,13 +782,14 @@ public class JokerEffectRegistry {
 
         effectMap.put("SEANCE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SEANCE_EFFECT");
+            List<Card> cardList = context.getConsumableManager().getCardList();
 
-            if (context.getBestHand().getName() == "Straight Flush" && context.getConsumableList().size() < context.getRunState().getMaxConsumables()) {
-                AnchorPane anchorPane = CardViewController.getCardAnchorPane(context.getActiveJokerMap(), self);
+            if (context.getBestHand().getName() == "Straight Flush" && cardList.size() < context.getRunState().getMaxConsumables()) {
+                AnchorPane anchorPane = context.getJokerManager().getView(self);
                 Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
                 timeline.setOnFinished(event -> {
-                    context.getConsumableList().add(context.getConsumableList().get(context.getRand().nextInt(context.getConsumableList().size())));
+                    context.getConsumableManager().create(cardList.get(context.getRand().nextInt(cardList.size())));
                 });
 
                 UIController.addToAnimationList(timeline);

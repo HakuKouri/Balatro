@@ -79,28 +79,17 @@ public class BoosterOpeningController {
     private void drawBoosterCards() {
         GameModel gameModel = Balatro.getGameModel();
         for (int i = 0; i < booster.get().getBoosterSizeValue(); i++) {
-            Card card = null;
-
-            switch (booster.get().getCardName()) {
-                case "Standard Pack":
-                    card = CardGenerator.getRandomPlayingCard(gameModel);
-                    break;
-                case "Arcana Pack":
-                    card = CardGenerator.getRandomTarot(gameModel);
-                    break;
-                case "Celestial Pack":
-                    card = CardGenerator.getRandomPlanet(gameModel);
-                    break;
-                case "Buffoon Pack":
-                    card = CardGenerator.getRandomJoker(gameModel);
-                    break;
-                case "Spectral Pack":
-                    card = CardGenerator.getRandomSpectral(gameModel);
-                    break;
-            }
+            Card card = switch (booster.get().getCardName()) {
+                case "Standard Pack" -> CardGenerator.getRandomPlayingCard(gameModel);
+                case "Arcana Pack" -> CardGenerator.getRandomTarot(gameModel);
+                case "Celestial Pack" -> CardGenerator.getRandomPlanet(gameModel);
+                case "Buffoon Pack" -> CardGenerator.getRandomJoker(gameModel);
+                case "Spectral Pack" -> CardGenerator.getRandomSpectral(gameModel);
+                default -> null;
+            };
 
             if(card != null)
-                CardViewController.createCardNode(card, boosterDrawnMap);
+                gameModel.getShopModel().getBoosterCardViewManager().create(card);
             else
                 System.out.println("Card is Null");
         }

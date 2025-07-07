@@ -38,7 +38,7 @@ public class GameController
     @FXML
     private ImageView shopImageView;
 
-    //region Phase Display
+    //Phase Display
     @FXML
     private AnchorPane chooseBlind_AnchorPane;
     @FXML
@@ -47,7 +47,6 @@ public class GameController
     private AnchorPane shopSign_AnchorPane;
     @FXML
     private AnchorPane pickedBlind_AnchorPane;
-    //endregion
 
     @FXML
     private AnchorPane holdingHand_AnchorPane;
@@ -76,7 +75,7 @@ public class GameController
     @FXML
     private StackPane boosterCards_StackPane;
 
-    //region Handinfo
+    //Handinfo
     @FXML
     private Label infoHandName;
     @FXML
@@ -85,9 +84,8 @@ public class GameController
     private Label infoHandChips;
     @FXML
     private Label infoHandMulti;
-    //endregion
 
-    //region Run Info
+    //Run Info
     @FXML
     private Label handsLabel;
     @FXML
@@ -98,9 +96,8 @@ public class GameController
     private Label anteLabel;
     @FXML
     private Label roundLabel;
-    //endregion
 
-    //region to beat elements
+    //to beat elements
     @FXML
     private Label toBeatEffect;
     @FXML
@@ -111,9 +108,8 @@ public class GameController
     private Label toBeatScore;
     @FXML
     private Label toBeatReward;
-    //endregion
 
-    //region Placeholder
+    //Placeholder
     @FXML
     private AnchorPane placeHolderBlinds;
     @FXML
@@ -122,48 +118,44 @@ public class GameController
     private AnchorPane placeHolderReward;
     @FXML
     private AnchorPane placeHolderBoosterOpening;
+
+    //Test Elements
+    @FXML
+    private ImageView testImageView;
+    @FXML
+    private Button testButton;
     //endregion
 
-    //region FXMLLOADER
+    //region Attributes
+    //FXML LOADER
     private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop.fxml"));
     private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
     private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand.fxml"));
     private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
     private final FXMLLoader loaderBlindBox = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-box.fxml"));
     private final FXMLLoader loaderBoosterOpening = new FXMLLoader(getClass().getResource("/com/example/balatro/boosterOpening.fxml"));
-    //endregion
 
-    //region CONTROLLER
+    //Controller
     private ShopController shopController;
     private HoldingHandController holdingHandController;
     private PlayedCardsController playedCardsController;
     private BlindBoxController blindBoxController;
     private BoosterOpeningController boosterOpeningController;
-    //endregion
 
-    //region TEST
-    @FXML
-    private ImageView testImageView;
-    @FXML
-    private Button testButton;
-    //endregion
-    //endregion
-
-    //region INSTANCE
+    //Gamecontroller Instance
     private static GameController instance;
 
     public static GameController getInstance() {
         return instance;
     }
-    //endregion
 
-    //region GAMEMODEL
+    //Game Model instance
     private static final GameModel gameModel = Balatro.getGameModel();
-    //endregion
 
     public StackPane getJokerStackPane() {
         return spaceJoker;
     }
+    //endregion
 
     //UI HANDLER
     public void initialize(){
@@ -202,35 +194,16 @@ public class GameController
             }
         });
 
-        if(false) {
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(79), gameModel.getActiveJokerMap());
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(1), gameModel.getActiveJokerMap());
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(2), gameModel.getActiveJokerMap());
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(3), gameModel.getActiveJokerMap());
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(4), gameModel.getActiveJokerMap());
-            CardViewController.createCardNode(gameModel.getAllJokerList().get(5), gameModel.getActiveJokerMap());
-
-            for (AnchorPane pane : gameModel.getActiveJokerMap().values()) {
-                CardViewController controller = gameModel.getActiveJokerMap().keySet()
-                        .stream()
-                        .filter(cardViewController -> gameModel.getActiveJokerMap().get(cardViewController) == pane).toList().getFirst();
-                System.out.println("Card instance: " + (controller.getCard() instanceof Joker));
-                pane.setOnMouseClicked(mouseEvent -> {
-                    System.out.println(controller.getCard());
-
-                    controller.selectedProperty().set(!controller.isSelected());
-                });
-            }
-            UIController.moveCards(spaceJoker);
-        }
 
         //TEST BUTTON
         //JOKER 15
         testButton.setOnAction(event -> {
+
             for (int i = 0; i < gameModel.getAllJokerList().size() && i < 6; i++) {
                 Joker joker = gameModel.getAllJokerList().get(i);
                 joker.addSticker(gameModel.getStickerList().get(10));
-                CardViewController.createCardNode(joker, gameModel.getActiveJokerMap());
+                gameModel.getJokerManager().create(joker);
+                //CardViewController.createCardNode(joker, gameModel.getJokerManager());
             }
             for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());
@@ -298,9 +271,8 @@ public class GameController
         rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getRunState().getMoney() < 10, gameModel.getRunState().moneyProperty()));
 
         //Binding von Stack Panes für Inhalt und Click Events
-        UIController.bindStackPane(gameModel.getActiveJokerMap(), spaceJoker);
-        UIController.bindStackPane(gameModel.getConsumableMap(), spaceConsumable);
-        UIController.bindStackPane(gameModel.getBoosterMap(), boosterCards_StackPane);
+        UIController.bindStackPane(gameModel.getJokerManager().getViewMap(), spaceJoker);
+        UIController.bindStackPane(gameModel.getConsumableManager().getViewMap(), spaceConsumable);
 
         //Binding der Gameinfo Labels
         UIController.bindBlindToBeatInfo(blindToBeat_Label, toBeatEffect,toBeatImage,toBeatStake,toBeatScore,toBeatReward,gameModel);
@@ -313,10 +285,10 @@ public class GameController
                 gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().playingDeckProperty(), gameModel.getRunState().getPlayingDeck().getFullDeck()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getActiveJokerObList().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerObList()
+                gameModel.getActiveJokerList().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
         ));
         consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getConsumableList().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableList()
+                gameModel.getConsumableManager().getViewMap().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
         ));
         //endregion
     }
@@ -330,7 +302,6 @@ public class GameController
                 card.setSeal(gameModel.getAllSealList().get(0));
                 System.out.println(card.getSeal().getSealName());
                 cards.add(card);
-
             }
         }
         gameModel.getRunState().getPlayingDeck().setFullDeck(cards);
@@ -414,7 +385,16 @@ public class GameController
 
         Card card = controller.getCard();
         if (card instanceof PurchasableCard) {
-            ((PurchasableCard) card).onPurchase(gameModel, pane);
+            ((PurchasableCard) card).onPurchase(gameModel);
+        }
+    }
+
+    public void buyItem(Card card) {
+        System.out.println("Buy item: ");
+        System.out.println(card.getCardName());
+
+        if (card instanceof PurchasableCard) {
+            ((PurchasableCard) card).onPurchase(gameModel);
         }
 
     }

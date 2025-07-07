@@ -10,9 +10,9 @@ import javafx.scene.layout.AnchorPane;
 public class Booster extends Card implements PurchasableCard {
 
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
+    public void onPurchase(GameModel model) {
         GameController.getInstance().playBooster(this);
-        model.getShopModel().getBoosterMap().remove(this);
+        model.getShopModel().getBoosterCardViewManager().remove(this);
     }
 
     private static final DoubleProperty imageHeightProperty = new SimpleDoubleProperty();
@@ -25,6 +25,9 @@ public class Booster extends Card implements PurchasableCard {
     private final IntegerProperty boosterChoiceValue = new SimpleIntegerProperty(0);
 
     //Constructor
+    public Booster() {
+
+    }
 
     //Getter Setter
     public static double getImageHeightProperty() {

@@ -65,7 +65,7 @@ public class RewardSummaryController {
 
         gameModel.rewardVisibilityProperty().addListener((observable, oldValue, newValue) -> {
             gameModel.pickedBlindVisibilityProperty().setValue(false);
-            if(newValue) setRewards(gameModel.getActiveJokerObList());
+            if(newValue) setRewards(gameModel.getActiveJokerList());
         });
     }
 

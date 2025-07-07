@@ -4,6 +4,7 @@ import com.example.balatro.controller.CardViewController;
 import com.example.balatro.domain.effects.JokerEffectRegistry;
 import com.example.balatro.domain.effects.JokerEffectTrigger;
 import com.example.balatro.domain.effects.JokerEffectUtil;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.enums.Suit;
 import com.example.balatro.interfaces.JokerEffect;
@@ -20,8 +21,8 @@ import java.util.Map;
 
 public class Joker extends Card implements PurchasableCard {
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
-        model.getActiveJokerMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    public void onPurchase(GameModel model) {
+        model.getActiveJokerMap().put(model.getShopModel().getItemCardViewManager().getControllerByCard(this), model.getShopModel().getItemCardViewManager().getView(this));
     }
 
     private final StringProperty rarity = new SimpleStringProperty("");

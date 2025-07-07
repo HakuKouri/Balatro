@@ -11,8 +11,8 @@ import javafx.scene.layout.AnchorPane;
 
 public class Tarot extends Card implements PurchasableCard, PlayableCard {
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
-        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    public void onPurchase(GameModel model) {
+        model.getConsumableManager().create(this);
     }
 
     @Override

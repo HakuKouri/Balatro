@@ -13,7 +13,6 @@ module com.example.balatro {
 
     exports com.example.balatro;
     exports com.example.balatro.controller;
-    exports com.example.balatro.classes;
     exports com.example.balatro.models;
 
     opens com.example.balatro to javafx.fxml;

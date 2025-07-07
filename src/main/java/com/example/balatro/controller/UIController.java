@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.models.GameModel;
@@ -30,8 +31,8 @@ import java.util.*;
 
 public class UIController {
 
-    private static IntegerProperty gameSpeed = new SimpleIntegerProperty();
-    private static List<Animation> animationList = new ArrayList<>();
+    private static final IntegerProperty gameSpeed = new SimpleIntegerProperty();
+    private static final List<Animation> animationList = new ArrayList<>();
 
     public static void setupUiController() {
         gameSpeed.bind(Balatro.getSettings().gameSpeedProperty());
@@ -40,7 +41,6 @@ public class UIController {
     public static void bindGameUi(GameController gameController) {
 
     }
-
 
     public static void bindHandInfo(Label name, Label level, Label chips, Label multi, GameModel model) {
         name.textProperty().bind(Bindings.createStringBinding(() -> {
@@ -275,35 +275,36 @@ public class UIController {
 
 
     public static void moveCards(StackPane stackPane) {
-        int cards = stackPane.getChildren().size();
-        if (cards == 0) return;
-
-        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
-        else stackPane.setAlignment(Pos.CENTER);
-
-        double cardWidth = 200;
-        double paneWidth = stackPane.getWidth();
-        double margin = 10;
-        double availableSpace = paneWidth - cardWidth * cards;
-        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
-        double pos;
-        double centerIndex = (cards - 1) / 2.0;
-
-        for (int i = 0; i < cards; i++) {
-            if (cards > 5) {
-                pos = margin + i * (cardWidth + spacing);
-            } else {
-                pos = (i - centerIndex) * (cardWidth - cards * 4);
-            }
-
-            stackPane.getChildren().get(i).setTranslateX(pos);
-
-            for (AnchorPane pane : Balatro.getGameModel().getActiveJokerMap().values()) {
-                if(CardViewController.getCardViewController(Balatro.getGameModel().getActiveJokerMap(), pane).isSelected()) {
-                    pane.setTranslateY(-50);
-                } else pane.setTranslateY(0);
-            }
-        }
+        moveCards(stackPane,new Card());
+//        int cards = stackPane.getChildren().size();
+//        if (cards == 0) return;
+//
+//        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
+//        else stackPane.setAlignment(Pos.CENTER);
+//
+//        double cardWidth = 200;
+//        double paneWidth = stackPane.getWidth();
+//        double margin = 10;
+//        double availableSpace = paneWidth - cardWidth * cards;
+//        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
+//        double pos;
+//        double centerIndex = (cards - 1) / 2.0;
+//
+//        for (int i = 0; i < cards; i++) {
+//            if (cards > 5) {
+//                pos = margin + i * (cardWidth + spacing);
+//            } else {
+//                pos = (i - centerIndex) * (cardWidth - cards * 4);
+//            }
+//
+//            stackPane.getChildren().get(i).setTranslateX(pos);
+//
+//            for (AnchorPane pane : Balatro.getGameModel().getActiveJokerMap().values()) {
+//                if(CardViewController.getCardViewController(Balatro.getGameModel().getActiveJokerMap(), pane).isSelected()) {
+//                    pane.setTranslateY(-50);
+//                } else pane.setTranslateY(0);
+//            }
+//        }
     }
 
     public static void moveCards(StackPane stackPane, Node exclude) {
@@ -377,7 +378,7 @@ public class UIController {
         double targetX = scene.getWidth() + 300;
         double targetY = scene.getHeight() / 2;
 
-        if (to == "middle") {
+        if (Objects.equals(to, "middle")) {
             targetX = scene.getWidth() / 2;
             targetY = scene.getHeight() / 3 * 2;
         }
@@ -399,16 +400,15 @@ public class UIController {
     }
 
     public static Timeline delayTimeline() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        return new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         }));
-        return timeline;
     }
 
     public static void playAnimation(List<Animation> list) {
         if (list.isEmpty()) {
             return;
         }
-        Animation first = list.remove(0);
+        Animation first = list.removeFirst();
         wrapAnimation(first, () -> playAnimation(list)).play();
     }
 
@@ -439,7 +439,7 @@ public class UIController {
             return;
         }
 
-        Animation current = animationList.remove(0);
+        Animation current = animationList.removeFirst();
         EventHandler<ActionEvent> originalHandler = current.getOnFinished();
 
         current.setOnFinished(event -> {

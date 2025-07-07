@@ -23,7 +23,9 @@ public class CardGenerator {
 
     public static Tarot getRandomTarot(GameModel gameModel) {
         Tarot tarot = new Tarot();
+
         int tarotChance = gameModel.getRand().nextInt(gameModel.getAllTarotList().size());
+
         tarot.setTarot(gameModel.getAllTarotList().get(tarotChance));
         tarot.setEffect(TarotEffect.values()[tarot.getCardId() -1]);
         System.out.println("Tarot: " + tarot.getCardName());
@@ -32,7 +34,9 @@ public class CardGenerator {
 
     public static Planet getRandomPlanet(GameModel gameModel) {
         Planet planet = new Planet();
+
         int planetChance = gameModel.getRand().nextInt(gameModel.getAllPlanetList().size());
+
         planet.setPlanet(gameModel.getAllPlanetList().get(planetChance));
         System.out.println("Planet: " + planet.getCardName());
         return planet;
@@ -40,7 +44,9 @@ public class CardGenerator {
 
     public static Spectral getRandomSpectral(GameModel gameModel) {
         Spectral spectral = new Spectral();
+
         int spectralChance = gameModel.getRand().nextInt(gameModel.getAllSpectralList().size());
+
         spectral.setSpectral(gameModel.getAllSpectralList().get(spectralChance));
         System.out.println("Spectral: " + spectral.getSpectralName());
         return spectral;
@@ -48,12 +54,15 @@ public class CardGenerator {
 
     public static PlayingCard getRandomPlayingCard(GameModel gameModel) {
         PlayingCard playingCard = new PlayingCard(gameModel.getRand().nextInt(14),4);
+
         System.out.println("PlayingCard: " + playingCard.getCardName());
+
         return playingCard;
     }
 
     public static Voucher getRandomVoucher(GameModel gameModel) {
         Voucher voucher = new Voucher();
+
         List<Voucher> availableVoucher = gameModel.getAllVoucherList().stream().filter(Voucher::isAvailable).toList();
         voucher.setVoucher(availableVoucher.get(gameModel.getRand().nextInt(availableVoucher.size())));
         return voucher;

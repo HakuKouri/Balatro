@@ -132,7 +132,10 @@ public class PlayedCardsController {
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
-        for (Joker joker : gameModel.getActiveJokerList()) {
+        System.out.println("Jokers getriggert");
+        //for (Joker joker : gameModel.getActiveJokerList()) {
+        for (Joker joker : gameModel.getJokerList()) {
+            System.out.println("Triggert Joker: " + joker.getCardName());
             joker.tryActivate(trigger, gameModel, playedCards);
         }
     }

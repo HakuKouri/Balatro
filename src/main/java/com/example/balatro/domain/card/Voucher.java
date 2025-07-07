@@ -11,10 +11,10 @@ import javafx.scene.layout.AnchorPane;
 public class Voucher extends Card implements PurchasableCard {
 
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
+    public void onPurchase(GameModel model) {
         //TODO
         VoucherHandler.setVoucherFlag(this);
-        model.getShopModel().getVoucherMap().remove(CardViewController.getCardViewController(model.getShopModel().getVoucherMap(),pane));
+        model.getShopModel().getVoucherCardViewManager().remove(this);
     }
 
     //region Properties

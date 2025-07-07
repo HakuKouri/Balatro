@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.domain.card.Booster;
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.util.CardGenerator;
 import com.example.balatro.models.GameModel;
@@ -42,15 +43,15 @@ public class ShopController {
     }
 
     public ObservableMap<CardViewController, AnchorPane> getItemMap() {
-        return gameModel.getShopModel().getItemMap();
+        return gameModel.getShopModel().getItemCardViewManager().getViewMap();
     }
 
     public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
-        return gameModel.getShopModel().getBoosterMap();
+        return gameModel.getShopModel().getBoosterCardViewManager().getViewMap();
     }
 
     public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
-        return gameModel.getShopModel().getVoucherMap();
+        return gameModel.getShopModel().getVoucherCardViewManager().getViewMap();
     }
 
     public int getMaxItems() {
@@ -91,7 +92,7 @@ public class ShopController {
     private void drawItems() {
         getItemMap().clear();
         for (int i = 0; i < getMaxItems(); i++) {
-            CardViewController.createCardNode(getRandomCard(), getItemMap(),true);
+            gameModel.getShopModel().getItemCardViewManager().create(getRandomCard(), true);
         }
     }
 
@@ -134,17 +135,21 @@ public class ShopController {
 
     private void drawVoucher() {
         getVoucherMap().clear();
-        CardViewController.createCardNode(CardGenerator.getRandomVoucher(gameModel), getVoucherMap(), true);
+        gameModel.getShopModel().getVoucherCardViewManager().create(CardGenerator.getRandomVoucher(gameModel), true);
     }
 
     public void addVoucher() {
-        CardViewController.createCardNode(CardGenerator.getRandomVoucher(gameModel), getVoucherMap(), true);
+        gameModel.getShopModel().getVoucherCardViewManager().create(CardGenerator.getRandomVoucher(gameModel), true);
     }
 
     private void drawBooster() {
         getBoosterMap().clear();
         for (int i = 0; i < getMaxBoosters(); i++) {
-            CardViewController.createCardNode(CardGenerator.getRandomBooster(gameModel), getBoosterMap(), true);
+            Booster booster = CardGenerator.getRandomBooster(gameModel);
+            System.out.println("Random Booster: " +  booster.getCardName());
+            System.out.println("Booster Image: " + booster.getImage());
+            System.out.println("Booster Image url: " + booster.getCardImageUrl());
+            gameModel.getShopModel().getBoosterCardViewManager().create(booster, true);
         }
     }
 

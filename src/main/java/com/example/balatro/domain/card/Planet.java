@@ -12,8 +12,8 @@ import java.util.Map;
 public class Planet extends Card implements PurchasableCard {
 
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
-        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    public void onPurchase(GameModel model) {
+        model.getConsumableManager().create(this);
     }
 
     private static Map<String, Boolean> uniquePlanetPlayed = new HashMap<>() {{

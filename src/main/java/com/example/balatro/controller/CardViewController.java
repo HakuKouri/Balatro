@@ -122,10 +122,14 @@ public class CardViewController {
         bindMouseClickEvent();
         bindText();
 
-        cardImage.imageProperty().bind(getCard().imageProperty());
+        cardProperty().addListener((obs, oldCard, newCard) -> {
+            System.out.println("New Card: " + newCard.getCardImageUrl());
+            cardImage.imageProperty().unbind();
+            cardImage.imageProperty().bind(newCard.imageProperty());
+        });
+
 
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
-
 
         selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(card.get() instanceof Tarot)
@@ -142,7 +146,7 @@ public class CardViewController {
     private void bindMouseClickEvent() {
         buyLabel.setOnMouseClicked(event -> {
             System.out.println("BuyLabel clicked");
-            GameController.getInstance().buyItem(card_AnchorPane,this);
+            GameController.getInstance().buyItem(getCard());
         });
 
         buyUseSell_AnchorPane.setOnMouseClicked(event -> {
@@ -156,6 +160,11 @@ public class CardViewController {
         use_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("use_clicked");
             GameController.getInstance().useItem(card_AnchorPane,this);
+        });
+
+        image_StackPane.setOnMouseClicked(event -> {
+            System.out.println("image_clicked");
+            selectedProperty().set(!isSelected());
         });
     }
 
@@ -174,8 +183,8 @@ public class CardViewController {
                 buyPriceProperty(),              // Preisänderung
                 Balatro.getGameModel().getRunState().moneyProperty(),  // Geld
                 Balatro.getGameModel().getSelectedCards(),             // Auswahlkarten
-                Balatro.getGameModel().getActiveJokerMap(),            // Joker (für bestimmte Tarot-Effekte)
-                Balatro.getGameModel().getConsumableMap()              // Consumables (z. B. The Fool)
+                Balatro.getGameModel().getJokerManager().getViewMap(),            // Joker (für bestimmte Tarot-Effekte)
+                Balatro.getGameModel().getConsumableManager().getViewMap()              // Consumables (z. B. The Fool)
         ));
 
         use_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
@@ -187,8 +196,8 @@ public class CardViewController {
                 buyPriceProperty(),              // Preisänderung
                 Balatro.getGameModel().getRunState().moneyProperty(),  // Geld
                 Balatro.getGameModel().getSelectedCards(),             // Auswahlkarten
-                Balatro.getGameModel().getActiveJokerMap(),            // Joker (für bestimmte Tarot-Effekte)
-                Balatro.getGameModel().getConsumableMap()              // Consumables (z. B. The Fool)
+                Balatro.getGameModel().getJokerManager().getViewMap(),            // Joker (für bestimmte Tarot-Effekte)
+                Balatro.getGameModel().getConsumableManager().getViewMap()              // Consumables (z. B. The Fool)
         ));
     }
 
@@ -224,13 +233,15 @@ public class CardViewController {
         while(image_StackPane.getChildren().size() > 1)
             image_StackPane.getChildren().remove(image_StackPane.getChildren().getLast());
 
-        getCard().setCard(card);
+        cardProperty().set(card);
+        card.setupBindings();
 
         if(card instanceof Joker) {
             for(Sticker sticker : ((Joker) card).getStickers()) {
                 image_StackPane.getChildren().add(sticker);
             }
         }
+
         if(card instanceof PlayingCard) {
             if(((PlayingCard) card).getSeal().getSealId() > 0)
                 image_StackPane.getChildren().add(((PlayingCard) card).getSeal());
@@ -247,10 +258,6 @@ public class CardViewController {
 
     private boolean isPlanet() {
         return "Planet".equals(getCard().getCardType());
-    }
-
-    public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map) {
-        createCardNode(card,map,false);
     }
 
     public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map, boolean inShop) {

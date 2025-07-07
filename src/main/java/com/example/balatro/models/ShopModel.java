@@ -1,6 +1,7 @@
 package com.example.balatro.models;
 
 import com.example.balatro.controller.CardViewController;
+import com.example.balatro.domain.util.CardViewManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,9 +21,9 @@ public class ShopModel {
     private final IntegerProperty rerollPrice  = new SimpleIntegerProperty(5);
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
-    private final ObservableMap<CardViewController, AnchorPane> itemMap = FXCollections.observableMap(new LinkedHashMap<>());
-    private final ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableMap(new LinkedHashMap<>());
-    private final ObservableMap<CardViewController, AnchorPane> voucherMap = FXCollections.observableMap(new LinkedHashMap<>());
+    private final CardViewManager itemCardViewManager = new CardViewManager();
+    private final CardViewManager boosterCardViewManager = new CardViewManager();
+    private final CardViewManager voucherCardViewManager = new CardViewManager();
     //endregion
 
     //region CONSTRUCTOR
@@ -70,17 +71,29 @@ public class ShopModel {
         return maxInterest;
     }
 
-    public ObservableMap<CardViewController, AnchorPane> getItemMap() {
-        return itemMap;
+    public CardViewManager getItemCardViewManager() {
+        return itemCardViewManager;
     }
 
-    public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
-        return boosterMap;
+    public CardViewManager getBoosterCardViewManager() {
+        return boosterCardViewManager;
     }
 
-    public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
-        return voucherMap;
+    public CardViewManager getVoucherCardViewManager() {
+        return voucherCardViewManager;
     }
+
+//    public ObservableMap<CardViewController, AnchorPane> getItemMap() {
+//        return itemMap;
+//    }
+//
+//    public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
+//        return boosterMap;
+//    }
+//
+//    public ObservableMap<CardViewController, AnchorPane> getVoucherMap() {
+//        return voucherMap;
+//    }
 
 
     //endregion

@@ -26,20 +26,7 @@ public class Card extends ImageView
 
     //region Constructor
     public Card() {
-        cardImageUrl.addListener((observable, oldValue, newValue) -> {
-            setImage(new Image("file:" + newValue));
-            setPreserveRatio(true);
-            fitHeightProperty().bind(Balatro.getSettings().cardHeightProperty());
-        });
-
-        maxCostProperty().bind(Bindings.createIntegerBinding(() ->
-                        getCardCost() + getEditionCost(),
-                cardCostProperty(), editionCostProperty())
-        );
-
-        sellValueProperty().bind(Bindings.createDoubleBinding(() -> {
-            return Math.floor(getMaxCost() / 2.0 + getAdditionalSellValue());
-        }, maxCostProperty(), additionalSellValueProperty()));
+        setupBindings();
     }
 
     //endregion
@@ -185,6 +172,23 @@ public class Card extends ImageView
         setCardDescription(card.getCardDescription());
         setCardCost(card.getCardCost());
         setEditionCost(card.getEditionCost());
+    }
+
+    public void setupBindings() {
+        cardImageUrl.addListener((observable, oldValue, newValue) -> {
+            setImage(new Image("file:" + newValue));
+            setPreserveRatio(true);
+            fitHeightProperty().bind(Balatro.getSettings().cardHeightProperty());
+        });
+
+        maxCostProperty().bind(Bindings.createIntegerBinding(() ->
+                        getCardCost() + getEditionCost(),
+                cardCostProperty(), editionCostProperty())
+        );
+
+        sellValueProperty().bind(Bindings.createDoubleBinding(() -> {
+            return Math.floor(getMaxCost() / 2.0 + getAdditionalSellValue());
+        }, maxCostProperty(), additionalSellValueProperty()));
     }
 
 }

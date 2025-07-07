@@ -6,6 +6,7 @@ import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rules.Blind;
 import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.domain.util.CardViewManager;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,6 +69,8 @@ public class GameModel {
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
+
+    private final CardViewManager playCardsManager = new CardViewManager();
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
@@ -81,10 +84,6 @@ public class GameModel {
 
     //region HAND POINTS VAR
     private final ObjectProperty<PokerHand> bestHand = new SimpleObjectProperty<>(new PokerHand());
-    private final StringProperty handName = new SimpleStringProperty();
-    private final IntegerProperty handLevel = new SimpleIntegerProperty();
-    private final IntegerProperty handChips = new SimpleIntegerProperty();
-    private final DoubleProperty handMultiplier = new SimpleDoubleProperty();
     //endregion
 
     //region HOLDING HAND VAR
@@ -92,20 +91,17 @@ public class GameModel {
     //endregion
 
     //region ACTIVE JOKERS
-    private final ObservableList<Joker> activeJokerObList = FXCollections.observableArrayList();
+    private final CardViewManager jokerManager = new CardViewManager();
     private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region Collected Consumables
-    private final ObservableList<Card> consumableList = FXCollections.observableArrayList();
+    private final CardViewManager consumableManager = new CardViewManager();
     private final ObservableMap<CardViewController, AnchorPane> consumableMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
-    //region Booster Map
-    private final ObservableMap<CardViewController, AnchorPane> boosterMap = FXCollections.observableMap(new LinkedHashMap<>());
-
     //region RUN INFO VAR
-    private final Card lastConsumableUsed = null;
+    private Card lastConsumableUsed;
     //endregion
 
     //region Background Run Variables
@@ -261,6 +257,10 @@ public class GameModel {
     //endregion
 
     //region Played Cards
+    public CardViewManager getPlayCardsManager() {
+        return playCardsManager;
+    }
+
     public ObservableList<PlayingCard> getPlayedCards() {
         return playedCards;
     }
@@ -285,7 +285,7 @@ public class GameModel {
     //endregion
 
     //region HAND POINTS VAR
-    //Best Hand
+    //Best Poker Hand
     public PokerHand getBestHand() {
         return bestHand.get();
     }
@@ -293,47 +293,6 @@ public class GameModel {
     public ObjectProperty<PokerHand> bestHandProperty() {
         return bestHand;
     }
-
-
-    //endregion
-
-    //region Poker Hand
-    //Name
-    public String getHandName() {
-        return handName.get();
-    }
-
-    public StringProperty handNameProperty() {
-        return handName;
-    }
-
-    //Level
-    public int getHandLevel() {
-        return handLevel.get();
-    }
-
-    public IntegerProperty handLevelProperty() {
-        return handLevel;
-    }
-
-    //Chips
-    public int getHandChips() {
-        return handChips.get();
-    }
-
-    public IntegerProperty handChipsProperty() {
-        return handChips;
-    }
-
-    //Multiplier
-    public double getHandMultiplier() {
-        return handMultiplier.get();
-    }
-
-    public DoubleProperty handMultiplierProperty() {
-        return handMultiplier;
-    }
-
     //endregion
 
     //region HOLDING HAND GS
@@ -375,21 +334,27 @@ public class GameModel {
     public void toggleSortedByRank() {
         setSortedByRank(!isSortedByRank());
     }
-
-
    //endregion
 
     //region ACTIVE JOKER GS
-    public ObservableList<Joker> getActiveJokerObList() {
-        return activeJokerObList;
-    }
-
     public ObservableMap<Joker, IntegerProperty> getRocketJokers() {
         return rocketJokers.get();
     }
 
     public MapProperty<Joker, IntegerProperty> rocketJokersProperty() {
         return rocketJokers;
+    }
+
+    public CardViewManager getJokerManager() {
+        return jokerManager;
+    }
+
+    public List<Joker> getJokerList() {
+        List<Joker> jokerList = new ArrayList<>();
+        for(Card card : jokerManager.getCardList()) {
+            jokerList.add((Joker) card);
+        }
+        return jokerList;
     }
 
     public ObservableMap<CardViewController, AnchorPane> getActiveJokerMap() {
@@ -409,20 +374,9 @@ public class GameModel {
 
 
     //region CONSUMABLES ON BOARD
-    public ObservableList<Card> getConsumableList() {
-        return consumableList;
+    public CardViewManager getConsumableManager() {
+        return consumableManager;
     }
-
-    public ObservableMap<CardViewController, AnchorPane> getConsumableMap() {
-        return consumableMap;
-    }
-    //endregion
-
-    //region Booster Map
-    public ObservableMap<CardViewController, AnchorPane> getBoosterMap() {
-        return boosterMap;
-    }
-
     //endregion
 
     //region Background Run Variables
@@ -445,7 +399,7 @@ public class GameModel {
     }
 
     public void setLastConsumableUsed(Card lastConsumableUsed) {
-        this.lastConsumableUsed.setCard(lastConsumableUsed);
+        this.lastConsumableUsed = lastConsumableUsed;
     }
 
     //endregion
@@ -575,10 +529,6 @@ public class GameModel {
 
     public BigDecimal getChipRequirementByIndex(int index) {
         return getChipRequirement()[index];
-    }
-
-    public void addToMultiplier(int i) {
-        handMultiplier.add(i);
     }
     //endregion
 

@@ -15,9 +15,9 @@ import java.net.URL;
 public class PlayingCard extends Card implements PurchasableCard {
 
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
+    public void onPurchase(GameModel model) {
         //TODO zum Deck hinzufügen
-        model.getRunState().getPlayingDeck().addCard((PlayingCard) CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane).getCard());
+        model.getRunState().getPlayingDeck().addCard(this);
     }
 
     private static String imageUrl = "/com/images/DEFAULT/BASIC/8BitDeck";

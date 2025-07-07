@@ -11,13 +11,14 @@ public enum TarotEffect {
         @Override
         public void apply(GameModel model) {
             if (canPlay(model)) {
-                CardViewController.createCardNode(model.getLastConsumableUsed(), model.getConsumableMap());
+                model.getConsumableManager().create(model.getLastConsumableUsed());
+                //CardViewController.createCardNode(model.getLastConsumableUsed(), model.getConsumableMap());
             }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableMap().size() < model.getRunState().getMaxConsumables() && model.getLastConsumableUsed() != null;
+            return model.getConsumableManager().getViewMap().size() < model.getRunState().getMaxConsumables() && model.getLastConsumableUsed() != null;
         }
     },
 
@@ -39,14 +40,14 @@ public enum TarotEffect {
     THE_HIGH_PRIESTESS {
         @Override
         public void apply(GameModel model) {
-            for (int i = model.getConsumableMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
-                CardViewController.createCardNode(model.getAllPlanetList().get(model.getRand().nextInt(model.getAllPlanetList().size())), model.getConsumableMap());
+            for (int i = model.getConsumableManager().getViewMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
+                model.getConsumableManager().create(model.getAllPlanetList().get(model.getRand().nextInt(model.getAllPlanetList().size())));
             }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableMap().size() <= model.getRunState().getMaxConsumables();
+            return model.getConsumableManager().getViewMap().size() <= model.getRunState().getMaxConsumables();
         }
 
     },
@@ -67,14 +68,14 @@ public enum TarotEffect {
     THE_EMPEROR {
         @Override
         public void apply(GameModel model) {
-            for (int i = model.getConsumableMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
-                CardViewController.createCardNode(model.getAllTarotList().get(model.getRand().nextInt(model.getAllTarotList().size())), model.getConsumableMap());
+            for (int i = model.getConsumableManager().getViewMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
+                model.getConsumableManager().create(model.getAllTarotList().get(model.getRand().nextInt(model.getAllTarotList().size())));
             }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableMap().size() <= model.getRunState().getMaxConsumables();
+            return model.getConsumableManager().getViewMap().size() <= model.getRunState().getMaxConsumables();
         }
 
     },
@@ -290,7 +291,7 @@ public enum TarotEffect {
         @Override
         public void apply(GameModel model) {
             if (model.getActiveJokerMap().size() < model.getRunState().getMaxJokers())
-                CardViewController.createCardNode(model.getAllJokerList().get(model.getRand().nextInt(model.getAllJokerList().size())), model.getActiveJokerMap());
+                model.getJokerManager().create(model.getAllJokerList().get(model.getRand().nextInt(model.getAllJokerList().size())));
         }
 
         @Override

@@ -12,8 +12,8 @@ import javafx.scene.layout.AnchorPane;
 public class Spectral extends Card implements PurchasableCard {
 
     @Override
-    public void onPurchase(GameModel model, AnchorPane pane) {
-        model.getConsumableMap().put(CardViewController.getCardViewController(model.getShopModel().getItemMap(), pane), pane);
+    public void onPurchase(GameModel model) {
+        model.getConsumableManager().create(this);
     }
     private final StringProperty spectralImageUrl = new SimpleStringProperty("");
     private final StringProperty spectralName = new SimpleStringProperty("");
