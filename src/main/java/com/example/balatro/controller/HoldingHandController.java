@@ -45,30 +45,21 @@ public class HoldingHandController {
 
     public void initialize() {
         //Add Cards to Stack Pane
-        gameModel.getHandCards().addListener((ListChangeListener<? super PlayingCard>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    holdingHand_StackPane.getChildren().addAll(change.getAddedSubList());
-                }
-                if(change.wasRemoved()) {
-                    holdingHand_StackPane.getChildren().removeAll(change.getRemoved());
-                }
-            }
-        });
+        UIController.bindStackPane(gameModel.getHandCardViewManager().getViewMap(), holdingHand_StackPane);
 
         //region Event Playing Card CLICKED
-        holdingHand_StackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
-
-            if (source instanceof PlayingCard) {
-                handMouseClick((PlayingCard) source);
-              }
-        });
+//        holdingHand_StackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+//            Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
+//
+//            if (source instanceof PlayingCard) {
+//                handMouseClick((PlayingCard) source);
+//              }
+//        });
         //endregion
 
         //Card Count Label
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getHandCards().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCards()
+                gameModel.getHandCardViewManager().getViewMap().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCardViewManager().getViewMap()
         ));
 
         //Hand Control Buttons
@@ -97,7 +88,10 @@ public class HoldingHandController {
     }
 
     public List<PlayingCard> getHandCards() {
-        return gameModel.getHandCards();
+        return  gameModel.getHandCardViewManager().getCardList().stream()
+                .filter(card -> card instanceof PlayingCard)
+                .map(card -> (PlayingCard) card)
+                .toList();
     }
 
 
@@ -105,12 +99,12 @@ public class HoldingHandController {
     public void drawCard() {
         PlayingCard cardToDraw = gameModel.getRunState().getPlayingDeck().drawCard();
         cardToDraw.setClickAble(true);
-        gameModel.getHandCards().add(cardToDraw);
+        gameModel.getHandCardViewManager().create(cardToDraw);
         sort();
     }
 
     public void drawCardToLimit() {
-        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCards().size());
+        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCardViewManager().getViewMap().size());
     }
 
     public void drawCardToLimit(int cardCount) {
@@ -162,34 +156,25 @@ public class HoldingHandController {
     }
 
     public void sort() {
-        List<PlayingCard> tempCardList = gameModel.getHandCards()
-                .stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        Comparator<PlayingCard> comparator = gameModel.isSortedByRank()
+                ? Comparator.comparingInt(PlayingCard::getRankIndex).thenComparingInt(PlayingCard::getSuitIndex).reversed()
+                : Comparator.comparingInt(PlayingCard::getSuitIndex).thenComparingInt(PlayingCard::getRankIndex);
 
-        if(gameModel.isSortedByRank()) {
-            tempCardList.sort(Comparator
-                    .comparingInt(PlayingCard::getRankIndex)
-                    .thenComparingInt(PlayingCard::getSuitOrder));
-        } else {
-            tempCardList.sort(Comparator
-                    .comparingInt(PlayingCard::getSuitOrder)
-                    .thenComparingInt(PlayingCard::getRankIndex));
-        }
+        List<PlayingCard> sorted = gameModel.getHandCardViewManager().getViewMap().keySet().stream()
+                .map(cvc -> (PlayingCard) cvc.getCard())
+                .sorted(comparator)
+                .toList();
 
-        Collections.reverse(tempCardList);
-
-        gameModel.getHandCards().clear();
-        gameModel.getHandCards().addAll(tempCardList);
-
-        UIController.moveCards(holdingHand_StackPane);
+        gameModel.getHandCardViewManager().clear();
+        sorted.forEach(card -> gameModel.getHandCardViewManager().create(card));
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
         if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getHands() > 0) {
             gameModel.setHandButtonVisibility(false);
             gameModel.getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
-            gameModel.getHandCards().removeAll(getSelectedCards());
+
+            getSelectedCards().forEach(playingCard -> { gameModel.getHandCardViewManager().remove(playingCard); });
             GameController.getInstance().playSelectedCards();
 
             if(Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))

@@ -67,7 +67,8 @@ public class GameModel {
     //TODO REMOVE RUN TAGS DYNAMISCH ERSTELLEN DER TAG FÜR DIE BLINDS
     private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
-    private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
+    public final CardViewManager handCardViewManager = new CardViewManager();
+    //private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
 
     private final CardViewManager playCardsManager = new CardViewManager();
@@ -297,9 +298,13 @@ public class GameModel {
 
     //region HOLDING HAND GS
     //Hand Cards
-    public ObservableList<PlayingCard> getHandCards() {
-        return handCards;
+    public CardViewManager getHandCardViewManager() {
+        return handCardViewManager;
     }
+
+//    public ObservableList<PlayingCard> getHandCards() {
+//        return handCards;
+//    }
 
     //Selected Cards
     public ObservableList<PlayingCard> getSelectedCards() {

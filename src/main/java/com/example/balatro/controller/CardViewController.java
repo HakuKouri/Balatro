@@ -122,8 +122,14 @@ public class CardViewController {
         bindMouseClickEvent();
         bindText();
 
+        selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                card_AnchorPane.getStyleClass().add("card-selected");
+            } else
+                card_AnchorPane.getStyleClass().remove("card-selected");
+        });
+
         cardProperty().addListener((obs, oldCard, newCard) -> {
-            System.out.println("New Card: " + newCard.getCardImageUrl());
             cardImage.imageProperty().unbind();
             cardImage.imageProperty().bind(newCard.imageProperty());
         });
@@ -160,11 +166,6 @@ public class CardViewController {
         use_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("use_clicked");
             GameController.getInstance().useItem(card_AnchorPane,this);
-        });
-
-        image_StackPane.setOnMouseClicked(event -> {
-            System.out.println("image_clicked");
-            selectedProperty().set(!isSelected());
         });
     }
 

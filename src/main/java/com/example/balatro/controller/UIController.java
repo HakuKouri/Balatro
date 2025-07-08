@@ -3,6 +3,9 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.card.PlayingCard;
+import com.example.balatro.domain.game.checkHand;
+import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.models.GameModel;
 import javafx.animation.*;
@@ -163,17 +166,11 @@ public class UIController {
                 AnchorPane anchorPane = change.getValueAdded();
                 CardViewController controller = change.getKey();
 
-                // (1) Auswahl-Visualisierung
-                controller.selectedProperty().addListener((observable, oldVal, isSelected) -> {
-                    anchorPane.setTranslateY(isSelected ? -50.0 : 0.0);
-                });
-
-                // (2) Drag + Click Unterscheidung vorbereiten
                 final double[] pressX = new double[1];
                 final double[] pressY = new double[1];
                 final Delta dragDelta = new Delta();
 
-                // (3) Maus gedrückt
+                //Mouse Pressed
                 anchorPane.setOnMousePressed(e -> {
                     dragDelta.x = e.getSceneX() - anchorPane.getTranslateX();
                     dragDelta.y = e.getSceneY() - anchorPane.getTranslateY();
@@ -181,38 +178,64 @@ public class UIController {
                     pressX[0] = e.getScreenX();
                     pressY[0] = e.getScreenY();
 
-                    anchorPane.toFront(); // Karte optisch nach vorne holen
+                    anchorPane.toFront();
                 });
 
-                // (4) Maus gezogen
+                //Mouse Drag
                 anchorPane.setOnMouseDragged(e -> {
-                    anchorPane.setTranslateX(e.getSceneX() - dragDelta.x);
-                    anchorPane.setTranslateY(e.getSceneY() - dragDelta.y);
+                    Pos alignment = stackPane.getAlignment();
+                    double newX = e.getSceneX() - dragDelta.x;
+                    double newY = e.getSceneY() - dragDelta.y;
 
-                    // Während des Drags: Andere Karten visuell umsortieren
+                    double halfCardWidth = anchorPane.getWidth() / 2;
+                    double halfCardHeight = anchorPane.getHeight() / 2;
+
+                    double clampedX, clampedY;
+
+                    if (alignment == Pos.CENTER || alignment == null) {
+                        double halfWidth = stackPane.getWidth() / 2;
+                        clampedX = Math.max(-halfWidth + halfCardWidth, Math.min(halfWidth - halfCardWidth, newX));
+                    } else if (alignment == Pos.CENTER_LEFT) {
+                        // Linksbündig: Start bei X = 0
+                        double maxX = stackPane.getWidth() - anchorPane.getWidth();
+                        clampedX = Math.max(0, Math.min(maxX, newX));
+                    } else {
+                        clampedX = newX;
+                    }
+
+                    double halfHeight = stackPane.getHeight() / 2;
+
+                    double minY = -halfHeight + halfCardHeight;
+                    double maxY = halfHeight - halfCardHeight;
+
+                    clampedY = Math.max(minY, Math.min(maxY, newY));
+
+                    anchorPane.setTranslateX(clampedX);
+                    anchorPane.setTranslateY(clampedY);
+
                     snapAnchorPaneToNewIndex(stackPane,anchorPane);
 
                     moveCards(stackPane, anchorPane);// Visuelles Neulayout
                     anchorPane.toFront();
                 });
 
-                // (5) Maus losgelassen – Click oder Drag?
+                //Mouse Release
                 anchorPane.setOnMouseReleased(e -> {
                     double dx = Math.abs(e.getScreenX() - pressX[0]);
                     double dy = Math.abs(e.getScreenY() - pressY[0]);
+                    double dragDistance = Math.sqrt(dx * dx + dy * dy);
 
-                    // (5a) Click (kleine Bewegung)
-                    if (dx < 100 && dy < 100) {
-                        for(CardViewController cardViewController : map.keySet())
-                            if(cardViewController != controller) cardViewController.selectedProperty().set(false);
-                        controller.selectedProperty().set(!controller.isSelected());
+                    //Klick
+                    if (dragDistance < 10) {
+                        handleCardSelection(controller, Balatro.getGameModel());
                         anchorPane.toFront();
-                        return;
                     }
-
-                    // (5b) Drag & Snap
-                    snapAnchorPaneToNewIndex(stackPane, anchorPane);
-                    moveCards(stackPane); // visuelles Neulayout
+                    //Drag
+                    else {
+                        snapAnchorPaneToNewIndex(stackPane, anchorPane);
+                        moveCards(stackPane);
+                        map.keySet().forEach(otherController -> { if(otherController.isSelected()) map.get(otherController).toFront(); });
+                    }
                 });
 
                 // (6) Karte der StackPane hinzufügen
@@ -250,20 +273,23 @@ public class UIController {
      * die gezogene Karte eingefügt werden soll (Snapping-Logik).
      */
     private static void snapAnchorPaneToNewIndex(StackPane stackPane, AnchorPane anchorPane) {
-        List<Node> children = new ArrayList<>(stackPane.getChildren());
-        children.remove(anchorPane);
+        List<Node> sortedChildren = stackPane.getChildren().stream()
+                .filter(n -> n != anchorPane)
+                .sorted(Comparator.comparingDouble(Node::getTranslateX))
+                .toList();
 
         double draggedX = anchorPane.getTranslateX();
         int insertIndex = 0;
 
-        for (int i = 0; i < children.size(); i++) {
-            if (draggedX > children.get(i).getTranslateX()) {
+        for (int i = 0; i < sortedChildren.size(); i++) {
+            if (draggedX > sortedChildren.get(i).getTranslateX()) {
                 insertIndex = i + 1;
             }
         }
 
-        children.add(insertIndex, anchorPane);
-        stackPane.getChildren().setAll(children);
+        List<Node> newOrder = new ArrayList<>(sortedChildren);
+        newOrder.add(insertIndex, anchorPane);
+        stackPane.getChildren().setAll(newOrder);
     }
 
     /**
@@ -273,66 +299,79 @@ public class UIController {
         double x, y;
     }
 
-
     public static void moveCards(StackPane stackPane) {
         moveCards(stackPane,new Card());
-//        int cards = stackPane.getChildren().size();
-//        if (cards == 0) return;
-//
-//        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
-//        else stackPane.setAlignment(Pos.CENTER);
-//
-//        double cardWidth = 200;
-//        double paneWidth = stackPane.getWidth();
-//        double margin = 10;
-//        double availableSpace = paneWidth - cardWidth * cards;
-//        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
-//        double pos;
-//        double centerIndex = (cards - 1) / 2.0;
-//
-//        for (int i = 0; i < cards; i++) {
-//            if (cards > 5) {
-//                pos = margin + i * (cardWidth + spacing);
-//            } else {
-//                pos = (i - centerIndex) * (cardWidth - cards * 4);
-//            }
-//
-//            stackPane.getChildren().get(i).setTranslateX(pos);
-//
-//            for (AnchorPane pane : Balatro.getGameModel().getActiveJokerMap().values()) {
-//                if(CardViewController.getCardViewController(Balatro.getGameModel().getActiveJokerMap(), pane).isSelected()) {
-//                    pane.setTranslateY(-50);
-//                } else pane.setTranslateY(0);
-//            }
-//        }
     }
 
     public static void moveCards(StackPane stackPane, Node exclude) {
-        int cards = stackPane.getChildren().size();
-        if (cards == 0) return;
-
-        if (cards > 5) stackPane.setAlignment(Pos.CENTER_LEFT);
-        else stackPane.setAlignment(Pos.CENTER);
+        int count = stackPane.getChildren().size();
+        if (count == 0) return;
 
         double cardWidth = 200;
-        double paneWidth = stackPane.getWidth();
         double margin = 10;
-        double availableSpace = paneWidth - cardWidth * cards;
-        double spacing = availableSpace < 0 ? availableSpace / (cards - 1) : 20;
-        double centerIndex = (cards - 1) / 2.0;
+        double paneWidth = stackPane.getWidth();
+        double spacing;
 
-        for (int i = 0; i < cards; i++) {
-            Node node = stackPane.getChildren().get(i);
-            if (node == exclude) continue; // Ziehende Karte bleibt wo sie ist
-
-            double pos;
-            if (cards > 5) {
-                pos = margin + i * (cardWidth + spacing);
-            } else {
-                pos = (i - centerIndex) * (cardWidth - cards * 4);
-            }
-            node.setTranslateX(pos);
+        if (count > 5) {
+            stackPane.setAlignment(Pos.CENTER_LEFT);
+            double availableSpace = paneWidth - (cardWidth * count);
+            spacing = availableSpace / Math.max(1, count - 1); // Schutz vor Division durch 0
+        } else {
+            stackPane.setAlignment(Pos.CENTER);
+            spacing = 20; // Wird bei ≤5 ignoriert
         }
+
+        double centerIndex = (count - 1) / 2.0;
+
+        for (int i = 0; i < count; i++) {
+            Node node = stackPane.getChildren().get(i);
+            if (node == exclude) continue;
+
+            double translateX;
+            if (count > 5) {
+                translateX = margin + i * (cardWidth + spacing);
+            } else {
+                translateX = (i - centerIndex) * (cardWidth - count * 4);
+            }
+
+            node.setTranslateX(translateX);
+        }
+    }
+
+    public static void handleCardSelection(CardViewController controller, GameModel gameModel) {
+        Card card = controller.getCard();
+
+        if (card instanceof PlayingCard playingCard) {
+            if (controller.isSelected()) {
+                controller.selectedProperty().set(false);
+                gameModel.removeCardFromSelectedCards(playingCard);
+            } else if (gameModel.getSelectedCards().size() < 5) {
+                controller.selectedProperty().set(true);
+                gameModel.addCardToSelectedCards(playingCard);
+            }
+            setHandInfo(Balatro.getGameModel(), checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
+        } else {
+            // Nur eine andere Karte auswählbar (z. B. Joker, Consumable)
+            gameModel.getHandCardViewManager().getViewMap().keySet()
+                    .forEach(cvc -> cvc.selectedProperty().set(false));
+            controller.selectedProperty().set(true);
+        }
+    }
+
+    public static void setHandInfo(GameModel gameModel, List<PokerHand> hands) {
+        if (hands.isEmpty()) {
+            gameModel.getBestHand().setHand(new PokerHand());
+            gameModel.getPossiblePokerHand().clear();
+            return;
+        }
+
+        gameModel.getPossiblePokerHand().setAll(hands);
+
+        PokerHand bestHand = hands.stream()
+                .max(Comparator.comparingInt(h -> h.getChips() * h.getMulti()))
+                .orElse(new PokerHand());
+
+        gameModel.getBestHand().setHand(bestHand);
     }
 
     private static AnchorPane getPaneById(Node node, String id) {

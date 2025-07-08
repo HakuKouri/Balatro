@@ -203,7 +203,6 @@ public class GameController
                 Joker joker = gameModel.getAllJokerList().get(i);
                 joker.addSticker(gameModel.getStickerList().get(10));
                 gameModel.getJokerManager().create(joker);
-                //CardViewController.createCardNode(joker, gameModel.getJokerManager());
             }
             for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());

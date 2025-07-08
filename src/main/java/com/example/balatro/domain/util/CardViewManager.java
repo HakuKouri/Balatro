@@ -5,17 +5,16 @@ import com.example.balatro.controller.CardViewController;
 import com.example.balatro.domain.card.Joker;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CardViewManager {
 
     // Mapping Model <-> UI
-    private final ObservableMap<CardViewController, AnchorPane> viewMap = FXCollections.observableHashMap();
+    private final ObservableMap<CardViewController, AnchorPane> viewMap = FXCollections.observableMap(new LinkedHashMap<>());
     private final Map<Card, CardViewController> controllerMap = new HashMap<>();
 
     public void create(Card card, boolean inShop) {
@@ -60,5 +59,25 @@ public class CardViewManager {
 
     public List<Card> getCardList() {
         return controllerMap.keySet().stream().toList();
+    }
+
+    public static void sortMapByX(ObservableMap<CardViewController, AnchorPane> map, StackPane root) {
+        List<Map.Entry<CardViewController, AnchorPane>> sorted = map.entrySet().stream().sorted(Comparator.comparingDouble(entry -> entry.getValue().getTranslateX())).toList();
+
+        LinkedHashMap<CardViewController, AnchorPane> newMap = new LinkedHashMap<>();
+        sorted.forEach(e -> newMap.put(e.getKey(), e.getValue()));
+
+        map.clear();
+        map.putAll(newMap);
+
+        root.getChildren().setAll(map.values());
+        map.keySet().stream()
+                .filter(CardViewController::isSelected)
+                .map(map::get)
+                .forEach(Node::toFront);
+    }
+
+    public static void sortMapHoldingHand() {
+        
     }
 }
