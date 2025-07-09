@@ -53,9 +53,9 @@ public class CardGenerator {
     }
 
     public static PlayingCard getRandomPlayingCard(GameModel gameModel) {
-        PlayingCard playingCard = new PlayingCard(gameModel.getRand().nextInt(14),4);
+        PlayingCard playingCard = new PlayingCard(gameModel.getRand().nextInt(13),gameModel.getRand().nextInt(4));
 
-        System.out.println("PlayingCard: " + playingCard.getCardName());
+        System.out.println("PlayingCard: " + playingCard.getRank() + " of " + playingCard.getSuit());
 
         return playingCard;
     }

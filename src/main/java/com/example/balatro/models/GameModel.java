@@ -61,17 +61,21 @@ public class GameModel {
         return shopModel;
     }
 
+    private final BoosterDrawModel boosterDrawModel = new BoosterDrawModel();
+    public BoosterDrawModel getBoosterDrawModel() {
+        return boosterDrawModel;
+    }
+
     //region Run Lists
     //TODO REMOVE RUN BLINDS DYNAMISCH BOSS BLIND ERSTELLEN
     private final ObservableList<Blind> runBlinds = FXCollections.observableArrayList();
     //TODO REMOVE RUN TAGS DYNAMISCH ERSTELLEN DER TAG FÜR DIE BLINDS
     private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
-    public final CardViewManager handCardViewManager = new CardViewManager();
-    //private final ObservableList<PlayingCard> handCards = FXCollections.observableArrayList();
+    public final CardViewManager handCardViewManager = new CardViewManager(false);
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
 
-    private final CardViewManager playCardsManager = new CardViewManager();
+    private final CardViewManager playCardsManager = new CardViewManager(false);
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
@@ -92,13 +96,12 @@ public class GameModel {
     //endregion
 
     //region ACTIVE JOKERS
-    private final CardViewManager jokerManager = new CardViewManager();
+    private final CardViewManager jokerManager = new CardViewManager(true);
     private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region Collected Consumables
-    private final CardViewManager consumableManager = new CardViewManager();
-    private final ObservableMap<CardViewController, AnchorPane> consumableMap = FXCollections.observableMap(new LinkedHashMap<>());
+    private final CardViewManager consumableManager = new CardViewManager(true);
     //endregion
 
     //region RUN INFO VAR
@@ -166,29 +169,50 @@ public class GameModel {
     public List<Tarot> getAllTarotList() {
         return allTarotList;
     }
+    public Tarot getRandomTarot() {
+        return allTarotList.get(rand.nextInt(allTarotList.size()));
+    }
 
     public List<Planet> getAllPlanetList() {
         return allPlanetList;
+    }
+    public Planet getRandomPlanet() {
+        return allPlanetList.get(rand.nextInt(allPlanetList.size()));
     }
 
     public List<Joker> getAllJokerList() {
         return allJokerList;
     }
+    public Joker getRandomJoker() {
+        return allJokerList.get(rand.nextInt(allJokerList.size()));
+    }
 
     public List<Spectral> getAllSpectralList() {
         return allSpectralList;
+    }
+    public Spectral getRandomSpectral() {
+        return allSpectralList.get(rand.nextInt(allSpectralList.size()));
     }
 
     public List<Edition> getAllEditionList() {
         return allEditionList;
     }
+    public Edition getRandomEdition() {
+        return allEditionList.get(rand.nextInt(allEditionList.size()));
+    }
 
     public List<Enhancement> getAllEnhancementList() {
         return allEnhancementList;
     }
+    public Enhancement getRandomEnhancement() {
+        return allEnhancementList.get(rand.nextInt(allEnhancementList.size()));
+    }
 
     public List<Seal> getAllSealList() {
         return allSealList;
+    }
+    public Seal getRandomSeal() {
+        return allSealList.get(rand.nextInt(allSealList.size()));
     }
 
     public List<PokerHand> getPokerHandList() {

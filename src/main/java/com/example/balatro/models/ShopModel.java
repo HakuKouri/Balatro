@@ -21,9 +21,9 @@ public class ShopModel {
     private final IntegerProperty rerollPrice  = new SimpleIntegerProperty(5);
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
-    private final CardViewManager itemCardViewManager = new CardViewManager();
-    private final CardViewManager boosterCardViewManager = new CardViewManager();
-    private final CardViewManager voucherCardViewManager = new CardViewManager();
+    private final CardViewManager itemCardViewManager = new CardViewManager(true);
+    private final CardViewManager boosterCardViewManager = new CardViewManager(true);
+    private final CardViewManager voucherCardViewManager = new CardViewManager(true);
     //endregion
 
     //region CONSTRUCTOR

@@ -8,11 +8,15 @@ import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.RewardModel;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -28,7 +32,6 @@ public class RewardSummaryController {
     private GridPane blindRewardPane;
     @FXML
     private VBox rewardVBox;
-
     @FXML
     private ImageView rewardBlindChip;
     @FXML
@@ -37,22 +40,34 @@ public class RewardSummaryController {
     private Label rewardBlindScore;
     @FXML
     private Label rewardBlindReward;
-
-    private int reward = 0;
+    @FXML
+    private Button cashOut_Button;
     //endregion
 
+    //region Attributes
+    private IntegerProperty reward = new SimpleIntegerProperty(0);
     private final GameModel gameModel = Balatro.getGameModel();
-    private final RewardModel rewardModel = new RewardModel();
+    //endregion
 
-    private final FXMLLoader rewardFxmlLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-pane.fxml"));
-    private GridPane rewardGridPane;
+    //region Getter Setter
+    public int getReward() {
+        return reward.get();
+    }
+
+    public IntegerProperty rewardProperty() {
+        return reward;
+    }
+
+    public void setReward(int reward) {
+        this.reward.set(reward);
+    }
+    //endregion
 
     public void initialize() {
-        try {
-            rewardGridPane = rewardFxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        rewardProperty().addListener((observable, oldValue, newValue) -> {
+            cashOut_Button.setText("Cash out: $" + newValue);
+        });
+
         rewardBlindChip.imageProperty().bind(gameModel.getActiveBlind().imageProperty());
         rewardBlindStake.imageProperty().bind(gameModel.getRunState().getChosenStake().imageProperty());
         rewardBlindScore.textProperty().bind(gameModel.scoreToReachProperty().asString());
@@ -69,6 +84,11 @@ public class RewardSummaryController {
         });
     }
 
+    //region Function
+    private void addToReward(int value) {
+        setReward(getReward() + value);
+    }
+
     private void setRewards(List<Joker> jokers ) {
         //clear Rewards
         while(rewardVBox.getChildren().size() > 2) {
@@ -78,7 +98,7 @@ public class RewardSummaryController {
         //Blind Reward
         blindRewardPane.setVisible(gameModel.activeBlindProperty().get().isRewarded());
         if(gameModel.activeBlindProperty().get().isRewarded()) {
-            reward += gameModel.activeBlindProperty().get().getBlindReward();
+            addToReward(gameModel.activeBlindProperty().get().getBlindReward());
 
         }
 
@@ -144,21 +164,31 @@ public class RewardSummaryController {
 
     public void cashOut(ActionEvent actionEvent) {
         gameModel.getActiveBlind().setBlind(new Blind());
-        gameModel.getRunState().addMoney(reward);
+        gameModel.getRunState().addMoney(getReward());
         gameModel.setRewardVisibility(false);
         gameModel.setShopVisibility(true);
         gameModel.setScoredPoints(BigDecimal.valueOf(0));
 
-        reward = 0;
+        setReward(0);
         GameController.getInstance().restockShop();
     }
 
-    public GridPane createRewardPane(int count, String effect, int money, boolean tag) {
-        reward += money;
-        RewardPaneController controller = rewardFxmlLoader.getController();
-        controller.setValues(count, effect, money, tag);
+    public AnchorPane createRewardPane(int count, String effect, int money, boolean tag) {
+        addToReward(money);
 
-        return rewardGridPane;
+        try {
+            FXMLLoader rewardFxmlLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-pane.fxml"));
+            AnchorPane rewardPane = rewardFxmlLoader.load();
+            RewardPaneController controller = rewardFxmlLoader.getController();
+            controller.createPane(count, effect, money, tag);
+            return rewardPane;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
     }
 
 }

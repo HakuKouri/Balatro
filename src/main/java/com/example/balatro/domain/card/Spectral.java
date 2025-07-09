@@ -1,23 +1,37 @@
 package com.example.balatro.domain.card;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.controller.CardViewController;
+import com.example.balatro.domain.util.CardViewManager;
+import com.example.balatro.enums.SpectralEffect;
+import com.example.balatro.interfaces.PlayableCard;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 
-public class Spectral extends Card implements PurchasableCard {
+public class Spectral extends Card implements PurchasableCard, PlayableCard {
 
+    //region @Override
     @Override
     public void onPurchase(GameModel model) {
-        model.getConsumableManager().create(this);
+        model.getRunState().subMoney(model.getShopModel().getItemCardViewManager().getControllerByCard(this).getBuyPrice());
+        CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getConsumableManager(), this);
     }
+
+    @Override
+    public boolean canPlay(GameModel model) {
+        return effect != null && effect.canPlay(model);
+    }
+    //endregion
+
+    //region Attributes
     private final StringProperty spectralImageUrl = new SimpleStringProperty("");
     private final StringProperty spectralName = new SimpleStringProperty("");
-    private final StringProperty spectralEffect = new SimpleStringProperty("");
+    private final StringProperty spectralDescription = new SimpleStringProperty("");
+
+    private SpectralEffect effect;
+    //endregion
 
     //region Constructor
     public Spectral() {
@@ -29,7 +43,6 @@ public class Spectral extends Card implements PurchasableCard {
         setPreserveRatio(true);
     }
     //endregion
-
 
     //region Getter Setter
     public String getSpectralImageUrl() {
@@ -56,17 +69,23 @@ public class Spectral extends Card implements PurchasableCard {
         this.spectralName.set(spectralName);
     }
 
-    public String getSpectralEffect() {
-        return spectralEffect.get();
+    public String getSpectralDescription() {
+        return spectralDescription.get();
     }
 
-    public StringProperty spectralEffectProperty() {
-        return spectralEffect;
+    public StringProperty spectralDescriptionProperty() {
+        return spectralDescription;
     }
 
-    public void setSpectralEffect(String spectralEffect) {
-        this.spectralEffect.set(spectralEffect);
+    public void setSpectralDescription(String spectralDescription) {
+        this.spectralDescription.set(spectralDescription);
     }
+
+    public void setEffect(SpectralEffect effect) {
+        this.effect = effect;
+    }
+
+
     //endregion
 
     //region Functions
@@ -76,6 +95,16 @@ public class Spectral extends Card implements PurchasableCard {
         setCardImageUrl(spectral.getCardImageUrl());
         setCardType(spectral.getCardType());
         setCardDescription(spectral.getCardDescription());
+        setEffect(spectral.getEffect());
     }
+
+    public void play(GameModel model) {
+        System.out.println("Playing Spectral");
+        if(effect != null) {
+            System.out.println("Effect Apply");
+            effect.apply(model);
+        }
+    }
+
     //endregion
 }

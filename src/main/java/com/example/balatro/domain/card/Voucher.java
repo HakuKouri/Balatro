@@ -14,6 +14,7 @@ public class Voucher extends Card implements PurchasableCard {
     public void onPurchase(GameModel model) {
         //TODO
         VoucherHandler.setVoucherFlag(this);
+        model.getRunState().subMoney(model.getShopModel().getVoucherCardViewManager().getControllerByCard(this).getBuyPrice());
         model.getShopModel().getVoucherCardViewManager().remove(this);
     }
 

@@ -15,43 +15,49 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-border-color: #233; -fx-border-width: 3;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.RewardSummaryController">
+<AnchorPane style="-fx-border-color: #233; -fx-border-width: 3;" stylesheets="@../../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.RewardSummaryController">
    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <columnConstraints>
-         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="80.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       </columnConstraints>
       <rowConstraints>
          <RowConstraints percentHeight="18.7" vgrow="SOMETIMES" />
          <RowConstraints vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-         <Button mnemonicParsing="false" onAction="#cashOut" prefHeight="63.0" prefWidth="476.0" style="-fx-background-color: #B06500; -fx-background-radius: 10; -fx-border-color: #fff; -fx-border-radius: 10; -fx-border-width: 3;" text="Cash Out: $..." textFill="WHITE">
+         <Button fx:id="cashOut_Button" mnemonicParsing="false" onAction="#cashOut" prefHeight="63.0" prefWidth="476.0" style="-fx-background-color: #B06500; -fx-background-radius: 10; -fx-border-color: #fff; -fx-border-radius: 10; -fx-border-width: 3;" text="Cash Out: $..." textFill="WHITE" GridPane.columnIndex="1">
             <font>
                <Font name="balatro Regular" size="29.0" />
             </font>
          </Button>
-         <ScrollPane GridPane.rowIndex="1">
+         <ScrollPane fitToHeight="true" GridPane.columnSpan="3" GridPane.rowIndex="1">
            <content>
              <AnchorPane>
                   <children>
-                     <VBox fx:id="rewardVBox" layoutX="15.0" layoutY="15.0" prefWidth="639.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <VBox fx:id="rewardVBox" layoutX="15.0" layoutY="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <children>
-                           <GridPane fx:id="blindRewardPane" prefHeight="60.0" prefWidth="674.0">
+                           <GridPane fx:id="blindRewardPane" prefHeight="60.0">
                               <columnConstraints>
-                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="77.0" />
-                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="209.0" />
-                                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="209.0" />
+                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="-Infinity" percentWidth="10.0" />
+                                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
                               </columnConstraints>
                               <rowConstraints>
                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               </rowConstraints>
                               <ImageView fx:id="rewardBlindChip" fitHeight="72.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true" GridPane.rowSpan="2" />
-                              <Label alignment="CENTER" prefHeight="58.0" prefWidth="261.0" text="Score at least:" textFill="WHITE" GridPane.columnIndex="1">
-                                 <font>
-                                    <Font name="balatro Regular" size="15.0" />
-                                 </font>
-                              </Label>
+                              <AnchorPane GridPane.columnIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" text="Score at least:" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="balatro Regular" size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
                               <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <ImageView fx:id="rewardBlindStake" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
                                  <Label fx:id="rewardBlindScore" prefHeight="39.0" prefWidth="199.0" text="Label" textFill="RED">
@@ -66,7 +72,7 @@
                                  </font>
                               </Label>
                            </GridPane>
-                           <Separator opacity="0.27" prefWidth="200.0">
+                           <Separator opacity="0.27">
                               <padding>
                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                               </padding>
@@ -81,6 +87,10 @@
            </content>
          </ScrollPane>
       </children>
+      <styleClass>
+         <String fx:value="background-dark" />
+         <String fx:value="bgr-10" />
+      </styleClass>
    </GridPane>
    <styleClass>
       <String fx:value="background-light" />

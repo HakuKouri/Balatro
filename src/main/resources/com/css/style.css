@@ -10,7 +10,7 @@
     -fx-rare-color: #ff4c40;
     -fx-legendary-color: #ab5bb5;
     -fx-background-color-dark: #152023;
-    -fx-background-color-ligth: #2B3639;
+    -fx-background-color-light: #2B3639;
     -fx-shop-color: #CF4B3F;
     -fx-chips-color: #0093ff;
     -fx-mult-color: #ff4c40;
@@ -53,14 +53,6 @@
     -fx-border-color: red;
     -fx-border-width: 5;
     -fx-border-radius: 20;
-}
-
-/* Buttons */
-.btnClose {
-    -fx-background-image: url("../images/menuIcons/close-button.png");
-    -fx-background-size: cover;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
 }
 
 .btn-yellow {
@@ -182,6 +174,14 @@
 
 }
 
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: -fx-background-color-dark;
+}
+
 .playingCard:hover {
 
 }
@@ -191,7 +191,7 @@
 }
 
 .background-light {
-    -fx-background-color: -fx-background-color-ligth;
+    -fx-background-color: -fx-background-color-light;
 }
 
 /* Background Radius */

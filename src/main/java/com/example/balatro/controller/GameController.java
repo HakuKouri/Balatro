@@ -204,6 +204,7 @@ public class GameController
                 joker.addSticker(gameModel.getStickerList().get(10));
                 gameModel.getJokerManager().create(joker);
             }
+
             for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());
                 triggerJokers(JokerTrigger.ON_BUY,new ArrayList<>());
@@ -270,8 +271,8 @@ public class GameController
         rerollBossBlind_Button.disableProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getRunState().getMoney() < 10, gameModel.getRunState().moneyProperty()));
 
         //Binding von Stack Panes für Inhalt und Click Events
-        UIController.bindStackPane(gameModel.getJokerManager().getViewMap(), spaceJoker);
-        UIController.bindStackPane(gameModel.getConsumableManager().getViewMap(), spaceConsumable);
+        UIController.bindStackPane(gameModel.getJokerManager(), spaceJoker);
+        UIController.bindStackPane(gameModel.getConsumableManager(), spaceConsumable);
 
         //Binding der Gameinfo Labels
         UIController.bindBlindToBeatInfo(blindToBeat_Label, toBeatEffect,toBeatImage,toBeatStake,toBeatScore,toBeatReward,gameModel);
@@ -284,10 +285,10 @@ public class GameController
                 gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().playingDeckProperty(), gameModel.getRunState().getPlayingDeck().getFullDeck()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getActiveJokerList().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
+                gameModel.getJokerManager().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
         ));
         consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getConsumableManager().getViewMap().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
+                gameModel.getConsumableManager().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
         ));
         //endregion
     }
@@ -374,20 +375,6 @@ public class GameController
         shopController.restockShop();
     }
 
-    public void buyItem(AnchorPane pane, CardViewController controller) {
-        System.out.println("Buy item: ");
-        System.out.println(controller.getCard());
-
-        controller.selectedProperty().set(false);
-        controller.inShopProperty().set(false);
-        gameModel.getRunState().subMoney(controller.getBuyPrice());
-
-        Card card = controller.getCard();
-        if (card instanceof PurchasableCard) {
-            ((PurchasableCard) card).onPurchase(gameModel);
-        }
-    }
-
     public void buyItem(Card card) {
         System.out.println("Buy item: ");
         System.out.println(card.getCardName());
@@ -395,7 +382,6 @@ public class GameController
         if (card instanceof PurchasableCard) {
             ((PurchasableCard) card).onPurchase(gameModel);
         }
-
     }
 
     public void playTarot(CardViewController cardViewController) {

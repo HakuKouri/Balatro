@@ -382,7 +382,7 @@ public class JokerEffectRegistry {
                     ((PlayingCard)card).getSuit() == Suit.SPADES ||
                             ((PlayingCard)card).getSuit() == Suit.CLUBS ||
                             Objects.equals(((PlayingCard)card).getEnhancement().getEnhancementName(), "Wild Card")).count();
-            if(blackCount == context.getHandCardViewManager().getViewMap().size()) {
+            if(blackCount == context.getHandCardViewManager().size()) {
                 context.getBestHand().multMult(3);
             }
         });
@@ -706,7 +706,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
             List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
-            for (int i = 0; i < 2 && context.getJokerManager().getViewMap().size() < context.getRunState().getMaxJokers(); i++) {
+            for (int i = 0; i < 2 && context.getJokerManager().size() < context.getRunState().getMaxJokers(); i++) {
                 context.getJokerManager().create(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())));
             }
         });
@@ -768,7 +768,7 @@ public class JokerEffectRegistry {
         effectMap.put("STENCIL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STENCIL_EFFECT");
 
-            int emptySpace = context.getRunState().getMaxJokers() - context.getJokerManager().getViewMap().size() + 1;
+            int emptySpace = context.getRunState().getMaxJokers() - context.getJokerManager().size() + 1;
 
             AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);

@@ -2,7 +2,8 @@ package com.example.balatro.domain.util;
 
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.controller.CardViewController;
-import com.example.balatro.domain.card.Joker;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.Node;
@@ -13,10 +14,30 @@ import java.util.*;
 
 public class CardViewManager {
 
-    // Mapping Model <-> UI
+    //region Attributes
     private final ObservableMap<CardViewController, AnchorPane> viewMap = FXCollections.observableMap(new LinkedHashMap<>());
     private final Map<Card, CardViewController> controllerMap = new HashMap<>();
+    private final BooleanProperty singleSelect =  new SimpleBooleanProperty(true);
+    //endregion
 
+    //region Constructor
+    public CardViewManager(boolean singleSelect) {
+        this.singleSelect.set(singleSelect);
+    }
+    //endregion
+
+    //region Getter Setter
+    public boolean isSingleSelect() {
+        return singleSelect.get();
+    }
+
+    public BooleanProperty singleSelectProperty() {
+        return singleSelect;
+    }
+    //endregion
+
+
+    //region Functions
     public void create(Card card, boolean inShop) {
         CardViewController.createCardNode(card, viewMap, inShop);
         CardViewController controller = getControllerByCard(card);
@@ -61,6 +82,10 @@ public class CardViewManager {
         return controllerMap.keySet().stream().toList();
     }
 
+    public int size() {
+        return controllerMap.size();
+    }
+
     public static void sortMapByX(ObservableMap<CardViewController, AnchorPane> map, StackPane root) {
         List<Map.Entry<CardViewController, AnchorPane>> sorted = map.entrySet().stream().sorted(Comparator.comparingDouble(entry -> entry.getValue().getTranslateX())).toList();
 
@@ -77,7 +102,8 @@ public class CardViewManager {
                 .forEach(Node::toFront);
     }
 
-    public static void sortMapHoldingHand() {
-        
+    public static void transferCardTo(CardViewManager from, CardViewManager to, Card card) {
+        from.remove(card);
+        to.create(card);
     }
 }

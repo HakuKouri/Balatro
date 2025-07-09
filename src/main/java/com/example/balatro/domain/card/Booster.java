@@ -11,6 +11,7 @@ public class Booster extends Card implements PurchasableCard {
 
     @Override
     public void onPurchase(GameModel model) {
+        model.getRunState().subMoney(model.getShopModel().getBoosterCardViewManager().getControllerByCard(this).getBuyPrice());
         GameController.getInstance().playBooster(this);
         model.getShopModel().getBoosterCardViewManager().remove(this);
     }

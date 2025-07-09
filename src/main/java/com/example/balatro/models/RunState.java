@@ -37,6 +37,8 @@ public class RunState {
 
     private final IntegerProperty maxJokers = new SimpleIntegerProperty(5);
     private final IntegerProperty maxConsumables = new SimpleIntegerProperty(2);
+
+    private final IntegerProperty usedEctoplasm = new SimpleIntegerProperty(0);
     //endregion
 
     //region CONSTRUCTOR
@@ -241,6 +243,18 @@ public class RunState {
 
     public void setMaxConsumables(int maxConsumables) {
         this.maxConsumables.set(maxConsumables);
+    }
+
+    public int getUsedEctoplasm() {
+        return usedEctoplasm.get();
+    }
+
+    public IntegerProperty usedEctoplasmProperty() {
+        return usedEctoplasm;
+    }
+
+    public void incrementUsedEctoplasm() {
+        usedEctoplasm.set(getUsedEctoplasm() + 1);
     }
 
     //endregion

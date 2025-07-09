@@ -5,6 +5,7 @@ import com.example.balatro.domain.card.Booster;
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.util.CardGenerator;
 import com.example.balatro.domain.card.PlayingCard;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -40,8 +41,6 @@ public class BoosterOpeningController {
     //region ATTRIBUTES
     private final ObjectProperty<Booster> booster = new SimpleObjectProperty<>(new Booster());
 
-    private final ObservableList<PlayingCard> playingCardsDrawn = FXCollections.observableArrayList();
-    private final ObservableMap<CardViewController, AnchorPane> boosterDrawnMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region GETTER SETTER
@@ -60,8 +59,8 @@ public class BoosterOpeningController {
 
     //region FUNCTIONS
     public void initialize() {
-        UIController.bindStackPane(playingCardsDrawn, playingCard_StackPane);
-        UIController.bindStackPane(boosterDrawnMap, boosterDraw_StackPane);
+        UIController.bindStackPane(Balatro.getGameModel().getBoosterDrawModel().getPlayingCardsDrawn(), playingCard_StackPane);
+        UIController.bindStackPane(Balatro.getGameModel().getBoosterDrawModel().getBoosterDrawnManager(), boosterDraw_StackPane);
 
         boosterName_Label.textProperty().bind(booster.get().cardNameProperty());
     }
@@ -73,12 +72,13 @@ public class BoosterOpeningController {
         if("Arcana Pack".equals(booster.getCardName()) || "Spectral Pack".equals(booster.getCardName())) {
             drawDeckCards();
         }
-
     }
 
     private void drawBoosterCards() {
+        System.out.println("drawBoosterCards: " + booster.get().getCardName());
         GameModel gameModel = Balatro.getGameModel();
         for (int i = 0; i < booster.get().getBoosterSizeValue(); i++) {
+            System.out.println("Draw " + i + " Card");
             Card card = switch (booster.get().getCardName()) {
                 case "Standard Pack" -> CardGenerator.getRandomPlayingCard(gameModel);
                 case "Arcana Pack" -> CardGenerator.getRandomTarot(gameModel);
@@ -89,7 +89,7 @@ public class BoosterOpeningController {
             };
 
             if(card != null)
-                gameModel.getShopModel().getBoosterCardViewManager().create(card);
+                gameModel.getBoosterDrawModel().getBoosterDrawnManager().create(card);
             else
                 System.out.println("Card is Null");
         }
@@ -108,17 +108,18 @@ public class BoosterOpeningController {
             //TODO choose Playing Cards (not clickable)
             PlayingCard playingCard = gameModel.getRunState().getPlayingDeck().getFullDeck().get(index);
             playingCard.setClickAble(true);
-            playingCardsDrawn.add(playingCard);
+            gameModel.getBoosterDrawModel().getPlayingCardsDrawn().add(playingCard);
         }
     }
 
 
     public void skipBooster(ActionEvent actionEvent) {
-        playingCardsDrawn.clear();
-        boosterDrawnMap.clear();
+        GameModel gameModel = Balatro.getGameModel();
+        gameModel.getBoosterDrawModel().getPlayingCardsDrawn().clear();
+        gameModel.getBoosterDrawModel().getBoosterDrawnManager().clear();
 
-        Balatro.getGameModel().setBoosterOpeningVisibility(false);
-        Balatro.getGameModel().setShopVisibility(true);
+        gameModel.setBoosterOpeningVisibility(false);
+        gameModel.setShopVisibility(true);
     }
     //endregion
 }

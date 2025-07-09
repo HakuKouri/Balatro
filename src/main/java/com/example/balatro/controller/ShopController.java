@@ -73,9 +73,9 @@ public class ShopController {
     //endregion
 
     public void initialize() {
-        UIController.bindStackPane(getItemMap(), shopArea);
-        UIController.bindStackPane(getBoosterMap(), boosterArea);
-        UIController.bindStackPane(getVoucherMap(), voucherArea);
+        UIController.bindStackPane(gameModel.getShopModel().getItemCardViewManager(), shopArea);
+        UIController.bindStackPane(gameModel.getShopModel().getBoosterCardViewManager(), boosterArea);
+        UIController.bindStackPane(gameModel.getShopModel().getVoucherCardViewManager(), voucherArea);
     }
 
     //region FUNCTIONS

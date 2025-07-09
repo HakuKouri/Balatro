@@ -1,18 +1,18 @@
 package com.example.balatro.domain.card;
 
-import com.example.balatro.controller.CardViewController;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.TarotEffect;
 import com.example.balatro.interfaces.PlayableCard;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.layout.AnchorPane;
 
 public class Tarot extends Card implements PurchasableCard, PlayableCard {
     @Override
     public void onPurchase(GameModel model) {
-        model.getConsumableManager().create(this);
+        model.getRunState().subMoney(model.getShopModel().getItemCardViewManager().getControllerByCard(this).getBuyPrice());
+        CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getConsumableManager(), this);
     }
 
     @Override
@@ -36,9 +36,11 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
 
     private TarotEffect effect;
 
-
-    public void setEffect(TarotEffect effect) {
+    public void setTarotEffect(TarotEffect effect) {
         this.effect = effect;
+    }
+    public TarotEffect getTarotEffect() {
+        return effect;
     }
 
     //region Functions
@@ -49,7 +51,7 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
         setCardCost(tarot.getCardCost());
         setCardType(tarot.getCardType());
         setTarotDescription(tarot.getTarotDescription());
-        setEffect(tarot.getEffect());
+        setTarotEffect(tarot.getTarotEffect());
     }
 
     public void play(GameModel model) {

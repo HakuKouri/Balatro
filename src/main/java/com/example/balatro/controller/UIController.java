@@ -2,6 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.game.checkHand;
 import com.example.balatro.domain.rules.PokerHand;
@@ -114,52 +115,11 @@ public class UIController {
     }
 
     /**
-    * Diese Methode bindet MouseClick events an StackPanes,
-    * um zu erkennen, welches Label geklickt worden sind
-    */
-    public static void addCardClickEvent(StackPane stackPane, Map<CardViewController, AnchorPane> map) {
-        stackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            Node source = (Node) event.getTarget();
-            AnchorPane anchorPane = null;
-            CardViewController cardViewController = null;
-
-            Node currentNode = source;
-            // Falls das Textfeld eines Labels geklickt wurde
-            if (source.getParent() instanceof Label) {
-                currentNode = source.getParent();
-            }
-
-            //Führe bestimmte Aktionen aus anhand des geklickten Labels
-            if (currentNode instanceof Label) {
-                anchorPane = getPaneById(currentNode, "card_AnchorPane");
-                cardViewController = CardViewController.getCardViewController(map, anchorPane);
-
-                switch (currentNode.getId()) {
-                    case "buyLabel":
-                        System.out.println("BuyLabel clicked");
-                        GameController.getInstance().buyItem(anchorPane, cardViewController);
-                        break;
-                    case "buyUseSell_Label":
-                        System.out.println("SellLabel clicked");
-                        if (cardViewController.isInShop())
-                            GameController.getInstance().buyAndUse(cardViewController);
-                        else
-                            GameController.getInstance().sellItem(anchorPane, cardViewController, map);
-                        break;
-                    case "use_Label":
-                        System.out.println("UseLabel clicked");
-                        GameController.getInstance().useCard(anchorPane, cardViewController, map);
-                        break;
-                }
-            }
-        });
-    }
-
-    /**
     * Diese Methode bindet visuelle Effekte an eine StackPane
     * z.B. selected oder Drag and Drop
     */
-    public static void bindStackPane(ObservableMap<CardViewController, AnchorPane> map, StackPane stackPane) {
+    public static void bindStackPane(CardViewManager manager, StackPane stackPane) {
+        ObservableMap<CardViewController, AnchorPane> map = manager.getViewMap();
         map.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
 
             if (change.wasAdded()) {
@@ -214,9 +174,10 @@ public class UIController {
                     anchorPane.setTranslateY(clampedY);
 
                     snapAnchorPaneToNewIndex(stackPane,anchorPane);
-
                     moveCards(stackPane, anchorPane);// Visuelles Neulayout
+
                     anchorPane.toFront();
+
                 });
 
                 //Mouse Release
@@ -227,7 +188,7 @@ public class UIController {
 
                     //Klick
                     if (dragDistance < 10) {
-                        handleCardSelection(controller, Balatro.getGameModel());
+                        handleCardSelection(manager.isSingleSelect(), controller, Balatro.getGameModel());
                         anchorPane.toFront();
                     }
                     //Drag
@@ -338,7 +299,7 @@ public class UIController {
         }
     }
 
-    public static void handleCardSelection(CardViewController controller, GameModel gameModel) {
+    public static void handleCardSelection(boolean singleSelect, CardViewController controller, GameModel gameModel) {
         Card card = controller.getCard();
 
         if (card instanceof PlayingCard playingCard) {
@@ -350,11 +311,16 @@ public class UIController {
                 gameModel.addCardToSelectedCards(playingCard);
             }
             setHandInfo(Balatro.getGameModel(), checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
-        } else {
-            // Nur eine andere Karte auswählbar (z. B. Joker, Consumable)
-            gameModel.getHandCardViewManager().getViewMap().keySet()
-                    .forEach(cvc -> cvc.selectedProperty().set(false));
-            controller.selectedProperty().set(true);
+        } else if (singleSelect) {
+            if(controller.isSelected()) {
+                controller.selectedProperty().set(false);
+            } else {
+                gameModel.getJokerManager().getViewMap().keySet()
+                        .forEach(cvc -> cvc.selectedProperty().set(false));
+
+                controller.selectedProperty().set(true);
+            }
+
         }
     }
 
@@ -487,10 +453,6 @@ public class UIController {
         });
 
         current.play();
-    }
-
-    public static void clear() {
-        animationList.clear();
     }
 
     //endregion

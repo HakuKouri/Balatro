@@ -44,22 +44,12 @@ public class HoldingHandController {
     GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-        //Add Cards to Stack Pane
-        UIController.bindStackPane(gameModel.getHandCardViewManager().getViewMap(), holdingHand_StackPane);
 
-        //region Event Playing Card CLICKED
-//        holdingHand_StackPane.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-//            Node source = (Node) event.getTarget();  // Bestimme das geklickte Element
-//
-//            if (source instanceof PlayingCard) {
-//                handMouseClick((PlayingCard) source);
-//              }
-//        });
-        //endregion
+        UIController.bindStackPane(gameModel.getHandCardViewManager(), holdingHand_StackPane);
 
         //Card Count Label
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getHandCardViewManager().getViewMap().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCardViewManager().getViewMap()
+                gameModel.getHandCardViewManager().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCardViewManager().getViewMap()
         ));
 
         //Hand Control Buttons
@@ -69,19 +59,6 @@ public class HoldingHandController {
         discardSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
     }
 
-    private void handMouseClick(PlayingCard card) {
-        // Wenn das geklickte Element eine PlayingCard ist
-        if(card.isSelected()) {
-            card.setSelected(false);
-            gameModel.removeCardFromSelectedCards(card);
-        }
-        else if(gameModel.getSelectedCards().size() < 5){
-            card.setSelected(true);
-            gameModel.addCardToSelectedCards(card);
-        }
-        setHandInfo(checkHand.evaluateHands(gameModel, gameModel.getSelectedCards()));
-
-    }
 
     public List<PlayingCard> getSelectedCards() {
         return gameModel.getSelectedCards();
@@ -104,7 +81,7 @@ public class HoldingHandController {
     }
 
     public void drawCardToLimit() {
-        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCardViewManager().getViewMap().size());
+        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCardViewManager().size());
     }
 
     public void drawCardToLimit(int cardCount) {
@@ -172,7 +149,7 @@ public class HoldingHandController {
     public void playSelectedCards(ActionEvent actionEvent) {
         if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getHands() > 0) {
             gameModel.setHandButtonVisibility(false);
-            gameModel.getSelectedCards().sort(Comparator.comparingInt(getHandCards()::indexOf));
+            gameModel.getSelectedCards().sort(Comparator.comparingInt(gameModel.getHandCardViewManager().getCardList()::indexOf));
 
             getSelectedCards().forEach(playingCard -> { gameModel.getHandCardViewManager().remove(playingCard); });
             GameController.getInstance().playSelectedCards();
@@ -187,7 +164,8 @@ public class HoldingHandController {
 
     public void discardSelectedCards(ActionEvent actionEvent) {
         if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getDiscards() > -1000) {
-            getHandCards().removeAll(getSelectedCards());
+            getSelectedCards().forEach(playingCard -> { gameModel.getHandCardViewManager().remove(playingCard); });
+
             getSelectedCards().clear();
 
             if (Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))

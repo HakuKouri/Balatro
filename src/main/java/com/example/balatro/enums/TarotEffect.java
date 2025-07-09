@@ -2,7 +2,6 @@ package com.example.balatro.enums;
 
 import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
-import com.example.balatro.controller.CardViewController;
 import com.example.balatro.models.GameModel;
 
 public enum TarotEffect {
@@ -18,7 +17,7 @@ public enum TarotEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableManager().getViewMap().size() < model.getRunState().getMaxConsumables() && model.getLastConsumableUsed() != null;
+            return model.getConsumableManager().size() < model.getRunState().getMaxConsumables() && model.getLastConsumableUsed() != null;
         }
     },
 
@@ -40,14 +39,14 @@ public enum TarotEffect {
     THE_HIGH_PRIESTESS {
         @Override
         public void apply(GameModel model) {
-            for (int i = model.getConsumableManager().getViewMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
+            for (int i = model.getConsumableManager().size(); i < model.getRunState().getMaxConsumables(); i++) {
                 model.getConsumableManager().create(model.getAllPlanetList().get(model.getRand().nextInt(model.getAllPlanetList().size())));
             }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableManager().getViewMap().size() <= model.getRunState().getMaxConsumables();
+            return model.getConsumableManager().size() <= model.getRunState().getMaxConsumables();
         }
 
     },
@@ -68,14 +67,14 @@ public enum TarotEffect {
     THE_EMPEROR {
         @Override
         public void apply(GameModel model) {
-            for (int i = model.getConsumableManager().getViewMap().size(); i < model.getRunState().getMaxConsumables(); i++) {
+            for (int i = model.getConsumableManager().size(); i < model.getRunState().getMaxConsumables(); i++) {
                 model.getConsumableManager().create(model.getAllTarotList().get(model.getRand().nextInt(model.getAllTarotList().size())));
             }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getConsumableManager().getViewMap().size() <= model.getRunState().getMaxConsumables();
+            return model.getConsumableManager().size() <= model.getRunState().getMaxConsumables();
         }
 
     },

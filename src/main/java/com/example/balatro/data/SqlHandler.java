@@ -198,7 +198,7 @@ public class SqlHandler {
                     ps.setInt(1, ((Spectral) listItem).getCardId());
                     ps.setString(2, ((Spectral) listItem).getSpectralImageUrl());
                     ps.setString(3, ((Spectral) listItem).getSpectralName());
-                    ps.setString(4, ((Spectral) listItem).getSpectralEffect());
+                    ps.setString(4, ((Spectral) listItem).getSpectralDescription());
                     ps.executeUpdate();
                 } else if (listItem.getClass() == Voucher.class) {
                     //VoucherCardsTableColumns = "(id, voucherImageUrl, voucherName, voucherEffect, upgradeFrom, upgradeVoucherUnlocked, note)";

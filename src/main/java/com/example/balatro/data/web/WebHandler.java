@@ -285,7 +285,7 @@ public class WebHandler
                     spectral.setCardId(arrayList.size()+1);
                     spectral.setSpectralImageUrl("src\\main\\resources\\com\\images\\Tarots_Celestial_Spectral\\spectral_" + spectral.getCardId() + ".png");
                     spectral.setSpectralName(cells.get(1).text());
-                    spectral.setSpectralEffect(cells.get(2).text());
+                    spectral.setSpectralDescription(cells.get(2).text());
                 }
                 catch (Exception e) {
                     System.out.println("Fehler aufgetreten!! Spectrals: ");

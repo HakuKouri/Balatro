@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class CardViewController {
 
+
     //region FXML
     @FXML
     private AnchorPane price_AnchorPane;
@@ -40,15 +41,21 @@ public class CardViewController {
     private ImageView cardImage;
     @FXML
     private StackPane image_StackPane;
+    @FXML
+    private AnchorPane useSelect_AnchorPane;
+    @FXML
+    private Label useSelect_Label;
     //endregion
 
     //region Properties
     private final ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
     private final BooleanProperty inShop = new SimpleBooleanProperty(false);
+    private final BooleanProperty fromBooster = new SimpleBooleanProperty(false);
     private final StringProperty cardType = new SimpleStringProperty("");
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
     private final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
     private Map<CardViewController, AnchorPane> inMap;
+
     //endregion
 
     //region const Strings
@@ -71,6 +78,14 @@ public class CardViewController {
 
     public BooleanProperty inShopProperty() {
         return inShop;
+    }
+
+    public boolean isFromBooster() {
+        return fromBooster.get();
+    }
+
+    public BooleanProperty fromBoosterProperty() {
+        return fromBooster;
     }
 
     public String getCardType() {
@@ -112,7 +127,6 @@ public class CardViewController {
     public void setInMap(Map<CardViewController, AnchorPane> inMap) {
         this.inMap = inMap;
     }
-
     //endregion
 
     public void initialize() {
@@ -132,8 +146,11 @@ public class CardViewController {
         cardProperty().addListener((obs, oldCard, newCard) -> {
             cardImage.imageProperty().unbind();
             cardImage.imageProperty().bind(newCard.imageProperty());
+            buyPrice.bind(Bindings.createIntegerBinding(() ->
+                            Math.max((int) Math.round(getCard().getMaxCost() * Balatro.getGameModel().getShopModel().getShopPrices()),1) ,
+                    getCard().maxCostProperty(),
+                    Balatro.getGameModel().getShopModel().shopPricesProperty()));
         });
-
 
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
 
@@ -141,11 +158,6 @@ public class CardViewController {
             if(card.get() instanceof Tarot)
                 System.out.println(((Tarot)card.get()).canPlay(Balatro.getGameModel()));
         });
-
-        buyPrice.bind(Bindings.createIntegerBinding(() ->
-                        Math.max((int) Math.round(getCard().getMaxCost() * Balatro.getGameModel().getShopModel().getShopPrices()),1) ,
-                getCard().maxCostProperty(),
-                Balatro.getGameModel().getShopModel().shopPricesProperty()));
     }
 
     //Funktionen
@@ -166,6 +178,10 @@ public class CardViewController {
         use_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("use_clicked");
             GameController.getInstance().useItem(card_AnchorPane,this);
+        });
+
+        useSelect_AnchorPane.setOnMouseClicked(event -> {
+            System.out.println("useSelect_clicked");
         });
     }
 
@@ -200,6 +216,12 @@ public class CardViewController {
                 Balatro.getGameModel().getJokerManager().getViewMap(),            // Joker (für bestimmte Tarot-Effekte)
                 Balatro.getGameModel().getConsumableManager().getViewMap()              // Consumables (z. B. The Fool)
         ));
+
+        useSelect_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
+            if(getCard() instanceof Tarot tarot) return !(tarot.canPlay(Balatro.getGameModel()));
+            if(getCard() instanceof Spectral spectral) return !(spectral.canPlay(Balatro.getGameModel()));
+            return true;
+        }));
     }
 
     private void bindVisibility() {

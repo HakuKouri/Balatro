@@ -1,6 +1,7 @@
 package com.example.balatro.domain.card;
 
 import com.example.balatro.controller.CardViewController;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.*;
@@ -13,7 +14,8 @@ public class Planet extends Card implements PurchasableCard {
 
     @Override
     public void onPurchase(GameModel model) {
-        model.getConsumableManager().create(this);
+        model.getRunState().subMoney(model.getShopModel().getItemCardViewManager().getControllerByCard(this).getBuyPrice());
+        CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getConsumableManager(), this);
     }
 
     private static Map<String, Boolean> uniquePlanetPlayed = new HashMap<>() {{
