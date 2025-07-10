@@ -46,6 +46,15 @@ public class CardViewManager {
         }
     }
 
+    public void createForBooster(Card card) {
+        CardViewController cvc = CardViewController.createCardNode(card, viewMap, false);
+        cvc.fromBoosterProperty().set(true);
+        CardViewController controller = getControllerByCard(card);
+        if (controller != null) {
+            controllerMap.put(card, controller);
+        }
+    }
+
     public void create(Card card) {
         create(card, false);
     }

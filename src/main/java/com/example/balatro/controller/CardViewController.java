@@ -221,14 +221,14 @@ public class CardViewController {
             if(getCard() instanceof Tarot tarot) return !(tarot.canPlay(Balatro.getGameModel()));
             if(getCard() instanceof Spectral spectral) return !(spectral.canPlay(Balatro.getGameModel()));
             return true;
-        }));
+        }, cardProperty()));
     }
 
     private void bindVisibility() {
         price_AnchorPane.visibleProperty().bind(inShopProperty());
 
         buyUseSell_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && ((isTarot() || isPlanet()) || (!isInShop() && isJoker())), selectedProperty())
+                        isSelected() && ((isTarot() || isPlanet()) || (!isInShop() && isJoker())) && !isFromBooster(), selectedProperty())
         );
 
         use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
@@ -241,6 +241,9 @@ public class CardViewController {
                         isSelected() && isInShop(),
                 selectedProperty(), inShopProperty()
         ));
+
+        useSelect_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
+                isSelected() && isFromBooster(), selectedProperty(), fromBoosterProperty()));
     }
 
     private void bindText() {
@@ -283,11 +286,12 @@ public class CardViewController {
         return "Planet".equals(getCard().getCardType());
     }
 
-    public static void createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map, boolean inShop) {
+    public static CardViewController createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map, boolean inShop) {
+        CardViewController controller = new CardViewController();
         try {
             FXMLLoader loader = new FXMLLoader(CardViewController.class.getResource("/com/example/balatro/card.fxml"));
             AnchorPane cardPane = loader.load();
-            CardViewController controller = loader.getController();
+            controller = loader.getController();
 
             cardPane.getStyleClass().add("card");
             controller.setInMap(map);
@@ -295,28 +299,13 @@ public class CardViewController {
             controller.inShopProperty().set(inShop);
 
             map.put(controller,cardPane);
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        };
+        return controller;
     }
 
-    public static CardViewController getCardViewController(Map<CardViewController,AnchorPane> map, AnchorPane pane) {
-        return map.entrySet().stream()
-                .filter(e -> e.getValue().equals(pane))
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No CardViewController found"));
-    }
 
-    public static AnchorPane getCardAnchorPane(Map<CardViewController,AnchorPane> map, Card card) {
-        return map.entrySet().stream()
-                .filter( e -> e.getKey().getCard().equals(card))
-                .findFirst()
-                .map(Map.Entry::getValue)
-                .orElseGet(() -> {
-                    System.out.println("Card not found in map: " + card.getCardName());
-                    return null;
-                });
-    }
 
 }

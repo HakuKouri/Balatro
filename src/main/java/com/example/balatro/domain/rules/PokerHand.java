@@ -1,5 +1,7 @@
 package com.example.balatro.domain.rules;
 
+import com.example.balatro.Balatro;
+import com.example.balatro.domain.card.Planet;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,13 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PokerHand {
+    //region Attributes
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty name = new SimpleStringProperty();
     private final IntegerProperty level = new SimpleIntegerProperty();
     private final IntegerProperty chips = new SimpleIntegerProperty();
     private final IntegerProperty multi = new SimpleIntegerProperty();
     private final IntegerProperty played = new SimpleIntegerProperty();
+    //endregion
 
+    //region Constructor
     public PokerHand() {
 
     }
@@ -27,6 +32,7 @@ public class PokerHand {
         this.multi.set(multi);
         this.played.set(0);
     }
+    //endregion
 
     //region GETTER SETTER
     public void setHand(PokerHand pokerHand) {
@@ -108,9 +114,9 @@ public class PokerHand {
     public void setPlayed(int played) {
         this.played.set(played);
     }
-
     //endregion
 
+    //region Functions
     public void addMult(int multiplier) {
         setMulti(getMulti() + multiplier);
     }
@@ -144,6 +150,10 @@ public class PokerHand {
     }
 
     public void addLevel() {
+        Planet matchingPlanet = Balatro.getGameModel().getAllPlanetList().stream().filter(p -> getName().equals(p.getPlanetPokerHand())).toList().getFirst();
         levelProperty().set(getLevel() + 1);
+        multiProperty().set(getMulti() + matchingPlanet.getPlanetMultiplier());
+        chipsProperty().set(getChips() + matchingPlanet.getPlanetChips());
     }
+    //endregion
 }

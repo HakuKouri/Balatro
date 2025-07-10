@@ -1,14 +1,17 @@
 package com.example.balatro.enums;
 
 import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.card.Edition;
 import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
+import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.models.GameModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum SpectralEffect {
 
@@ -184,101 +187,143 @@ public enum SpectralEffect {
         @Override
         public boolean canPlay(GameModel model) {
             return (!model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility()) && model.getRunState().getMaxHandSize() > 1;
-
         }
     },
     ANKH {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect ANKH");
+            if(canPlay(model)) {
+                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().size()));
+                List<Card> cardList = model.getJokerManager().getCardList().stream().filter(card -> !joker.equals(card) ).toList();
+                if(joker.getEdition().getEditionName().equals("Negative")) {
+                    joker.setEdition(new Edition());
+                }
+                model.getJokerManager().create(joker);
+                cardList.forEach(card -> {
+                    model.getJokerManager().remove(card);
+                });
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getJokerManager().size() > 1;
         }
     },
     DEJA_VU {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect DEJA_VU");
+            if(canPlay(model)) {
+                model.getSelectedCards().getFirst().setSeal(model.getAllSealList().get(1));
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getSelectedCards().size() == 1;
         }
     },
 
     HEX {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect HEX");
+            if(canPlay(model)) {
+                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().size()));
+                joker.setEdition(model.getAllEditionList().get(3));
+                model.getJokerManager().getCardList().forEach((card) -> {
+                    if(card != joker)
+                        model.getJokerManager().remove(card);
+                });
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getJokerManager().getCardList().stream().anyMatch(card -> card.getEdition().getId() == 0);
         }
     },
 
     TRANCE {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect TRANCE");
+            if(canPlay(model)) {
+                model.getSelectedCards().getFirst().setSeal(model.getAllSealList().get(2));
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getSelectedCards().size() == 1;
         }
     },
 
     MEDIUM {
         @Override
         public void apply(GameModel model) {
+            System.out.println("Spectral Effect MEDIUM");
+            if(canPlay(model)) {
+                model.getSelectedCards().getFirst().setSeal(model.getAllSealList().get(3));
 
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getSelectedCards().size() == 1;
         }
     },
 
     CRYPTID {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect CRYPTID");
+            if(canPlay(model)) {
+                for(int  i = 0; i < 2; i++) {
+                    model.getRunState().getPlayingDeck().addCard(model.getSelectedCards().getFirst());
+                    if(model.isBoosterOpeningVisibility()) {
+                        model.getBoosterDrawModel().getPlayingCardsDrawn().add(model.getSelectedCards().getFirst());
+                    } else {
+                        model.getHandCardViewManager().create((model.getSelectedCards().getFirst()));
+                    }
+                }
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getSelectedCards().size() == 1;
         }
     },
 
     THE_SOUL {
         @Override
         public void apply(GameModel model) {
-
+            System.out.println("Spectral Effect THE_SOUL");
+            if(canPlay(model)) {
+                List<Joker> legendaryJoker = model.getAllJokerList().stream().filter(j -> "Legendary".equals(j.getRarity())).toList();
+                model.getJokerManager().create(legendaryJoker.get(model.getRand().nextInt(legendaryJoker.size())));
+            }
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return model.getJokerManager().size() < model.getRunState().getMaxJokers();
         }
     },
 
     BLACK_HOLE {
         @Override
         public void apply(GameModel model) {
-
+            model.getPokerHandList().forEach(PokerHand::addLevel);
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return false;
+            return true;
         }
     };
 

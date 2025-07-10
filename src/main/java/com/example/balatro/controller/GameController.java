@@ -299,7 +299,7 @@ public class GameController
         for(int i = 0; i < 4; i++ ){
             for(int j = 0; j < 13; j++){
                 PlayingCard card = new PlayingCard(j,i);
-                card.setSeal(gameModel.getAllSealList().get(0));
+                card.setSeal(gameModel.getRandomSeal());
                 System.out.println(card.getSeal().getSealName());
                 cards.add(card);
             }

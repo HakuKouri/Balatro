@@ -27,7 +27,6 @@ public class CardGenerator {
         int tarotChance = gameModel.getRand().nextInt(gameModel.getAllTarotList().size());
 
         tarot.setTarot(gameModel.getAllTarotList().get(tarotChance));
-        tarot.setEffect(TarotEffect.values()[tarot.getCardId() -1]);
         System.out.println("Tarot: " + tarot.getCardName());
         return tarot;
     }

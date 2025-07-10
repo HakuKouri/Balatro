@@ -89,7 +89,7 @@ public class BoosterOpeningController {
             };
 
             if(card != null)
-                gameModel.getBoosterDrawModel().getBoosterDrawnManager().create(card);
+                gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(card);
             else
                 System.out.println("Card is Null");
         }
