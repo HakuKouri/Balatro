@@ -48,7 +48,7 @@ public class PlayedCardsController {
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
             //Löse Joker Trigger aus
-            List<PlayingCard> handCards = gameModel.getHandCardViewManager().getCardList().stream()
+            List<PlayingCard> handCards = gameModel.getHoldingHandViewManager().getCardList().stream()
                     .filter(card -> card instanceof PlayingCard)
                     .map(card -> (PlayingCard) card)
                     .toList();
@@ -111,9 +111,9 @@ public class PlayedCardsController {
 
         if(gameModel.isPointsReached()) {
             gameModel.setRewardVisibility(true);
-            gameModel.getHandCardViewManager().clear();
+            gameModel.getHoldingHandViewManager().clear();
 
-            List<PlayingCard> handCards = gameModel.getHandCardViewManager().getCardList().stream()
+            List<PlayingCard> handCards = gameModel.getHoldingHandViewManager().getCardList().stream()
                     .filter(card -> card instanceof PlayingCard)
                     .map(card -> (PlayingCard) card)
                     .toList();

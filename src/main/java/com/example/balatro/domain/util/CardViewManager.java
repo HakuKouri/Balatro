@@ -3,8 +3,11 @@ package com.example.balatro.domain.util;
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.controller.CardViewController;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -18,11 +21,19 @@ public class CardViewManager {
     private final ObservableMap<CardViewController, AnchorPane> viewMap = FXCollections.observableMap(new LinkedHashMap<>());
     private final Map<Card, CardViewController> controllerMap = new HashMap<>();
     private final BooleanProperty singleSelect =  new SimpleBooleanProperty(true);
+    private final BooleanProperty draggable =  new SimpleBooleanProperty(true);
+    private final BooleanProperty bringToFrontOnClick =  new SimpleBooleanProperty(true);
+    private final IntegerProperty size = new SimpleIntegerProperty();
     //endregion
 
     //region Constructor
-    public CardViewManager(boolean singleSelect) {
+    public CardViewManager(boolean singleSelect, boolean draggable, boolean bringToFrontOnClick) {
         this.singleSelect.set(singleSelect);
+        this.draggable.set(draggable);
+        this.bringToFrontOnClick.set(bringToFrontOnClick);
+        viewMap.addListener((MapChangeListener<? super CardViewController, ? super AnchorPane>) change -> {
+            size.set(viewMap.size());
+        });
     }
     //endregion
 
@@ -34,6 +45,23 @@ public class CardViewManager {
     public BooleanProperty singleSelectProperty() {
         return singleSelect;
     }
+
+    public boolean isBringToFrontOnClick() {
+        return bringToFrontOnClick.get();
+    }
+
+    public BooleanProperty bringToFrontOnClickProperty() {
+        return bringToFrontOnClick;
+    }
+
+    public boolean isDraggable() {
+        return draggable.get();
+    }
+
+    public BooleanProperty draggableProperty() {
+        return draggable;
+    }
+
     //endregion
 
 
@@ -91,8 +119,12 @@ public class CardViewManager {
         return controllerMap.keySet().stream().toList();
     }
 
-    public int size() {
-        return controllerMap.size();
+    public int getSize() {
+        return size.get();
+    }
+
+    public IntegerProperty sizeProperty() {
+        return size;
     }
 
     public static void sortMapByX(ObservableMap<CardViewController, AnchorPane> map, StackPane root) {

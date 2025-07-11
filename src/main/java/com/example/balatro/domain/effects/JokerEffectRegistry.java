@@ -2,7 +2,6 @@ package com.example.balatro.domain.effects;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.controller.CardViewController;
-import com.example.balatro.controller.GameController;
 import com.example.balatro.controller.UIController;
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.card.Joker;
@@ -13,11 +12,9 @@ import com.example.balatro.interfaces.JokerEffect;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.JokerState;
 import javafx.animation.Timeline;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class JokerEffectRegistry {
     private static final Map<String, JokerEffect> effectMap = new HashMap<>();
@@ -360,7 +357,7 @@ public class JokerEffectRegistry {
         effectMap.put("BARON_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BARON_EFFECT");
             //TODO Einzel Trigger Animation pro König in der Hand
-            int countKings = (int) context.getHandCardViewManager().getCardList().stream().filter(x -> "King".equals(((PlayingCard)x).getRank())).count();
+            int countKings = (int) context.getHoldingHandViewManager().getCardList().stream().filter(x -> "King".equals(((PlayingCard)x).getRank())).count();
             for (int i = 0; i < countKings; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -378,11 +375,11 @@ public class JokerEffectRegistry {
         effectMap.put("BLACKBOARD_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BLACKBOARD_EFFECT");
             //TODO Joker Animation
-            int blackCount = (int) context.getHandCardViewManager().getCardList().stream().filter(card ->
+            int blackCount = (int) context.getHoldingHandViewManager().getCardList().stream().filter(card ->
                     ((PlayingCard)card).getSuit() == Suit.SPADES ||
                             ((PlayingCard)card).getSuit() == Suit.CLUBS ||
                             Objects.equals(((PlayingCard)card).getEnhancement().getEnhancementName(), "Wild Card")).count();
-            if(blackCount == context.getHandCardViewManager().size()) {
+            if(blackCount == context.getHoldingHandViewManager().getSize()) {
                 context.getBestHand().multMult(3);
             }
         });
@@ -446,7 +443,7 @@ public class JokerEffectRegistry {
             PlayingCard card = new PlayingCard(context.getRand().nextInt(12), context.getRand().nextInt(4));
             card.setSeal(context.getAllSealList().get(context.getRand().nextInt(context.getAllSealList().size())));
             context.getRunState().getPlayingDeck().addCard(card);
-            context.getHandCardViewManager().create(card);
+            context.getHoldingHandViewManager().create(card);
         });
 
         effectMap.put("DAGGER_EFFECT", (context, self, cards, params) -> {
@@ -472,7 +469,7 @@ public class JokerEffectRegistry {
             if (context.getCurrentRound().isFirstHand() && context.getPlayedCards().size() == 1) {
                 PlayingCard card = context.getPlayedCards().get(0);
                 context.getRunState().getPlayingDeck().addCard(card);
-                context.getHandCardViewManager().create(card);
+                context.getHoldingHandViewManager().create(card);
             }
         });
 
@@ -665,7 +662,7 @@ public class JokerEffectRegistry {
         effectMap.put("RAISED_FIST_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RAISED_FIST_EFFECT");
 
-            CardViewManager cardViewManager = context.getHandCardViewManager();
+            CardViewManager cardViewManager = context.getHoldingHandViewManager();
             List<PlayingCard> playingCards = cardViewManager.getCardList().stream()
                     .filter(card -> card instanceof PlayingCard)
                     .map(card -> (PlayingCard) card)
@@ -689,7 +686,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: RESERVED_PARKING_EFFECT");
             //TODO Joker Trigger Effekt
 
-            List<PlayingCard> list = context.getHandCardViewManager().getCardList().stream()
+            List<PlayingCard> list = context.getHoldingHandViewManager().getCardList().stream()
                     .filter(card -> card instanceof PlayingCard)
                     .map(card -> (PlayingCard) card)
                     .toList();
@@ -706,7 +703,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
             List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
-            for (int i = 0; i < 2 && context.getJokerManager().size() < context.getRunState().getMaxJokers(); i++) {
+            for (int i = 0; i < 2 && context.getJokerManager().getSize() < context.getRunState().getMaxJokers(); i++) {
                 context.getJokerManager().create(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())));
             }
         });
@@ -768,7 +765,7 @@ public class JokerEffectRegistry {
         effectMap.put("STENCIL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: STENCIL_EFFECT");
 
-            int emptySpace = context.getRunState().getMaxJokers() - context.getJokerManager().size() + 1;
+            int emptySpace = context.getRunState().getMaxJokers() - context.getJokerManager().getSize() + 1;
 
             AnchorPane anchorPane = context.getJokerManager().getView(self);
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);

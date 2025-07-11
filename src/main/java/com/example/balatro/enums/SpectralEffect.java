@@ -7,11 +7,9 @@ import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.models.GameModel;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public enum SpectralEffect {
 
@@ -25,7 +23,7 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
 
@@ -38,9 +36,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
+
     INCANTATION {
         @Override
         public void apply(GameModel model) {
@@ -50,9 +49,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
+
     TALISMAN {
         @Override
         public void apply(GameModel model) {
@@ -67,6 +67,7 @@ public enum SpectralEffect {
             return model.getSelectedCards().size() == 1;
         }
     },
+
     AURA {
         @Override
         public void apply(GameModel model) {
@@ -74,8 +75,8 @@ public enum SpectralEffect {
             if (canPlay(model)) {
                 if(model.isBoosterOpeningVisibility()) {
                     model.getBoosterDrawModel().getPlayingCardsDrawn().get(model.getRand().nextInt(model.getBoosterDrawModel().getPlayingCardsDrawn().size())).setEdition(model.getRandomEdition());
-                } else if(!model.getHandCardViewManager().getViewMap().isEmpty()) {
-                    model.getHandCardViewManager().getCardList().get(model.getRand().nextInt(model.getHandCardViewManager().size())).setEdition(model.getRandomEdition());
+                } else if(!model.getHoldingHandViewManager().getViewMap().isEmpty()) {
+                    model.getHoldingHandViewManager().getCardList().get(model.getRand().nextInt(model.getHoldingHandViewManager().getSize())).setEdition(model.getRandomEdition());
                 } else {
                     System.out.println("Spectral Effect AURA not Possible");
                 }
@@ -84,9 +85,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
+
     WRAITH {
         @Override
         public void apply(GameModel model) {
@@ -100,9 +102,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getJokerManager().size() < model.getRunState().getMaxJokers();
+            return model.getJokerManager().getSize() < model.getRunState().getMaxJokers();
         }
     },
+
     SIGIL {
         @Override
         public void apply(GameModel model) {
@@ -111,8 +114,8 @@ public enum SpectralEffect {
                 int suitIndex = model.getRand().nextInt(4);
                 if(model.isBoosterOpeningVisibility()) {
                     model.getBoosterDrawModel().getPlayingCardsDrawn().forEach(card -> card.setSuitIndex(suitIndex));
-                } else if(!model.getHandCardViewManager().getViewMap().isEmpty()) {
-                    model.getHandCardViewManager().getCardList().forEach(card -> ((PlayingCard)card).setSuitIndex(suitIndex));
+                } else if(!model.getHoldingHandViewManager().getViewMap().isEmpty()) {
+                    model.getHoldingHandViewManager().getCardList().forEach(card -> ((PlayingCard)card).setSuitIndex(suitIndex));
                 } else {
                     System.out.println("Spectral Effect SIGIL not Possible");
                 }
@@ -121,9 +124,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
+
     OUIJA {
         @Override
         public void apply(GameModel model) {
@@ -132,8 +136,8 @@ public enum SpectralEffect {
                 int rankIndex = model.getRand().nextInt(13);
                 if(model.isBoosterOpeningVisibility()) {
                     model.getBoosterDrawModel().getPlayingCardsDrawn().forEach(card -> card.setRankIndex(rankIndex));
-                } else if(!model.getHandCardViewManager().getViewMap().isEmpty()) {
-                    model.getHandCardViewManager().getCardList().forEach(card -> ((PlayingCard)card).setRankIndex(rankIndex));
+                } else if(!model.getHoldingHandViewManager().getViewMap().isEmpty()) {
+                    model.getHoldingHandViewManager().getCardList().forEach(card -> ((PlayingCard)card).setRankIndex(rankIndex));
                 } else {
                     System.out.println("Spectral Effect OUIJA not Possible");
                 }
@@ -143,15 +147,16 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return !model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
+            return !model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility();
         }
     },
+
     ECTOPLASM {
         @Override
         public void apply(GameModel model) {
             System.out.println("Spectral Effect ECTOPLASM");
             if (canPlay(model)) {
-                model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().size())).setEdition(model.getAllEditionList().get(4));
+                model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().getSize())).setEdition(model.getAllEditionList().get(4));
                 model.getRunState().decreaseHandSizeBy(1 + model.getRunState().getUsedEctoplasm());
                 model.getRunState().incrementUsedEctoplasm();
             }
@@ -159,15 +164,16 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getJokerManager().size() > 0;
+            return model.getJokerManager().getSize() > 0;
         }
     },
+
     IMMOLATE {
         @Override
         public void apply(GameModel model) {
             System.out.println("Spectral Effect IMMOLATE");
             if (canPlay(model)) {
-                List<? extends Card> cardList = model.isBoosterOpeningVisibility() ? model.getBoosterDrawModel().getPlayingCardsDrawn().stream().toList() : !model.getHandCardViewManager().getViewMap().isEmpty() ? model.getHandCardViewManager().getCardList() : null;
+                List<? extends Card> cardList = model.isBoosterOpeningVisibility() ? model.getBoosterDrawModel().getPlayingCardsDrawn().stream().toList() : !model.getHoldingHandViewManager().getViewMap().isEmpty() ? model.getHoldingHandViewManager().getCardList() : null;
                 if(cardList != null) {
                     Set<Card> cardSet = new HashSet<>();
                     while(cardSet.size() < cardList.size() && cardSet.size() < 5) {
@@ -176,7 +182,7 @@ public enum SpectralEffect {
                     cardSet.forEach(card -> {
                         if(model.isBoosterOpeningVisibility()) {
                             model.getBoosterDrawModel().getPlayingCardsDrawn().remove(card);
-                        } else model.getHandCardViewManager().getCardList().remove(card);
+                        } else model.getHoldingHandViewManager().getCardList().remove(card);
                     });
                 } else {
                     System.out.println("Spectral Effect IMMOLATE not Possible");
@@ -186,15 +192,16 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return (!model.getHandCardViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility()) && model.getRunState().getMaxHandSize() > 1;
+            return (!model.getHoldingHandViewManager().getViewMap().isEmpty() || model.isBoosterOpeningVisibility()) && model.getRunState().getMaxHandSize() > 1;
         }
     },
+
     ANKH {
         @Override
         public void apply(GameModel model) {
             System.out.println("Spectral Effect ANKH");
             if(canPlay(model)) {
-                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().size()));
+                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().getSize()));
                 List<Card> cardList = model.getJokerManager().getCardList().stream().filter(card -> !joker.equals(card) ).toList();
                 if(joker.getEdition().getEditionName().equals("Negative")) {
                     joker.setEdition(new Edition());
@@ -208,9 +215,10 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getJokerManager().size() > 1;
+            return model.getJokerManager().getSize() > 1;
         }
     },
+
     DEJA_VU {
         @Override
         public void apply(GameModel model) {
@@ -231,7 +239,7 @@ public enum SpectralEffect {
         public void apply(GameModel model) {
             System.out.println("Spectral Effect HEX");
             if(canPlay(model)) {
-                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().size()));
+                Card joker = model.getJokerManager().getCardList().get(model.getRand().nextInt(model.getJokerManager().getSize()));
                 joker.setEdition(model.getAllEditionList().get(3));
                 model.getJokerManager().getCardList().forEach((card) -> {
                     if(card != joker)
@@ -287,7 +295,7 @@ public enum SpectralEffect {
                     if(model.isBoosterOpeningVisibility()) {
                         model.getBoosterDrawModel().getPlayingCardsDrawn().add(model.getSelectedCards().getFirst());
                     } else {
-                        model.getHandCardViewManager().create((model.getSelectedCards().getFirst()));
+                        model.getHoldingHandViewManager().create((model.getSelectedCards().getFirst()));
                     }
                 }
             }
@@ -311,7 +319,7 @@ public enum SpectralEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getJokerManager().size() < model.getRunState().getMaxJokers();
+            return model.getJokerManager().getSize() < model.getRunState().getMaxJokers();
         }
     },
 

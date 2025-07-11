@@ -3,23 +3,18 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.domain.card.PlayingCard;
-import com.example.balatro.domain.game.checkHand;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HoldingHandController {
 
@@ -45,11 +40,11 @@ public class HoldingHandController {
 
     public void initialize() {
 
-        UIController.bindStackPane(gameModel.getHandCardViewManager(), holdingHand_StackPane);
+        UIController.bindStackPane(gameModel.getHoldingHandViewManager(), holdingHand_StackPane);
 
         //Card Count Label
         handCardsCounterLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getHandCardViewManager().size() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHandCardViewManager().getViewMap()
+                gameModel.getHoldingHandViewManager().getSize() + "/" + gameModel.getRunState().getMaxHandSize(), gameModel.getHoldingHandViewManager().getViewMap()
         ));
 
         //Hand Control Buttons
@@ -65,7 +60,7 @@ public class HoldingHandController {
     }
 
     public List<PlayingCard> getHandCards() {
-        return  gameModel.getHandCardViewManager().getCardList().stream()
+        return  gameModel.getHoldingHandViewManager().getCardList().stream()
                 .filter(card -> card instanceof PlayingCard)
                 .map(card -> (PlayingCard) card)
                 .toList();
@@ -76,12 +71,12 @@ public class HoldingHandController {
     public void drawCard() {
         PlayingCard cardToDraw = gameModel.getRunState().getPlayingDeck().drawCard();
         cardToDraw.setClickAble(true);
-        gameModel.getHandCardViewManager().create(cardToDraw);
+        gameModel.getHoldingHandViewManager().create(cardToDraw);
         sort();
     }
 
     public void drawCardToLimit() {
-        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHandCardViewManager().size());
+        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHoldingHandViewManager().getSize());
     }
 
     public void drawCardToLimit(int cardCount) {
@@ -92,34 +87,34 @@ public class HoldingHandController {
     }
 
     //Selecting Cards
-    private void setHandInfo(List<PokerHand> hands) {
-        if(hands.isEmpty()) {
-            gameModel.getBestHand().setHand(new PokerHand());
-            gameModel.getPossiblePokerHand().clear();
-            return;
-        }
-        int maxPoints = 0;
-
-        PokerHand bestHand = null;
-        gameModel.getPossiblePokerHand().setAll(hands);
-
-        for (PokerHand pokerHand : gameModel.getPokerHandList()) {
-            if(hands.contains(pokerHand)) {
-                System.out.println(pokerHand.getName());
-                int points = pokerHand.getChips() * pokerHand.getMulti();
-                System.out.println("Possible Points: " + points);
-                if(maxPoints < points) {
-                    maxPoints = points;
-                    bestHand = pokerHand;
-                }
-            }
-        }
-
-        if(bestHand != null) {
-            gameModel.getBestHand().setHand(bestHand);
-        }
-        System.out.println("Best Hand: " + gameModel.getBestHand().getName());
-    }
+//    private void setHandInfo(List<PokerHand> hands) {
+//        if(hands.isEmpty()) {
+//            gameModel.getBestHand().setHand(new PokerHand());
+//            gameModel.getPossiblePokerHand().clear();
+//            return;
+//        }
+//        int maxPoints = 0;
+//
+//        PokerHand bestHand = null;
+//        gameModel.getPossiblePokerHand().setAll(hands);
+//
+//        for (PokerHand pokerHand : gameModel.getPokerHandList()) {
+//            if(hands.contains(pokerHand)) {
+//                System.out.println(pokerHand.getName());
+//                int points = pokerHand.getChips() * pokerHand.getMulti();
+//                System.out.println("Possible Points: " + points);
+//                if(maxPoints < points) {
+//                    maxPoints = points;
+//                    bestHand = pokerHand;
+//                }
+//            }
+//        }
+//
+//        if(bestHand != null) {
+//            gameModel.getBestHand().setHand(bestHand);
+//        }
+//        System.out.println("Best Hand: " + gameModel.getBestHand().getName());
+//    }
 
     //Button Functions
     public void sortRank() {
@@ -137,21 +132,21 @@ public class HoldingHandController {
                 ? Comparator.comparingInt(PlayingCard::getRankIndex).thenComparingInt(PlayingCard::getSuitIndex).reversed()
                 : Comparator.comparingInt(PlayingCard::getSuitIndex).thenComparingInt(PlayingCard::getRankIndex);
 
-        List<PlayingCard> sorted = gameModel.getHandCardViewManager().getViewMap().keySet().stream()
+        List<PlayingCard> sorted = gameModel.getHoldingHandViewManager().getViewMap().keySet().stream()
                 .map(cvc -> (PlayingCard) cvc.getCard())
                 .sorted(comparator)
                 .toList();
 
-        gameModel.getHandCardViewManager().clear();
-        sorted.forEach(card -> gameModel.getHandCardViewManager().create(card));
+        gameModel.getHoldingHandViewManager().clear();
+        sorted.forEach(card -> gameModel.getHoldingHandViewManager().create(card));
     }
 
     public void playSelectedCards(ActionEvent actionEvent) {
         if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getHands() > 0) {
             gameModel.setHandButtonVisibility(false);
-            gameModel.getSelectedCards().sort(Comparator.comparingInt(gameModel.getHandCardViewManager().getCardList()::indexOf));
+            gameModel.getSelectedCards().sort(Comparator.comparingInt(gameModel.getHoldingHandViewManager().getCardList()::indexOf));
 
-            getSelectedCards().forEach(playingCard -> { gameModel.getHandCardViewManager().remove(playingCard); });
+            getSelectedCards().forEach(playingCard -> { gameModel.getHoldingHandViewManager().remove(playingCard); });
             GameController.getInstance().playSelectedCards();
 
             if(Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))
@@ -164,7 +159,7 @@ public class HoldingHandController {
 
     public void discardSelectedCards(ActionEvent actionEvent) {
         if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getDiscards() > -1000) {
-            getSelectedCards().forEach(playingCard -> { gameModel.getHandCardViewManager().remove(playingCard); });
+            getSelectedCards().forEach(playingCard -> { gameModel.getHoldingHandViewManager().remove(playingCard); });
 
             getSelectedCards().clear();
 

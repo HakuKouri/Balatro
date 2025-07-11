@@ -42,10 +42,6 @@ public class UIController {
         gameSpeed.bind(Balatro.getSettings().gameSpeedProperty());
     }
 
-    public static void bindGameUi(GameController gameController) {
-
-    }
-
     public static void bindHandInfo(Label name, Label level, Label chips, Label multi, GameModel model) {
         name.textProperty().bind(Bindings.createStringBinding(() -> {
             String best = model.getBestHand().getName();
@@ -138,46 +134,48 @@ public class UIController {
                     pressX[0] = e.getScreenX();
                     pressY[0] = e.getScreenY();
 
-                    anchorPane.toFront();
+                    if(manager.isBringToFrontOnClick())
+                        anchorPane.toFront();
                 });
 
                 //Mouse Drag
                 anchorPane.setOnMouseDragged(e -> {
-                    Pos alignment = stackPane.getAlignment();
-                    double newX = e.getSceneX() - dragDelta.x;
-                    double newY = e.getSceneY() - dragDelta.y;
+                    if(manager.isDraggable()) {
+                        Pos alignment = stackPane.getAlignment();
+                        double newX = e.getSceneX() - dragDelta.x;
+                        double newY = e.getSceneY() - dragDelta.y;
 
-                    double halfCardWidth = anchorPane.getWidth() / 2;
-                    double halfCardHeight = anchorPane.getHeight() / 2;
+                        double halfCardWidth = anchorPane.getWidth() / 2;
+                        double halfCardHeight = anchorPane.getHeight() / 2;
 
-                    double clampedX, clampedY;
+                        double clampedX, clampedY;
 
-                    if (alignment == Pos.CENTER || alignment == null) {
-                        double halfWidth = stackPane.getWidth() / 2;
-                        clampedX = Math.max(-halfWidth + halfCardWidth, Math.min(halfWidth - halfCardWidth, newX));
-                    } else if (alignment == Pos.CENTER_LEFT) {
-                        // Linksbündig: Start bei X = 0
-                        double maxX = stackPane.getWidth() - anchorPane.getWidth();
-                        clampedX = Math.max(0, Math.min(maxX, newX));
-                    } else {
-                        clampedX = newX;
+                        if (alignment == Pos.CENTER || alignment == null) {
+                            double halfWidth = stackPane.getWidth() / 2;
+                            clampedX = Math.max(-halfWidth + halfCardWidth, Math.min(halfWidth - halfCardWidth, newX));
+                        } else if (alignment == Pos.CENTER_LEFT) {
+                            // Linksbündig: Start bei X = 0
+                            double maxX = stackPane.getWidth() - anchorPane.getWidth();
+                            clampedX = Math.max(0, Math.min(maxX, newX));
+                        } else {
+                            clampedX = newX;
+                        }
+
+                        double halfHeight = stackPane.getHeight() / 2;
+
+                        double minY = -halfHeight + halfCardHeight;
+                        double maxY = halfHeight - halfCardHeight;
+
+                        clampedY = Math.max(minY, Math.min(maxY, newY));
+
+                        anchorPane.setTranslateX(clampedX);
+                        //anchorPane.setTranslateY(clampedY);
+
+                        snapAnchorPaneToNewIndex(stackPane, anchorPane);
+                        moveCards(stackPane, anchorPane);// Visuelles Neulayout
+
+                        anchorPane.toFront();
                     }
-
-                    double halfHeight = stackPane.getHeight() / 2;
-
-                    double minY = -halfHeight + halfCardHeight;
-                    double maxY = halfHeight - halfCardHeight;
-
-                    clampedY = Math.max(minY, Math.min(maxY, newY));
-
-                    anchorPane.setTranslateX(clampedX);
-                    anchorPane.setTranslateY(clampedY);
-
-                    snapAnchorPaneToNewIndex(stackPane,anchorPane);
-                    moveCards(stackPane, anchorPane);// Visuelles Neulayout
-
-                    anchorPane.toFront();
-
                 });
 
                 //Mouse Release
@@ -189,13 +187,14 @@ public class UIController {
                     //Klick
                     if (dragDistance < 10) {
                         handleCardSelection(manager.isSingleSelect(), controller, Balatro.getGameModel());
-                        anchorPane.toFront();
+                        if(manager.isBringToFrontOnClick())
+                            anchorPane.toFront();
                     }
-                    //Drag
+                    //Drop
                     else {
                         snapAnchorPaneToNewIndex(stackPane, anchorPane);
                         moveCards(stackPane);
-                        map.keySet().forEach(otherController -> { if(otherController.isSelected()) map.get(otherController).toFront(); });
+                        //map.keySet().forEach(otherController -> { if(otherController.isSelected()) map.get(otherController).toFront(); });
                     }
                 });
 

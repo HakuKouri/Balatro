@@ -2,6 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
+import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
@@ -112,14 +113,6 @@ public class CardViewController {
         return buyPrice;
     }
 
-    public String getBuyAndUse() {
-        return buyAndUse;
-    }
-
-    public String getSell() {
-        return sell;
-    }
-
     public Map<CardViewController, AnchorPane> getInMap() {
         return inMap;
     }
@@ -155,8 +148,11 @@ public class CardViewController {
         card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
 
         selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(card.get() instanceof Tarot)
-                System.out.println(((Tarot)card.get()).canPlay(Balatro.getGameModel()));
+            if(getCard() instanceof  Planet planet) {
+                System.out.println("Planet can play: " + planet.canPlay(Balatro.getGameModel()));
+            }
+            if(getCard() instanceof Tarot tarot)
+                System.out.println("Tarot can play: " + tarot.canPlay(Balatro.getGameModel()));
         });
     }
 
@@ -220,8 +216,18 @@ public class CardViewController {
         useSelect_AnchorPane.disableProperty().bind(Bindings.createBooleanBinding(() -> {
             if(getCard() instanceof Tarot tarot) return !(tarot.canPlay(Balatro.getGameModel()));
             if(getCard() instanceof Spectral spectral) return !(spectral.canPlay(Balatro.getGameModel()));
+            if(getCard() instanceof Planet) return false;
+            if(getCard() instanceof PlayingCard) return false;
+            if(getCard() instanceof Joker joker) return Balatro.getGameModel().getJokerManager().getSize() >= Balatro.getGameModel().getRunState().getMaxJokers();
             return true;
-        }, cardProperty()));
+        }, cardProperty(),
+                Balatro.getGameModel().getSelectedCards(),// wichtig für Kartenlogik
+                Balatro.getGameModel().getJokerManager().sizeProperty(),
+                Balatro.getGameModel().getConsumableManager().sizeProperty(),
+                Balatro.getGameModel().getRunState().moneyProperty(),
+                Balatro.getGameModel().getRunState().maxConsumablesProperty(),
+                Balatro.getGameModel().getRunState().maxJokersProperty()
+                ));
     }
 
     private void bindVisibility() {
@@ -232,7 +238,7 @@ public class CardViewController {
         );
 
         use_AnchorPane.visibleProperty().bind(Bindings.createBooleanBinding(() ->
-                        isSelected() && (isTarot() || isPlanet()) && !isInShop(),
+                        isSelected() && ((isTarot() || isPlanet()) && !isInShop()) && !isFromBooster(),
                 selectedProperty(), cardTypeProperty(), cardTypeProperty(), inShopProperty()
         ));
         use_AnchorPane.managedProperty().bind(use_AnchorPane.visibleProperty());
@@ -248,11 +254,23 @@ public class CardViewController {
 
     private void bindText() {
         buyUseSell_Label.textProperty().bind(Bindings.createStringBinding(() ->
-                        isInShop() ? buyAndUse : String.format(sell, Math.max(Math.round(getCard().getSellValue()),1)),
+                        isInShop() ? buyAndUse : String.format(sell, (int)Math.max(getCard().getSellValue(), 1)),
                 inShopProperty(), getCard().sellValueProperty()));
 
         priceLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 "$ " + buyPrice.get(), buyPriceProperty()));
+
+        useSelect_Label.textProperty().bind(Bindings.createStringBinding(() -> {
+            System.out.println(getCard().getClass().getSimpleName());
+            if(getCard() instanceof Tarot ||  getCard() instanceof Spectral || getCard() instanceof Planet) {
+                System.out.println("Use wird genutzt");
+                return "USE";
+            } else {
+                System.out.println("Select wird genutzt");
+                return "SELECT";
+            }
+        }, cardProperty()));
+
     }
 
     public void initializeCardData(Card card) {
@@ -305,7 +323,4 @@ public class CardViewController {
         };
         return controller;
     }
-
-
-
 }

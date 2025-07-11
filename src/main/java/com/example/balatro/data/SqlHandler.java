@@ -1,5 +1,7 @@
 package com.example.balatro.data;
 
+import com.example.balatro.enums.SpectralEffect;
+import com.example.balatro.enums.TarotEffect;
 import com.example.balatro.models.settings.Language;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.rewards.Tag;
@@ -546,7 +548,7 @@ public class SqlHandler {
         List<Tarot> tarots = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            String statementString = "SELECT * FROM TarotCards";
+            String statementString = "SELECT * FROM Tarot";
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {
@@ -558,6 +560,7 @@ public class SqlHandler {
                 tarot.setCardImageUrl(rs.getString(2));
                 tarot.setCardName(rs.getString(3));
                 tarot.setTarotDescription(rs.getString(4));
+                tarot.setTarotEffect(TarotEffect.valueOf(rs.getString(5)));
 
                 tarots.add(tarot);
             }
@@ -574,7 +577,7 @@ public class SqlHandler {
         try {
             Statement statement = connection.createStatement();
             //(id, spectralImage, spectralName, spectralEffect)
-            String statementString = "SELECT * FROM SpectralCards";
+            String statementString = "SELECT * FROM Spectral";
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {
@@ -586,6 +589,7 @@ public class SqlHandler {
                 spectral.setCardName(rs.getString(3));
                 spectral.setCardCost(3);
                 spectral.setCardDescription(rs.getString(4));
+                spectral.setEffect(SpectralEffect.valueOf(rs.getString(5)));
 
                 spectrals.add(spectral);
             }

@@ -63,7 +63,6 @@ public class BlindBoxController {
                 bigBlindController.setTag(getNewTag());
 
                 bossBlindController.getBlind().setBlind(getNewBoss());
-                bossBlindController.blindProperty().get().setBlind(gameModel.getRunBlinds().isEmpty() ? new Blind() : gameModel.getRunBlinds().get((gameModel.getRunState().getAnte() - 1) * 3 + 2));
                 bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
             });
 
@@ -83,8 +82,6 @@ public class BlindBoxController {
         bigBlindPanel.setPrefHeight(blindBox.getHeight());
         bossBlindPanel.setPrefWidth(Balatro.getSettings().getWindowWidth() * .16);
         bossBlindPanel.setPrefHeight(blindBox.getHeight());
-
-
     }
 
     public void rerollBoss() {

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class GameModel {
     //region ATTRIBUTES
+
     //region Lists of All Data (Tag, Blind, Joker, Tarot. Planet, Booster, Voucher, PokerHand)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
@@ -35,7 +36,7 @@ public class GameModel {
     private final List<Sticker> stickerList = SqlHandler.getAllStickers();
     //endregion
 
-
+    //region Models
     private final JokerState jokerState = new JokerState();
     public JokerState getJokerState() {
         return jokerState;
@@ -65,17 +66,14 @@ public class GameModel {
     public BoosterDrawModel getBoosterDrawModel() {
         return boosterDrawModel;
     }
+    //endregion
 
     //region Run Lists
-    //TODO REMOVE RUN BLINDS DYNAMISCH BOSS BLIND ERSTELLEN
-    private final ObservableList<Blind> runBlinds = FXCollections.observableArrayList();
-    //TODO REMOVE RUN TAGS DYNAMISCH ERSTELLEN DER TAG FÜR DIE BLINDS
-    private final List<Tag> runTags = new ArrayList<>();
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
-    public final CardViewManager handCardViewManager = new CardViewManager(false);
+    public final CardViewManager holdingHandViewManager = new CardViewManager(false, true, false);
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
 
-    private final CardViewManager playCardsManager = new CardViewManager(false);
+    private final CardViewManager playCardsManager = new CardViewManager(false, false, false);
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
@@ -96,12 +94,12 @@ public class GameModel {
     //endregion
 
     //region ACTIVE JOKERS
-    private final CardViewManager jokerManager = new CardViewManager(true);
+    private final CardViewManager jokerManager = new CardViewManager(true, true, true);
     private final ObservableMap<CardViewController, AnchorPane> activeJokerMap = FXCollections.observableMap(new LinkedHashMap<>());
     //endregion
 
     //region Collected Consumables
-    private final CardViewManager consumableManager = new CardViewManager(true);
+    private final CardViewManager consumableManager = new CardViewManager(true, true, true);
     //endregion
 
     //region RUN INFO VAR
@@ -241,26 +239,6 @@ public class GameModel {
     public void setActiveBlind(Blind pickedBlind) {
         activeBlind.get().setBlind(pickedBlind);
     }
-
-    public ObservableList<Blind> getRunBlinds() {
-        return runBlinds;
-    }
-
-    public void setRunBlinds(List<Blind> blindList) {
-        runBlinds.clear();
-        runBlinds.addAll(blindList);
-    }
-    //endregion
-
-    //region Tags for the Run
-    public List<Tag> getRunTags() {
-        return runTags;
-    }
-
-    public void setRunTags(List<Tag> tags) {
-        runTags.clear();
-        runTags.addAll(tags);
-    }
     //endregion
 
     //region Tag Queue
@@ -322,8 +300,8 @@ public class GameModel {
 
     //region HOLDING HAND GS
     //Hand Cards
-    public CardViewManager getHandCardViewManager() {
-        return handCardViewManager;
+    public CardViewManager getHoldingHandViewManager() {
+        return holdingHandViewManager;
     }
 
 //    public ObservableList<PlayingCard> getHandCards() {

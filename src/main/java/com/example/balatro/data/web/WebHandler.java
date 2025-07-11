@@ -228,7 +228,7 @@ public class WebHandler
                 }
                 arrayList.add(tarot);
             }
-            SqlHandler.ListToSql(arrayList, "TarotCards");
+            SqlHandler.ListToSql(arrayList, "Tarot");
         } catch (Exception e)
         {
             throw new RuntimeException(e);

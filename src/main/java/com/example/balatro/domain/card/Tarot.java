@@ -17,6 +17,7 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
 
     @Override
     public boolean canPlay(GameModel model) {
+        System.out.println("Tarot canPlay called for: " + getCardName() + " | Effect: " + effect);
         return effect != null && effect.canPlay(model);
     }
 

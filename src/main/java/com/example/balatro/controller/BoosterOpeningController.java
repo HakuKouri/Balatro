@@ -59,7 +59,7 @@ public class BoosterOpeningController {
 
     //region FUNCTIONS
     public void initialize() {
-        UIController.bindStackPane(Balatro.getGameModel().getBoosterDrawModel().getPlayingCardsDrawn(), playingCard_StackPane);
+        UIController.bindStackPane(Balatro.getGameModel().getBoosterDrawModel().getPlayCardsDrawnViewManager(), playingCard_StackPane);
         UIController.bindStackPane(Balatro.getGameModel().getBoosterDrawModel().getBoosterDrawnManager(), boosterDraw_StackPane);
 
         boosterName_Label.textProperty().bind(booster.get().cardNameProperty());
@@ -79,19 +79,13 @@ public class BoosterOpeningController {
         GameModel gameModel = Balatro.getGameModel();
         for (int i = 0; i < booster.get().getBoosterSizeValue(); i++) {
             System.out.println("Draw " + i + " Card");
-            Card card = switch (booster.get().getCardName()) {
-                case "Standard Pack" -> CardGenerator.getRandomPlayingCard(gameModel);
-                case "Arcana Pack" -> CardGenerator.getRandomTarot(gameModel);
-                case "Celestial Pack" -> CardGenerator.getRandomPlanet(gameModel);
-                case "Buffoon Pack" -> CardGenerator.getRandomJoker(gameModel);
-                case "Spectral Pack" -> CardGenerator.getRandomSpectral(gameModel);
-                default -> null;
+            switch (booster.get().getCardName()) {
+                case "Standard Pack" ->  gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(CardGenerator.getRandomPlayingCard(gameModel));
+                case "Arcana Pack" ->  gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(CardGenerator.getRandomTarot(gameModel));
+                case "Celestial Pack" ->  gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(CardGenerator.getRandomPlanet(gameModel));
+                case "Buffoon Pack" ->  gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(CardGenerator.getRandomJoker(gameModel));
+                case "Spectral Pack" ->  gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(CardGenerator.getRandomSpectral(gameModel));
             };
-
-            if(card != null)
-                gameModel.getBoosterDrawModel().getBoosterDrawnManager().createForBooster(card);
-            else
-                System.out.println("Card is Null");
         }
 
     }
@@ -108,14 +102,14 @@ public class BoosterOpeningController {
             //TODO choose Playing Cards (not clickable)
             PlayingCard playingCard = gameModel.getRunState().getPlayingDeck().getFullDeck().get(index);
             playingCard.setClickAble(true);
-            gameModel.getBoosterDrawModel().getPlayingCardsDrawn().add(playingCard);
+            gameModel.getBoosterDrawModel().getPlayCardsDrawnViewManager().create(playingCard);
         }
     }
 
 
     public void skipBooster(ActionEvent actionEvent) {
         GameModel gameModel = Balatro.getGameModel();
-        gameModel.getBoosterDrawModel().getPlayingCardsDrawn().clear();
+        gameModel.getBoosterDrawModel().getPlayCardsDrawnViewManager().clear();
         gameModel.getBoosterDrawModel().getBoosterDrawnManager().clear();
 
         gameModel.setBoosterOpeningVisibility(false);

@@ -285,10 +285,10 @@ public class GameController
                 gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().playingDeckProperty(), gameModel.getRunState().getPlayingDeck().getFullDeck()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getJokerManager().size() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
+                gameModel.getJokerManager().getSize() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
         ));
         consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getConsumableManager().size() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
+                gameModel.getConsumableManager().getSize() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
         ));
         //endregion
     }

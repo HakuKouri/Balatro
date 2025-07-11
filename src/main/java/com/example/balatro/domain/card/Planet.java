@@ -2,6 +2,7 @@ package com.example.balatro.domain.card;
 
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.domain.util.CardViewManager;
+import com.example.balatro.interfaces.PlayableCard;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.*;
@@ -10,13 +11,25 @@ import javafx.scene.layout.AnchorPane;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Planet extends Card implements PurchasableCard {
+public class Planet extends Card implements PurchasableCard, PlayableCard {
 
     @Override
     public void onPurchase(GameModel model) {
         model.getRunState().subMoney(model.getShopModel().getItemCardViewManager().getControllerByCard(this).getBuyPrice());
         CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getConsumableManager(), this);
     }
+
+    @Override
+    public boolean canPlay(GameModel model) {
+        return true;
+    }
+
+    @Override
+    public void play(GameModel model) {
+
+    }
+
+
 
     private static Map<String, Boolean> uniquePlanetPlayed = new HashMap<>() {{
         put("Pluto", false);
@@ -146,5 +159,7 @@ public class Planet extends Card implements PurchasableCard {
         setPlanetHandBaseScore(planet.getPlanetHandBaseScore());
         setSecret(planet.isSecret());
     }
+
+
     //endregion
 }
