@@ -98,7 +98,7 @@ public class Spectral extends Card implements PurchasableCard, PlayableCard {
         setEffect(spectral.getEffect());
     }
 
-    public void play(GameModel model) {
+    public void play(GameModel model, Runnable onFinished) {
         System.out.println("Playing Spectral");
         if(effect != null) {
             System.out.println("Effect Apply");

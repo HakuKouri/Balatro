@@ -1,6 +1,5 @@
 package com.example.balatro.enums;
 
-import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.models.GameModel;
 
@@ -155,7 +154,7 @@ public enum TarotEffect {
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getActiveJokerMap().keySet().stream().anyMatch(j -> ((Joker) j.getCard()).getEdition().getId() < 1);
+            return model.getActiveJokerList().stream().anyMatch(j -> ( j.getEdition().getId() < 1));
         }
     },
     STRENGTH {
@@ -207,7 +206,7 @@ public enum TarotEffect {
     TEMPERANCE {
         @Override
         public void apply(GameModel model) {
-            model.getRunState().addMoney(model.getActiveJokerMap().keySet().stream().mapToInt(i -> (int) i.getCard().getSellValue()).sum());
+            model.getRunState().addMoney(model.getActiveJokerList().stream().mapToInt(i -> (int) i.getSellValue()).sum());
         }
 
         @Override
@@ -288,13 +287,13 @@ public enum TarotEffect {
     JUDGEMENT {
         @Override
         public void apply(GameModel model) {
-            if (model.getActiveJokerMap().size() < model.getRunState().getMaxJokers())
+            if (model.getJokerManager().getSize() < model.getRunState().getMaxJokers())
                 model.getJokerManager().create(model.getAllJokerList().get(model.getRand().nextInt(model.getAllJokerList().size())));
         }
 
         @Override
         public boolean canPlay(GameModel model) {
-            return model.getActiveJokerMap().size() < model.getRunState().getMaxJokers();
+            return model.getJokerManager().getSize() < model.getRunState().getMaxJokers();
         }
     },
     THE_WORLD {

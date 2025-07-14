@@ -149,7 +149,7 @@ public class CardViewController {
 
         selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(getCard() instanceof  Planet planet) {
-                System.out.println("Planet can play: " + planet.canPlay(Balatro.getGameModel()));
+                System.out.println("Planet can play: " + planet.canPlay());
             }
             if(getCard() instanceof Tarot tarot)
                 System.out.println("Tarot can play: " + tarot.canPlay(Balatro.getGameModel()));
@@ -166,18 +166,30 @@ public class CardViewController {
         buyUseSell_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("BuyUseSell clicked");
             if(isInShop())
-                GameController.getInstance().buyAndUse(this);
+                GameController.getInstance().buyAndUse(getCard());
             else
                 GameController.getInstance().sellItem(card_AnchorPane, this, getInMap());
         });
 
         use_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("use_clicked");
-            GameController.getInstance().useItem(card_AnchorPane,this);
+            GameController.getInstance().useCardFromConsumable(getCard());
         });
 
         useSelect_AnchorPane.setOnMouseClicked(event -> {
             System.out.println("useSelect_clicked");
+            GameModel model = Balatro.getGameModel();
+            if(getCard() instanceof Planet planet) {
+                GameController.getInstance().useCardFromBooster(planet);
+            } else if(getCard() instanceof Tarot tarot) {
+                GameController.getInstance().useCardFromBooster(tarot);
+            } else if(getCard() instanceof Spectral spectral) {
+                GameController.getInstance().useCardFromBooster(spectral);
+            } else if(getCard() instanceof PlayingCard playingCard) {
+                GameController.getInstance().selectCardFromBooster(playingCard);
+            } else if(getCard() instanceof Joker joker) {
+                GameController.getInstance().selectCardFromBooster(joker);
+            }
         });
     }
 

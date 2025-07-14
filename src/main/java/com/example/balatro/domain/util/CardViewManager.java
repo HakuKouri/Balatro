@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -87,6 +88,12 @@ public class CardViewManager {
         create(card, false);
     }
 
+    public void create(ObservableList<Card> cards) {
+        for (Card card : cards) {
+            create(card, false);
+        }
+    }
+
     public AnchorPane getView(Card card) {
         CardViewController controller = controllerMap.get(card);
         return controller != null ? viewMap.get(controller) : null;
@@ -117,6 +124,13 @@ public class CardViewManager {
 
     public List<Card> getCardList() {
         return controllerMap.keySet().stream().toList();
+    }
+
+    public <T extends Card> List<T> getCardList(Class<T> clazz) {
+        return controllerMap.keySet().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .toList();
     }
 
     public int getSize() {

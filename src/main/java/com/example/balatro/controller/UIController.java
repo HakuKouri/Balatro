@@ -48,7 +48,7 @@ public class UIController {
             boolean isRoyal = "Straight Flush".equals(best) &&
                     model.getSelectedCards().stream().anyMatch(card -> "Ace".equals(card.getRank()));
             return isRoyal ? "Royal Flush" : best;
-        }, model.getBestHand().nameProperty(), model.getPlayedCards()));
+        }, model.getBestHand().nameProperty()));
 
         level.textProperty().bind(
                 Bindings.when(model.getBestHand().levelProperty().greaterThan(0))

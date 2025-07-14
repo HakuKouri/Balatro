@@ -6,7 +6,6 @@ import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.Planet;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
-import com.example.balatro.models.RewardModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

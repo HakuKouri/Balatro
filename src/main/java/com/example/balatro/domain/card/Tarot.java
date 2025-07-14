@@ -21,6 +21,14 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
         return effect != null && effect.canPlay(model);
     }
 
+    public void play(GameModel model, Runnable onFinished) {
+        System.out.println("Playing tarot");
+        if(effect != null) {
+            System.out.println("Effect Apply");
+            effect.apply(model);
+        }
+    }
+
     private final StringProperty tarotDescription = new SimpleStringProperty("");
 
     public String getTarotDescription() {
@@ -36,15 +44,15 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
     }
 
     private TarotEffect effect;
-
     public void setTarotEffect(TarotEffect effect) {
         this.effect = effect;
     }
+
     public TarotEffect getTarotEffect() {
         return effect;
     }
-
     //region Functions
+
     public void setTarot(Tarot tarot) {
         setCardId(tarot.getCardId());
         setCardName(tarot.getCardName());
@@ -53,14 +61,6 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
         setCardType(tarot.getCardType());
         setTarotDescription(tarot.getTarotDescription());
         setTarotEffect(tarot.getTarotEffect());
-    }
-
-    public void play(GameModel model) {
-        System.out.println("Playing tarot");
-        if(effect != null) {
-            System.out.println("Effect Apply");
-            effect.apply(model);
-        }
     }
     //endregion
 }

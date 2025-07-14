@@ -75,6 +75,10 @@ public class RunState {
         return playingDeck;
     }
 
+    public void setPlayingDeck(PlayingDeck playingDeck) {
+        playingDeckProperty().set(playingDeck);
+    }
+
     public ObservableList<Blind> getBossBlindsBeaten() {
         return bossBlindsBeaten;
     }

@@ -1,17 +1,20 @@
 package com.example.balatro.domain.card;
 
 import com.example.balatro.controller.CardViewController;
+import com.example.balatro.controller.UIController;
+import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.interfaces.PlayableCard;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Planet extends Card implements PurchasableCard, PlayableCard {
+public class Planet extends Card implements PurchasableCard {
 
     @Override
     public void onPurchase(GameModel model) {
@@ -19,14 +22,48 @@ public class Planet extends Card implements PurchasableCard, PlayableCard {
         CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getConsumableManager(), this);
     }
 
-    @Override
-    public boolean canPlay(GameModel model) {
+    public boolean canPlay() {
         return true;
     }
 
-    @Override
-    public void play(GameModel model) {
+    public void play(GameModel model, Runnable onFinished) {
+        PokerHand hand = model.getPokerHandList().stream()
+                .filter(x -> x.getName().equals(this.getPlanetPokerHand()))
+                .findFirst()
+                .orElseThrow();
 
+        model.getBestHand().setHand(hand);
+
+        Timeline multTimeline = UIController.cardWiggleTimeline(this);
+        multTimeline.setCycleCount(3);
+        multTimeline.setOnFinished(e -> {
+            hand.addMult(this.getPlanetMultiplier());
+            model.getBestHand().addMult(this.getPlanetMultiplier());
+        });
+
+        Timeline chipsTimeline = UIController.cardWiggleTimeline(this);
+        chipsTimeline.setCycleCount(3);
+        chipsTimeline.setOnFinished(e -> {
+            hand.addChips(this.getPlanetChips());
+            model.getBestHand().addChips(this.getPlanetChips());
+        });
+
+        Timeline levelTimeline = UIController.cardWiggleTimeline(this);
+        levelTimeline.setCycleCount(3);
+        levelTimeline.setOnFinished(e -> {
+            hand.addLevel();
+            model.getBestHand().addLevel();
+        });
+
+        UIController.addToAnimationList(multTimeline);
+        UIController.addToAnimationList(chipsTimeline);
+        UIController.addToAnimationList(levelTimeline);
+        UIController.addToAnimationList(UIController.delayTimeline());
+
+        UIController.playAnimations(() -> {
+            model.getBestHand().setHand(new PokerHand());
+            onFinished.run();
+        });
     }
 
 

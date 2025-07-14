@@ -32,10 +32,7 @@ public class PlayingDeck {
     //region Functions
     //Full Deck
     public void setFullDeck(List<PlayingCard> fullDeck) {
-        System.out.println("set full deck");
-        System.out.println("set full deck size: " + fullDeck.size());
         this.fullDeck.addAll(fullDeck);
-        System.out.println("set this full deck size: " + this.fullDeck.size());
     }
 
     public List<PlayingCard> drawFromFullDeck(int cardCount, Random random) {

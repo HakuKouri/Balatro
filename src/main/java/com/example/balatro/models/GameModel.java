@@ -15,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameModel {
     //region ATTRIBUTES
@@ -70,7 +69,7 @@ public class GameModel {
 
     //region Run Lists
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
-    public final CardViewManager holdingHandViewManager = new CardViewManager(false, true, false);
+    private final CardViewManager holdingHandViewManager = new CardViewManager(false, true, false);
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
 
     private final CardViewManager playCardsManager = new CardViewManager(false, false, false);
@@ -100,6 +99,10 @@ public class GameModel {
 
     //region Collected Consumables
     private final CardViewManager consumableManager = new CardViewManager(true, true, true);
+    //endregion
+
+    //region
+    private final CardViewManager playedCardsViewManager = new CardViewManager(true, false,false);
     //endregion
 
     //region RUN INFO VAR
@@ -260,14 +263,9 @@ public class GameModel {
     //endregion
 
     //region Played Cards
-    public CardViewManager getPlayCardsManager() {
-        return playCardsManager;
-    }
-
     public ObservableList<PlayingCard> getPlayedCards() {
         return playedCards;
     }
-
     //endregion
 
     //region Possible Poker Hands
@@ -304,10 +302,6 @@ public class GameModel {
         return holdingHandViewManager;
     }
 
-//    public ObservableList<PlayingCard> getHandCards() {
-//        return handCards;
-//    }
-
     //Selected Cards
     public ObservableList<PlayingCard> getSelectedCards() {
         return selectedCards;
@@ -337,10 +331,6 @@ public class GameModel {
     public void setSortedByRank(boolean bool) {
         sortedByRank.set(bool);
     }
-
-    public void toggleSortedByRank() {
-        setSortedByRank(!isSortedByRank());
-    }
    //endregion
 
     //region ACTIVE JOKER GS
@@ -356,34 +346,22 @@ public class GameModel {
         return jokerManager;
     }
 
-    public List<Joker> getJokerList() {
-        List<Joker> jokerList = new ArrayList<>();
-        for(Card card : jokerManager.getCardList()) {
-            jokerList.add((Joker) card);
-        }
-        return jokerList;
-    }
-
-    public ObservableMap<CardViewController, AnchorPane> getActiveJokerMap() {
-        return activeJokerMap;
-    }
-
     public List<Joker> getActiveJokerList() {
-        List<Joker> jokers = activeJokerMap.keySet().stream()
-                .map(CardViewController::getCard)       // holt die Card aus dem Controller
-                .filter(card -> card instanceof Joker)  // prüft, ob es ein Joker ist
-                .map(card -> (Joker) card)              // castet auf Joker
-                .collect(Collectors.toList());               // Java 16+ oder collect(Collectors.toList())
-        return jokers;
-    }
-
-    //endregion
+    return jokerManager.getCardList(Joker.class);
+    }    //endregion
 
 
     //region CONSUMABLES ON BOARD
     public CardViewManager getConsumableManager() {
         return consumableManager;
     }
+    //endregion
+
+    //region played Card View Manager
+    public CardViewManager getPlayedCardsViewManager() {
+        return playedCardsViewManager;
+    }
+
     //endregion
 
     //region Background Run Variables

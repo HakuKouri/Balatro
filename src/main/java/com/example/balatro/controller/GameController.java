@@ -6,6 +6,7 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rewards.VoucherHandler;
 import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.interfaces.PurchasableCard;
@@ -282,13 +283,13 @@ public class GameController
 
         //region Card count Labels Bind
         cardsInDeckLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().playingDeckProperty(), gameModel.getRunState().getPlayingDeck().getFullDeck()
+                gameModel.getRunState().getPlayingDeck().getPlaySize() + "/" + gameModel.getRunState().getPlayingDeck().getFullSize(), gameModel.getRunState().getPlayingDeck().getPlayDeck(), gameModel.getRunState().getPlayingDeck().getFullDeck()
         ));
         jokerCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getJokerManager().getSize() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getActiveJokerMap(),gameModel.getRunState().maxJokersProperty()
+                gameModel.getJokerManager().getSize() + "/" + gameModel.getRunState().getMaxJokers(), gameModel.getJokerManager().sizeProperty(),gameModel.getRunState().maxJokersProperty()
         ));
         consumableCountLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                gameModel.getConsumableManager().getSize() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().getViewMap()
+                gameModel.getConsumableManager().getSize() + "/" + gameModel.getRunState().getMaxConsumables(), gameModel.getConsumableManager().sizeProperty()
         ));
         //endregion
     }
@@ -323,7 +324,7 @@ public class GameController
                 gameModel.handButtonVisibilityProperty().set(true);
                 gameModel.clearSelectedCards();
 
-                playedCardsController.removeAllCards();
+                gameModel.getPlayedCardsViewManager().clear();
             });
         });
     }
@@ -375,97 +376,84 @@ public class GameController
         shopController.restockShop();
     }
 
-    public void buyItem(Card card) {
-        System.out.println("Buy item: ");
-        System.out.println(card.getCardName());
+    public void rerollBossBlind(ActionEvent actionEvent) {
+        blindBoxController.rerollBoss();
+    }
 
+    public void useCardFromConsumable(Card card) {
+        gameModel.handButtonVisibilityProperty().set(false);
+        CardViewManager.transferCardTo(gameModel.getConsumableManager(), gameModel.getPlayedCardsViewManager(), card);
+        if(card instanceof Planet planet) {
+            planet.play(gameModel, () -> {
+                gameModel.handButtonVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        } else if(card instanceof Tarot tarot) {
+            tarot.play(gameModel, () -> {
+                gameModel.handButtonVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        } else if(card instanceof Spectral spectral) {
+            spectral.play(gameModel, () -> {
+                gameModel.handButtonVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        }
+    }
+
+    public void useCardFromShop(Card card) {
+        gameModel.shopVisibilityProperty().set(false);
+        CardViewManager.transferCardTo(gameModel.getShopModel().getItemCardViewManager(), gameModel.getPlayedCardsViewManager(), card);
+        if(card instanceof Planet planet) {
+            planet.play(gameModel, () -> {
+                gameModel.shopVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        } else if(card instanceof Tarot tarot) {
+            tarot.play(gameModel, () -> {
+                gameModel.shopVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        } else if(card instanceof Spectral spectral) {
+            spectral.play(gameModel, () -> {
+                gameModel.shopVisibilityProperty().set(true);
+                gameModel.getPlayedCardsViewManager().clear();
+            });
+        }
+    }
+
+    public void useCardFromBooster(Card card) {
+        //TODO USE FROM BOOSTER
+    }
+
+    public void selectCardFromBooster(Card card) {
+        if(card instanceof Joker joker) {
+            if (gameModel.getJokerManager().getSize() < gameModel.getRunState().getMaxJokers()) {
+                GameController.getInstance().selectCardFromBooster(joker);
+            } else {
+                //TODO JOKER SPACE FULL ANIMATION
+                System.out.println("Joker Space Full");
+            }
+        } else if (card instanceof PlayingCard playingCard) {
+            gameModel.getRunState().getPlayingDeck().addCard(playingCard);
+        }
+    }
+
+    public void buyItem(Card card) {
         if (card instanceof PurchasableCard) {
             ((PurchasableCard) card).onPurchase(gameModel);
         }
     }
 
-    public void playTarot(CardViewController cardViewController) {
-        Card card = cardViewController.getCard();
-        if(card instanceof Tarot) {
-            ((Tarot) card).play(gameModel);
-        }
-    }
-
-    public void rerollBossBlind(ActionEvent actionEvent) {
-        blindBoxController.rerollBoss();
-    }
-
-    public void buyAndUse(CardViewController cardViewController) {
+    public void buyAndUse(Card card) {
         System.out.println("Buy & Use");
-        Card card = cardViewController.getCard();
-        if(card.getCardType().equals("Planet")) {
-            gameModel.setShopVisibility(false);
-            playPlanet(cardViewController, shopController.getItemMap());
-            shopController.getItemMap().remove(cardViewController);
-        } else if(card.getCardType().equals("Tarot")) {
-            playTarot(cardViewController);
-        }
+        gameModel.getRunState().subMoney(card.getBuyPrice());
+        useCardFromShop(card);
     }
 
     public void sellItem(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
         addMoney((int) cardViewController.getCard().getSellValue());
         map.remove(cardViewController, anchorPane);
-    }
-
-    public void useCard(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
-        if(cardViewController.getCard().getCardType().equals("Tarot")) {
-            playTarot(cardViewController);
-        }
-        else if(cardViewController.getCard().getCardType().equals("Planet")) {
-            playPlanet(cardViewController, map);
-        }
-        else if(cardViewController.getCard().getCardType().equals("Spectral")) {
-            System.out.println("Spectral Card");
-        }
-    }
-
-    public void playPlanet(CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
-        gameModel.setShopVisibility(false);
-        Planet planet = (Planet) cardViewController.getCard();
-
-        PokerHand hand = gameModel.getPokerHandList().stream().filter(x -> x.getName().equals(planet.getPlanetPokerHand())).toList().getFirst();
-
-        gameModel.getBestHand().setHand(hand);
-
-        Animation moveAnimation = UIController.cardMoveToAnimation(map.get(cardViewController),"" ,"middle");
-
-        Timeline multTimeline = UIController.cardWiggleTimeline(planet);
-        multTimeline.setCycleCount(3);
-        multTimeline.setOnFinished( event -> {
-            hand.addMult(planet.getPlanetMultiplier());
-            gameModel.getBestHand().addMult(planet.getPlanetMultiplier());
-        });
-
-        Timeline chipsTimeline = UIController.cardWiggleTimeline(planet);
-        chipsTimeline.setCycleCount(3);
-        chipsTimeline.setOnFinished( event -> {
-            hand.addChips(planet.getPlanetChips());
-            gameModel.getBestHand().addChips(planet.getPlanetChips());
-        });
-
-        Timeline levelTimeline = UIController.cardWiggleTimeline(planet);
-        levelTimeline.setCycleCount(3);
-        levelTimeline.setOnFinished( event -> {
-            hand.addLevel();
-            gameModel.getBestHand().addLevel();
-        });
-
-        UIController.addToAnimationList(moveAnimation);
-        UIController.addToAnimationList(multTimeline);
-        UIController.addToAnimationList(chipsTimeline);
-        UIController.addToAnimationList(levelTimeline);
-        UIController.addToAnimationList(UIController.delayTimeline());
-
-        UIController.playAnimations(() -> {
-            map.remove(cardViewController);
-            gameModel.getBestHand().setHand(new PokerHand());
-            gameModel.setShopVisibility(true);
-        });
     }
 
     public void playBooster(Booster booster) {
@@ -480,23 +468,6 @@ public class GameController
         }
     }
 
-    public void useItem(AnchorPane cardAnchorPane, CardViewController cardViewController) {
-
-    }
-
-    //BACKGROUND HANDLER
-//    public static void delay(long millis, Runnable continuation) {
-//        Task<Void> sleeper = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                try { Thread.sleep(millis); }
-//                catch (InterruptedException ignored) { }
-//                return null;
-//            }
-//        };
-//        sleeper.setOnSucceeded(event -> continuation.run());
-//        new Thread(sleeper).start();
-//    }
 }
 
 

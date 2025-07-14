@@ -5,10 +5,12 @@ import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.game.PokerHandChecker;
 import com.example.balatro.domain.rules.PokerHand;
+import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.models.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -23,22 +25,23 @@ public class PlayedCardsController {
     private final GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-        UIController.bindStackPane(gameModel.getPlayedCards(), playedCards_StackPane);
+        UIController.bindStackPane(gameModel.getPlayedCardsViewManager(), playedCards_StackPane);
     }
 
     public void addSelectedCards(Runnable onComplete) {
-        gameModel.getPlayedCards().addAll(gameModel.getSelectedCards());
         for (PlayingCard card : gameModel.getSelectedCards()) {
             card.setSelected(false);
+            CardViewManager.transferCardTo(gameModel.getHoldingHandViewManager(), gameModel.getPlayedCardsViewManager(), card);
         }
+
         gameModel.getSelectedCards().clear();
 
-        List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCards(), gameModel.getBestHand().getName());
-        for(PlayingCard card : gameModel.getPlayedCards()) {
+        List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class), gameModel.getBestHand().getName());
+        for(PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
             card.setSelected(countedCards.contains(card));
         }
 
-        List<PlayingCard> selectedCards = gameModel.getPlayedCards().stream()
+        List<PlayingCard> selectedCards = gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class).stream()
                 .filter(PlayingCard::isSelected)
                 .collect(Collectors.toList());
 
@@ -56,11 +59,11 @@ public class PlayedCardsController {
             for(PlayingCard card : handCards) {
                 if(card.getEnhancement().getEnhancementName().equals("Steel Card")) {
                     gameModel.getBestHand().multMult(1.5);
-                    triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCards());
+                    triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class));
                 }
             }
 
-            triggerJokers(JokerTrigger.ALL_CARDS_SCORED, gameModel.getPlayedCards());
+            triggerJokers(JokerTrigger.ALL_CARDS_SCORED, gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class));
 
             UIController.playAnimations(() -> {
                 //Rechne Punkte zusammen
@@ -70,9 +73,9 @@ public class PlayedCardsController {
                 pointsReached();
 
                 if(onComplete != null) {
-                    for(PlayingCard card : gameModel.getPlayedCards()) {
+                    for(PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
                         card.setSelected(false);
-                        Animation animation = UIController.cardMoveToAnimation(card);
+                        Animation animation = UIController.cardMoveToAnimation(gameModel.getPlayedCardsViewManager().getView(card));
                         animation.setDelay(Duration.seconds(.2));
                         UIController.addToAnimationList(animation);
                     }
@@ -84,8 +87,9 @@ public class PlayedCardsController {
         }
 
         PlayingCard card = cards.get(index);
+        AnchorPane cardPane = gameModel.getPlayedCardsViewManager().getView(card);
 
-        Timeline timeline = UIController.cardWiggleTimeline(card);
+        Timeline timeline = UIController.cardWiggleTimeline(cardPane);
 
         timeline.setCycleCount(3);
         timeline.setDelay(Duration.seconds(0.2));
@@ -138,13 +142,13 @@ public class PlayedCardsController {
     }
 
     public void removeAllCards() {
-        gameModel.getPlayedCards().clear();
+        gameModel.getPlayedCardsViewManager().clear();
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
         System.out.println("Jokers getriggert");
         //for (Joker joker : gameModel.getActiveJokerList()) {
-        for (Joker joker : gameModel.getJokerList()) {
+        for (Joker joker : gameModel.getActiveJokerList()) {
             System.out.println("Triggert Joker: " + joker.getCardName());
             joker.tryActivate(trigger, gameModel, playedCards);
         }
