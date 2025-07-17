@@ -86,36 +86,6 @@ public class HoldingHandController {
         }
     }
 
-    //Selecting Cards
-//    private void setHandInfo(List<PokerHand> hands) {
-//        if(hands.isEmpty()) {
-//            gameModel.getBestHand().setHand(new PokerHand());
-//            gameModel.getPossiblePokerHand().clear();
-//            return;
-//        }
-//        int maxPoints = 0;
-//
-//        PokerHand bestHand = null;
-//        gameModel.getPossiblePokerHand().setAll(hands);
-//
-//        for (PokerHand pokerHand : gameModel.getPokerHandList()) {
-//            if(hands.contains(pokerHand)) {
-//                System.out.println(pokerHand.getName());
-//                int points = pokerHand.getChips() * pokerHand.getMulti();
-//                System.out.println("Possible Points: " + points);
-//                if(maxPoints < points) {
-//                    maxPoints = points;
-//                    bestHand = pokerHand;
-//                }
-//            }
-//        }
-//
-//        if(bestHand != null) {
-//            gameModel.getBestHand().setHand(bestHand);
-//        }
-//        System.out.println("Best Hand: " + gameModel.getBestHand().getName());
-//    }
-
     //Button Functions
     public void sortRank() {
         gameModel.setSortedByRank(true);
@@ -146,7 +116,6 @@ public class HoldingHandController {
             gameModel.setHandButtonVisibility(false);
             gameModel.getSelectedCards().sort(Comparator.comparingInt(gameModel.getHoldingHandViewManager().getCardList()::indexOf));
 
-            getSelectedCards().forEach(playingCard -> { gameModel.getHoldingHandViewManager().remove(playingCard); });
             GameController.getInstance().playSelectedCards();
 
             if(Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))

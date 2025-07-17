@@ -247,7 +247,7 @@ public enum TarotEffect {
         public void apply(GameModel model) {
             if (model.getSelectedCards().size() < 3)
                 for (PlayingCard card : model.getSelectedCards()) {
-                    card.setSuit(Suit.DIAMONDS);
+                    card.setSuit(2);
                 }
         }
 
@@ -261,7 +261,7 @@ public enum TarotEffect {
         public void apply(GameModel model) {
             if (model.getSelectedCards().size() < 3)
                 for (PlayingCard card : model.getSelectedCards()) {
-                    card.setSuit(Suit.CLUBS);
+                    card.setSuit(1);
                 }
         }
 
@@ -275,7 +275,7 @@ public enum TarotEffect {
         public void apply(GameModel model) {
             if (model.getSelectedCards().size() < 3)
                 for (PlayingCard card : model.getSelectedCards()) {
-                    card.setSuit(Suit.HEARTS);
+                    card.setSuit(0);
                 }
         }
 
@@ -301,7 +301,7 @@ public enum TarotEffect {
         public void apply(GameModel model) {
             if (model.getSelectedCards().size() < 3)
                 for (PlayingCard card : model.getSelectedCards()) {
-                    card.setSuit(Suit.SPADES);
+                    card.setSuit(3);
                 }
         }
 

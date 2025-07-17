@@ -65,6 +65,9 @@ public class GameModel {
     public BoosterDrawModel getBoosterDrawModel() {
         return boosterDrawModel;
     }
+
+    private final RewardModel rewardModel = new RewardModel();
+    public RewardModel getRewardModel() {return rewardModel;}
     //endregion
 
     //region Run Lists
@@ -171,49 +174,49 @@ public class GameModel {
         return allTarotList;
     }
     public Tarot getRandomTarot() {
-        return allTarotList.get(rand.nextInt(allTarotList.size()));
+        return allTarotList.get(rand.nextInt(allTarotList.size())).copy();
     }
 
     public List<Planet> getAllPlanetList() {
         return allPlanetList;
     }
     public Planet getRandomPlanet() {
-        return allPlanetList.get(rand.nextInt(allPlanetList.size()));
+        return allPlanetList.get(rand.nextInt(allPlanetList.size())).copy();
     }
 
     public List<Joker> getAllJokerList() {
         return allJokerList;
     }
     public Joker getRandomJoker() {
-        return allJokerList.get(rand.nextInt(allJokerList.size()));
+        return allJokerList.get(rand.nextInt(allJokerList.size())).copy();
     }
 
     public List<Spectral> getAllSpectralList() {
         return allSpectralList;
     }
     public Spectral getRandomSpectral() {
-        return allSpectralList.get(rand.nextInt(allSpectralList.size()));
+        return allSpectralList.get(rand.nextInt(allSpectralList.size())).copy();
     }
 
     public List<Edition> getAllEditionList() {
         return allEditionList;
     }
     public Edition getRandomEdition() {
-        return allEditionList.get(rand.nextInt(allEditionList.size()));
+        return allEditionList.get(rand.nextInt(allEditionList.size())).copy();
     }
 
     public List<Enhancement> getAllEnhancementList() {
         return allEnhancementList;
     }
     public Enhancement getRandomEnhancement() {
-        return allEnhancementList.get(rand.nextInt(allEnhancementList.size()));
+        return allEnhancementList.get(rand.nextInt(allEnhancementList.size())).copy();
     }
 
     public List<Seal> getAllSealList() {
         return allSealList;
     }
     public Seal getRandomSeal() {
-        return allSealList.get(rand.nextInt(allSealList.size()));
+        return allSealList.get(rand.nextInt(allSealList.size())).copy();
     }
 
     public List<PokerHand> getPokerHandList() {

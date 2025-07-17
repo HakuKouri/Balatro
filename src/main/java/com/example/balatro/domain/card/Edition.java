@@ -46,4 +46,13 @@ public class Edition
     {
         this.editionEffect = editionEffect;
     }
+
+    public Edition copy() {
+        Edition edition = new Edition();
+        edition.setId(id);
+        edition.setEditionImageUrl(editionImageUrl);
+        edition.setEditionName(editionName);
+        edition.setEditionEffect(editionEffect);
+        return edition;
+    }
 }

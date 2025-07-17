@@ -302,6 +302,7 @@ public class UIController {
         Card card = controller.getCard();
 
         if (card instanceof PlayingCard playingCard) {
+            System.out.println("PlayingCard: "  + playingCard.getSuit() + " " + playingCard.getRank() + " " + playingCard.getSeal().getSealName());
             if (controller.isSelected()) {
                 controller.selectedProperty().set(false);
                 gameModel.removeCardFromSelectedCards(playingCard);

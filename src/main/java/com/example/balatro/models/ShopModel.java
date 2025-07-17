@@ -19,7 +19,6 @@ public class ShopModel {
     private final DoubleProperty shopPrices =  new SimpleDoubleProperty(1);
     private final DoubleProperty editionChanceMultiplier = new SimpleDoubleProperty(1);
     private final IntegerProperty rerollPrice  = new SimpleIntegerProperty(5);
-    private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
     private final CardViewManager itemCardViewManager = new CardViewManager(true, false, false);
     private final CardViewManager boosterCardViewManager = new CardViewManager(true, false, false);
@@ -61,14 +60,6 @@ public class ShopModel {
 
     public IntegerProperty rerollPriceProperty() {
         return rerollPrice;
-    }
-
-    public int getMaxInterest() {
-        return maxInterest.get();
-    }
-
-    public IntegerProperty maxInterestProperty() {
-        return maxInterest;
     }
 
     public CardViewManager getItemCardViewManager() {

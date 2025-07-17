@@ -244,6 +244,23 @@ public class Joker extends Card implements PurchasableCard {
     public void addSticker(Sticker sticker) {
         getStickers().add(sticker);
     }
+
+    public Joker copy() {
+        Joker joker = new Joker();
+        joker.setCardId(getCardId());
+        joker.setCardImageUrl(getCardImageUrl());
+        joker.setCardName(getCardName());
+        joker.setCardDescription(getCardDescription());
+        joker.setCardCost(getCardCost());
+        joker.setCardType(getCardType());
+        joker.setActTiming(getActTiming());
+        joker.setRarity(getRarity());
+        joker.setUnlockRequirement(getUnlockRequirement());
+        joker.setJokerType(getJokerType());
+        joker.setTriggers(getTriggers());
+        joker.setParams(getParams());
+        return joker;
+    }
     //endregion
 
 }

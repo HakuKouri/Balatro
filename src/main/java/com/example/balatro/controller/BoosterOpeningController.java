@@ -1,10 +1,8 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.domain.card.Booster;
-import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.util.CardGenerator;
-import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.models.GameModel;
 import javafx.beans.property.ObjectProperty;
@@ -21,6 +19,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class BoosterOpeningController {
@@ -40,7 +39,8 @@ public class BoosterOpeningController {
 
     //region ATTRIBUTES
     private final ObjectProperty<Booster> booster = new SimpleObjectProperty<>(new Booster());
-
+    private int choosePossibility = 0;
+    private GameModel gameModel;
     //endregion
 
     //region GETTER SETTER
@@ -54,6 +54,7 @@ public class BoosterOpeningController {
 
     public void setBooster(Booster booster) {
         this.booster.get().setBooster(booster);
+        choosePossibility = booster.getBoosterChoiceValue();
     }
     //endregion
 
@@ -65,7 +66,7 @@ public class BoosterOpeningController {
         boosterName_Label.textProperty().bind(booster.get().cardNameProperty());
     }
 
-    public void useBooster(Booster booster, GameModel gameModel) {
+    public void useBooster(Booster booster) {
         setBooster(booster);
 
         drawBoosterCards();
@@ -76,7 +77,6 @@ public class BoosterOpeningController {
 
     private void drawBoosterCards() {
         System.out.println("drawBoosterCards: " + booster.get().getCardName());
-        GameModel gameModel = Balatro.getGameModel();
         for (int i = 0; i < booster.get().getBoosterSizeValue(); i++) {
             System.out.println("Draw " + i + " Card");
             switch (booster.get().getCardName()) {
@@ -91,8 +91,6 @@ public class BoosterOpeningController {
     }
 
     private void drawDeckCards() {
-        GameModel gameModel = Balatro.getGameModel();
-
         Set<Integer> generated = new LinkedHashSet<>();
         while (generated.size() < gameModel.getRunState().getMaxHandSize()) {
             generated.add(gameModel.getRand().nextInt(gameModel.getRunState().getPlayingDeck().getFullSize()));
@@ -106,14 +104,55 @@ public class BoosterOpeningController {
         }
     }
 
-
     public void skipBooster(ActionEvent actionEvent) {
-        GameModel gameModel = Balatro.getGameModel();
+        //TODO FIRE BOOSTER SKIP EVENT
+        closeBoosterOpener();
+    }
+
+    public void useCard(Card card) {
+        choosePossibility--;
+        if(card instanceof Planet planet) {
+            List<Planet> nonPlayedPlanets = gameModel.getBoosterDrawModel().getBoosterDrawnManager().getCardList(Planet.class).stream().filter(p -> p != planet ).toList();
+            for(Planet p : nonPlayedPlanets) {
+                gameModel.getBoosterDrawModel().getBoosterDrawnManager().getView(p).setManaged(false);
+            }
+
+            planet.play(gameModel, () -> {
+                for(Planet p : nonPlayedPlanets) {
+                    gameModel.getBoosterDrawModel().getBoosterDrawnManager().getView(p).setManaged(true);
+                }
+                if(choosePossibility == 0) {
+                    closeBoosterOpener();
+                }
+            });
+        }
+        if(card instanceof Tarot tarot) {
+            List<Tarot> nonPlayedTarot = gameModel.getBoosterDrawModel().getBoosterDrawnManager().getCardList(Tarot.class).stream().filter(t -> t != tarot ).toList();
+            for(Tarot t : nonPlayedTarot) {
+                gameModel.getBoosterDrawModel().getBoosterDrawnManager().getView(t).setManaged(false);
+            }
+
+            tarot.play(gameModel, () -> {
+                for(Tarot t : nonPlayedTarot) {
+                    gameModel.getBoosterDrawModel().getBoosterDrawnManager().getView(t).setManaged(true);
+                }
+                if(choosePossibility == 0) {
+                    closeBoosterOpener();
+                }
+            });
+        }
+    }
+
+    public void closeBoosterOpener() {
         gameModel.getBoosterDrawModel().getPlayCardsDrawnViewManager().clear();
         gameModel.getBoosterDrawModel().getBoosterDrawnManager().clear();
 
         gameModel.setBoosterOpeningVisibility(false);
         gameModel.setShopVisibility(true);
+    }
+
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
     }
     //endregion
 }

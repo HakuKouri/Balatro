@@ -1,19 +1,18 @@
 package com.example.balatro.controller;
 
+import com.almasb.fxgl.trade.Shop;
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rewards.VoucherHandler;
-import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.domain.util.CardViewManager;
+import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.VoucherState;
-import javafx.animation.Animation;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -24,101 +23,44 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Pair;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
 public class GameController
 {
     //region FXML
-    @FXML
-    private RowConstraints holdingHand_GrowRow;
-    @FXML
-    private AnchorPane playedCards_AnchorPane;
-    @FXML
-    private ImageView shopImageView;
 
     //Phase Display
-    @FXML
-    private AnchorPane chooseBlind_AnchorPane;
-    @FXML
-    private Button rerollBossBlind_Button;
-    @FXML
-    private AnchorPane shopSign_AnchorPane;
-    @FXML
-    private AnchorPane pickedBlind_AnchorPane;
+    @FXML private AnchorPane chooseBlind_AnchorPane, shopSign_AnchorPane, pickedBlind_AnchorPane;
+    @FXML private Button rerollBossBlind_Button;
+    @FXML private ImageView shopImageView;
 
-    @FXML
-    private AnchorPane holdingHand_AnchorPane;
-    @FXML
-    private AnchorPane gameScreenAnchor;
-    @FXML
-    private Label cardsInDeckLabel;
-    @FXML
-    private Label blindToBeat_Label;
-    @FXML
-    private ImageView stakeImageView;
-    @FXML
-    private Label pointsScoredLabel;
-    @FXML
-    private VBox spaceTag;
-    @FXML
-    private StackPane spaceJoker;
-    @FXML
-    private Label jokerCountLabel;
-    @FXML
-    private ImageView deckCover_ImageView;
-    @FXML
-    private StackPane spaceConsumable;
-    @FXML
-    private Label consumableCountLabel;
-    @FXML
-    private StackPane boosterCards_StackPane;
+    //Spaces
+    @FXML private AnchorPane gameScreenAnchor, holdingHand_AnchorPane, playedCards_AnchorPane;
+    @FXML private StackPane spaceJoker, spaceConsumable;
+    @FXML private ImageView deckCover_ImageView;
+    @FXML private VBox spaceTag;
+    @FXML private Label jokerCountLabel, consumableCountLabel, cardsInDeckLabel;
 
     //Handinfo
-    @FXML
-    private Label infoHandName;
-    @FXML
-    private Label infoHandLevel;
-    @FXML
-    private Label infoHandChips;
-    @FXML
-    private Label infoHandMulti;
+    @FXML private Label infoHandName, infoHandLevel, infoHandChips, infoHandMulti;
 
     //Run Info
-    @FXML
-    private Label handsLabel;
-    @FXML
-    private Label discardsLabel;
-    @FXML
-    private Label moneyLabel;
-    @FXML
-    private Label anteLabel;
-    @FXML
-    private Label roundLabel;
+    @FXML private Label handsLabel, discardsLabel, moneyLabel, anteLabel, roundLabel;
 
     //to beat elements
-    @FXML
-    private Label toBeatEffect;
-    @FXML
-    private ImageView toBeatImage;
-    @FXML
-    private ImageView toBeatStake;
-    @FXML
-    private Label toBeatScore;
-    @FXML
-    private Label toBeatReward;
+    @FXML private ImageView toBeatImage, toBeatStake;
+    @FXML private Label toBeatName, toBeatEffect, toBeatScore, toBeatReward;
+
+    //scored Points
+    @FXML private ImageView stakeImageView;
+    @FXML private Label pointsScoredLabel;
 
     //Placeholder
     @FXML
-    private AnchorPane placeHolderBlinds;
-    @FXML
-    private AnchorPane placeHolderShop;
-    @FXML
-    private AnchorPane placeHolderReward;
-    @FXML
-    private AnchorPane placeHolderBoosterOpening;
+    private AnchorPane placeHolderBlinds, placeHolderShop, placeHolderReward, placeHolderBoosterOpening;
 
     //Test Elements
     @FXML
@@ -128,14 +70,6 @@ public class GameController
     //endregion
 
     //region Attributes
-    //FXML LOADER
-    private final FXMLLoader loaderShop = new FXMLLoader(getClass().getResource("/com/example/balatro/shop.fxml"));
-    private final FXMLLoader loaderReward = new FXMLLoader(getClass().getResource("/com/example/balatro/reward-summary.fxml"));
-    private final FXMLLoader loaderHoldingHand = new FXMLLoader(getClass().getResource("/com/example/balatro/holdingHand.fxml"));
-    private final FXMLLoader loaderPlayedCards = new FXMLLoader(getClass().getResource("/com/example/balatro/playedCards_StackPane.fxml"));
-    private final FXMLLoader loaderBlindBox = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-box.fxml"));
-    private final FXMLLoader loaderBoosterOpening = new FXMLLoader(getClass().getResource("/com/example/balatro/boosterOpening.fxml"));
-
     //Controller
     private ShopController shopController;
     private HoldingHandController holdingHandController;
@@ -143,30 +77,24 @@ public class GameController
     private BlindBoxController blindBoxController;
     private BoosterOpeningController boosterOpeningController;
 
-    //Gamecontroller Instance
+    //Game Controller & Model
     private static GameController instance;
-
     public static GameController getInstance() {
         return instance;
     }
-
-    //Game Model instance
     private static final GameModel gameModel = Balatro.getGameModel();
 
-    public StackPane getJokerStackPane() {
-        return spaceJoker;
-    }
     //endregion
 
-    //UI HANDLER
     public void initialize(){
         instance = this;
         VoucherHandler.initializeVoucherHandler(gameModel);
 
+        loadFXMLParts();
+
         double height = Balatro.getSettings().getWindowHeight();
         double width = Balatro.getSettings().getWindowWidth();
 
-        loadFXMLParts();
         bindUi();
 
         Booster.setImageHeightProperty(height * .26);
@@ -174,6 +102,7 @@ public class GameController
 
         gameScreenAnchor.setMaxWidth(width);
         gameScreenAnchor.setMaxHeight(height);
+
         //Shop
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
             return width * 0.186;
@@ -213,46 +142,43 @@ public class GameController
         });
     }
 
+    //region Setup
     private void loadFXMLParts() {
-        //Place Holder
-        try {
-            //Holding Hand
-            AnchorPane holdingHand = loaderHoldingHand.load();
-            holdingHandController = loaderHoldingHand.getController();
-            holdingHand_AnchorPane.getChildren().add(holdingHand);
+        //Holding Hand
+        Pair<HoldingHandController, AnchorPane> holdingHand = FxmlUtil.loadWithPane("/com/example/balatro/holdingHand.fxml");
+        holdingHandController = holdingHand.getKey();
+        holdingHand_AnchorPane.getChildren().add(holdingHand.getValue());
 
-            //Played Cards
-            AnchorPane playedCards = loaderPlayedCards.load();
-            playedCardsController = loaderPlayedCards.getController();
-            playedCards_AnchorPane.getChildren().add(playedCards);
+        //Played Cards
+        Pair<PlayedCardsController, AnchorPane> playedCards = FxmlUtil.loadWithPane("/com/example/balatro/playedCards_StackPane.fxml");
+        playedCardsController = playedCards.getKey();
+        playedCards_AnchorPane.getChildren().add(playedCards.getValue());
 
-            //Blind Box
-            AnchorPane blindBox = loaderBlindBox.load();
-            blindBoxController = loaderBlindBox.getController();
-            placeHolderBlinds.getChildren().add(blindBox);
-            UIController.configurePlaceHolder(placeHolderBlinds);
+        //Blind Box
+        Pair<BlindBoxController, AnchorPane> blindBox = FxmlUtil.loadWithPane("/com/example/balatro/blind-box.fxml");
+        blindBoxController = blindBox.getKey();
+        placeHolderBlinds.getChildren().add(blindBox.getValue());
+        UIController.configurePlaceHolder(placeHolderBlinds);
 
-            AnchorPane boosterOpening = loaderBoosterOpening.load();
-            boosterOpeningController = loaderBoosterOpening.getController();
-            placeHolderBoosterOpening.getChildren().add(boosterOpening);
-            UIController.configurePlaceHolder(placeHolderBoosterOpening);
+        //Booster Opener
+        Pair<BoosterOpeningController, AnchorPane> boosterOpening = FxmlUtil.loadWithPane("/com/example/balatro/boosterOpening.fxml");
+        boosterOpeningController = boosterOpening.getKey();
+        boosterOpeningController.setGameModel(gameModel);
+        placeHolderBoosterOpening.getChildren().add(boosterOpening.getValue());
+        UIController.configurePlaceHolder(placeHolderBoosterOpening);
 
-            //Shop
-            //region Placeholder
-            AnchorPane shop = loaderShop.load();
-            shopController = loaderShop.getController();
-            placeHolderShop.getChildren().add(shop);
-            UIController.configurePlaceHolder(placeHolderShop);
-            shopController.setOnNextRoundCallback(this::nextRound);
+        //Shop
+        //region Placeholder
+        Pair<ShopController, AnchorPane> shop = FxmlUtil.loadWithPane("/com/example/balatro/shop.fxml");
+        shopController = shop.getKey();
+        placeHolderShop.getChildren().add(shop.getValue());
+        UIController.configurePlaceHolder(placeHolderShop);
+        shopController.setOnNextRoundCallback(this::nextRound);
 
-            //Reward
-            AnchorPane reward = loaderReward.load();
-            placeHolderReward.getChildren().add(reward);
-            UIController.configurePlaceHolder(placeHolderReward);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        //Reward
+        Pair<RewardSummaryController, AnchorPane> reward = FxmlUtil.loadWithPane("/com/example/balatro/reward-summary.fxml");
+        placeHolderReward.getChildren().add(reward.getValue());
+        UIController.configurePlaceHolder(placeHolderReward);
     }
 
     private void bindUi() {
@@ -276,7 +202,7 @@ public class GameController
         UIController.bindStackPane(gameModel.getConsumableManager(), spaceConsumable);
 
         //Binding der Gameinfo Labels
-        UIController.bindBlindToBeatInfo(blindToBeat_Label, toBeatEffect,toBeatImage,toBeatStake,toBeatScore,toBeatReward,gameModel);
+        UIController.bindBlindToBeatInfo(toBeatName, toBeatEffect,toBeatImage,toBeatStake,toBeatScore,toBeatReward,gameModel);
         UIController.bindScoredPointsInfo(stakeImageView, pointsScoredLabel, gameModel);
         UIController.bindHandInfo(infoHandName,infoHandLevel,infoHandChips,infoHandMulti,gameModel);
         UIController.bindRunInfo(handsLabel,discardsLabel,moneyLabel,anteLabel,roundLabel,gameModel);
@@ -293,6 +219,7 @@ public class GameController
         ));
         //endregion
     }
+    //endregion
 
     //SETTING UP GAME
     private void setPlayingDeck() {
@@ -302,18 +229,17 @@ public class GameController
                 PlayingCard card = new PlayingCard(j,i);
                 card.setSeal(gameModel.getRandomSeal());
                 System.out.println(card.getSeal().getSealName());
+                System.out.println("Card: " + card.getSuit() + " " + card.getRank());
                 cards.add(card);
             }
         }
         gameModel.getRunState().getPlayingDeck().setFullDeck(cards);
     }
 
-
     //PLAYING CARD HANDLER
     public void playSelectedCards() {
         List<PlayingCard> selectedCards = gameModel.getSelectedCards();
         for (PlayingCard card : selectedCards) {
-            card.setTranslateX(0);
             card.setClickAble(false);
         }
 
@@ -321,9 +247,7 @@ public class GameController
 
         playedCardsController.addSelectedCards(() -> {
             Platform.runLater(() -> {
-                gameModel.handButtonVisibilityProperty().set(true);
                 gameModel.clearSelectedCards();
-
                 gameModel.getPlayedCardsViewManager().clear();
             });
         });
@@ -423,19 +347,20 @@ public class GameController
     }
 
     public void useCardFromBooster(Card card) {
-        //TODO USE FROM BOOSTER
+        boosterOpeningController.useCard(card);
     }
 
     public void selectCardFromBooster(Card card) {
         if(card instanceof Joker joker) {
             if (gameModel.getJokerManager().getSize() < gameModel.getRunState().getMaxJokers()) {
-                GameController.getInstance().selectCardFromBooster(joker);
+                CardViewManager.transferCardTo(gameModel.getBoosterDrawModel().getBoosterDrawnManager(), gameModel.getJokerManager(), card);
             } else {
                 //TODO JOKER SPACE FULL ANIMATION
                 System.out.println("Joker Space Full");
             }
         } else if (card instanceof PlayingCard playingCard) {
             gameModel.getRunState().getPlayingDeck().addCard(playingCard);
+            gameModel.getBoosterDrawModel().getBoosterDrawnManager().remove(playingCard);
         }
     }
 
@@ -451,15 +376,19 @@ public class GameController
         useCardFromShop(card);
     }
 
-    public void sellItem(AnchorPane anchorPane, CardViewController cardViewController, Map<CardViewController, AnchorPane> map) {
-        addMoney((int) cardViewController.getCard().getSellValue());
-        map.remove(cardViewController, anchorPane);
+    public void sellItem(Card card) {
+        addMoney((int) card.getSellValue());
+        if(card instanceof Joker joker) {
+            gameModel.getJokerManager().remove(joker);
+        } else {
+            gameModel.getConsumableManager().remove(card);
+        }
     }
 
     public void playBooster(Booster booster) {
         gameModel.setShopVisibility(false);
         gameModel.setBoosterOpeningVisibility(true);
-        boosterOpeningController.useBooster(booster, gameModel);
+        boosterOpeningController.useBooster(booster);
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {

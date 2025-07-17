@@ -2,27 +2,27 @@ package com.example.balatro.domain.card;
 
 public class Enhancement
 {
-    private int id;
+    private int enhancementId;
     private String enhancementImageUrl;
     private String enhancementName;
     private String enhancementEffect;
 
     public Enhancement() {
-        setId(-1);
+        setEnhancementId(-1);
         setEnhancementImageUrl("");
         setEnhancementName("");
         setEnhancementEffect("");
     }
 
 
-    public int getId()
+    public int getEnhancementId()
     {
-        return id;
+        return enhancementId;
     }
 
-    public void setId(int id)
+    public void setEnhancementId(int enhancementId)
     {
-        this.id = id;
+        this.enhancementId = enhancementId;
     }
 
     public String getEnhancementImageUrl()
@@ -53,5 +53,14 @@ public class Enhancement
     public void setEnhancementEffect(String enhancementEffect)
     {
         this.enhancementEffect = enhancementEffect;
+    }
+
+    public Enhancement copy() {
+        Enhancement enhancement = new Enhancement();
+        enhancement.setEnhancementId(enhancementId);
+        enhancement.setEnhancementImageUrl(enhancementImageUrl);
+        enhancement.setEnhancementName(enhancementName);
+        enhancement.setEnhancementEffect(enhancementEffect);
+        return enhancement;
     }
 }

@@ -20,7 +20,7 @@ public class CardViewManager {
 
     //region Attributes
     private final ObservableMap<CardViewController, AnchorPane> viewMap = FXCollections.observableMap(new LinkedHashMap<>());
-    private final Map<Card, CardViewController> controllerMap = new HashMap<>();
+    private final Map<Card, CardViewController> controllerMap = new LinkedHashMap<>();
     private final BooleanProperty singleSelect =  new SimpleBooleanProperty(true);
     private final BooleanProperty draggable =  new SimpleBooleanProperty(true);
     private final BooleanProperty bringToFrontOnClick =  new SimpleBooleanProperty(true);
@@ -68,17 +68,15 @@ public class CardViewManager {
 
     //region Functions
     public void create(Card card, boolean inShop) {
-        CardViewController.createCardNode(card, viewMap, inShop);
-        CardViewController controller = getControllerByCard(card);
-        if (controller != null) {
-            controllerMap.put(card, controller);
-        }
+        CardViewController controller = CardViewController.createCardNode(card, viewMap, inShop);
+        controllerMap.put(card, controller);
     }
 
     public void createForBooster(Card card) {
-        CardViewController cvc = CardViewController.createCardNode(card, viewMap, false);
-        cvc.fromBoosterProperty().set(true);
-        CardViewController controller = getControllerByCard(card);
+        CardViewController controller = CardViewController.createCardNode(card, viewMap, false);
+        //cvc.fromBoosterProperty().set(true);
+        controller.fromBoosterProperty().set(true);
+        //CardViewController controller = getControllerByCard(card);
         if (controller != null) {
             controllerMap.put(card, controller);
         }

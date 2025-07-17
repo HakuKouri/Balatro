@@ -1,14 +1,12 @@
 package com.example.balatro.domain.card;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.controller.CardViewController;
 import com.example.balatro.enums.Suit;
 import com.example.balatro.interfaces.PurchasableCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 
@@ -60,7 +58,7 @@ public class PlayingCard extends Card implements PurchasableCard {
         }, rankIndexProperty(), suitIndexProperty()));
 
         getSeal().setSealID(-1);
-        getEnhancement().setId(-1);
+        getEnhancement().setEnhancementId(-1);
         getEdition().setId(-1);
 
         getStyleClass().add("playingCard");
@@ -128,8 +126,8 @@ public class PlayingCard extends Card implements PurchasableCard {
         return suit;
     }
 
-    public void setSuit(Suit suit) {
-        this.suit.set(suit);
+    public void setSuit(int suitIndex) {
+        setSuitIndex(suitIndex);
     }
 
     public Seal getSeal() {

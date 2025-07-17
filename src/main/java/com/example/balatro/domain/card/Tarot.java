@@ -27,6 +27,10 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
             System.out.println("Effect Apply");
             effect.apply(model);
         }
+
+        if (onFinished != null) {
+            onFinished.run();
+        }
     }
 
     private final StringProperty tarotDescription = new SimpleStringProperty("");
@@ -61,6 +65,18 @@ public class Tarot extends Card implements PurchasableCard, PlayableCard {
         setCardType(tarot.getCardType());
         setTarotDescription(tarot.getTarotDescription());
         setTarotEffect(tarot.getTarotEffect());
+    }
+
+    public Tarot copy() {
+        Tarot tarot = new Tarot();
+        setCardId(tarot.getCardId());
+        setCardName(tarot.getCardName());
+        setCardImageUrl(tarot.getCardImageUrl());
+        setCardCost(tarot.getCardCost());
+        setCardType(tarot.getCardType());
+        setTarotDescription(tarot.getTarotDescription());
+        setTarotEffect(tarot.getTarotEffect());
+        return tarot;
     }
     //endregion
 }

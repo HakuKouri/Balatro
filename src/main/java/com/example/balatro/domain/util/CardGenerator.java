@@ -32,13 +32,7 @@ public class CardGenerator {
     }
 
     public static Planet getRandomPlanet(GameModel gameModel) {
-        Planet planet = new Planet();
-
-        int planetChance = gameModel.getRand().nextInt(gameModel.getAllPlanetList().size());
-
-        planet.setPlanet(gameModel.getAllPlanetList().get(planetChance));
-        System.out.println("Planet: " + planet.getCardName());
-        return planet;
+        return gameModel.getRandomPlanet();
     }
 
     public static Spectral getRandomSpectral(GameModel gameModel) {

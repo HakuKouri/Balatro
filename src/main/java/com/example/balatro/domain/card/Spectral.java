@@ -106,5 +106,16 @@ public class Spectral extends Card implements PurchasableCard, PlayableCard {
         }
     }
 
+    public Spectral copy() {
+        Spectral spectral = new Spectral();
+        spectral.setCardId(getCardId());
+        spectral.setCardName(getCardName());
+        spectral.setCardImageUrl(getCardImageUrl());
+        spectral.setCardType(getCardType());
+        spectral.setCardDescription(getCardDescription());
+        spectral.setEffect(getEffect());
+        return spectral;
+    }
+
     //endregion
 }

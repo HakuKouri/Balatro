@@ -197,6 +197,22 @@ public class Planet extends Card implements PurchasableCard {
         setSecret(planet.isSecret());
     }
 
+    public Planet copy() {
+        Planet planet = new Planet();
+        planet.setCardId(getCardId());
+        planet.setCardImageUrl(getCardImageUrl());
+        planet.setCardName(getCardName());
+        planet.setCardCost(getCardCost());
+        planet.setCardType(getCardType());
+        planet.setPlanetAddition(getPlanetAddition());
+        planet.setPlanetChips(getPlanetChips());
+        planet.setPlanetMultiplier(getPlanetMultiplier());
+        planet.setPlanetPokerHand(getPlanetPokerHand());
+        planet.setPlanetHandBaseScore(getPlanetHandBaseScore());
+        planet.setSecret(isSecret());
+        return planet;
+    }
+
 
     //endregion
 }

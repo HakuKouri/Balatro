@@ -13,7 +13,7 @@ public class RewardModel {
     private final IntegerProperty cloud9 = new SimpleIntegerProperty();
     private final int goldJokerReward = 4;
     private final IntegerProperty interestReward = new SimpleIntegerProperty();
-
+    private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
     public Map<Joker, Integer> getRocketList() {
         return rocketList;
@@ -46,5 +46,13 @@ public class RewardModel {
 
     public IntegerProperty interestRewardProperty() {
         return interestReward;
+    }
+
+    public int getMaxInterest() {
+        return maxInterest.get();
+    }
+
+    public IntegerProperty maxInterestProperty() {
+        return maxInterest;
     }
 }

@@ -156,8 +156,8 @@ public class RewardSummaryController {
 
         //Interest Reward
         if(gameModel.getRunState().getMoney() >= 5) {
-            int interestReward = gameModel.getRunState().getMoney() / 5;
-            rewardVBox.getChildren().add(createRewardPane(interestReward, "1 interest per $5 (" + gameModel.getShopModel().getMaxInterest() + " max)", Math.min(gameModel.getShopModel().getMaxInterest(), interestReward), false));
+            int interestReward = Math.max(gameModel.getRunState().getMoney() / 5, gameModel.getRewardModel().getMaxInterest());
+            rewardVBox.getChildren().add(createRewardPane(interestReward, "1 interest per $5 (" + gameModel.getRewardModel().getMaxInterest() + " max)", Math.min(gameModel.getRewardModel().getMaxInterest(), interestReward), false));
         }
     }
 

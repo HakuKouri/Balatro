@@ -53,7 +53,7 @@ public class VoucherHandler {
                 activeVoucherUpgrade(9);
                 break;
             case "Seed Money": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.SEED_MONEY, true);
-                gameModel.getShopModel().maxInterestProperty().set(10);
+                gameModel.getRewardModel().maxInterestProperty().set(10);
                 activeVoucherUpgrade(10);
                 break;
             case "Blank": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.BLANK, true);
@@ -112,7 +112,7 @@ public class VoucherHandler {
                 upgradeBrought(25);
                 break;
             case "Money Tree": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.MONEY_TREE, true);
-                gameModel.getShopModel().maxInterestProperty().set(20);
+                gameModel.getRewardModel().maxInterestProperty().set(20);
                 upgradeBrought(26);
                 break;
             case "Antimatter": gameModel.getVoucherState().setVoucher(VoucherState.VoucherType.ANTIMATTER, true);

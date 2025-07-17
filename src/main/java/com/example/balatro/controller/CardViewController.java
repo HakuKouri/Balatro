@@ -2,53 +2,38 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 public class CardViewController {
-
-
     //region FXML
     @FXML
-    private AnchorPane price_AnchorPane;
+    private AnchorPane card_AnchorPane, price_AnchorPane, buy_AnchorPane, buyUseSell_AnchorPane, use_AnchorPane, useSelect_AnchorPane;
     @FXML
-    private Label priceLabel;
-    @FXML
-    private AnchorPane buy_AnchorPane;
-    @FXML
-    private Label buyLabel;
-    @FXML
-    private AnchorPane buyUseSell_AnchorPane;
-    @FXML
-    private Label buyUseSell_Label;
-    @FXML
-    private AnchorPane use_AnchorPane;
-    @FXML
-    private Label use_Label;
-    @FXML
-    private AnchorPane card_AnchorPane;
+    private Label priceLabel, buyLabel, buyUseSell_Label, use_Label, useSelect_Label;
     @FXML
     private ImageView cardImage;
     @FXML
     private StackPane image_StackPane;
-    @FXML
-    private AnchorPane useSelect_AnchorPane;
-    @FXML
-    private Label useSelect_Label;
     //endregion
 
-    //region Properties
+    //region Attributes
     private final ObjectProperty<Card> card = new SimpleObjectProperty<>(new Card());
     private final BooleanProperty inShop = new SimpleBooleanProperty(false);
     private final BooleanProperty fromBooster = new SimpleBooleanProperty(false);
@@ -56,7 +41,6 @@ public class CardViewController {
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
     private final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
     private Map<CardViewController, AnchorPane> inMap;
-
     //endregion
 
     //region const Strings
@@ -156,7 +140,8 @@ public class CardViewController {
         });
     }
 
-    //Funktionen
+    //region Funktionen
+
     private void bindMouseClickEvent() {
         buyLabel.setOnMouseClicked(event -> {
             System.out.println("BuyLabel clicked");
@@ -168,7 +153,7 @@ public class CardViewController {
             if(isInShop())
                 GameController.getInstance().buyAndUse(getCard());
             else
-                GameController.getInstance().sellItem(card_AnchorPane, this, getInMap());
+                GameController.getInstance().sellItem(getCard());
         });
 
         use_AnchorPane.setOnMouseClicked(event -> {
@@ -273,34 +258,32 @@ public class CardViewController {
                 "$ " + buyPrice.get(), buyPriceProperty()));
 
         useSelect_Label.textProperty().bind(Bindings.createStringBinding(() -> {
-            System.out.println(getCard().getClass().getSimpleName());
             if(getCard() instanceof Tarot ||  getCard() instanceof Spectral || getCard() instanceof Planet) {
-                System.out.println("Use wird genutzt");
                 return "USE";
             } else {
-                System.out.println("Select wird genutzt");
                 return "SELECT";
             }
         }, cardProperty()));
 
     }
 
-    public void initializeCardData(Card card) {
-        while(image_StackPane.getChildren().size() > 1)
-            image_StackPane.getChildren().remove(image_StackPane.getChildren().getLast());
+    public void renderCardVisuals() {
+        if (getCard() == null) {
+            System.out.println("Card is null");
+            return;
+        }
+        image_StackPane.getChildren().removeIf(child -> !"cardImage".equals(child.getId()));
 
-        cardProperty().set(card);
-        card.setupBindings();
-
-        if(card instanceof Joker) {
-            for(Sticker sticker : ((Joker) card).getStickers()) {
+        if(getCard() instanceof Joker joker) {
+            for(Sticker sticker : joker.getStickers()) {
                 image_StackPane.getChildren().add(sticker);
             }
         }
 
-        if(card instanceof PlayingCard) {
-            if(((PlayingCard) card).getSeal().getSealId() > 0)
-                image_StackPane.getChildren().add(((PlayingCard) card).getSeal());
+        if(getCard() instanceof PlayingCard playingCard) {
+            System.out.println(playingCard.getSeal().toString());
+            if(playingCard.getSeal().getSealId() > 0)
+                image_StackPane.getChildren().add(playingCard.getSeal());
         }
     }
 
@@ -317,22 +300,23 @@ public class CardViewController {
     }
 
     public static CardViewController createCardNode(Card card, ObservableMap<CardViewController, AnchorPane> map, boolean inShop) {
-        CardViewController controller = new CardViewController();
-        try {
-            FXMLLoader loader = new FXMLLoader(CardViewController.class.getResource("/com/example/balatro/card.fxml"));
-            AnchorPane cardPane = loader.load();
-            controller = loader.getController();
+        Pair<CardViewController, AnchorPane> cardView = FxmlUtil.loadWithPane("/com/example/balatro/card.fxml");
+        CardViewController controller = cardView.getKey();
+        AnchorPane cardPane = cardView.getValue();
 
-            cardPane.getStyleClass().add("card");
-            controller.setInMap(map);
-            controller.initializeCardData(card);
-            controller.inShopProperty().set(inShop);
+        cardPane.getStyleClass().add("card");
+        controller.setInMap(map);
+        controller.setCard(card);
+        controller.inShopProperty().set(inShop);
 
-            map.put(controller,cardPane);
+        map.put(controller, cardPane);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        };
         return controller;
+    }
+
+    public void setCard(Card card) {
+        this.cardProperty().set(card);
+        getCard().setupBindings();
+        renderCardVisuals();
     }
 }

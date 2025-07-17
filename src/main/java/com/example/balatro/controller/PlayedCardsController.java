@@ -15,6 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,18 @@ public class PlayedCardsController {
     }
 
     public void addSelectedCards(Runnable onComplete) {
-        for (PlayingCard card : gameModel.getSelectedCards()) {
+        List<PlayingCard> sortedCards = gameModel.getSelectedCards().stream()
+                .sorted(Comparator.comparingDouble(card -> {
+                    AnchorPane view = gameModel.getHoldingHandViewManager().getView(card);
+                    if (view == null) {
+                        System.out.println("⚠️ View not found for card: " + card);
+                        return 0;
+                    }
+                    return view.getTranslateX();
+                }))
+                .toList();
+
+        for (PlayingCard card : sortedCards) {
             card.setSelected(false);
             CardViewManager.transferCardTo(gameModel.getHoldingHandViewManager(), gameModel.getPlayedCardsViewManager(), card);
         }
@@ -50,13 +62,7 @@ public class PlayedCardsController {
 
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
         if(index >= cards.size()) {
-            //Löse Joker Trigger aus
-            List<PlayingCard> handCards = gameModel.getHoldingHandViewManager().getCardList().stream()
-                    .filter(card -> card instanceof PlayingCard)
-                    .map(card -> (PlayingCard) card)
-                    .toList();
-
-            for(PlayingCard card : handCards) {
+            for(PlayingCard card : gameModel.getHoldingHandViewManager().getCardList(PlayingCard.class)) {
                 if(card.getEnhancement().getEnhancementName().equals("Steel Card")) {
                     gameModel.getBestHand().multMult(1.5);
                     triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class));
@@ -147,8 +153,7 @@ public class PlayedCardsController {
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
         System.out.println("Jokers getriggert");
-        //for (Joker joker : gameModel.getActiveJokerList()) {
-        for (Joker joker : gameModel.getActiveJokerList()) {
+        for (Joker joker : gameModel.getJokerManager().getCardList(Joker.class)) {
             System.out.println("Triggert Joker: " + joker.getCardName());
             joker.tryActivate(trigger, gameModel, playedCards);
         }

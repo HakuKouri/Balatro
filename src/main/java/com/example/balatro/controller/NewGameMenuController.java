@@ -297,4 +297,8 @@ public class NewGameMenuController
     public Color getDark() {
         return dark;
     }
+
+    public void closeNewGameMenu(ActionEvent actionEvent) {
+        TitleScreenController.getInstance().closeNewGameMenu();
+    }
 }

@@ -79,11 +79,25 @@ public class Seal extends ImageView
     //endregion
 
     //region Functions
+    @Override
+    public String toString() {
+        return sealID + " | " + sealImageUrl + " | " + sealName + " | " + sealEffect;
+    }
+
     public void setSeal(Seal seal) {
         setSealID(seal.getSealId());
         setSealImageUrl(seal.getSealImageUrl());
         setSealName(seal.getSealName());
         setSealEffect(seal.getSealEffect());
+    }
+
+    public Seal copy() {
+        Seal seal = new Seal();
+        seal.setSealID(sealID.get());
+        seal.setSealImageUrl(sealImageUrl.get());
+        seal.setSealName(sealName.get());
+        seal.setSealEffect(sealEffect.get());
+        return seal;
     }
 
     //endregion

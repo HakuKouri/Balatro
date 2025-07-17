@@ -230,7 +230,7 @@ public class SqlHandler {
                     //EnhancementsTableColumns = " (id, appearance, enhancement, effect)";
                     query += EnhancementsTableColumns + "VALUES (?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Enhancement) listItem).getId());
+                    ps.setInt(1, ((Enhancement) listItem).getEnhancementId());
                     ps.setString(2, ((Enhancement) listItem).getEnhancementImageUrl());
                     ps.setString(3, ((Enhancement) listItem).getEnhancementName());
                     ps.setString(4, ((Enhancement) listItem).getEnhancementEffect());
@@ -639,7 +639,7 @@ public class SqlHandler {
             while (rs.next()) {
                 Enhancement enhancement = new Enhancement();
 
-                enhancement.setId(rs.getInt(1));
+                enhancement.setEnhancementId(rs.getInt(1));
                 enhancement.setEnhancementImageUrl(rs.getString(2));
                 enhancement.setEnhancementName(rs.getString(3));
                 enhancement.setEnhancementEffect(rs.getString(4));

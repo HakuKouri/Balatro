@@ -393,8 +393,8 @@ public class WebHandler
                 if(cells.size() == 0) continue;
                 try
                 {
-                    enhancement.setId(arrayList.size()+1);
-                    enhancement.setEnhancementImageUrl("src\\main\\resources\\com\\images\\Enhancers\\Enhancers" + enhancement.getId() + ".png");
+                    enhancement.setEnhancementId(arrayList.size()+1);
+                    enhancement.setEnhancementImageUrl("src\\main\\resources\\com\\images\\Enhancers\\Enhancers" + enhancement.getEnhancementId() + ".png");
                     enhancement.setEnhancementName(cells.get(1).text());
                     enhancement.setEnhancementEffect(cells.get(2).text());
                 }

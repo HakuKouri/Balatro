@@ -3,6 +3,7 @@ package com.example.balatro;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.controller.GameController;
+import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
@@ -12,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -19,35 +22,27 @@ import java.io.IOException;
 public class Balatro extends Application
 {
     //region Primary Stage
-    static private Stage primaryStage;
-
+    private static Stage primaryStage;
     public static Stage getPrimaryStage() {
         return primaryStage;
     }
     //endregion
 
-    //region Game Model
+    //region Game & Settings Model
     private static GameModel gameModel;
-
     public static GameModel getGameModel() {
         return gameModel;
     }
-    //endregion
 
-    //region Settings Model
-    private String rootPath = "settings.xml";
+
     private static final SettingsModel settingsModel = new SettingsModel();
-
     public static SettingsModel getSettings() { return settingsModel; }
+
+    private final String rootPath = "settings.xml";
     //endregion
 
     //region Title Screen
-    private final FXMLLoader fxmlLoaderMain = new FXMLLoader(Balatro.class.getResource("balatro-screen.fxml"));
-    private final FXMLLoader fxmlLoaderTitle = new FXMLLoader(Balatro.class.getResource("title-screen.fxml"));
-    private static final FXMLLoader fxmlLoaderGame = new FXMLLoader(Balatro.class.getResource("game-screen.fxml"));
     public static AnchorPane mainPane;
-
-
     //endregion
 
     @Override
@@ -58,16 +53,14 @@ public class Balatro extends Application
         primaryStage.setMaximized(true);
         primaryStage.setResizable(false);
 
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
-
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setX(bounds.getMinX());
         primaryStage.setY(bounds.getMinY());
         primaryStage.setWidth(bounds.getWidth());
         primaryStage.setHeight(bounds.getHeight());
 
         //region Sql
-        Thread sqlThread = new Thread(() -> SqlHandler.main());
+        Thread sqlThread = new Thread(SqlHandler::main);
 
         sqlThread.start();
         try {
@@ -76,7 +69,6 @@ public class Balatro extends Application
             throw new RuntimeException(e);
         }
         //endregion
-        gameModel = new GameModel();
 
         //region Settings
         File settingsFile = new File(rootPath);
@@ -86,14 +78,19 @@ public class Balatro extends Application
 
         settingsModel.setSettings(rootPath);
         settingsModel.updateSettings(rootPath);
+
+        gameModel = new GameModel();
         //endregion
 
         //region add Main Pane
-        mainPane = fxmlLoaderMain.load();
-        AnchorPane titleScreen = fxmlLoaderTitle.load();
-        titleScreen.setMaxWidth(settingsModel.getWindowWidth());
-        titleScreen.setMaxHeight(settingsModel.getWindowHeight());
-        mainPane.getChildren().add(titleScreen);
+        mainPane = new AnchorPane();
+        mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+
+        Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title-screen.fxml");
+        AnchorPane titlePane = titleScreen.getValue();
+        titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+        mainPane.getChildren().add(titlePane);
+
         Scene scene = new Scene(mainPane, bounds.getWidth(), bounds.getHeight());
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
@@ -101,19 +98,14 @@ public class Balatro extends Application
         //endregion
     }
 
-    public void ScreenResolutions() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        DisplayMode[] modes = gd.getDisplayModes();
-    }
-
     public static void newGame(GameSetup gameSetup) throws IOException {
         //clear Pane
         mainPane.getChildren().clear();
 
         //declare
-        AnchorPane gamePane = fxmlLoaderGame.load();
-        GameController controller = fxmlLoaderGame.getController();
+        Pair<GameController, AnchorPane> gameScreen = FxmlUtil.loadWithPane("/com/example/balatro/game-screen.fxml");
+        GameController controller = gameScreen.getKey();
+        AnchorPane gamePane = gameScreen.getValue();
 
         //set max size Game Pane
         gamePane.setMaxWidth(settingsModel.getWindowWidth());

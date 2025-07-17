@@ -58,9 +58,17 @@ public class TitleScreenController
     //region Global Variables
     private double angle = 0;
     private AnimationTimer timer;
+
     //endregion
 
+    private static TitleScreenController instance;
+
+    public static TitleScreenController getInstance() {
+        return instance;
+    }
+
     public void initialize() {
+        instance = this;
         titlePane.setVisible(false);
         btnTitleQuit.setMaxHeight(btnTitlePlay.getPrefHeight()*0.858);
 
@@ -137,6 +145,12 @@ public class TitleScreenController
     public void openOptionsMenu() throws IOException {
         titlePane.setVisible(true);
         titlePane.getChildren().add(optionsTabPane);
+    }
+
+
+    public void closeNewGameMenu() {
+        titlePane.getChildren().remove(newGameGrid);
+        titlePane.setVisible(false);
     }
 
     public void closeGame() {
