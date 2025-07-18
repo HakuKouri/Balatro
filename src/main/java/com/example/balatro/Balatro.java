@@ -4,10 +4,10 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.controller.GameController;
 import com.example.balatro.domain.util.FxmlUtil;
+import com.example.balatro.domain.util.MenuManager;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -15,7 +15,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -80,13 +79,14 @@ public class Balatro extends Application
         settingsModel.updateSettings(rootPath);
 
         gameModel = new GameModel();
+        MenuManager.init(gameModel);
         //endregion
 
         //region add Main Pane
         mainPane = new AnchorPane();
         mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
 
-        Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title-screen.fxml");
+        Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
         AnchorPane titlePane = titleScreen.getValue();
         titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
         mainPane.getChildren().add(titlePane);
@@ -103,7 +103,7 @@ public class Balatro extends Application
         mainPane.getChildren().clear();
 
         //declare
-        Pair<GameController, AnchorPane> gameScreen = FxmlUtil.loadWithPane("/com/example/balatro/game-screen.fxml");
+        Pair<GameController, AnchorPane> gameScreen = FxmlUtil.loadWithPane("/com/example/balatro/main/game-screen.fxml");
         GameController controller = gameScreen.getKey();
         AnchorPane gamePane = gameScreen.getValue();
 

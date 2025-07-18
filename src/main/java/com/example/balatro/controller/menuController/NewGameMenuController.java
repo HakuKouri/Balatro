@@ -1,10 +1,12 @@
-package com.example.balatro.controller;
+package com.example.balatro.controller.menuController;
 
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.TitleScreenController;
 import com.example.balatro.domain.deck.SelectableDeck;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.rules.Stake;
+import com.example.balatro.domain.util.MenuManager;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -271,6 +273,7 @@ public class NewGameMenuController
     }
 
     public void startNewGame(ActionEvent actionEvent) {
+        MenuManager.getInstance().closeMenu();
         GameSetup gameSetup = new GameSetup();
         gameSetup.setChosenDeck(selectableDeckList.get(getActiveDeckIndex()));
         gameSetup.setChosenStake(stakeList.get(getActiveStakeIndex()));

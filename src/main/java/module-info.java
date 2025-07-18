@@ -28,4 +28,7 @@ module com.example.balatro {
     exports com.example.balatro.data.web;
     exports com.example.balatro.domain.rewards;
     exports com.example.balatro.models.settings;
+    exports com.example.balatro.controller.menuController;
+    opens com.example.balatro.controller.menuController to javafx.fxml;
+    opens com.example.balatro.domain.util to javafx.fxml;
 }

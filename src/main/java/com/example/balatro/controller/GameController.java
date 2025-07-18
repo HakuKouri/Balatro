@@ -1,13 +1,14 @@
 package com.example.balatro.controller;
 
-import com.almasb.fxgl.trade.Shop;
 import com.example.balatro.Balatro;
+import com.example.balatro.controller.menuController.DeckOverviewController;
 import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rewards.VoucherHandler;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.domain.util.FxmlUtil;
+import com.example.balatro.domain.util.MenuManager;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.enums.SlideDirection;
 import com.example.balatro.interfaces.PurchasableCard;
@@ -18,7 +19,6 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -62,6 +62,10 @@ public class GameController
     @FXML
     private AnchorPane placeHolderBlinds, placeHolderShop, placeHolderReward, placeHolderBoosterOpening;
 
+    //Menu
+    @FXML
+    private StackPane menuOverlay_StackPane;
+
     //Test Elements
     @FXML
     private ImageView testImageView;
@@ -76,6 +80,9 @@ public class GameController
     private PlayedCardsController playedCardsController;
     private BlindBoxController blindBoxController;
     private BoosterOpeningController boosterOpeningController;
+    private DeckOverviewController deckOverviewController;
+
+
 
     //Game Controller & Model
     private static GameController instance;
@@ -89,6 +96,8 @@ public class GameController
     public void initialize(){
         instance = this;
         VoucherHandler.initializeVoucherHandler(gameModel);
+        MenuManager.setRootPane(menuOverlay_StackPane);
+        menuOverlay_StackPane.setVisible(false);
 
         loadFXMLParts();
 
@@ -107,6 +116,9 @@ public class GameController
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
             return width * 0.186;
         }));
+        shopImageView.setOnMouseClicked(event -> {
+            openDeckOverview();
+        });
 
         //Deck CoverBind
         deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
@@ -395,6 +407,10 @@ public class GameController
         for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
+    }
+
+    private void openDeckOverview() {
+
     }
 
 }

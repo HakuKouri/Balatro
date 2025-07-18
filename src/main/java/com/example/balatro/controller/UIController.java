@@ -214,19 +214,19 @@ public class UIController {
         });
     }
 
-    public static void bindStackPane(ObservableList<PlayingCard> playingCardsList, StackPane stackPane) {
-        playingCardsList.addListener((ListChangeListener<? super PlayingCard>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    stackPane.getChildren().addAll(change.getAddedSubList());
-                }
-                if(change.wasRemoved()) {
-                    stackPane.getChildren().removeAll(change.getRemoved());
-                }
-            }
-            moveCards(stackPane);
-        });
-    }
+//    public static void bindStackPane(ObservableList<PlayingCard> playingCardsList, StackPane stackPane) {
+//        playingCardsList.addListener((ListChangeListener<? super PlayingCard>) change -> {
+//            while (change.next()) {
+//                if(change.wasAdded()) {
+//                    stackPane.getChildren().addAll(change.getAddedSubList());
+//                }
+//                if(change.wasRemoved()) {
+//                    stackPane.getChildren().removeAll(change.getRemoved());
+//                }
+//            }
+//            moveCards(stackPane);
+//        });
+//    }
 
     /**
      * Diese Methode bestimmt, an welche Position im StackPane

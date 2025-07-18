@@ -314,6 +314,18 @@ public class CardViewController {
         return controller;
     }
 
+    public static CardViewController createCardNode(Card card) {
+        Pair<CardViewController, AnchorPane> cardView = FxmlUtil.loadWithPane("/com/example/balatro/card.fxml");
+        CardViewController controller = cardView.getKey();
+        AnchorPane cardPane = cardView.getValue();
+
+        cardPane.getStyleClass().add("card");
+        controller.setCard(card);
+        controller.inShopProperty().set(false);
+
+        return controller;
+    }
+
     public void setCard(Card card) {
         this.cardProperty().set(card);
         getCard().setupBindings();
