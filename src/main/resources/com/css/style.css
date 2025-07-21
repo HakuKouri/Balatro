@@ -105,11 +105,15 @@
     -fx-background-color: #333;
     -fx-background-radius: 5;
     -fx-effect:  dropshadow(three-pass-box,black,0,0,0,5);
-
 }
 
 .info-label label {
     -fx-background-radius: 5;
+}
+
+.tabPane .tab-header-area {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
 }
 
 .spot {

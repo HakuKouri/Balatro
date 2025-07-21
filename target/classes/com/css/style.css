@@ -112,6 +112,10 @@
     -fx-background-radius: 5;
 }
 
+.tabPane:top {
+    -fx-opacity: 0;
+}
+
 .spot {
     -fx-border-style: solid;
     -fx-border-radius: 5;
