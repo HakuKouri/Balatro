@@ -30,29 +30,12 @@ public class TitleScreenController
     public Button btnTitleCollection;
     public StackPane titleMenuOverlay_StackPane;
     @FXML
-    private MediaView mediaTitleBackground;
-    @FXML
     private Button btnTitlePlay;
-    
-    @FXML
-    private Pane panePlayMenu;
-    //endregion
-
-    //region FXML Loader
-    private final FXMLLoader newGameLoader = new FXMLLoader(getClass().getResource("/com/example/menu/balatro/menu/newGameMenu-screen.fxml"));
-    private final FXMLLoader optionLoader = new FXMLLoader(getClass().getResource("/com/example/balatro/menu/option-screen.fxml"));
-
-
-    private NewGameMenuController newGameMenuController;
-    private OptionScreenController optionScreenController;
-    private GridPane newGameGrid;
-    private AnchorPane optionsTabPane;
     //endregion
 
     //region Global Variables
     private double angle = 0;
     private AnimationTimer timer;
-
     //endregion
 
     private static TitleScreenController instance;
@@ -65,8 +48,27 @@ public class TitleScreenController
         instance = this;
         titleMenuOverlay_StackPane.setVisible(false);
         MenuManager.setRootPane(titleMenuOverlay_StackPane);
-        btnTitleQuit.setMaxHeight(btnTitlePlay.getPrefHeight()*0.858);
 
+        //startBackGroundAnimation();
+    }
+
+    public void openNewGameMenu() {
+        MenuManager.getInstance().openNewGame();
+    }
+
+    public void openOptionsMenu() throws IOException {
+        MenuManager.getInstance().openOptionScreen();
+    }
+
+    public void closeNewGameMenu() {
+        MenuManager.getInstance().closeMenu();
+    }
+
+    public void closeGame() {
+        Balatro.getPrimaryStage().close();
+    }
+
+    private void startBackGroundAnimation() {
         double width = Balatro.getSettings().getWindowWidth();
         double height = Balatro.getSettings().getWindowHeight();
 
@@ -118,40 +120,6 @@ public class TitleScreenController
             }
         };
         timer.start();
-
-//        try {
-//            newGameGrid = newGameLoader.load();
-//            newGameMenuController = newGameLoader.getController();
-//            optionsTabPane = optionLoader.load();
-//            optionScreenController = optionLoader.getController();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
-
-    public void openNewGameMenu() {
-        MenuManager.getInstance().openNewGame();
-//        titlePane.getChildren().add(newGameGrid);
-//        titlePane.setVisible(true);
-//        newGameMenuController.setSize(Balatro.getSettings().getWindowHeight());
-//        newGameMenuController.setDeck();
-//        timer.stop();
-    }
-
-    public void openOptionsMenu() throws IOException {
-        titleMenuOverlay_StackPane.setVisible(true);
-        titleMenuOverlay_StackPane.getChildren().add(optionsTabPane);
-    }
-
-
-    public void closeNewGameMenu() {
-        MenuManager.getInstance().closeMenu();
-//        titleMenuOverlay_StackPane.getChildren().remove(newGameGrid);
-//        titleMenuOverlay_StackPane.setVisible(false);
-    }
-
-    public void closeGame() {
-        Balatro.getPrimaryStage().close();
     }
 
 }
