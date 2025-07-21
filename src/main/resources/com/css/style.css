@@ -111,7 +111,7 @@
     -fx-background-radius: 5;
 }
 
-.tabPane .tab-header-area {
+.newGameTabPane .tab-header-area {
     -fx-opacity: 0;
     -fx-pref-height: 0;
 }
