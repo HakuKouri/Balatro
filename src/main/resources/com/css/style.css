@@ -112,6 +112,68 @@
     -fx-background-radius: 5;
 }
 
+/*New Game Styles*/
+.newGameTabPane .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.newGameTabPane .tab-header {
+
+}
+
+.tab{
+
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+
+.newGameTabPane .tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #3c3c3c;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.newGameTabPane .tab {
+
+    -fx-pref-width: 280;
+    -fx-background-color: -fx-mult-color;
+    -fx-background-insets: 0 1 0 1, 0, 0;
+}
+
+.newGameTabPane .tab-pane {
+
+    -fx-tab-min-width: 90px;
+}
+
+.newGameTabPane .tab-pane .tab {
+    -fx-background-color: #e8e8e8;
+}
+
+.newGameTabPane .tab-pane .tab:selected {
+    -fx-background-color: #c0c0c0;
+}
+
+.circle {
+    -fx-fill: -fx-background-color-dark;
+}
+
+.circle.active {
+    -fx-fill: white;
+}
+
+.rectangle {
+    -fx-fill: -fx-background-color-dark;
+    -fx-stroke: -fx-background-color-light;
+}
+
+.rectangle.available {
+    -fx-min-width: 20;
+}
+
+.rectangle.active {
+    -fx-stroke: white;
+}
+
 .spot {
     -fx-border-style: solid;
     -fx-border-radius: 5;

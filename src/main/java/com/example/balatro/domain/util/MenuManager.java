@@ -25,12 +25,10 @@ public class MenuManager {
     private AnchorPane collectionPane, jokerPane, deckPane, voucherPane, tarotPane, planetPane, spectralPane,
             enhancedPane, sealsPane, editionPane, boosterPane, tagPane, blindPane;
 
-    //Controller
-    private DeckOverviewController deckOverviewController;
-    private NewGameMenuController newGameMenuController;
-    private OptionScreenController optionScreenController;
 
+    //Gamemodel
     private static GameModel gameModel;
+
     //endregion
 
 
@@ -210,38 +208,12 @@ public class MenuManager {
     public void setBlindPane(AnchorPane blindPane) {
         this.blindPane = blindPane;
     }
-
-    public DeckOverviewController getDeckOverviewController() {
-        return deckOverviewController;
-    }
-
-    public void setDeckOverviewController(DeckOverviewController deckOverviewController) {
-        this.deckOverviewController = deckOverviewController;
-    }
-
-    public NewGameMenuController getNewGameMenuController() {
-        return newGameMenuController;
-    }
-
-    public void setNewGameMenuController(NewGameMenuController newGameMenuController) {
-        this.newGameMenuController = newGameMenuController;
-    }
-
-    public OptionScreenController getOptionScreenController() {
-        return optionScreenController;
-    }
-
-    public void setOptionScreenController(OptionScreenController optionScreenController) {
-        this.optionScreenController = optionScreenController;
-    }
-
     //endregion
 
 
     //region Constructor
     public MenuManager(StackPane root) {
         this.root = root;
-
     }
     //endregion
 
@@ -259,7 +231,7 @@ public class MenuManager {
     }
 
     private void openMenu(AnchorPane menu) {
-        if(currentOpenMenu!= null) closeCurrentMenu();
+        root.getChildren().clear();
         root.getChildren().add(menu);
         currentOpenMenu = menu;
         menu.toFront();
@@ -275,7 +247,6 @@ public class MenuManager {
     public void openDeckOverview() {
         if(deckOverviewPane == null) {
             Pair<DeckOverviewController, AnchorPane> overview = FxmlUtil.loadWithPane("/com/example/balatro/menu/deck-overview.fxml");
-            setDeckOverviewController(overview.getKey());
             setDeckOverviewPane(overview.getValue());
         }
         openMenu(deckOverviewPane);
@@ -283,7 +254,8 @@ public class MenuManager {
 
     public void openOptionScreen() {
         if(optionsPane == null) {
-
+            Pair<OptionScreenController, AnchorPane> option = FxmlUtil.loadWithPane("/com/example/balatro/menu/option-screen.fxml");
+            setOptionsPane(option.getValue());
         }
         openMenu(optionsPane);
     }
@@ -291,8 +263,9 @@ public class MenuManager {
     public void openNewGame() {
         if(newGamePane == null) {
             Pair<NewGameMenuController, AnchorPane> newGame = FxmlUtil.loadWithPane("/com/example/balatro/menu/newGameMenu-screen.fxml");
-            setNewGameMenuController(newGame.getKey());
             setNewGamePane(newGame.getValue());
+            newGamePane.setMaxWidth(root.getWidth() * .475);
+            newGamePane.setMaxHeight(root.getHeight() * .844);
         }
         root.setVisible(true);
         openMenu(newGamePane);
@@ -302,8 +275,5 @@ public class MenuManager {
         closeCurrentMenu();
         root.setVisible(false);
     }
-
-
     //endregion
-
 }
