@@ -14,426 +14,462 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
 
-<AnchorPane minHeight="550.0" minWidth="722.0" stylesheets="@../../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.OptionScreenController">
+<AnchorPane minHeight="550.0" minWidth="722.0" styleClass="menu-pane" stylesheets="@../../../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.OptionScreenController">
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE" tabMaxHeight="84.0" tabMaxWidth="280.0" tabMinHeight="42.0" tabMinWidth="140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <tabs>
-          <Tab closable="false" text="Game">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox alignment="CENTER" layoutX="537.0" layoutY="-10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <GridPane hgap="10.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Polygon fx:id="selectionIndicator_1" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" />
+                  <Polygon fx:id="selectionIndicator_2" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="2" />
+                  <Polygon fx:id="selectionIndicator_3" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="3" />
+                  <Polygon fx:id="selectionIndicator_4" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="4" />
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openTab" text="Game" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openTab" text="Video" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openTab" text="Graphics" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openTab" text="Audio" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <TabPane fx:id="option_TabPane" styleClass="hiddenTabHeader" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="84.0" tabMaxWidth="280.0" tabMinHeight="42.0" tabMinWidth="140.0" GridPane.rowIndex="1">
+              <tabs>
+                <Tab closable="false" text="Game">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane hgap="10.0">
-                                <columnConstraints>
-                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
+                              <VBox alignment="CENTER" layoutX="537.0" layoutY="-10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Label text="Game Speed" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane hgap="10.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Game Speed" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Play/Discard Button Position" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Play/Discard Button Position" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
+                                    </GridPane>
+                                    <GridPane>
+                                      <columnConstraints>
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="Screenshake" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                                          <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                    <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
+                                       <children>
+                                          <Label text="Display Stake Stickers during Run" />
+                                          <CheckBox mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
+                                       <children>
+                                          <Label text="High Contrast Cards" />
+                                          <CheckBox mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
+                                       <children>
+                                          <Label text="Reduced Motion" />
+                                          <CheckBox mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
                                  </children>
-                              </GridPane>
-                              <GridPane>
-                                <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label text="Screenshake" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                                    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
-                              <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
-                                 <children>
-                                    <Label text="Display Stake Stickers during Run" />
-                                    <CheckBox mnemonicParsing="false" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
-                                 <children>
-                                    <Label text="High Contrast Cards" />
-                                    <CheckBox mnemonicParsing="false" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefHeight="41.0" prefWidth="722.0">
-                                 <children>
-                                    <Label text="Reduced Motion" />
-                                    <CheckBox mnemonicParsing="false" />
-                                 </children>
-                              </HBox>
+                              </VBox>
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                            </children>
-                        </VBox>
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-          <Tab closable="false" text="Video">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox alignment="TOP_CENTER" layoutX="-4.099999904632568" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab closable="false" text="Video">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
+                              <VBox alignment="TOP_CENTER" layoutX="-4.099999904632568" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Label text="Display Monitor" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Display Monitor" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Window Mode" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Window Mode" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Button mnemonicParsing="false" text="&lt;" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1">
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Button mnemonicParsing="false" text="&lt;" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Button mnemonicParsing="false" text="&lt;" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1">
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Button mnemonicParsing="false" text="&lt;" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
+                                    </GridPane>
+                                    <Button mnemonicParsing="false" text="Apply" />
                                  </children>
-                              </GridPane>
-                              <Button mnemonicParsing="false" text="Apply" />
+                                 <padding>
+                                    <Insets top="30.0" />
+                                 </padding>
+                              </VBox>
+                              <Button mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                            </children>
-                           <padding>
-                              <Insets top="30.0" />
-                           </padding>
-                        </VBox>
-                        <Button mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-            <Tab closable="false" text="Graphics">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab closable="false" text="Graphics">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Label text="Shadows" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Shadows" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Pixel Art Smoothing" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                          <Label text="Pixel Art Smoothing" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
                                              </children>
-                                          </HBox>
+                                          </VBox>
                                        </children>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                              <GridPane>
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label text="CRT" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                                    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
-                              <GridPane hgap="10.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="CRT Bloom" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
-                                    <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    </GridPane>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
                                        <children>
-                                          <Label text="Label" />
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
-                                             <children>
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                                <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
-                                             </children>
-                                          </HBox>
+                                          <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="CRT" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                                          <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                        </children>
-                                    </VBox>
+                                    </GridPane>
+                                    <GridPane hgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                                          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="CRT Bloom" GridPane.columnIndex="1" />
+                                          <Button mnemonicParsing="false" text="&lt;" GridPane.rowIndex="1" />
+                                          <Button mnemonicParsing="false" text="&gt;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label text="Label" />
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                   <children>
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                      <Circle radius="4.0" stroke="BLACK" strokeType="INSIDE" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
                                  </children>
-                              </GridPane>
-                           </children>
-                        </VBox>
-                        <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                     </children>
-                     <padding>
-                        <Insets top="20.0" />
-                     </padding>
-                  </AnchorPane>
-              </content>
-            </Tab>
-            <Tab closable="false" text="Audio">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <GridPane>
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label text="Master Volume" GridPane.columnIndex="1" />
-                                    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
-                              <GridPane>
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label text="Music Volume" GridPane.columnIndex="1" />
-                                    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
-                              <GridPane>
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label text="Game Volume" GridPane.columnIndex="1" />
-                                    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                              </GridPane>
+                              </VBox>
+                              <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                            </children>
                            <padding>
                               <Insets top="20.0" />
                            </padding>
-                        </VBox>
-                        <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
-        </tabs>
-      </TabPane>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab closable="false" text="Audio">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="Master Volume" GridPane.columnIndex="1" />
+                                          <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="Music Volume" GridPane.columnIndex="1" />
+                                          <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                    <GridPane>
+                                       <columnConstraints>
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="35.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="10.0" />
+                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="Game Volume" GridPane.columnIndex="1" />
+                                          <Slider GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                                 <padding>
+                                    <Insets top="20.0" />
+                                 </padding>
+                              </VBox>
+                              <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#closeOptionScreen" text="Back" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

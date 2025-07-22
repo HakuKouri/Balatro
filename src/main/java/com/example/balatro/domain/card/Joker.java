@@ -24,6 +24,7 @@ public class Joker extends Card implements PurchasableCard {
         CardViewManager.transferCardTo(model.getShopModel().getItemCardViewManager(), model.getJokerManager(), this);
     }
 
+    //region Attributes
     private final StringProperty rarity = new SimpleStringProperty("");
     private final StringProperty unlockRequirement = new SimpleStringProperty("");
     private final StringProperty actTiming = new SimpleStringProperty("");
@@ -41,6 +42,7 @@ public class Joker extends Card implements PurchasableCard {
     private final DoubleProperty multValue = new SimpleDoubleProperty(0);
     private final DoubleProperty chipValue = new SimpleDoubleProperty(0);
     private final DoubleProperty otherValue = new SimpleDoubleProperty(0);
+    //endregion
 
     //region Constructor
     public Joker() {
