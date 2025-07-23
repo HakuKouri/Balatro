@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,9 +11,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="titleScreen" prefHeight="1440.0" prefWidth="2560.0" stylesheets="@../../../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.TitleScreenController">
+<AnchorPane fx:id="titleScreen" prefHeight="1440.0" prefWidth="2560.0" stylesheets="@../../../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.TitleScreenController">
     <Canvas fx:id="canvasGame" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -34,63 +35,38 @@
         <ImageView fitHeight="1060.0" fitWidth="1228.0" pickOnBounds="true" preserveRatio="true" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowSpan="2147483647" GridPane.valignment="CENTER">
             <Image url="@../../../images/balatro.png" />
         </ImageView>
-        <GridPane hgap="20.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+        <GridPane hgap="20.0" styleClass="title-button-box" GridPane.columnIndex="3" GridPane.rowIndex="2">
             <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="20.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="20.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="30.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
             </rowConstraints>
-            <styleClass>
-                <String fx:value="shadow-b" />
-                <String fx:value="background-light" />
-                <String fx:value="bgr-20" />
-            </styleClass>
-            <Button fx:id="btnTitlePlay" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openNewGameMenu" text="Play" textAlignment="CENTER" textFill="WHITE">
-                <styleClass>
-                    <String fx:value="shadow-b" />
-                    <String fx:value="btn-blue" />
-                    <String fx:value="bgr-15" />
-                </styleClass>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openNewGameMenu" styleClass="blue" text="Play" textAlignment="CENTER" textFill="WHITE">
             <font>
                <Font size="72.0" />
             </font>
             </Button>
-            <Button fx:id="btnTitleOption" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openOptionsMenu" text="Options" textFill="WHITE" GridPane.columnIndex="1">
-                <styleClass>
-                    <String fx:value="shadow-b" />
-                    <String fx:value="btn-yellow" />
-                    <String fx:value="bgr-15" />
-                </styleClass>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openOptionsMenu" styleClass="yellow" text="Options" textFill="WHITE" GridPane.columnIndex="1">
             <GridPane.margin>
-               <Insets bottom="20.0" top="20.0" />
+               <Insets bottom="10.0" top="10.0" />
             </GridPane.margin>
             <font>
                <Font name="balatro Regular" size="52.0" />
             </font>
             </Button>
-            <Button fx:id="btnTitleQuit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#closeGame" text="Quit" textFill="WHITE" GridPane.columnIndex="2">
-                <styleClass>
-                    <String fx:value="shadow-b" />
-                    <String fx:value="btn-red" />
-                    <String fx:value="bgr-15" />
-                </styleClass>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#closeGame" styleClass="red" text="Quit" textFill="WHITE" GridPane.columnIndex="2">
             <GridPane.margin>
-               <Insets bottom="20.0" top="20.0" />
+               <Insets bottom="10.0" top="10.0" />
             </GridPane.margin>
             <font>
                <Font name="balatro Regular" size="60.0" />
             </font>
             </Button>
-            <Button fx:id="btnTitleCollection" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Collection" textFill="WHITE" GridPane.columnIndex="3">
-                <styleClass>
-                    <String fx:value="shadow-b" />
-                    <String fx:value="btn-green" />
-                    <String fx:value="bgr-15" />
-                </styleClass>
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openCollectionMenu" styleClass="green" text="Collection" textFill="WHITE" GridPane.columnIndex="3">
                 <font>
                     <Font name="balatro Regular" size="60.0" />
                 </font>
@@ -102,6 +78,20 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
         </GridPane>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="title-button-box" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Label styleClass="font-white" text="Profile" />
+            <Button mnemonicParsing="false" onAction="#openProfileMenu" styleClass="grey" text="P.Name" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" styleClass="title-button-box" GridPane.columnIndex="5" GridPane.rowIndex="2">
+         <children>
+            <Button mnemonicParsing="false" onAction="#openLanguageMenu" styleClass="grey" text="English" />
+         </children>
+         <GridPane.margin>
+            <Insets bottom="40.0" top="40.0" />
+         </GridPane.margin>
+      </VBox>
     </GridPane>
-    <StackPane fx:id="titleMenuOverlay_StackPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+    <StackPane fx:id="titleMenuOverlay_StackPane" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 </AnchorPane>

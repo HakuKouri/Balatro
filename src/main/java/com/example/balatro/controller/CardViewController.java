@@ -129,7 +129,7 @@ public class CardViewController {
                     Balatro.getGameModel().getShopModel().shopPricesProperty()));
         });
 
-        card_AnchorPane.maxWidthProperty().bind(Bindings.createDoubleBinding(() -> Balatro.getSettings().getWindowWidth() * .09, Balatro.getSettings().windowWidthProperty()));
+        card_AnchorPane.setMaxWidth(Balatro.getSettings().getWindowWidth() * .09);
 
         selectedProperty().addListener((observable, oldValue, newValue) -> {
             if(getCard() instanceof  Planet planet) {
@@ -330,5 +330,9 @@ public class CardViewController {
         this.cardProperty().set(card);
         getCard().setupBindings();
         renderCardVisuals();
+    }
+
+    public void setMaxWidth(double width) {
+        card_AnchorPane.setMaxWidth(width);
     }
 }

@@ -4,6 +4,7 @@ import com.example.balatro.Balatro;
 import com.example.balatro.controller.OptionScreenController;
 import com.example.balatro.controller.menuController.DeckOverviewController;
 import com.example.balatro.controller.menuController.NewGameMenuController;
+import com.example.balatro.controller.menuController.ProfileMenuController;
 import com.example.balatro.models.GameModel;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -233,6 +234,7 @@ public class MenuManager {
     private void openMenu(AnchorPane menu) {
         root.getChildren().clear();
         root.getChildren().add(menu);
+        root.setVisible(true);
         currentOpenMenu = menu;
         menu.toFront();
     }
@@ -244,31 +246,46 @@ public class MenuManager {
         }
     }
 
-    public void openDeckOverview() {
-        if(deckOverviewPane == null) {
-            Pair<DeckOverviewController, AnchorPane> overview = FxmlUtil.loadWithPane("/com/example/balatro/menu/deck-overview.fxml");
-            setDeckOverviewPane(overview.getValue());
+    public void openProfileMenu() {
+        if(profilePane == null) {
+            Pair<ProfileMenuController, AnchorPane> profile = FxmlUtil.loadWithPane(("/com/example/balatro/menu/profile-menu.fxml"));
+            setProfilePane(profile.getValue());
+            profilePane.setMaxSize(root.getWidth() * 49, root.getHeight() * 61);
         }
-        openMenu(deckOverviewPane);
-    }
-
-    public void openOptionScreen() {
-        if(optionsPane == null) {
-            Pair<OptionScreenController, AnchorPane> option = FxmlUtil.loadWithPane("/com/example/balatro/menu/option-screen.fxml");
-            setOptionsPane(option.getValue());
-        }
-        openMenu(optionsPane);
+        openMenu(profilePane);
     }
 
     public void openNewGame() {
         if(newGamePane == null) {
             Pair<NewGameMenuController, AnchorPane> newGame = FxmlUtil.loadWithPane("/com/example/balatro/menu/newGameMenu-screen.fxml");
             setNewGamePane(newGame.getValue());
-            newGamePane.setMaxWidth(root.getWidth() * .475);
-            newGamePane.setMaxHeight(root.getHeight() * .844);
+            newGamePane.setMaxSize(root.getWidth() * .475, root.getHeight() * .844);
         }
-        root.setVisible(true);
         openMenu(newGamePane);
+    }
+
+    public void openOptionsMenu() {
+        if(optionsPane == null) {
+            Pair<OptionScreenController, AnchorPane> option = FxmlUtil.loadWithPane("/com/example/balatro/menu/option-screen.fxml");
+            setOptionsPane(option.getValue());
+            optionsPane.setMaxSize(root.getWidth() * .56, root.getHeight() * .76);
+        }
+        openMenu(optionsPane);
+    }
+
+    public void openCollectionMenu() {
+        if(collectionPane == null) {
+
+        }
+    }
+
+    public void openDeckOverview() {
+        if(deckOverviewPane == null) {
+            Pair<DeckOverviewController, AnchorPane> overview = FxmlUtil.loadWithPane("/com/example/balatro/menu/deck-overview.fxml");
+            setDeckOverviewPane(overview.getValue());
+            deckOverviewPane.setMaxSize(root.getWidth() * .84, root.getHeight() * .87);
+        }
+        openMenu(deckOverviewPane);
     }
 
     public void closeMenu() {

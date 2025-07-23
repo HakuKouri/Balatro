@@ -1,6 +1,7 @@
 @font-face {
     font-family: Balatro;
     src: url("../font/balatro.ttf");
+
 }
 
 * {
@@ -18,7 +19,30 @@
     -fx-planet-color: #00A8CA;
     -fx-spectral-color: #2E76FD;
     -fx-money-color: #f5b244;
+    -fx-menu-border-color: #B9C2D3;
+    -fx-menu-background-color: #3B5055;
+    -fx-menu-shadow: #777D89;
+    -fx-button-shadow: #1E3032;
+    -fx-button-disabled-background-color: #545454;
 }
+
+
+/* region  Menu */
+.menu-pane {
+    -fx-background-color: -fx-menu-background-color;
+    -fx-background-radius: 20;
+    -fx-border-color: -fx-menu-border-color;
+    -fx-border-radius: 20;
+    -fx-effect:  dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,5);
+    -fx-font-size: 20;
+}
+
+.menu-pane .button {
+    -fx-background-color: -fx-mult-color;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+}
+/* endregion */
 
 .border {
     -fx-border-color: white;
@@ -35,7 +59,6 @@
     -fx-padding: 4 10 4 4 ;
 }
 
-
 #boosterName_Label {
     -fx-font-size: 20pt;
 }
@@ -44,6 +67,29 @@
     -fx-text-fill: white;
 }
 
+.font-white-shadow {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,1);
+}
+
+.font-red {
+    -fx-text-fill: red;
+}
+
+.font-money {
+    -fx-text-fill: -fx-money-color;
+}
+
+/* region Title Screen */
+.title-button-box {
+    -fx-background-color: -fx-menu-background-color;
+    -fx-background-radius: 20;
+    -fx-font-size: 60;
+    -fx-text-fill: white;
+}
+/* endregion */
+
+/* region Game Screen */
 #gameScreenAnchor {
     -fx-background-image: url("../images/backgroundImage/pokerBackground.jpg");
     -fx-background-size: cover;
@@ -54,43 +100,101 @@
     -fx-border-width: 5;
     -fx-border-radius: 20;
 }
+/* endregion */
 
-.btn-yellow {
+/*region Buttons  */
+.button {
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,3);
+}
+
+.menu-pane .button:disabled {
+    -fx-background-color: -fx-button-disabled-background-color;
+}
+
+.button.yellow {
     -fx-background-color: #ff8c00;
-    -fx-font-color: white;
+    -fx-text-fill: white;
 }
 
-.btn-red {
+.button.red {
     -fx-background-color: #f9443a;
-    -fx-font-color: white;
+    -fx-text-fill: white;
 }
 
-.btn-blue {
+.button.blue {
     -fx-background-color: #0087f0;
-    -fx-font-color: white;
+    -fx-text-fill: white;
 }
 
-.btn-green {
+.button.green {
     -fx-background-color: #41926f;
-    -fx-font-color: white;
+    -fx-text-fill: white;
 }
 
-.btn-yellow:hover {
+.button.grey {
+    -fx-background-color: -fx-menu-shadow;
+}
+
+.button.yellow:hover {
     -fx-background-color: #935d00;
 }
 
-.btn-red:hover {
+.button.red:hover {
     -fx-background-color: #93241c;
 }
 
-.btn-blue:hover {
+.button.blue:hover {
     -fx-background-color: #004f94;
 }
 
-.btn-green:hover {
+.button.green:hover {
     -fx-background-color: #1e563f;
 }
 
+/*endregion*/
+
+.planetCount {
+    -fx-background-color: -fx-menu-border-color;
+    -fx-background-radius: 24;
+    -fx-pref-height: 66;
+    -fx-padding: 6;
+    -fx-font-size: 20;
+    -fx-effect: dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,2);
+}
+
+.chipMultLabel {
+    -fx-background-color: -fx-background-color-dark;
+    -fx-background-radius: 26;
+    -fx-padding: 6;
+}
+
+.chipMultLabel > * {
+    -fx-background-radius: 250;
+
+}
+
+.chip-label {
+    -fx-text-fill: white;
+    -fx-background-color: -fx-chips-color;
+    -fx-padding: 0 10 0 0;
+}
+
+.mult-label {
+    -fx-text-fill: white;
+    -fx-background-color: -fx-mult-color;
+    -fx-padding: 0 0 0 10;
+}
+
+.level-label {
+    -fx-text-fill: black;
+    -fx-background-color: #F0F0F0;
+    -fx-background-radius: 24;
+    -fx-border-color: #FFFFFA;
+    -fx-border-radius: 24;
+}
+
+/* region Card */
 .buy-background {
     -fx-background-color: #ff9700;
 }
@@ -98,6 +202,7 @@
 .sell-background {
     -fx-background-color: #34bd85;
 }
+/* endregion */
 
 
 /* */
@@ -105,15 +210,42 @@
     -fx-background-color: #333;
     -fx-background-radius: 5;
     -fx-effect:  dropshadow(three-pass-box,black,0,0,0,5);
-
 }
 
 .info-label label {
     -fx-background-radius: 5;
 }
 
-.tabPane:top {
+/* region Solos */
+.check-box {
+
+}
+
+.check-box .box {
+
+}
+
+.check-box .box .mark {
+    -fx-background-radius: 50%;
+    -fx-background-color: transparent;
+    -fx-border-radius: 50%;
+    -fx-border-color: -fx-menu-border-color;
+    -fx-border-width: 3;
+    -fx-shape: ""; /* oder: hidden */
+}
+
+.check-box:selected .box .mark {
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-shape: ""; /* oder: hidden */
+}
+
+
+/* endregion */
+
+.hiddenTabHeader .tab-header-area {
     -fx-opacity: 0;
+    -fx-pref-height: 0;
 }
 
 .spot {
@@ -121,11 +253,6 @@
     -fx-border-radius: 5;
     -fx-border-color: #444;
     -fx-border-width: 1;
-}
-
-#mainButtonBox {
-    -fx-background-color: #333;
-    -fx-background-radius: 5px;
 }
 
 .money {
@@ -145,11 +272,6 @@
 
 .maxHeight {
 
-}
-
-#gridMenu {
-    -fx-background-radius: 10px;
-    -fx-background-color: #444;
 }
 
 .deck {
@@ -198,7 +320,7 @@
     -fx-background-color: -fx-background-color-light;
 }
 
-/* Background Radius */
+/* region Background Radius */
 .bgr-5 {
     -fx-background-radius: 5;
 }
@@ -278,8 +400,9 @@
 .bgr-t-20 {
     -fx-background-radius: 20 20 0 0;
 }
+/* endregion */
 
-/* Border Radius */
+/* region Border Radius */
 .br-5 {
     -fx-border-radius: 5;
 }
@@ -295,3 +418,4 @@
 .br-20 {
     -fx-border-radius: 20;
 }
+/* endregion */

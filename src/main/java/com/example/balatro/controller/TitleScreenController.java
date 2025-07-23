@@ -4,6 +4,7 @@ import com.example.balatro.Balatro;
 import com.example.balatro.controller.menuController.NewGameMenuController;
 import com.example.balatro.domain.util.MenuManager;
 import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
@@ -57,12 +58,26 @@ public class TitleScreenController
     }
 
     public void openOptionsMenu() throws IOException {
-        MenuManager.getInstance().openOptionScreen();
+        System.out.println("OPEN OPTIONS MENU");
+        MenuManager.getInstance().openOptionsMenu();
+    }
+
+
+    public void openProfileMenu(ActionEvent actionEvent) {
+        MenuManager.getInstance().openProfileMenu();
+    }
+
+    public void openLanguageMenu(ActionEvent actionEvent) {
+    }
+
+    public void openCollectionMenu(ActionEvent actionEvent) {
     }
 
     public void closeNewGameMenu() {
         MenuManager.getInstance().closeMenu();
     }
+
+
 
     public void closeGame() {
         Balatro.getPrimaryStage().close();

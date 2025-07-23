@@ -62,7 +62,7 @@ public class Balatro extends Application
 
         Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
         AnchorPane titlePane = titleScreen.getValue();
-        //titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+        titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
         mainPane.getChildren().add(titlePane);
 
         Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight());

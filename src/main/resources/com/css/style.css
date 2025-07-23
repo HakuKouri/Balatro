@@ -1,6 +1,7 @@
 @font-face {
     font-family: Balatro;
     src: url("../font/balatro.ttf");
+
 }
 
 * {
@@ -79,7 +80,14 @@
     -fx-text-fill: -fx-money-color;
 }
 
-
+/* region Title Screen */
+.title-button-box {
+    -fx-background-color: -fx-menu-background-color;
+    -fx-background-radius: 20;
+    -fx-font-size: 60;
+    -fx-text-fill: white;
+}
+/* endregion */
 
 /* region Game Screen */
 #gameScreenAnchor {
@@ -122,6 +130,10 @@
 .button.green {
     -fx-background-color: #41926f;
     -fx-text-fill: white;
+}
+
+.button.grey {
+    -fx-background-color: -fx-menu-shadow;
 }
 
 .button.yellow:hover {
@@ -243,11 +255,6 @@
     -fx-border-width: 1;
 }
 
-#mainButtonBox {
-    -fx-background-color: #333;
-    -fx-background-radius: 5px;
-}
-
 .money {
     -fx-background-color: -fx-money-color;
 }
@@ -265,11 +272,6 @@
 
 .maxHeight {
 
-}
-
-#gridMenu {
-    -fx-background-radius: 10px;
-    -fx-background-color: #444;
 }
 
 .deck {

@@ -7,40 +7,53 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.util.MenuManager;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class NewGameMenuController
 {
-    public ColumnConstraints deckImage_Column;
-    public ColumnConstraints stakeImage_Column;
-    public RowConstraints deckImage_Row;
+
     //region FXML
+    //Tabs
     @FXML
-    private ImageView deckCover_ImageView, stakeSticker_ImageView, stakeChip_ImageView;
+    private Polygon selectionIndicator_1, selectionIndicator_2, selectionIndicator_3;
     @FXML
-    private StackPane deck_StackPane;
+    private TabPane tabPane;
+    //Images
     @FXML
-    private Label deckName_Label, deckEffect_Label;
+    private ColumnConstraints deckImage_Column, stakeImage_Column, continue_deckImage_Column, continue_stakeImage_Column;
     @FXML
-    private Label stakeName_Label, stakeEffect_Label;
+    private RowConstraints deckImage_Row, continue_deckImage_Row;
+    @FXML
+    private StackPane deck_StackPane, continue_deck_StackPane;
+    @FXML
+    private ImageView deckCover_ImageView, stakeSticker_ImageView, stakeChip_ImageView,
+            continue_deckCover_ImageView, continue_stakeSticker_ImageView, continue_stakeChip_ImageView;
+    //Labels
+    @FXML
+    private Label deckName_Label, deckEffect_Label, stakeName_Label, stakeEffect_Label,
+            continue_deckName_Label, continue_deckEffect_Label, continue_stakeName_Label, continue_stakeEffect_Label;;
     @FXML
     private HBox selectedStakeDisplay_HBox, selectedDeckDisplay_HBox;
     @FXML
     private VBox selectedStakeDisplay_VBox;
+
+    //Seed
     @FXML
     private HBox seed_HBox;
     @FXML
@@ -48,9 +61,6 @@ public class NewGameMenuController
     //endregion
 
     //region Attributes
-    private final DoubleProperty width = new SimpleDoubleProperty(400);
-    private final DoubleProperty height = new SimpleDoubleProperty(400);
-
     private final ObjectProperty<SelectableDeck> activeDeck = new SimpleObjectProperty<>(new SelectableDeck());
     private final ObjectProperty<Stake> activeStake = new SimpleObjectProperty<>(new Stake());
     private final List<SelectableDeck> selectableDeckList = SqlHandler.getAllDecks();
@@ -70,6 +80,22 @@ public class NewGameMenuController
         for (int i = stakeList.size(); i > 0; i--) {
             selectedStakeDisplay_VBox.getChildren().add(createRectangle("selectedStake" + i, i <= activeDeckProperty().get().getStageCleared()));
         };
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Selected: " + newValue.getId());
+            selectionIndicator_1.setVisible(false);
+            selectionIndicator_2.setVisible(false);
+            selectionIndicator_3.setVisible(false);
+            if(Objects.equals(newValue.getId(), "tab0")) {
+                selectionIndicator_1.setVisible(true);
+            }
+            if(Objects.equals(newValue.getId(), "tab1")) {
+                selectionIndicator_2.setVisible(true);
+            }
+            if(Objects.equals(newValue.getId(), "tab2")) {
+                selectionIndicator_3.setVisible(true);
+            }
+        });
 
         seed_HBox.visibleProperty().bind(seed_CheckBox.selectedProperty());
 
@@ -111,16 +137,10 @@ public class NewGameMenuController
         stakeSticker_ImageView.setPreserveRatio(true);
         deck_StackPane.prefWidthProperty().bind(deckImage_Column.prefWidthProperty());
         stakeChip_ImageView.setPreserveRatio(true);
-        stakeChip_ImageView.fitWidthProperty().bind(deckImage_Column.prefWidthProperty());
+        stakeChip_ImageView.fitWidthProperty().bind(stakeImage_Column.prefWidthProperty());
     }
 
-    private void updateStakeDisplay(SelectableDeck newValue) {
-        selectedStakeDisplay_HBox.getChildren().clear();
-        for(int i = 0; i <= newValue.getStageCleared(); i++) {
-            selectedStakeDisplay_HBox.getChildren().add(createCircle("selectedStake" + i));
-        }
-        selectedStakeDisplay_HBox.getChildren().get(getActiveDeck().getStageCleared()).getStyleClass().add("active");
-    }
+
 
     //region Getter Setter
     public SelectableDeck getActiveDeck() {
@@ -162,31 +182,6 @@ public class NewGameMenuController
     public void setActiveDeckIndex(int activeDeckIndex) {
         this.activeDeckIndex.set(activeDeckIndex);
     }
-
-    public double getWidth() {
-        return width.get();
-    }
-
-    public DoubleProperty widthProperty() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width.set(width);
-    }
-
-    public double getHeight() {
-        return height.get();
-    }
-
-    public DoubleProperty heightProperty() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height.set(height);
-    }
-
     //endregion
 
     //region Functions
@@ -204,6 +199,18 @@ public class NewGameMenuController
 
 
     //FXML FUNCTIONS
+    public void openTab(ActionEvent actionEvent) {
+        String text = ((Button) actionEvent.getSource()).getText();
+        System.out.println(text + " Tab opened!");
+        switch (text) {
+            case "New Run": tabPane.getSelectionModel().select(0);
+            break;
+            case "Continue": tabPane.getSelectionModel().select(1);
+            break;
+            case "Challenges": tabPane.getSelectionModel().select(2);
+        }
+    }
+
     public void nextDeck() { changeDeck(1); }
     public void prevDeck() { changeDeck(-1); }
 
@@ -221,6 +228,15 @@ public class NewGameMenuController
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //UI
+    private void updateStakeDisplay(SelectableDeck newValue) {
+        selectedStakeDisplay_HBox.getChildren().clear();
+        for(int i = 0; i <= newValue.getStageCleared(); i++) {
+            selectedStakeDisplay_HBox.getChildren().add(createCircle("selectedStake" + i));
+        }
+        selectedStakeDisplay_HBox.getChildren().get(getActiveDeck().getStageCleared()).getStyleClass().add("active");
     }
 
     private Circle createCircle(String id) {
@@ -244,6 +260,9 @@ public class NewGameMenuController
         return rectangle;
     }
 
+
+
+    //Close
     public void closeNewGameMenu(ActionEvent actionEvent) {
         TitleScreenController.getInstance().closeNewGameMenu();
     }
