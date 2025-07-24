@@ -40,9 +40,9 @@
                   <RowConstraints vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Polygon fx:id="selectionIndicator_1" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" scaleX="2.0" scaleY="2.0" scaleZ="0.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" />
-                  <Polygon fx:id="selectionIndicator_2" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" scaleX="2.0" scaleY="2.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="3" />
-                  <Polygon fx:id="selectionIndicator_3" fill="#dd4b44" points="-10.0, 85.0, 7.5, 85.0, -0.25, 100.0" scaleX="2.0" scaleY="2.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="4" />
+                  <Polygon fx:id="selectionIndicator_1" fill="#dd4b44" points="0, 0, 16, 32, 32, 0" scaleZ="0.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" />
+                  <Polygon fx:id="selectionIndicator_2" fill="#dd4b44" points="0, 0, 16, 32, 32, 0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="3" />
+                  <Polygon fx:id="selectionIndicator_3" fill="#dd4b44" points="0, 0, 16, 32, 32, 0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="4" />
                   <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Poker Hands" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <opaqueInsets>
                         <Insets />

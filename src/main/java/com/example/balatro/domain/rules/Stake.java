@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 public class Stake extends ImageView
 {
@@ -13,8 +14,10 @@ public class Stake extends ImageView
     private final StringProperty stakeImageStickerUrl = new SimpleStringProperty();
     private final StringProperty stakeImageChipUrl = new SimpleStringProperty();
     private final StringProperty stakeName = new SimpleStringProperty();
-    private final StringProperty stakeEffect = new SimpleStringProperty();
+    private final StringProperty stakeDescription = new SimpleStringProperty();
     private final StringProperty stakeUnlockCondition = new SimpleStringProperty();
+    private final StringProperty stakeColorString = new SimpleStringProperty();
+    private Color stakeColor = new Color(1,1,1,1);
 
 
     public void setStake(Stake chosenStake) {
@@ -23,7 +26,7 @@ public class Stake extends ImageView
         setStakeName(chosenStake.getStakeName());
         setStakeImageStickerUrl(chosenStake.getStakeImageStickerUrl());
         setStakeImageChipUrl(chosenStake.getStakeImageChipUrl());
-        setStakeEffect(chosenStake.getStakeEffect());
+        setStakeDescription(chosenStake.getStakeDescription());
         setStakeUnlockCondition(chosenStake.getStakeUnlockCondition());
     }
 
@@ -76,16 +79,16 @@ public class Stake extends ImageView
         this.stakeName.set(stakeName);
     }
 
-    public String getStakeEffect() {
-        return stakeEffect.get();
+    public String getStakeDescription() {
+        return stakeDescription.get();
     }
 
-    public StringProperty stakeEffectProperty() {
-        return stakeEffect;
+    public StringProperty stakeDescriptionProperty() {
+        return stakeDescription;
     }
 
-    public void setStakeEffect(String stakeEffect) {
-        this.stakeEffect.set(stakeEffect);
+    public void setStakeDescription(String stakeDescription) {
+        this.stakeDescription.set(stakeDescription);
     }
 
     public String getStakeUnlockCondition() {
@@ -98,5 +101,22 @@ public class Stake extends ImageView
 
     public void setStakeUnlockCondition(String stakeUnlockCondition) {
         this.stakeUnlockCondition.set(stakeUnlockCondition);
+    }
+
+    public String getStakeColorString() {
+        return stakeColorString.get();
+    }
+
+    public StringProperty stakeColorStringProperty() {
+        return stakeColorString;
+    }
+
+    public void setStakeColorString(String stakeColorString) {
+        this.stakeColorString.set(stakeColorString);
+        stakeColor = Color.web(stakeColorString);
+    }
+
+    public Color getStakeColor() {
+        return stakeColor;
     }
 }

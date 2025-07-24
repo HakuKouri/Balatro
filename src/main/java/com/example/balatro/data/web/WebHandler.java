@@ -187,7 +187,7 @@ public class WebHandler
                     stake.setStakeImageStickerUrl("src\\main\\resources\\com\\images\\Stickers_Seals\\difficult_" + stake.getStakeId() + ".png");
                     stake.setStakeImageChipUrl("src\\main\\resources\\com\\images\\Stakechips\\stake_chip_" + stake.getStakeId() + ".png");
                     stake.setStakeName(cells.get(2).text());
-                    stake.setStakeEffect(cells.get(3).text());
+                    stake.setStakeDescription(cells.get(3).text());
                     stake.setStakeUnlockCondition(cells.get(4).text());
                 }
                 catch (Exception e) {

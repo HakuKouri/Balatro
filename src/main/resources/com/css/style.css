@@ -42,6 +42,62 @@
     -fx-text-fill: white;
     -fx-padding: 10;
 }
+
+.menu-pane .top-button {
+    -fx-max-width: 278;
+    -fx-max-height: 90;
+}
+
+.menu-pane .ratio {
+    -fx-arc-height: 20;
+    -fx-arc-width: 20;
+}
+
+.circle {
+    -fx-fill: -fx-background-color-dark;
+}
+
+.stake-rect {
+    -fx-background-color: -fx-background-color-light;
+    -fx-background-radius: 10;
+    -fx-border-color: -fx-background-color-dark;
+    -fx-border-radius: 10;
+    -fx-border-width: 3;
+
+    -fx-width: 20;
+    -fx-max-width: -fx-width;
+    -fx-min-width: -fx-width;
+
+    -fx-height: 20;
+    -fx-min-height: -fx-height;
+    -fx-max-height: -fx-height;
+}
+
+.stake-rect.available {
+    -fx-border-color: -fx-background-color-light;
+    -fx-border-radius: 10;
+    -fx-border-width: 3;
+
+    -fx-width: 40;
+    -fx-min-width: -fx-width;
+    -fx-max-width: -fx-width;
+
+    -fx-height: 20;
+    -fx-min-height: -fx-height;
+    -fx-max-height: -fx-height;
+}
+
+.stake-rect.available.active {
+    -fx-border-color: white;
+}
+
+.outer {
+    -fx-background-color: -fx-background-color-dark;
+}
+
+.inner {
+    -fx-background-color: -fx-background-color-light;
+}
 /* endregion */
 
 .border {

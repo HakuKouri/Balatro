@@ -7,6 +7,7 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.util.MenuManager;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -69,56 +71,26 @@ public class NewGameMenuController
     private final IntegerProperty activeStakeIndex = new SimpleIntegerProperty(-1);
     //endregion
 
-
-    //SET FIRST DECK AND FIRST STAKE IN SELECTION
+    //Initialize
     public void initialize() {
-        System.out.println("Decks: " + selectableDeckList.size());
-        for (int i = 0; i < selectableDeckList.size(); i++) {
-            selectedDeckDisplay_HBox.getChildren().add(createCircle("selectedDeck" + i));
-        };
-        System.out.println("Stakes: " + stakeList.size());
-        for (int i = stakeList.size(); i > 0; i--) {
-            selectedStakeDisplay_VBox.getChildren().add(createRectangle("selectedStake" + i, i <= activeDeckProperty().get().getStageCleared()));
-        };
-
-        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Selected: " + newValue.getId());
-            selectionIndicator_1.setVisible(false);
-            selectionIndicator_2.setVisible(false);
-            selectionIndicator_3.setVisible(false);
-            if(Objects.equals(newValue.getId(), "tab0")) {
-                selectionIndicator_1.setVisible(true);
-            }
-            if(Objects.equals(newValue.getId(), "tab1")) {
-                selectionIndicator_2.setVisible(true);
-            }
-            if(Objects.equals(newValue.getId(), "tab2")) {
-                selectionIndicator_3.setVisible(true);
-            }
+        activeDeckIndex.addListener((observable, oldValue, newValue) -> {
+            getActiveDeck().setDeck(selectableDeckList.get((Integer) newValue));
+            updateStakeDisplay(getActiveDeck());
         });
 
+        bindIndicatorVisibility();
         seed_HBox.visibleProperty().bind(seed_CheckBox.selectedProperty());
+        bindUi();
 
-        activeDeckIndexProperty().addListener((observable, oldValue, newValue) -> {
-            if(!selectedStakeDisplay_HBox.getChildren().isEmpty())
-                selectedDeckDisplay_HBox.getChildren().forEach(c -> c.getStyleClass().remove("active"));
-            selectedDeckDisplay_HBox.getChildren().get((Integer) newValue ).getStyleClass().add("active");
-            activeDeck.set(selectableDeckList.get((Integer) newValue));
-        });
+        activeDeck.addListener((observable, oldValue, newValue) -> {
+            System.out.println("Deck Update");
+            System.out.println("Deck Name: " + newValue.getDeckName());
 
-        activeDeckProperty().addListener((observable, oldValue, newValue) -> {
-            deckCover_ImageView.setImage(newValue.getImage());
-            System.out.println(deckCover_ImageView.getFitWidth());
-            System.out.println(deck_StackPane.getWidth());
-            deckName_Label.setText(newValue.getDeckName());
-            deckEffect_Label.setText(newValue.getDeckDescription());
-            if(newValue.getStageCleared() > 0) stakeSticker_ImageView.setImage(new Image("file:src/main/resources/com/images/Stickers_Seals/difficult_" + (activeDeck.get().getStageCleared()+1) + ".png"));
-            else stakeSticker_ImageView.setImage(null);
-            updateStakeDisplay(newValue);
             setActiveStakeIndex(newValue.getStageCleared());
         });
 
-        activeStakeIndexProperty().addListener((observable, oldValue, newValue) -> {
+        activeStakeIndex.addListener((observable, oldValue, newValue) -> {
+            getActiveStake().setStake(stakeList.get((Integer) newValue));
             System.out.println("Stake geändert");
             selectedStakeDisplay_VBox.getChildren().forEach(c -> c.getStyleClass().remove("active"));
             selectedStakeDisplay_VBox.getChildren().get(selectedStakeDisplay_VBox.getChildren().size() - 1 - (Integer) newValue).getStyleClass().add("active");
@@ -126,20 +98,24 @@ public class NewGameMenuController
                 selectedStakeDisplay_HBox.getChildren().forEach(c -> c.getStyleClass().remove("active"));
                 selectedStakeDisplay_HBox.getChildren().get((Integer) newValue).getStyleClass().add("active");
             }
-            stakeChip_ImageView.setImage(getActiveStake().getImage());
-            stakeName_Label.setText(getActiveStake().getStakeName());
-            stakeEffect_Label.setText(getActiveStake().getStakeEffect());
         });
 
         setActiveDeckIndex(0);
-
-        deckCover_ImageView.setPreserveRatio(true);
-        stakeSticker_ImageView.setPreserveRatio(true);
-        deck_StackPane.prefWidthProperty().bind(deckImage_Column.prefWidthProperty());
-        stakeChip_ImageView.setPreserveRatio(true);
-        stakeChip_ImageView.fitWidthProperty().bind(stakeImage_Column.prefWidthProperty());
+        setActiveStakeIndex(0);
     }
 
+    private void bindUi() {
+        deckCover_ImageView.imageProperty().bind(getActiveDeck().imageProperty());
+        deckName_Label.textProperty().bind(getActiveDeck().deckNameProperty());
+        deckEffect_Label.textProperty().bind(getActiveDeck().deckDescriptionProperty());
+        stakeSticker_ImageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            return getActiveDeck().getStageCleared() > 0 ? new Image("file:src/main/resources/com/images/Stickers_Seals/difficult_" + (activeDeck.get().getStageCleared()+1) + ".png") : null;
+        }));
+
+        stakeChip_ImageView.imageProperty().bind(getActiveStake().imageProperty());
+        stakeName_Label.textProperty().bind(getActiveStake().stakeNameProperty());
+        stakeEffect_Label.textProperty().bind(getActiveStake().stakeDescriptionProperty());
+    }
 
 
     //region Getter Setter
@@ -185,16 +161,16 @@ public class NewGameMenuController
     //endregion
 
     //region Functions
-    private void changeDeck(int value) {
-        if(getActiveDeckIndex() == 0 && value == -1) setActiveDeckIndex(selectableDeckList.size() - 1);
-         else if(getActiveDeckIndex() == selectableDeckList.size() - 1 && value == 1) setActiveDeckIndex(0);
-         else setActiveDeckIndex(getActiveDeckIndex() + value);
+    private void changeDeck(boolean up) {
+        setActiveDeckIndex(up
+                ? (getActiveDeckIndex() + 1 >= selectableDeckList.size() ? 0 : getActiveDeckIndex() + 1)
+                : (getActiveDeckIndex() - 1 < 0 ? selectableDeckList.size() - 1 : getActiveDeckIndex() - 1));
     }
 
-    private void changeStake(int value) {
-        if(getActiveStakeIndex() == 0 && value == -1) setActiveStakeIndex(selectedStakeDisplay_HBox.getChildren().size() - 1);
-        else if(getActiveStakeIndex() == selectedStakeDisplay_HBox.getChildren().size() - 1 && value == 1) setActiveStakeIndex(0);
-        else setActiveStakeIndex(getActiveStakeIndex() + value);
+    private void changeStake(boolean up) {
+        setActiveStakeIndex(up
+                ? (getActiveStakeIndex() + 1 >= getActiveDeck().getStageCleared() ? 0 : getActiveStakeIndex() + 1)
+                : (getActiveStakeIndex() - 1 < 0 ? getActiveDeck().getStageCleared() : getActiveStakeIndex() - 1));
     }
 
 
@@ -211,11 +187,11 @@ public class NewGameMenuController
         }
     }
 
-    public void nextDeck() { changeDeck(1); }
-    public void prevDeck() { changeDeck(-1); }
+    public void nextDeck() { changeDeck(true); }
+    public void prevDeck() { changeDeck(false); }
 
-    public void nextStake() { changeStake(1); }
-    public void prevStake() { changeStake(-1); }
+    public void nextStake() { changeStake(true); }
+    public void prevStake() { changeStake(false); }
 
     public void startNewGame(ActionEvent actionEvent) {
         MenuManager.getInstance().closeMenu();
@@ -231,36 +207,41 @@ public class NewGameMenuController
     }
 
     //UI
-    private void updateStakeDisplay(SelectableDeck newValue) {
-        selectedStakeDisplay_HBox.getChildren().clear();
-        for(int i = 0; i <= newValue.getStageCleared(); i++) {
-            selectedStakeDisplay_HBox.getChildren().add(createCircle("selectedStake" + i));
+    private void bindIndicatorVisibility() {
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Selected: " + newValue.getId());
+            selectionIndicator_1.setVisible(false);
+            selectionIndicator_2.setVisible(false);
+            selectionIndicator_3.setVisible(false);
+            if(Objects.equals(newValue.getId(), "tab0")) {
+                selectionIndicator_1.setVisible(true);
+            }
+            if(Objects.equals(newValue.getId(), "tab1")) {
+                selectionIndicator_2.setVisible(true);
+            }
+            if(Objects.equals(newValue.getId(), "tab2")) {
+                selectionIndicator_3.setVisible(true);
+            }
+        });
+    }
+
+    private void updateStakeDisplay(SelectableDeck newDeck) {
+        selectedStakeDisplay_HBox.getChildren().forEach(node -> { node.setVisible(false); });
+        selectedStakeDisplay_VBox.getChildren().forEach(node -> { node.setStyle(""); node.getStyleClass().setAll("stake-rect"); });
+
+        for(int i = 0; i <= newDeck.getStageCleared(); i++) {
+            selectedStakeDisplay_HBox.getChildren().get(i).setVisible(true);
         }
+
+        for(int i = stakeList.size() - newDeck.getStageCleared() - 1 ; i < stakeList.size(); i++) {
+            selectedStakeDisplay_VBox.getChildren().get(i).getStyleClass().add("available");
+            if(stakeList.size() - newDeck.getStageCleared() - 1 != i)
+                selectedStakeDisplay_VBox.getChildren().get(i).setStyle("-fx-background-color: " + stakeList.get(stakeList.size()- i).getStakeColorString() + " ;");
+        }
+
+        selectedStakeDisplay_VBox.getChildren().get(stakeList.size() - 1 - getActiveDeck().getStageCleared()).getStyleClass().add("active");
         selectedStakeDisplay_HBox.getChildren().get(getActiveDeck().getStageCleared()).getStyleClass().add("active");
     }
-
-    private Circle createCircle(String id) {
-        Circle circle = new Circle();
-        circle.getStyleClass().add("circle");
-        circle.setId(id);
-        circle.setRadius(5);
-        return circle;
-    }
-
-    private Rectangle createRectangle(String id, boolean available) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setId(id);
-        rectangle.getStyleClass().add("rectangle");
-        rectangle.setWidth(10);
-        rectangle.setHeight(8);
-        if(available) {
-            rectangle.getStyleClass().add("available");
-            rectangle.setWidth(20);
-        }
-        return rectangle;
-    }
-
-
 
     //Close
     public void closeNewGameMenu(ActionEvent actionEvent) {

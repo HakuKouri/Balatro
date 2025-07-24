@@ -167,7 +167,7 @@ public class SqlHandler {
                     ps.setString(2, ((Stake) listItem).getStakeImageStickerUrl());
                     ps.setString(3, ((Stake) listItem).getStakeImageChipUrl());
                     ps.setString(4, ((Stake) listItem).getStakeName());
-                    ps.setString(5, ((Stake) listItem).getStakeEffect());
+                    ps.setString(5, ((Stake) listItem).getStakeDescription());
                     ps.setString(6, ((Stake) listItem).getStakeUnlockCondition());
                     ps.executeUpdate();
                 } else if (listItem.getClass() == Tarot.class) {
@@ -345,8 +345,9 @@ public class SqlHandler {
                 stake.setStakeImageStickerUrl(rs.getString(2));
                 stake.setStakeImageChipUrl(rs.getString(3));
                 stake.setStakeName(rs.getString(4));
-                stake.setStakeEffect(rs.getString(5));
+                stake.setStakeDescription(rs.getString(5));
                 stake.setStakeUnlockCondition(rs.getString(6));
+                stake.setStakeColorString(rs.getString(7));
 
                 stakeList.add(stake);
             }
