@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
@@ -13,35 +14,53 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Polygon?>
 
 <AnchorPane prefHeight="1248.0" prefWidth="2148.0" styleClass="menu-pane" stylesheets="@../../../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.menuController.DeckOverviewController">
    <children>
-      <GridPane hgap="20.0" layoutX="173.0" layoutY="133.0" style="-fx-border-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="20.0" layoutX="173.0" layoutY="133.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
           <ColumnConstraints hgrow="SOMETIMES" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-          <RowConstraints percentHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <HBox alignment="CENTER" spacing="20.0" GridPane.columnSpan="2">
+            <GridPane GridPane.columnSpan="2">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <Button fx:id="remaining_Button" mnemonicParsing="false" onAction="#showCardsInDeck" text="Remaining" />
-                  <Button fx:id="full_Button" mnemonicParsing="false" onAction="#showFullDeck" text="Full Deck" />
+                  <Polygon fx:id="selectionIndicator_1" fill="#dd4b44" points="0, 0, 16, 32, 32, 0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" />
+                  <Polygon fx:id="selectionIndicator_11" fill="#dd4b44" points="0, 0, 16, 32, 32, 0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="2" />
+                  <Button fx:id="remaining_Button" mnemonicParsing="false" onAction="#showCardsInDeck" text="Remaining" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="full_Button" mnemonicParsing="false" onAction="#showFullDeck" text="Full Deck" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
-            </HBox>
-            <VBox fx:id="cardView_VBox" alignment="CENTER" maxHeight="500.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+            </GridPane>
+            <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <StackPane fx:id="spades_StackPane" prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane fx:id="hearts_StackPane" prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane fx:id="clubs_StackPane" prefHeight="150.0" prefWidth="200.0" />
-                  <StackPane fx:id="diamonds_StackPane" prefHeight="150.0" prefWidth="200.0" />
-               </children></VBox>
-            <GridPane GridPane.rowIndex="1">
+                  <VBox fx:id="cardView_VBox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <StackPane fx:id="spades_StackPane" prefHeight="100.0" />
+                        <StackPane fx:id="hearts_StackPane" prefHeight="100.0" />
+                        <StackPane fx:id="clubs_StackPane" prefHeight="100.0" />
+                        <StackPane fx:id="diamonds_StackPane" prefHeight="100.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <GridPane styleClass="outer" vgap="10.0" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="66.0" />
                 <ColumnConstraints hgrow="SOMETIMES" />
@@ -51,51 +70,103 @@
                 <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="inner">
                      <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <Label fx:id="selectedDeckName_Label" styleClass="font-white-shadow" text="Deck Name" />
+                        <Label fx:id="selectedDeckEffect_Label" text="Deck effekt" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
+                     <children>
+                        <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label text="A" />
-                              <Label text="K" />
-                              <Label text="Q" />
-                              <Label text="J" />
-                              <Label text="10" />
-                              <Label text="9" />
-                              <Label text="8" />
-                              <Label text="7" />
-                              <Label text="6" />
-                              <Label text="5" />
-                              <Label text="4" />
-                              <Label text="3" />
-                              <Label text="2" />
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="A">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="K">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="Q">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="J">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="10">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="9">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="8">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="7">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="6">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="5">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="4">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="3">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
+                              <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="2">
+                                 <styleClass>
+                                    <String fx:value="inner" />
+                                    <String fx:value="font-white-shadow" />
+                                 </styleClass></Label>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label fx:id="aceCount_Label" text="0" />
-                              <Label fx:id="kingCount_Label" text="0" />
-                              <Label fx:id="queenCount_Label" text="0" />
-                              <Label fx:id="jackCount_Label" text="0" />
-                              <Label fx:id="tenthCount_Label" text="0" />
-                              <Label fx:id="nineCount_Label" text="0" />
-                              <Label fx:id="eightCount_Label" text="0" />
-                              <Label fx:id="sevenCount_Label" text="0" />
-                              <Label fx:id="sixCount_Label" text="0" />
-                              <Label fx:id="fiveCount_Label" text="0" />
-                              <Label fx:id="fourCount_Label" text="0" />
-                              <Label fx:id="threeCount_Label" text="0" />
-                              <Label fx:id="twoCount_Label" text="0" />
+                              <Label fx:id="aceCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="kingCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="queenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="jackCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="tenthCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="nineCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="eightCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="sevenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="sixCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="fiveCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="fourCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="threeCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="twoCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <Label fx:id="selectedDeckName_Label" text="Deck Name" />
-                        <Label fx:id="selectedDeckEffect_Label" text="Deck effekt" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="inner" GridPane.rowIndex="1">
                      <children>
                         <Label text="Base Cards" />
                         <VBox prefHeight="200.0" prefWidth="100.0">

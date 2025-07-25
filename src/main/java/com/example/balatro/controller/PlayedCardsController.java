@@ -8,6 +8,7 @@ import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.JokerTrigger;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.JokerState;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.scene.layout.AnchorPane;
@@ -49,7 +50,7 @@ public class PlayedCardsController {
         gameModel.getSelectedCards().clear();
 
         List<PlayingCard> countedCards = PokerHandChecker.getCardsForHand(gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class), gameModel.getBestHand().getName());
-        for(PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
+        for (PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
             card.setSelected(countedCards.contains(card));
         }
 
@@ -61,9 +62,9 @@ public class PlayedCardsController {
     }
 
     private void animateSelectedCards(List<PlayingCard> cards, int index, Runnable onComplete) {
-        if(index >= cards.size()) {
-            for(PlayingCard card : gameModel.getHoldingHandViewManager().getCardList(PlayingCard.class)) {
-                if(card.getEnhancement().getEnhancementName().equals("Steel Card")) {
+        if (index >= cards.size()) {
+            for (PlayingCard card : gameModel.getHoldingHandViewManager().getCardList(PlayingCard.class)) {
+                if (card.getEnhancement().getEnhancementName().equals("Steel Card")) {
                     gameModel.getBestHand().multMult(1.5);
                     triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class));
                 }
@@ -78,9 +79,10 @@ public class PlayedCardsController {
 
                 pointsReached();
 
-                if(onComplete != null) {
-                    for(PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
+                if (onComplete != null) {
+                    for (PlayingCard card : gameModel.getPlayedCardsViewManager().getCardList(PlayingCard.class)) {
                         card.setSelected(false);
+                        card.getSeal().sealRetriggeredProperty().set(false);
                         Animation animation = UIController.cardMoveToAnimation(gameModel.getPlayedCardsViewManager().getView(card));
                         animation.setDelay(Duration.seconds(.2));
                         UIController.addToAnimationList(animation);
@@ -102,7 +104,61 @@ public class PlayedCardsController {
 
         timeline.setOnFinished(event -> {
             System.out.println("Card Value: " + card.getValue());
-            gameModel.getBestHand().chipsProperty().set(card.getValue() + gameModel.getBestHand().getChips());
+            if (!card.getEnhancement().getEnhancementName().equals("Stone Card"))
+                gameModel.getBestHand().chipsProperty().set(card.getValue() + gameModel.getBestHand().getChips());
+
+            if (card.getEnhancement().getEnhancementId() != -1)
+                switch (card.getEnhancement().getEnhancementId()) {
+                    case 1:
+                        gameModel.getBestHand().addChips(30);
+                        break;
+                    case 2:
+                        gameModel.getBestHand().addMult(4);
+                        break;
+                    case 4:
+                        if (gameModel.getRand().nextInt(4) <= gameModel.getJokerState().jokerFlagProperty(JokerState.JokerType.DOUBLE_CHANCE_FLAG).get())
+                            gameModel.getBestHand().addMult(gameModel.getBestHand().getMulti());
+                        break;
+                    case 5:
+                        gameModel.getBestHand().addMult((int) (gameModel.getBestHand().getMulti() * .5));
+                        break;
+                    case 6:
+                        gameModel.getBestHand().addChips(50);
+                        break;
+                    case 8:
+                        if (gameModel.getRand().nextInt(5) <= gameModel.getJokerState().jokerFlagProperty(JokerState.JokerType.DOUBLE_CHANCE_FLAG).get())
+                            gameModel.getBestHand().addMult(20);
+                        if (gameModel.getRand().nextInt(15) <= gameModel.getJokerState().jokerFlagProperty(JokerState.JokerType.DOUBLE_CHANCE_FLAG).get())
+                            gameModel.getRunState().addMoney(20);
+                        break;
+                }
+
+            if (card.getEdition().getId() != -1)
+                switch (card.getEdition().getId()) {
+                    case 2:
+                        gameModel.getBestHand().addChips(50);
+                        break;
+                    case 3:
+                        gameModel.getBestHand().addMult(10);
+                        break;
+                    case 4:
+                        gameModel.getBestHand().addMult((int) (gameModel.getBestHand().getMulti() * .5));
+                        break;
+                }
+
+            if (card.getSeal().getSealId() != -1)
+                switch (card.getSeal().getSealId()) {
+                    case 1:
+                        gameModel.getRunState().addMoney(3);
+                        break;
+                        case 2:
+                            if(!card.getSeal().isSealRetriggered()) {
+                                card.getSeal().sealRetriggeredProperty().set(true);
+                                animateSelectedCards(cards, index, onComplete);
+                            }
+                }
+
+
 
             // Joker triggern (fügen ihre Animationen hinzu)
             triggerJokers(JokerTrigger.ON_CARD_SCORED, List.of(card));
@@ -119,7 +175,7 @@ public class PlayedCardsController {
     private void pointsReached() {
         //TODO ADD EDITION, TRIGGER
 
-        if(gameModel.isPointsReached()) {
+        if (gameModel.isPointsReached()) {
             gameModel.setRewardVisibility(true);
             gameModel.getHoldingHandViewManager().clear();
 
@@ -128,7 +184,7 @@ public class PlayedCardsController {
                     .map(card -> (PlayingCard) card)
                     .toList();
 
-            for(PlayingCard card : handCards) {
+            for (PlayingCard card : handCards) {
                 if (card.getEnhancement().getEnhancementName().equals("Gold Card")) {
                     gameModel.getRunState().addMoney(3);
                     triggerJokers(JokerTrigger.HAND_CARD_TRIGGERED, gameModel.getPlayedCards());
@@ -136,7 +192,7 @@ public class PlayedCardsController {
             }
             triggerJokers(JokerTrigger.END_OF_ROUND, gameModel.getPlayedCards());
 
-            if(gameModel.getActiveBlind().getBlindId() > 1) {
+            if (gameModel.getActiveBlind().getBlindId() > 1) {
                 gameModel.getRunState().setAnte((gameModel.getRunState().getAnte() + 1));
             }
 
@@ -158,7 +214,6 @@ public class PlayedCardsController {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
     }
-
 
 
 }

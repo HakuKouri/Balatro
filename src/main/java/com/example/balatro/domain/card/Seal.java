@@ -1,10 +1,7 @@
 package com.example.balatro.domain.card;
 
 import com.example.balatro.Balatro;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -15,6 +12,7 @@ public class Seal extends ImageView
     private final StringProperty sealImageUrl = new SimpleStringProperty("");
     private final StringProperty sealName = new SimpleStringProperty("");
     private final StringProperty sealEffect = new SimpleStringProperty("");
+    private final BooleanProperty sealRetriggered = new SimpleBooleanProperty(false);
     //endregion
 
     //region Constructor
@@ -74,6 +72,14 @@ public class Seal extends ImageView
 
     public void setSealEffect(String sealEffect) {
         this.sealEffect.set(sealEffect);
+    }
+
+    public boolean isSealRetriggered() {
+        return sealRetriggered.get();
+    }
+
+    public BooleanProperty sealRetriggeredProperty() {
+        return sealRetriggered;
     }
 
     //endregion

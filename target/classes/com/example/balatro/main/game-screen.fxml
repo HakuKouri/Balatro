@@ -428,7 +428,7 @@
                <Label fx:id="consumableCountLabel" text="0/2" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             </GridPane>
          </AnchorPane>
-         <AnchorPane fx:id="playedCards_AnchorPane" GridPane.rowIndex="3">
+         <AnchorPane fx:id="playedCardsPlaceHolder" GridPane.rowIndex="3">
             <GridPane.margin>
                <Insets bottom="10.0" right="200.0" top="10.0" />
             </GridPane.margin>
@@ -448,7 +448,7 @@
                   <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
                   <RowConstraints percentHeight="9.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <AnchorPane fx:id="holdingHand_AnchorPane" styleClass="spot" GridPane.rowSpan="2" />
+               <AnchorPane fx:id="holdingHandPlaceHolder" styleClass="spot" GridPane.rowSpan="2" />
                <AnchorPane fx:id="deckCover_AnchorPane" GridPane.columnIndex="1">
                   <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <ImageView fx:id="deckCover_ImageView" fitHeight="250.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
@@ -469,10 +469,10 @@
       </GridPane>
       <VBox fx:id="spaceTag" alignment="BOTTOM_CENTER" GridPane.columnIndex="4" />
    </GridPane>
-   <AnchorPane fx:id="placeHolderShop" prefHeight="560.0" prefWidth="720.0" />
-   <AnchorPane fx:id="placeHolderReward" prefHeight="560.0" prefWidth="720.0" />
-   <AnchorPane fx:id="placeHolderBlinds" prefHeight="560.0" prefWidth="720.0" />
-   <AnchorPane fx:id="placeHolderBoosterOpening" layoutX="10.0" layoutY="10.0" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="shopPlaceHolder" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="rewardPlaceHolder" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="blindsPlaceHolder" prefHeight="560.0" prefWidth="720.0" />
+   <AnchorPane fx:id="boosterOpeningPlaceHolder" layoutX="10.0" layoutY="10.0" prefHeight="560.0" prefWidth="720.0" />
    <VBox layoutX="1644.0" layoutY="367.0">
       <Button fx:id="testButton" mnemonicParsing="false" text="Button" />
       <ImageView fx:id="testImageView" fitHeight="190.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">

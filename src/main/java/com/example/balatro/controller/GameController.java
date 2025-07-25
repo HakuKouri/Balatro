@@ -1,7 +1,6 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.controller.menuController.DeckOverviewController;
 import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.domain.rewards.Tag;
@@ -19,7 +18,6 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -39,7 +37,7 @@ public class GameController
     @FXML private ImageView shopImageView;
 
     //Spaces
-    @FXML private AnchorPane gameScreenAnchor, holdingHand_AnchorPane, playedCards_AnchorPane;
+    @FXML private AnchorPane gameScreenAnchor, holdingHandPlaceHolder, playedCardsPlaceHolder;
     @FXML private StackPane spaceJoker, spaceConsumable;
     @FXML private ImageView deckCover_ImageView;
     @FXML private VBox spaceTag;
@@ -61,7 +59,7 @@ public class GameController
 
     //Placeholder
     @FXML
-    private AnchorPane placeHolderBlinds, placeHolderShop, placeHolderReward, placeHolderBoosterOpening;
+    private AnchorPane blindsPlaceHolder, shopPlaceHolder, rewardPlaceHolder, boosterOpeningPlaceHolder;
 
     //Menu
     @FXML
@@ -81,9 +79,6 @@ public class GameController
     private PlayedCardsController playedCardsController;
     private BlindBoxController blindBoxController;
     private BoosterOpeningController boosterOpeningController;
-    private DeckOverviewController deckOverviewController;
-
-
 
     //Game Controller & Model
     private static GameController instance;
@@ -91,7 +86,6 @@ public class GameController
         return instance;
     }
     private static final GameModel gameModel = Balatro.getGameModel();
-
     //endregion
 
     public void initialize(){
@@ -161,48 +155,48 @@ public class GameController
         //Holding Hand
         Pair<HoldingHandController, AnchorPane> holdingHand = FxmlUtil.loadWithPane("/com/example/balatro/holdingHand.fxml");
         holdingHandController = holdingHand.getKey();
-        holdingHand_AnchorPane.getChildren().add(holdingHand.getValue());
+        holdingHandPlaceHolder.getChildren().add(holdingHand.getValue());
 
         //Played Cards
         Pair<PlayedCardsController, AnchorPane> playedCards = FxmlUtil.loadWithPane("/com/example/balatro/playedCards_StackPane.fxml");
         playedCardsController = playedCards.getKey();
-        playedCards_AnchorPane.getChildren().add(playedCards.getValue());
+        playedCardsPlaceHolder.getChildren().add(playedCards.getValue());
 
         //Blind Box
         Pair<BlindBoxController, AnchorPane> blindBox = FxmlUtil.loadWithPane("/com/example/balatro/blind-box.fxml");
         blindBoxController = blindBox.getKey();
-        placeHolderBlinds.getChildren().add(blindBox.getValue());
-        UIController.configurePlaceHolder(placeHolderBlinds);
+        blindsPlaceHolder.getChildren().add(blindBox.getValue());
+        UIController.configurePlaceHolder(blindsPlaceHolder);
 
         //Booster Opener
         Pair<BoosterOpeningController, AnchorPane> boosterOpening = FxmlUtil.loadWithPane("/com/example/balatro/boosterOpening.fxml");
         boosterOpeningController = boosterOpening.getKey();
         boosterOpeningController.setGameModel(gameModel);
-        placeHolderBoosterOpening.getChildren().add(boosterOpening.getValue());
-        UIController.configurePlaceHolder(placeHolderBoosterOpening);
+        boosterOpeningPlaceHolder.getChildren().add(boosterOpening.getValue());
+        UIController.configurePlaceHolder(boosterOpeningPlaceHolder);
 
         //Shop
         //region Placeholder
         Pair<ShopController, AnchorPane> shop = FxmlUtil.loadWithPane("/com/example/balatro/shop.fxml");
         shopController = shop.getKey();
-        placeHolderShop.getChildren().add(shop.getValue());
-        UIController.configurePlaceHolder(placeHolderShop);
+        shopPlaceHolder.getChildren().add(shop.getValue());
+        UIController.configurePlaceHolder(shopPlaceHolder);
         shopController.setOnNextRoundCallback(this::nextRound);
 
         //Reward
         Pair<RewardSummaryController, AnchorPane> reward = FxmlUtil.loadWithPane("/com/example/balatro/reward-summary.fxml");
-        placeHolderReward.getChildren().add(reward.getValue());
-        UIController.configurePlaceHolder(placeHolderReward);
+        rewardPlaceHolder.getChildren().add(reward.getValue());
+        UIController.configurePlaceHolder(rewardPlaceHolder);
     }
 
     private void bindUi() {
         UIController.setupUiController();
 
         //Binding der AnchorPanes mit Visibility und Animation
-        UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), placeHolderShop, SlideDirection.DOWN);
-        UIController.bindAnimatedVisibility(gameModel.rewardVisibilityProperty(), placeHolderReward, SlideDirection.DOWN);
-        UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), placeHolderBlinds, SlideDirection.DOWN);
-        UIController.bindAnimatedVisibility(gameModel.boosterOpeningVisibilityProperty(), placeHolderBoosterOpening, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), shopPlaceHolder, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.rewardVisibilityProperty(), rewardPlaceHolder, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), blindsPlaceHolder, SlideDirection.DOWN);
+        UIController.bindAnimatedVisibility(gameModel.boosterOpeningVisibilityProperty(), boosterOpeningPlaceHolder, SlideDirection.DOWN);
         UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), chooseBlind_AnchorPane, SlideDirection.UP);
         UIController.bindAnimatedVisibility(gameModel.pickedBlindVisibilityProperty(), pickedBlind_AnchorPane, SlideDirection.UP);
         UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), shopSign_AnchorPane, SlideDirection.UP);

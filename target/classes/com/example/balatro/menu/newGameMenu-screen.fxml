@@ -107,9 +107,16 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </Button>
-                                    <VBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                    <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
                                        <children>
-                                          <GridPane VBox.vgrow="ALWAYS">
+                                          <GridPane>
                                              <columnConstraints>
                                                 <ColumnConstraints fx:id="deckImage_Column" hgrow="SOMETIMES" percentWidth="28.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" />
@@ -119,26 +126,16 @@
                                                 <RowConstraints fx:id="deckImage_Row" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <StackPane fx:id="deck_StackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="outer">
+                                                <AnchorPane>
                                                    <children>
-                                                      <ImageView fx:id="deckCover_ImageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                                                      <ImageView fx:id="stakeSticker_ImageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                                      <StackPane fx:id="deck_StackPane" styleClass="outer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <ImageView fx:id="deckCover_ImageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                                            <ImageView fx:id="stakeSticker_ImageView" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                                         </children>
+                                                      </StackPane>
                                                    </children>
-                                                </StackPane>
-                                                <VBox fx:id="selectedStakeDisplay_VBox" alignment="CENTER" spacing="16.0" GridPane.columnIndex="2">
-                                                   <children>
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                      <Region styleClass="stake-rect" />
-                                                   </children>
-                                                   <GridPane.margin>
-                                                      <Insets bottom="13.0" top="13.0" />
-                                                   </GridPane.margin></VBox>
+                                                </AnchorPane>
                                                 <GridPane GridPane.columnIndex="1">
                                                    <columnConstraints>
                                                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
@@ -170,16 +167,27 @@
                                                       <Insets bottom="10.0" top="10.0" />
                                                    </GridPane.margin>
                                                 </GridPane>
+                                                <VBox fx:id="selectedStakeDisplay_VBox" alignment="CENTER" spacing="12.0" GridPane.columnIndex="2">
+                                                   <children>
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                      <Region styleClass="stake-rect" />
+                                                   </children>
+                                                   <GridPane.margin>
+                                                      <Insets bottom="13.0" top="13.0" />
+                                                   </GridPane.margin></VBox>
                                              </children>
-                                             <VBox.margin>
-                                                <Insets top="10.0" />
-                                             </VBox.margin>
                                              <styleClass>
                                                 <String fx:value="outer" />
                                                 <String fx:value="bgr-15" />
                                              </styleClass>
                                           </GridPane>
-                                          <HBox fx:id="selectedDeckDisplay_HBox" alignment="CENTER" minHeight="40.0" spacing="5.0">
+                                          <HBox fx:id="selectedDeckDisplay_HBox" alignment="CENTER" spacing="5.0" GridPane.rowIndex="1">
                                              <children>
                                                 <Circle fx:id="deck_circle_" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
                                                 <Circle fx:id="deck_circle_1" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
@@ -199,12 +207,22 @@
                                                 <Circle fx:id="deck_circle_15" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
                                              </children></HBox>
                                        </children>
-                                    </VBox>
+                                       <GridPane.margin>
+                                          <Insets top="10.0" />
+                                       </GridPane.margin>
+                                    </GridPane>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#nextDeck" text="&gt;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#prevStake" text="&lt;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <VBox prefHeight="177.0" prefWidth="571.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                    <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints percentHeight="15.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
                                        <children>
-                                          <GridPane VBox.vgrow="ALWAYS">
+                                          <GridPane styleClass="outer">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="7.0" />
                                                 <ColumnConstraints fx:id="stakeImage_Column" halignment="CENTER" hgrow="SOMETIMES" percentWidth="20.0" />
@@ -215,7 +233,7 @@
                                                 <RowConstraints vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label rotate="270.0" style="-fx-effect: dropshadow(three-pass-box,black,3,0,0,3);" text="Stake" textFill="#070707" GridPane.rowSpan="2" />
+                                                <Label rotate="270.0" style="-fx-effect: dropshadow(three-pass-box,black,3,0,0,3);" text="Stake" textFill="#070707" GridPane.columnSpan="2" GridPane.rowSpan="2" />
                                                 <ImageView fx:id="stakeChip_ImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowSpan="2" />
                                                 <AnchorPane GridPane.columnIndex="2" GridPane.rowSpan="2">
                                                    <styleClass>
@@ -235,7 +253,7 @@
                                                             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                          </rowConstraints>
                                                          <children>
-                                                            <Label fx:id="stakeName_Label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" textFill="WHITE">
+                                                            <Label fx:id="stakeName_Label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="font-white" text="Label" textFill="WHITE">
                                                                <GridPane.margin>
                                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                                </GridPane.margin>
@@ -253,11 +271,8 @@
                                                    </children>
                                                 </AnchorPane>
                                              </children>
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
                                           </GridPane>
-                                          <HBox fx:id="selectedStakeDisplay_HBox" alignment="CENTER" prefHeight="20.0" spacing="5.0">
+                                          <HBox fx:id="selectedStakeDisplay_HBox" alignment="CENTER" spacing="5.0" GridPane.rowIndex="1">
                                              <children>
                                                 <Circle fx:id="stake_circle_0" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
                                                 <Circle fx:id="stake_circle_1" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
@@ -269,7 +284,7 @@
                                                 <Circle fx:id="stake_circle_7" fill="DODGERBLUE" radius="5.5" stroke="BLACK" strokeType="INSIDE" styleClass="circle" />
                                              </children></HBox>
                                        </children>
-                                    </VBox>
+                                    </GridPane>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#nextStake" text="&gt;" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                     <HBox fx:id="seed_HBox" alignment="CENTER" spacing="20.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
                                        <children>
