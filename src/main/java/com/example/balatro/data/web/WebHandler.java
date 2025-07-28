@@ -154,7 +154,7 @@ public class WebHandler
                     blind.setBlindName(cells.get(1).text());
                     blind.setBlindDescription(cells.get(2).text());
                     blind.setBlindMinimumAnte(cells.get(3).text().indexOf(1));
-                    blind.setBlindScoreMultiplier(cells.get(4).text());
+                    blind.setBlindScoreMultiplier(Double.parseDouble(cells.get(4).text().replace("x base", "")));
                     blind.setBlindReward(Integer.parseInt(cells.get(5).text().substring(0,1)));
                 }
                 catch (Exception e) {

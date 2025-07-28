@@ -104,33 +104,15 @@ public class GameController
         Booster.setImageHeightProperty(height * .26);
         Booster.setImageWidthProperty(width * .09);
 
-        gameScreenAnchor.setMaxWidth(width);
-        gameScreenAnchor.setMaxHeight(height);
-
         //Shop
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
             return width * 0.186;
         }));
-        shopImageView.setOnMouseClicked(event -> {
-            openDeckOverview();
-        });
 
         //Deck CoverBind
-        deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
+
 
         pickedBlind_AnchorPane.setMaxHeight(height * 0.26);
-
-        gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
-            while (change.next()) {
-                if(change.wasAdded()) {
-                    spaceTag.getChildren().addAll(change.getAddedSubList());
-                }
-                if(change.next()) {
-                    spaceTag.getChildren().addAll(change.getAddedSubList());
-                }
-            }
-        });
-
 
         //TEST BUTTON
         //JOKER 15
@@ -168,25 +150,24 @@ public class GameController
         blindsPlaceHolder.getChildren().add(blindBox.getValue());
         UIController.configurePlaceHolder(blindsPlaceHolder);
 
-        //Booster Opener
-        Pair<BoosterOpeningController, AnchorPane> boosterOpening = FxmlUtil.loadWithPane("/com/example/balatro/boosterOpening.fxml");
-        boosterOpeningController = boosterOpening.getKey();
-        boosterOpeningController.setGameModel(gameModel);
-        boosterOpeningPlaceHolder.getChildren().add(boosterOpening.getValue());
-        UIController.configurePlaceHolder(boosterOpeningPlaceHolder);
+        //Reward
+        Pair<RewardSummaryController, AnchorPane> reward = FxmlUtil.loadWithPane("/com/example/balatro/reward-summary.fxml");
+        rewardPlaceHolder.getChildren().add(reward.getValue());
+        UIController.configurePlaceHolder(rewardPlaceHolder);
 
         //Shop
-        //region Placeholder
         Pair<ShopController, AnchorPane> shop = FxmlUtil.loadWithPane("/com/example/balatro/shop.fxml");
         shopController = shop.getKey();
         shopPlaceHolder.getChildren().add(shop.getValue());
         UIController.configurePlaceHolder(shopPlaceHolder);
         shopController.setOnNextRoundCallback(this::nextRound);
 
-        //Reward
-        Pair<RewardSummaryController, AnchorPane> reward = FxmlUtil.loadWithPane("/com/example/balatro/reward-summary.fxml");
-        rewardPlaceHolder.getChildren().add(reward.getValue());
-        UIController.configurePlaceHolder(rewardPlaceHolder);
+        //Booster Opener
+        Pair<BoosterOpeningController, AnchorPane> boosterOpening = FxmlUtil.loadWithPane("/com/example/balatro/boosterOpening.fxml");
+        boosterOpeningController = boosterOpening.getKey();
+        boosterOpeningController.setGameModel(gameModel);
+        boosterOpeningPlaceHolder.getChildren().add(boosterOpening.getValue());
+        UIController.configurePlaceHolder(boosterOpeningPlaceHolder);
     }
 
     private void bindUi() {
@@ -200,6 +181,10 @@ public class GameController
         UIController.bindAnimatedVisibility(gameModel.blindsVisibilityProperty(), chooseBlind_AnchorPane, SlideDirection.UP);
         UIController.bindAnimatedVisibility(gameModel.pickedBlindVisibilityProperty(), pickedBlind_AnchorPane, SlideDirection.UP);
         UIController.bindAnimatedVisibility(gameModel.shopVisibilityProperty(), shopSign_AnchorPane, SlideDirection.UP);
+
+        gameModel.setShopVisibility(false);
+        gameModel.setRewardVisibility(false);
+        gameModel.setBoosterOpeningVisibility(false);
 
         //Blind Box
         rerollBossBlind_Button.visibleProperty().bind(Bindings.createBooleanBinding(() -> gameModel.getVoucherState().hasVoucher(VoucherState.VoucherType.DIRECTORS_CUT), gameModel.blindsVisibilityProperty()));
@@ -227,6 +212,20 @@ public class GameController
         ));
         //endregion
 
+        //region Tag Queue
+        gameModel.getTagQueue().addListener((ListChangeListener<Tag>) change -> {
+            while (change.next()) {
+                if(change.wasAdded()) {
+                    spaceTag.getChildren().addAll(change.getAddedSubList());
+                }
+                if(change.next()) {
+                    spaceTag.getChildren().addAll(change.getAddedSubList());
+                }
+            }
+        });
+        //endregion
+
+        deckCover_ImageView.imageProperty().bind(gameModel.getRunState().getChosenDeck().imageProperty());
         deckCover_ImageView.setOnMouseClicked(event -> {
             MenuManager.getInstance().openDeckOverview();
         });
@@ -284,6 +283,8 @@ public class GameController
         gameModel.setShopVisibility(false);
         gameModel.setRewardVisibility(false);
         gameModel.setBoosterOpeningVisibility(false);
+
+        blindBoxController.setActiveBlind(0);
     }
 
     public void startRound(BigDecimal score) {
@@ -407,10 +408,6 @@ public class GameController
         for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
-    }
-
-    private void openDeckOverview() {
-
     }
 
 }

@@ -12,44 +12,36 @@ import javafx.scene.image.ImageView;
 public class BlindSkipPaneController {
 
     @FXML
-    private Button btnSkipBlind;
+    private Button skipBlind_Button;
     @FXML
-    private ImageView ivSkipReward;
-
+    private ImageView tag_ImageView;
 
     private final ObjectProperty<Tag> tag = new SimpleObjectProperty<>(new Tag());
-
-
-    private BlindBoxPanelController blindPickPanelsController;
+    private BlindBoxPanelController blindPanelController;
 
     public void initialize() {
-        ivSkipReward.imageProperty().bind(tag.get().imageProperty());
-
+        tag_ImageView.imageProperty().bind(tag.get().imageProperty());
     }
 
+    //region Getter & Setter
+    public void setBlindPanelController(BlindBoxPanelController controller) {
+        blindPanelController = controller;
+    }
 
+    public Tag getTag() {
+        return tag.get();
+    }
 
     public void setTag(Tag newTag) {
-        tag.get().setTag(newTag);
-
-        //setIvSkipReward(tag.get().getTagImageUrl());
+        getTag().setTag(newTag);
     }
 
-    public ObjectProperty<Tag> getTag() {
-        return tag;
-    }
 
-    private void setIvSkipReward(String imageUrl) {
-        ivSkipReward.setImage(new Image("file:" + imageUrl));
-    }
-
-    public void setBlindPickPanels(BlindBoxPanelController blindPickPanelsController) {
-        this.blindPickPanelsController = blindPickPanelsController;
-    }
-
+    //endregion
 
     public void onClickSkip(ActionEvent actionEvent) {
-        //System.out.println("Skipped clicked");
-        GameController.getInstance().skip(tag.get());
+        //GameController.getInstance().skip(tag.get());
+        blindPanelController.skip(getTag());
+        //BlindBoxController.nextBlind();
     }
 }

@@ -7,31 +7,21 @@ import javafx.scene.paint.Color;
 
 public class Blind extends ImageView
 {
-    private final IntegerProperty blindId = new SimpleIntegerProperty();
-    private final StringProperty blindImageUrl = new SimpleStringProperty();
-    private final StringProperty blindName = new SimpleStringProperty();
-    private final StringProperty blindDescription = new SimpleStringProperty();
-    private final IntegerProperty blindMinimumAnte = new SimpleIntegerProperty();
-    private final StringProperty blindScoreMultiplier = new SimpleStringProperty();
-    private final IntegerProperty blindReward = new SimpleIntegerProperty();
-    private final BooleanProperty blindSkipped = new SimpleBooleanProperty();
-    private final ObjectProperty<Color> colorScheme = new SimpleObjectProperty<>();
-    private final BooleanProperty rewarded = new SimpleBooleanProperty();
+    private final IntegerProperty blindId = new SimpleIntegerProperty(-1);
+    private final StringProperty blindImageUrl = new SimpleStringProperty("");
+    private final StringProperty blindName = new SimpleStringProperty("");
+    private final StringProperty blindDescription = new SimpleStringProperty("");
+    private final IntegerProperty blindMinimumAnte = new SimpleIntegerProperty(0);
+    private final DoubleProperty blindScoreMultiplier = new SimpleDoubleProperty(0);
+    private final IntegerProperty blindReward = new SimpleIntegerProperty(0);
+    private final BooleanProperty blindSkipped = new SimpleBooleanProperty(false);
+    private final ObjectProperty<Color> colorScheme = new SimpleObjectProperty<>(new Color(0,0,0,0));
+    private final BooleanProperty rewarded = new SimpleBooleanProperty(true);
 
     public Blind() {
         blindImageUrl.addListener((obs, oldVal, newVal) -> {
             this.setImage(new Image("file:" + newVal,true));
         });
-        blindId.set(-1);
-        blindImageUrl.set("");
-        blindName.set("default");
-        blindDescription.set("");
-        blindMinimumAnte.set(-1);
-        blindScoreMultiplier.set("0");
-        blindReward.set(0);
-        blindSkipped.set(false);
-        colorScheme.set(new Color(0,0,0,0));
-        rewarded.set(true);
     }
 
     //region GETTER SETTER
@@ -108,15 +98,15 @@ public class Blind extends ImageView
         this.blindMinimumAnte.set(blindMinimumAnte);
     }
 
-    public String getBlindScoreMultiplier() {
+    public double getBlindScoreMultiplier() {
         return blindScoreMultiplier.get();
     }
 
-    public StringProperty blindScoreMultiplierProperty() {
+    public DoubleProperty blindScoreMultiplierProperty() {
         return blindScoreMultiplier;
     }
 
-    public void setBlindScoreMultiplier(String blindScoreMultiplier) {
+    public void setBlindScoreMultiplier(double blindScoreMultiplier) {
         this.blindScoreMultiplier.set(blindScoreMultiplier);
     }
 

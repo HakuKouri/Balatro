@@ -3,96 +3,110 @@ package com.example.balatro.controller;
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.rules.Blind;
 import com.example.balatro.domain.rewards.Tag;
+import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
-import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Pair;
 
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BlindBoxController {
-    private final GameModel gameModel = Balatro.getGameModel();
 
-    public AnchorPane blindBox_AnchorPane;
-    public HBox blindBox;
+    //region FXML
+    @FXML private AnchorPane blindBox_AnchorPane;
+    @FXML private HBox blindBox;
+    //endregion
 
-    private final FXMLLoader loaderSmallBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
-    private final FXMLLoader loaderBigBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
-    private final FXMLLoader loaderBossBlind = new FXMLLoader(getClass().getResource("/com/example/balatro/blind-Box-Panel.fxml"));
+    //region Attributes
+    private GameModel gameModel;
+    private static final IntegerProperty activeBlind = new SimpleIntegerProperty(-1);
 
-    private BlindBoxPanelController smallBlindController;
-    private BlindBoxPanelController bigBlindController;
-    private BlindBoxPanelController bossBlindController;
+    private final Map<String, Pair<BlindBoxPanelController,AnchorPane>> controllerMap = new HashMap<>();
+    private final List<String> mapOrder = List.of("small", "big", "boss");
+    //endregion
 
-    private AnchorPane smallBlindPanel;
-    private AnchorPane bigBlindPanel;
-    private AnchorPane bossBlindPanel;
-
-    public void initialize() {
-        setBlindPanels();
+    //region Getter & Setter
+    public int getActiveBlind() {
+        return activeBlind.get();
     }
 
-    private void setBlindPanels() {
-        try {
-            smallBlindPanel = loaderSmallBlind.load();
-            smallBlindController = loaderSmallBlind.getController();
+    public IntegerProperty activeBlindProperty() {
+        return activeBlind;
+    }
 
-            bigBlindPanel = loaderBigBlind.load();
-            bigBlindController = loaderBigBlind.getController();
+    public void setActiveBlind(int index) {
+        activeBlind.set(index);
+    }
 
-            bossBlindPanel = loaderBossBlind.load();
-            bossBlindController = loaderBossBlind.getController();
+    //endregion
 
-            blindBox.getChildren().add(smallBlindPanel);
-            blindBox.getChildren().add(bigBlindPanel);
-            blindBox.getChildren().add(bossBlindPanel);
+    public void initialize() {
+        gameModel = Balatro.getGameModel();
+        fxmlLoad();
+        bindUi();
 
-            smallBlindController.setBossPanel(false);
-            bigBlindController.setBossPanel(false);
-            bossBlindController.setBossPanel(true);
+        Platform.runLater(() -> {
+            controllerMap.get("small").getKey().setBlind(gameModel.getAllBlindsList().get(0));
+            controllerMap.get("big").getKey().setBlind(gameModel.getAllBlindsList().get(1));
+            controllerMap.get("boss").getKey().setBlind(getNewBoss());
+        });
+    }
 
-            gameModel.getRunState().anteProperty().addListener((obs, oldAnte, newAnte) -> {
-                smallBlindController.blindProperty().get().setBlind(gameModel.getAllBlindsList().get(0));
-                smallBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(smallBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                smallBlindController.setTag(getNewTag());
-
-                bigBlindController.blindProperty().get().setBlind(gameModel.getAllBlindsList().get(1));
-                bigBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bigBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-                bigBlindController.setTag(getNewTag());
-
-                bossBlindController.getBlind().setBlind(getNewBoss());
-                bossBlindController.setMinScore(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()].multiply(BigDecimal.valueOf(Double.parseDouble(bossBlindController.getBlind().getBlindScoreMultiplier().split("x")[0]))));
-            });
-
-            gameModel.getRunState().roundProperty().addListener((obs, oldValue, newValue) -> {
-                smallBlindPanel.setDisable(newValue.intValue()%3 != 0);
-                bigBlindPanel.setDisable(newValue.intValue()%3 != 1 && newValue.intValue() != 0);
-                bossBlindPanel.setDisable(newValue.intValue()%3 != 2 && newValue.intValue() != 0);
-            });
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private void fxmlLoad() {
+        for (int i = 0; i <= 2; i++) {
+            controllerMap.put(mapOrder.get(i), FxmlUtil.loadWithPane("/com/example/balatro/blind-Box-Panel.fxml"));
+            blindBox.getChildren().add(controllerMap.get(mapOrder.get(i)).getValue());
+            controllerMap.get(mapOrder.get(i)).getKey().setBossPanel(i == 2);
         }
 
-        smallBlindPanel.setPrefWidth(Balatro.getSettings().getWindowWidth() * .16);
-        smallBlindPanel.setPrefHeight(blindBox.getHeight());
-        bigBlindPanel.setPrefWidth(Balatro.getSettings().getWindowWidth() * .16);
-        bigBlindPanel.setPrefHeight(blindBox.getHeight());
-        bossBlindPanel.setPrefWidth(Balatro.getSettings().getWindowWidth() * .16);
-        bossBlindPanel.setPrefHeight(blindBox.getHeight());
+        Platform.runLater(() -> {
+            setPanelSize(controllerMap.get("small").getValue());
+            setPanelSize(controllerMap.get("big").getValue());
+            setPanelSize(controllerMap.get("boss").getValue());
+        });
+    }
+
+    private void bindUi() {
+        gameModel.getRunState().anteProperty().addListener((obs, oldAnte, newAnte) -> {
+            for (int i = 0; i <= 2; i++) {
+                controllerMap.get(mapOrder.get(i)).getKey().setScoreToReach(gameModel.getChipRequirement()[gameModel.getRunState().getAnte()]);
+
+                if (newAnte.intValue() > oldAnte.intValue() ) {
+                    if(i == 2)
+                        controllerMap.get("boss").getKey().setBlind(getNewBoss());
+                    if(i < 2)
+                        controllerMap.get(mapOrder.get(i)).getKey().setTag(getNewTag());
+                }
+            }
+        });
+
+        activeBlindProperty().addListener((obs, oldValue, newValue) -> {
+            if(oldValue.intValue() != -1)
+                controllerMap.get(mapOrder.get(oldValue.intValue())).getKey().setIfNextBlind(true);
+            controllerMap.get(mapOrder.get(newValue.intValue())).getKey().setIfNextBlind(false);
+        });
+    }
+
+    private void setPanelSize(AnchorPane pane) {
+        pane.setPrefHeight(blindBox.heightProperty().get());
+        pane.setPrefWidth(Balatro.getSettings().getWindowWidth() * .16);
     }
 
     public void rerollBoss() {
-
-        bossBlindController.getBlind().setBlind(getNewBoss());
+        controllerMap.get("boss").getKey().setBlind(getNewBoss());
     }
 
     private Blind getNewBoss() {
-        List<Blind> blindList  = gameModel.getAllBlindsList().stream().filter(b -> b.getBlindId() > 2 && !gameModel.getRunState().getBossBlindsBeaten().contains(b)).toList();
+        List<Blind> blindList = gameModel.getAllBlindsList().stream().filter(b -> b.getBlindId() > 2 && !gameModel.getRunState().getBossBlindsBeaten().contains(b)).toList();
 
-        if(gameModel.getRunState().getAnte() % 8 == 0) {
+        if (gameModel.getRunState().getAnte() % 8 == 0) {
             blindList = blindList.stream().filter(b -> b.getBlindMinimumAnte() == 8).toList();
         }
 
@@ -103,5 +117,15 @@ public class BlindBoxController {
         List<Tag> tagList = gameModel.getAllTagList().stream().filter(t -> Integer.parseInt(t.getMinAnte()) <= gameModel.getRunState().getAnte()).toList();
         return tagList.get(gameModel.getRand().nextInt(tagList.size()));
     }
+
+    public static void nextBlind() {
+        if (activeBlind.get() + 1 > 2) {
+            activeBlind.set(0);
+        } else {
+            activeBlind.set(activeBlind.get() + 1);
+        }
+    }
+
+
 }
 
