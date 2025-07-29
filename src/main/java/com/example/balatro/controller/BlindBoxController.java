@@ -88,9 +88,10 @@ public class BlindBoxController {
         });
 
         activeBlindProperty().addListener((obs, oldValue, newValue) -> {
-            if(oldValue.intValue() != -1)
-                controllerMap.get(mapOrder.get(oldValue.intValue())).getKey().setIfNextBlind(true);
-            controllerMap.get(mapOrder.get(newValue.intValue())).getKey().setIfNextBlind(false);
+            for (int i = 0; i <= 2; i++) {
+                controllerMap.get(mapOrder.get(i)).getKey().setNextBlind(false);
+            }
+            controllerMap.get(mapOrder.get(newValue.intValue())).getKey().setNextBlind(true);
         });
     }
 

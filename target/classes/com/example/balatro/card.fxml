@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="card_AnchorPane" maxHeight="219.0" maxWidth="165.0" prefHeight="219.0" prefWidth="165.0" style="-fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.CardViewController">
+<AnchorPane fx:id="card_AnchorPane" maxHeight="219.0" maxWidth="165.0" prefHeight="219.0" prefWidth="165.0" style="-fx-background-color: transparent;" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.CardViewController">
     <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <AnchorPane fx:id="price_AnchorPane" maxHeight="60.0" maxWidth="93.0" StackPane.alignment="TOP_CENTER">
             <padding>

@@ -61,6 +61,7 @@ public class BlindBoxPanelController {
     public Blind getBlind () {
         return blind.get();
     }
+
     public void setBlind(Blind blind) {
         getBlind().setBlind(blind);
     }
@@ -129,11 +130,10 @@ public class BlindBoxPanelController {
 
     public void initialize() {
         bindUi();
-
     }
 
     private void bindUi() {
-        blindPanel.disableProperty().bind(nextBlindProperty());
+        blindPanel.disableProperty().bind(Bindings.createBooleanBinding(() -> !getNextBlind(), nextBlindProperty()));
 
         btnSelectBlind.textProperty().bind(Bindings.createStringBinding(() ->
                 isSkipped() ? "Skipped" : isDefeated() ? "Defeated" : getNextBlind() ? "Select Blind" : "Upcoming..."
@@ -155,6 +155,7 @@ public class BlindBoxPanelController {
         ));
     }
 
+
     public void setBossPanel(boolean isBoss) {
             if (isBoss) {
                 setBoss(true);
@@ -175,10 +176,6 @@ public class BlindBoxPanelController {
         blindSkipController.setTag(tag);
     }
 
-    public void setIfNextBlind(boolean isDisabled) {
-        nextBlind.set(isDisabled);
-    }
-
     public void setScoreToReach(BigDecimal score) {
         scoreToReach.set(score.multiply(BigDecimal.valueOf(getBlind().getBlindScoreMultiplier())));
     }
@@ -194,9 +191,11 @@ public class BlindBoxPanelController {
        gameModel.setBlindsVisibility(false);
        gameModel.pickedBlindVisibilityProperty().set(true);
        GameController.getInstance().startRound(new BigDecimal(scoreToReach_Label.getText()));
+       setDefeated(true);
     }
 
     public void skip(Tag tag) {
+        setSkipped(true);
         GameController.getInstance().skip(tag);
         BlindBoxController.nextBlind();
     }

@@ -41,6 +41,8 @@ public class CardViewController {
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
     private final IntegerProperty buyPrice = new SimpleIntegerProperty(0);
     private Map<CardViewController, AnchorPane> inMap;
+
+    private final TooltipBoxController tooltipController = GameController.getInstance().getTooltipBoxController();
     //endregion
 
     //region const Strings
@@ -176,6 +178,14 @@ public class CardViewController {
                 GameController.getInstance().selectCardFromBooster(joker);
             }
         });
+
+        cardImage.setOnMouseEntered(e -> {
+            tooltipController.showForCard(card_AnchorPane, getCard());
+        });
+
+        cardImage.setOnMouseExited(e -> {
+            tooltipController.hide();
+        });
     }
 
     private void bindDisabled() {
@@ -281,7 +291,7 @@ public class CardViewController {
         }
 
         if(getCard() instanceof PlayingCard playingCard) {
-            System.out.println(playingCard.getSeal().toString());
+            //System.out.println(playingCard.getSeal().toString());
             if(playingCard.getSeal().getSealId() > 0)
                 image_StackPane.getChildren().add(playingCard.getSeal());
         }

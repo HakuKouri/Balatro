@@ -6,4 +6,5 @@ public enum Suit {
     DIAMONDS,
     SPADES,
     NO_SUIT
+    
 }

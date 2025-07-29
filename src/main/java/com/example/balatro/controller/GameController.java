@@ -61,9 +61,11 @@ public class GameController
     @FXML
     private AnchorPane blindsPlaceHolder, shopPlaceHolder, rewardPlaceHolder, boosterOpeningPlaceHolder;
 
-    //Menu
+    //Overlay
     @FXML
     private StackPane menuOverlay_StackPane;
+    @FXML
+    private AnchorPane tooltipOverlay_AnchorPane;
 
     //Test Elements
     @FXML
@@ -86,12 +88,22 @@ public class GameController
         return instance;
     }
     private static final GameModel gameModel = Balatro.getGameModel();
+
+    private TooltipBoxController tooltipBoxController;
+    public TooltipBoxController getTooltipBoxController() {
+        return tooltipBoxController;
+    }
     //endregion
 
     public void initialize(){
         instance = this;
         VoucherHandler.initializeVoucherHandler(gameModel);
         MenuManager.setRootPane(menuOverlay_StackPane);
+
+        Platform.runLater(() -> {
+            tooltipBoxController.setOverlayPane(tooltipOverlay_AnchorPane);
+        });
+
         menuOverlay_StackPane.setVisible(false);
 
         loadFXMLParts();
@@ -103,6 +115,7 @@ public class GameController
 
         Booster.setImageHeightProperty(height * .26);
         Booster.setImageWidthProperty(width * .09);
+
 
         //Shop
         shopImageView.fitWidthProperty().bind(Bindings.createDoubleBinding(() -> {
@@ -168,6 +181,11 @@ public class GameController
         boosterOpeningController.setGameModel(gameModel);
         boosterOpeningPlaceHolder.getChildren().add(boosterOpening.getValue());
         UIController.configurePlaceHolder(boosterOpeningPlaceHolder);
+
+        Pair<TooltipBoxController, AnchorPane> tooltipPair = FxmlUtil.loadWithPane("/com/example/balatro/tooltipBox.fxml");
+        tooltipBoxController = tooltipPair.getKey();
+        tooltipOverlay_AnchorPane.getChildren().add(tooltipPair.getValue());
+        tooltipBoxController.setOverlayPane(tooltipOverlay_AnchorPane);
     }
 
     private void bindUi() {
@@ -239,8 +257,6 @@ public class GameController
             for(int j = 0; j < 13; j++){
                 PlayingCard card = new PlayingCard(j,i);
                 card.setSeal(gameModel.getRandomSeal());
-                System.out.println(card.getSeal().getSealName());
-                System.out.println("Card: " + card.getSuit() + " " + card.getRank());
                 cards.add(card);
             }
         }

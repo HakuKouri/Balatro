@@ -3,20 +3,157 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="200.0" prefWidth="161.0" style="-fx-background-color: #333; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-radius: 10; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.TooltipBoxController">
+<AnchorPane fx:id="rootPane" styleClass="tool-tip" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.TooltipBoxController">
    <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="161.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" prefHeight="56.0" prefWidth="271.0" text="name" textFill="WHITE" />
-            <Label alignment="CENTER" prefHeight="111.0" prefWidth="254.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="effect" />
-            <Label alignment="CENTER" prefHeight="33.0" prefWidth="161.0" styleClass="common" text="rarity" textFill="WHITE" />
+            <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="enhancementBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box" VBox.vgrow="NEVER">
+                     <children>
+                        <Label fx:id="enhancementName" text="Label" />
+                        <Label fx:id="enhancementEffect" styleClass="white-label" text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="editionBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box">
+                     <children>
+                        <Label fx:id="editionName" text="Label" />
+                        <Label fx:id="editionEffect" styleClass="white-label" text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="sealBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box">
+                     <children>
+                        <Label fx:id="sealName" text="Label" />
+                        <Label fx:id="sealEffect" styleClass="white-label" text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="stickerEternalBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box">
+                     <children>
+                        <Label fx:id="stickerEternalName" text="Eternal" />
+                        <Label fx:id="stickerEternalEffect" styleClass="white-label" text="Can't be sold&#10; or destroyed" textAlignment="CENTER" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="stickerPerishableBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box">
+                     <children>
+                        <Label fx:id="stickerPerishableName" text="Perishable" />
+                        <Label fx:id="stickerPerishableEffect" alignment="CENTER" styleClass="white-label" text="Debuffed after&#10;5 rounds &#10;[%d remaining]" textAlignment="CENTER" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="stickerRentalBox" alignment="CENTER" prefWidth="150.0" spacing="5.0" styleClass="box">
+                     <children>
+                        <Label fx:id="stickerRentalName" text="Rental" />
+                        <Label fx:id="stickerRentalEffect" alignment="CENTER" styleClass="white-label" text="Lose $3 at&#10;end of round" textAlignment="CENTER" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox fx:id="mainTooltipBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="300.0" spacing="5.0" styleClass="box" HBox.hgrow="ALWAYS">
+               <children>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardName_Label" alignment="CENTER" styleClass="font-white-shadow" text="name" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="playingCardName_AnchorPane" style="-fx-background-radius: 20;" styleClass="white-label">
+                     <children>
+                        <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label fx:id="cardValue_Label" text="Label" />
+                              <Label alignment="CENTER" text="of" textFill="WHITE" />
+                              <Label fx:id="cardSuit_Label" text="Label" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardEffect_Label" alignment="CENTER" styleClass="white-label" text="effect" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardRarity_Label" alignment="CENTER" styleClass="rarity" text="rarity" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <Label fx:id="cardType_Label" alignment="CENTER" text="cardtype" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardEnhancement_Label" alignment="CENTER" styleClass="enhancement" text="enhancement" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardEdition_Label" alignment="CENTER" styleClass="edition" text="edition" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="cardSeal_Label" alignment="CENTER" styleClass="seal" text="seal" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <Label fx:id="cardSticker_Label" alignment="CENTER" styleClass="sticker" text="sticker" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
          </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </VBox>
+      </HBox>
    </children>
 </AnchorPane>

@@ -23,6 +23,9 @@
     -fx-menu-shadow: #777D89;
     -fx-button-shadow: #1E3032;
     -fx-button-disabled-background-color: #545454;
+    -fx-enhancement-color: #777BDA;
+    -fx-edition-color: #5F61EF;
+    -fx-sticker-color: #E54982;
 }
 
 /* region Background */
@@ -294,6 +297,50 @@
 }
 /* endregion */
 
+/* region Labels* */
+.label {
+    -fx-background-radius: 20;
+}
+.white-label {
+    -fx-background-color: white;
+}
+
+.rarity {
+    -fx-background-color: white;
+}
+
+.rarity .common {
+    -fx-background-color: -fx-common-color;
+}
+
+.rarity .uncommon {
+    -fx-background-color: -fx-uncommon-color;
+}
+
+.rarity .rare {
+    -fx-background-color: -fx-rare-color;
+}
+
+.rarity .legendary {
+    -fx-background-color: -fx-legendary-color;
+}
+
+.enhancement {
+    -fx-background-color: -fx-enhancement-color;
+}
+
+.edition {
+    -fx-background-color: -fx-edition-color;
+}
+
+.seal {
+    -fx-background-color: -fx-common-color;
+}
+
+.sticker {
+    -fx-background-color: -fx-sticker-color;
+}
+/* endregion */
 /* region  Menu */
 .menu-pane {
     -fx-background-color: -fx-menu-background-color;
@@ -476,5 +523,18 @@
     -fx-background-radius: 20;
     -fx-font-size: 60;
     -fx-text-fill: white;
+}
+/* endregion */
+
+/* region Tool Tip */
+.tool-tip {
+
+}
+
+.tool-tip .box {
+    -fx-background-color: -fx-button-disabled-background-color;
+    -fx-background-radius: 20;
+    -fx-border-color: -fx-menu-border-color;
+    -fx-effect: dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,3);
 }
 /* endregion */

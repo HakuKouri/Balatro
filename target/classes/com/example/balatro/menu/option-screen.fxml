@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
 
-<AnchorPane minHeight="550.0" minWidth="722.0" styleClass="menu-pane" stylesheets="@../../../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.OptionScreenController">
+<AnchorPane minHeight="550.0" minWidth="722.0" styleClass="menu-pane" stylesheets="@../../../css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.balatro.controller.OptionScreenController">
    <children>
       <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
