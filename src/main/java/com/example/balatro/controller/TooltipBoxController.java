@@ -14,14 +14,17 @@ import javafx.scene.layout.VBox;
 public class TooltipBoxController {
 
     public VBox mainTooltipBox;
+    @FXML
+    private AnchorPane name_AnchorPane, playingCardName_AnchorPane, effect_AnchorPane,
+            rarity_AnchorPane, cardtype_AnchorPane, enhancement_AnchorPane, edition_AnchorPane, seal_AnchorPane,
+            eternal_AnchorPane, perish_AnchorPane, rental_AnchorPane;
     //region FXML
     @FXML
     private AnchorPane rootPane;
     @FXML
-    private AnchorPane playingCardName_AnchorPane;
-    @FXML
     private Label cardName_Label, cardEffect_Label, cardValue_Label, cardSuit_Label,
-            cardRarity_Label, cardType_Label, cardEnhancement_Label, cardEdition_Label, cardSeal_Label, cardSticker_Label;
+            cardRarity_Label, cardType_Label, cardEnhancement_Label, cardEdition_Label, cardSeal_Label,
+            cardSticker_Eternal_Label, cardSticker_Perish_Label, cardSticker_Rental_Label;
     @FXML
     private VBox enhancementBox, editionBox, sealBox,
             stickerEternalBox, stickerPerishableBox, stickerRentalBox;
@@ -34,34 +37,40 @@ public class TooltipBoxController {
     //endregion
 
 
-    private AnchorPane overlayPane;
-
     public void initialize() {
+        rootPane.setVisible(false);
         hideAllExtraLabels();
         hideAllExtraToolTips();
     }
 
     private void hideAllExtraLabels() {
-        cardName_Label.setVisible(false);
-        playingCardName_AnchorPane.setVisible(false);
+        hide(name_AnchorPane);
+        hide(playingCardName_AnchorPane);
+        hide(rarity_AnchorPane);
+        hide(cardtype_AnchorPane);
+        hide(enhancement_AnchorPane);
+        hide(edition_AnchorPane);
+        hide(seal_AnchorPane);
+        hide(eternal_AnchorPane);
+        hide(perish_AnchorPane);
+        hide(rental_AnchorPane);
 
-        cardRarity_Label.setVisible(false);
-        cardEnhancement_Label.setVisible(false);
-        cardEdition_Label.setVisible(false);
-        cardSeal_Label.setVisible(false);
     }
 
     private void hideAllExtraToolTips() {
-        enhancementBox.setVisible(false);
-        editionBox.setVisible(false);
-        sealBox.setVisible(false);
-        stickerEternalBox.setVisible(false);
-        stickerPerishableBox.setVisible(false);
-        stickerRentalBox.setVisible(false);
+        hide(enhancementBox);
+        hide(editionBox);
+        hide(sealBox);
+        hide(stickerEternalBox);
+        hide(stickerPerishableBox);
+        hide(stickerRentalBox);
     }
 
     // --- Hauptanzeige ---
     public void showForCard(Node anchor, Card card) {
+        hideAllExtraLabels();
+        hideAllExtraToolTips();
+
         if(card instanceof PlayingCard playingCard)
             showForPlayingCard(anchor, playingCard);
         else if (card instanceof Joker joker) {
@@ -73,12 +82,9 @@ public class TooltipBoxController {
     public void showForPlayingCard(Node anchor, PlayingCard card) {
         String effectString = "";
 
-        hideAllExtraLabels();
-        hideAllExtraToolTips();
-
         cardValue_Label.setText(String.valueOf(card.getValue()));
         cardSuit_Label.setText(String.valueOf(card.getSuit().toString()));
-        playingCardName_AnchorPane.setVisible(true);
+        show(playingCardName_AnchorPane);
 
         effectString += "+" + card.getValue() + " chips ";
 
@@ -101,17 +107,18 @@ public class TooltipBoxController {
     }
 
     public void showForJoker(Node anchor, Joker joker) {
-        hideAllExtraLabels();
-        hideAllExtraToolTips();
-
         cardName_Label.setText(joker.getCardName());
-        cardName_Label.setVisible(true);
+        show(name_AnchorPane);
+        cardEffect_Label.setText(joker.getCardDescription());
+        cardRarity_Label.setText(joker.getRarity());
+        show(rarity_AnchorPane);
+        cardRarity_Label.getStyleClass().setAll("rarity " + joker.getRarity().toLowerCase());
 
-        if (joker.getEdition().getId() != -1 ) {
+        if (joker.getEdition().getId() > 0 ) {
             setEdition(joker.getEdition());
         }
 
-        if (!joker.getStickers().isEmpty()) {
+        if (joker.getStickers().size() > 0) {
             setSticker(joker.getStickers());
         }
 
@@ -120,16 +127,12 @@ public class TooltipBoxController {
     }
 
     public void showForConsumable(Node anchor, Card  card) {
-        hideAllExtraLabels();
-        hideAllExtraToolTips();
-
         cardName_Label.setText(card.getCardName());
-        cardName_Label.setVisible(true);
+        show(name_AnchorPane);
         cardEffect_Label.setText(card.getCardDescription());
-        cardEffect_Label.setVisible(true);
 
         cardType_Label.setText(card.getCardType());
-        cardType_Label.setVisible(true);
+        show(cardtype_AnchorPane);
 
         if (card.getEdition().getId() != -1 ) {
             setEdition(card.getEdition());
@@ -162,11 +165,11 @@ public class TooltipBoxController {
 
         switch (position) {
             case ABOVE_ANCHOR -> {
-                rootPane.setLayoutX(anchorBounds.getMinX());
+                rootPane.setLayoutX(anchorBounds.getMinX() - tooltipWidth / 2);
                 rootPane.setLayoutY(anchorBounds.getMinY() - tooltipHeight - 10);
             }
             case BELOW_ANCHOR -> {
-                rootPane.setLayoutX(anchorBounds.getMinX());
+                rootPane.setLayoutX(anchorBounds.getMinX() - tooltipWidth / 2);
                 rootPane.setLayoutY(anchorBounds.getMaxY() + 10);
             }
             case LEFT_OF_ANCHOR -> {
@@ -180,7 +183,6 @@ public class TooltipBoxController {
 
     // Setzt den Overlay-Container (muss extern übergeben werden, z. B. root-AnchorPane)
     public void setOverlayPane(AnchorPane overlayPane) {
-        this.overlayPane = overlayPane;
         if (!overlayPane.getChildren().contains(rootPane)) {
             overlayPane.getChildren().add(rootPane);
         }
@@ -189,36 +191,49 @@ public class TooltipBoxController {
     // Setzt Texte für die Tool Tips und zeigt sie an
     private void setEnhancement(Enhancement enhancement) {
         cardEnhancement_Label.setText(enhancement.getEnhancementName());
-        cardEnhancement_Label.setVisible(true);
+        show(enhancement_AnchorPane);
         enhancementName.setText(enhancement.getEnhancementName());
         enhancementEffect.setText(enhancement.getEnhancementEffect());
-        enhancementBox.setVisible(true);
+        show(enhancementBox);
     }
 
     private void setEdition(Edition edition) {
         cardEdition_Label.setText(edition.getEditionName());
-        cardEdition_Label.setVisible(true);
+        show(edition_AnchorPane);
         editionName.setText(edition.getEditionName());
         editionEffect.setText(edition.getEditionEffect());
-        editionBox.setVisible(true);
+        show(editionBox);
     }
 
     void setSeal(Seal seal) {
         cardSeal_Label.setText(seal.getSealName());
-        cardSeal_Label.setVisible(true);
+        show(seal_AnchorPane);
         sealName.setText(seal.getSealName());
         sealEffect.setText(seal.getSealEffect());
-        sealBox.setVisible(true);
+        show(sealBox);
+    }
+
+    private void hide(Node node) {
+        node.setManaged(false);
+        node.setVisible(false);
+    }
+
+    private void show(Node node) {
+        node.setManaged(true);
+        node.setVisible(true);
     }
 
     void setSticker(ObservableSet<Sticker> sticker) {
         for (int i = 0; i < sticker.size(); i++) {
             switch (((Sticker)sticker.toArray()[i]).getStickerId()) {
-                case 10: stickerEternalBox.setVisible(true);
+                case 10: show(stickerEternalBox);
+                    show(eternal_AnchorPane);
                     break;
-                case 11: stickerPerishableBox.setVisible(true);
+                case 11: show(stickerPerishableBox);
+                    show(perish_AnchorPane);
                     break;
-                case 12: stickerRentalBox.setVisible(true);
+                case 12: show(stickerRentalBox);
+                    show(rental_AnchorPane);
                     break;
             }
         }

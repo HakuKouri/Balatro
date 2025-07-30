@@ -1,7 +1,6 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
@@ -39,7 +38,6 @@ public class HoldingHandController {
     GameModel gameModel = Balatro.getGameModel();
 
     public void initialize() {
-
         UIController.bindStackPane(gameModel.getHoldingHandViewManager(), holdingHand_StackPane);
 
         //Card Count Label
@@ -52,6 +50,8 @@ public class HoldingHandController {
         handButtonBox.managedProperty().bind(gameModel.handButtonVisibilityProperty());
         playSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
         discardSelectedCardsButton.disableProperty().bind(Bindings.isEmpty(gameModel.getSelectedCards()));
+
+        gameModel.setHandButtonVisibility(false);
     }
 
 

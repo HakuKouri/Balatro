@@ -31,6 +31,8 @@ public class CardViewController {
     private ImageView cardImage;
     @FXML
     private StackPane image_StackPane;
+    @FXML
+    private AnchorPane toolTipHoverPane;
     //endregion
 
     //region Attributes
@@ -179,11 +181,11 @@ public class CardViewController {
             }
         });
 
-        cardImage.setOnMouseEntered(e -> {
+        toolTipHoverPane.setOnMouseEntered(e -> {
             tooltipController.showForCard(card_AnchorPane, getCard());
         });
 
-        cardImage.setOnMouseExited(e -> {
+        toolTipHoverPane.setOnMouseExited(e -> {
             tooltipController.hide();
         });
     }

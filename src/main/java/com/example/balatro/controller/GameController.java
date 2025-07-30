@@ -24,8 +24,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.List;
 
 public class GameController
 {
@@ -82,6 +84,8 @@ public class GameController
     private BlindBoxController blindBoxController;
     private BoosterOpeningController boosterOpeningController;
 
+    private boolean menuOpen = false;
+
     //Game Controller & Model
     private static GameController instance;
     public static GameController getInstance() {
@@ -102,7 +106,24 @@ public class GameController
 
         Platform.runLater(() -> {
             tooltipBoxController.setOverlayPane(tooltipOverlay_AnchorPane);
+            gameScreenAnchor.getScene().setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case ESCAPE:
+                        System.out.println("Esc pressed");
+                        if (menuOpen) {
+                            MenuManager.getInstance().closeMenu();
+                            menuOpen = false;
+                        } else {
+                            MenuManager.getInstance().openOptionsMenu();
+                            menuOpen = true;
+                        }
+                        break;
+                    case R: restartRun();
+                }
+            });
         });
+
+
 
         menuOverlay_StackPane.setVisible(false);
 
@@ -133,7 +154,8 @@ public class GameController
 
             for (int i = 0; i < gameModel.getAllJokerList().size() && i < 6; i++) {
                 Joker joker = gameModel.getAllJokerList().get(i);
-                joker.addSticker(gameModel.getStickerList().get(10));
+                Sticker sticker = new Sticker();
+                joker.addSticker(new Sticker(gameModel.getStickerList().get(10)));
                 gameModel.getJokerManager().create(joker);
             }
 
@@ -143,6 +165,11 @@ public class GameController
             }
         });
 
+    }
+
+    private void restartRun() {
+        //TODO Restart Run
+        startNewGame(new GameSetup(gameModel.getRunState().getChosenDeck(), gameModel.getRunState().getChosenStake()));
     }
 
     //region Setup

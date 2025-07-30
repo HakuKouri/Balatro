@@ -19,11 +19,13 @@ public class Sticker extends ImageView {
 
     //region Constructor
     public Sticker() {
-        stickerImageUrl.addListener((observable, oldValue, newValue) -> {
-            setImage(new Image("file:" + newValue));
-            setPreserveRatio(true);
-            fitHeightProperty().bind(Balatro.getSettings().cardHeightProperty());
-        });
+        bindImage();
+
+    }
+
+    public Sticker(Sticker sticker) {
+        bindImage();
+        setSticker(sticker);
     }
     //endregion
 
@@ -84,7 +86,14 @@ public class Sticker extends ImageView {
         setStickerName(sticker.getStickerName());
         setStickerImageUrl(sticker.getStickerImageUrl());
         setStickerDescription(sticker.getStickerDescription());
+    }
 
+    private void bindImage() {
+        stickerImageUrl.addListener((observable, oldValue, newValue) -> {
+            setImage(new Image("file:" + newValue));
+            setPreserveRatio(true);
+            fitHeightProperty().bind(Balatro.getSettings().cardHeightProperty());
+        });
     }
     //endregion
 }
