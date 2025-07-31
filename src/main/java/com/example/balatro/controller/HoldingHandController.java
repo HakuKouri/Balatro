@@ -35,7 +35,22 @@ public class HoldingHandController {
     private GridPane handButtonBox;
     //endregion
 
+    //region Attributes
     GameModel gameModel = Balatro.getGameModel();
+    //endregion
+
+    //region Getter & Setter
+    public List<PlayingCard> getSelectedCards() {
+        return gameModel.getSelectedCards();
+    }
+
+    public List<PlayingCard> getHandCards() {
+        return  gameModel.getHoldingHandViewManager().getCardList().stream()
+                .filter(card -> card instanceof PlayingCard)
+                .map(card -> (PlayingCard) card)
+                .toList();
+    }
+    //endregion
 
     public void initialize() {
         UIController.bindStackPane(gameModel.getHoldingHandViewManager(), holdingHand_StackPane);
@@ -54,19 +69,7 @@ public class HoldingHandController {
         gameModel.setHandButtonVisibility(false);
     }
 
-
-    public List<PlayingCard> getSelectedCards() {
-        return gameModel.getSelectedCards();
-    }
-
-    public List<PlayingCard> getHandCards() {
-        return  gameModel.getHoldingHandViewManager().getCardList().stream()
-                .filter(card -> card instanceof PlayingCard)
-                .map(card -> (PlayingCard) card)
-                .toList();
-    }
-
-
+    //region Functions
     //Drawing Cards
     public void drawCard() {
         PlayingCard cardToDraw = gameModel.getRunState().getPlayingDeck().drawCard();
@@ -75,11 +78,11 @@ public class HoldingHandController {
         sort();
     }
 
-    public void drawCardToLimit() {
-        drawCardToLimit(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHoldingHandViewManager().getSize());
+    public void drawCards() {
+        drawCards(gameModel.getRunState().maxHandSizeProperty().get() - gameModel.getHoldingHandViewManager().getSize());
     }
 
-    public void drawCardToLimit(int cardCount) {
+    public void drawCards(int cardCount) {
         int draws = Math.min(cardCount, gameModel.getRunState().getPlayingDeck().getPlaySize());
         for (int i = 0; i < draws; i++) {
             drawCard();
@@ -118,25 +121,29 @@ public class HoldingHandController {
 
             GameController.getInstance().playSelectedCards();
 
+            //TODO Move Drawcard after Points are Scored
             if(Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))
-                drawCardToLimit(3);
+                drawCards(3);
             else
-                drawCardToLimit();
+                drawCards();
+
             gameModel.getCurrentRound().decrementHands();
         }
     }
 
     public void discardSelectedCards(ActionEvent actionEvent) {
-        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getDiscards() > -1000) {
+        if(!gameModel.getSelectedCards().isEmpty() && gameModel.getCurrentRound().getDiscards() > 0) {
             getSelectedCards().forEach(playingCard -> { gameModel.getHoldingHandViewManager().remove(playingCard); });
 
             getSelectedCards().clear();
 
+            //TODO Move Draw Cards
             if (Objects.equals(gameModel.getActiveBlind().getBlindName(), "The Serpent"))
-                drawCardToLimit(3);
+                drawCards(3);
             else
-                drawCardToLimit();
+                drawCards();
             gameModel.getCurrentRound().decrementDiscards();
         }
     }
+    //endregion
 }

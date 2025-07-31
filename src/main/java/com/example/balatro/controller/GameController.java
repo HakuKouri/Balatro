@@ -24,7 +24,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.List;
@@ -106,21 +105,21 @@ public class GameController
 
         Platform.runLater(() -> {
             tooltipBoxController.setOverlayPane(tooltipOverlay_AnchorPane);
-            gameScreenAnchor.getScene().setOnKeyPressed(event -> {
-                switch (event.getCode()) {
-                    case ESCAPE:
-                        System.out.println("Esc pressed");
-                        if (menuOpen) {
-                            MenuManager.getInstance().closeMenu();
-                            menuOpen = false;
-                        } else {
-                            MenuManager.getInstance().openOptionsMenu();
-                            menuOpen = true;
-                        }
-                        break;
-                    case R: restartRun();
-                }
-            });
+//            gameScreenAnchor.getScene().setOnKeyPressed(event -> {
+//                switch (event.getCode()) {
+//                    case ESCAPE:
+//                        System.out.println("Esc pressed");
+//                        if (menuOpen) {
+//                            MenuManager.getInstance().closeMenu();
+//                            menuOpen = false;
+//                        } else {
+//                            MenuManager.getInstance().openOptionsMenu();
+//                            menuOpen = true;
+//                        }
+//                        break;
+//                    case R: restartRun();
+//                }
+//            });
         });
 
 
@@ -334,7 +333,7 @@ public class GameController
         gameModel.setScoreToReach(score);
         gameModel.blindsVisibilityProperty().set(false);
         gameModel.getRunState().getPlayingDeck().shuffleDeck();
-        holdingHandController.drawCardToLimit();
+        holdingHandController.drawCards();
     }
 
     public void nextRound() {

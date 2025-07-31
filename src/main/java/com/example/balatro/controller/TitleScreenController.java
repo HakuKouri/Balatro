@@ -67,10 +67,10 @@ public class TitleScreenController
         MenuManager.getInstance().openProfileMenu();
     }
 
-    public void openLanguageMenu(ActionEvent actionEvent) {
+    public void openLanguageMenu(ActionEvent actionEvent) { MenuManager.getInstance().openLanguageMenu();
     }
 
-    public void openCollectionMenu(ActionEvent actionEvent) {
+    public void openCollectionMenu(ActionEvent actionEvent) { MenuManager.getInstance().openCollectionMenu();
     }
 
     public void closeNewGameMenu() {

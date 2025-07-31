@@ -2,10 +2,12 @@ package com.example.balatro.domain.util;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.controller.OptionScreenController;
+import com.example.balatro.controller.menuController.CollectionsMenuController;
 import com.example.balatro.controller.menuController.DeckOverviewController;
 import com.example.balatro.controller.menuController.NewGameMenuController;
 import com.example.balatro.controller.menuController.ProfileMenuController;
 import com.example.balatro.models.GameModel;
+import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Pair;
@@ -275,8 +277,11 @@ public class MenuManager {
 
     public void openCollectionMenu() {
         if(collectionPane == null) {
-
+            Pair<CollectionsMenuController, AnchorPane> collections = FxmlUtil.loadWithPane("/com/example/balatro/menu/collectionsMenu.fxml");
+            setCollectionPane(collections.getValue());
+            collectionPane.setMaxSize(root.getWidth() * .51, root.getHeight() * .67);
         }
+        openMenu(collectionPane);
     }
 
     public void openDeckOverview() {
@@ -291,6 +296,48 @@ public class MenuManager {
     public void closeMenu() {
         closeCurrentMenu();
         root.setVisible(false);
+    }
+
+    //TODO MENU
+    public void openLanguageMenu() {
+
+    }
+
+    public void openJokerCollection() {
+    }
+
+    public void openDeckCollection() {
+
+    }
+
+    public void openVoucherCollection() {
+    }
+
+    public void openEnhancedCollection() {
+    }
+
+    public void openSealCollection() {
+    }
+
+    public void openEditionCollection() {
+    }
+
+    public void openBoosterCollection() {
+    }
+
+    public void openTagCollection() {
+    }
+
+    public void openBlindCollection() {
+    }
+
+    public void openTarotCollection() {
+    }
+
+    public void openPlanetCollection() {
+    }
+
+    public void openSpectralCollection() {
     }
     //endregion
 }

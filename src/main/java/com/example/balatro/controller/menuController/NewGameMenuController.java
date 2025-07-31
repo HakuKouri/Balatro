@@ -73,52 +73,6 @@ public class NewGameMenuController
     private final List<Stake> stakeList = SqlHandler.getAllStakes();
     //endregion
 
-    //Initialize
-    public void initialize() {
-        bindIndicatorVisibility();
-        bindUi();
-
-        setListener();
-
-        seed_HBox.visibleProperty().bind(seed_CheckBox.selectedProperty());
-
-        setActiveDeckIndex(0);
-        setActiveStakeIndex(0);
-    }
-
-    private void setListener() {
-        activeDeckIndex.addListener((observable, oldValue, newValue) -> {
-            getActiveDeck().setDeck(selectableDeckList.get((Integer) newValue));
-            displayActiveDeck();
-            updateStakeDisplay(getActiveDeck());
-            setActiveStakeIndex(getActiveDeck().getStageCleared());
-        });
-
-        activeDeck.addListener((observable, oldValue, newValue) -> {
-            setActiveStakeIndex(newValue.getStageCleared() + 1);
-            displayActiveStake();
-        });
-
-        activeStakeIndex.addListener((observable, oldValue, newValue) -> {
-            if(getActiveStakeIndex() == -1 ) return;
-            getActiveStake().setStake(stakeList.get((Integer) newValue));
-            displayActiveStake();
-        });
-    }
-
-    private void bindUi() {
-        deckCover_ImageView.imageProperty().bind(getActiveDeck().imageProperty());
-        deckName_Label.textProperty().bind(getActiveDeck().deckNameProperty());
-        deckEffect_Label.textProperty().bind(getActiveDeck().deckDescriptionProperty());
-        stakeSticker_ImageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
-            return getActiveDeck().getStageCleared() > 0 ? new Image("file:src/main/resources/com/images/Stickers_Seals/difficult_" + (activeDeck.get().getStageCleared()+1) + ".png") : null;
-        }));
-
-        stakeChip_ImageView.imageProperty().bind(getActiveStake().imageProperty());
-        stakeName_Label.textProperty().bind(getActiveStake().stakeNameProperty());
-        stakeEffect_Label.textProperty().bind(getActiveStake().stakeDescriptionProperty());
-    }
-
     //region Getter Setter
     public SelectableDeck getActiveDeck() {
         return activeDeck.get();
@@ -162,7 +116,43 @@ public class NewGameMenuController
     }
     //endregion
 
+    //Initialize
+    public void initialize() {
+        bindIndicatorVisibility();
+        bindUi();
+
+        setListener();
+
+        seed_HBox.visibleProperty().bind(seed_CheckBox.selectedProperty());
+
+        setActiveDeckIndex(0);
+        setActiveStakeIndex(0);
+    }
+
+
     //region Functions
+    private void setListener() {
+        activeDeckIndex.addListener((observable, oldValue, newValue) -> {
+            getActiveDeck().setDeck(selectableDeckList.get((Integer) newValue));
+            displayActiveDeck();
+            updateStakeDisplay(getActiveDeck());
+            setActiveStakeIndex(getActiveDeck().getStageCleared());
+        });
+
+        activeDeck.addListener((observable, oldValue, newValue) -> {
+            setActiveStakeIndex(newValue.getStageCleared() + 1);
+            displayActiveStake();
+        });
+
+        activeStakeIndex.addListener((observable, oldValue, newValue) -> {
+            if(getActiveStakeIndex() == -1 ) return;
+            getActiveStake().setStake(stakeList.get((Integer) newValue));
+            displayActiveStake();
+        });
+    }
+
+
+
     private void changeDeck(boolean up) {
         setActiveDeckIndex(up
                 ? (getActiveDeckIndex() + 1 >= selectableDeckList.size() ? 0 : getActiveDeckIndex() + 1)
@@ -176,7 +166,20 @@ public class NewGameMenuController
     }
 
 
-    //FXML FUNCTIONS
+    //UI
+    private void bindUi() {
+        deckCover_ImageView.imageProperty().bind(getActiveDeck().imageProperty());
+        deckName_Label.textProperty().bind(getActiveDeck().deckNameProperty());
+        deckEffect_Label.textProperty().bind(getActiveDeck().deckDescriptionProperty());
+        stakeSticker_ImageView.imageProperty().bind(Bindings.createObjectBinding(() -> {
+            return getActiveDeck().getStageCleared() > 0 ? new Image("file:src/main/resources/com/images/Stickers_Seals/difficult_" + (activeDeck.get().getStageCleared()+1) + ".png") : null;
+        }));
+
+        stakeChip_ImageView.imageProperty().bind(getActiveStake().imageProperty());
+        stakeName_Label.textProperty().bind(getActiveStake().stakeNameProperty());
+        stakeEffect_Label.textProperty().bind(getActiveStake().stakeDescriptionProperty());
+    }
+
     public void openTab(ActionEvent actionEvent) {
         String text = ((Button) actionEvent.getSource()).getText();
         System.out.println(text + " Tab opened!");
@@ -263,7 +266,8 @@ public class NewGameMenuController
 
     //Close
     public void closeNewGameMenu(ActionEvent actionEvent) {
-        TitleScreenController.getInstance().closeNewGameMenu();
+        MenuManager.getInstance().closeMenu();
+        //TitleScreenController.getInstance().closeNewGameMenu();
     }
 
     //endregion
