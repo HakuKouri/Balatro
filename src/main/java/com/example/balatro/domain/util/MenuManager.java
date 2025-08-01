@@ -2,10 +2,7 @@ package com.example.balatro.domain.util;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.controller.OptionScreenController;
-import com.example.balatro.controller.menuController.CollectionsMenuController;
-import com.example.balatro.controller.menuController.DeckOverviewController;
-import com.example.balatro.controller.menuController.NewGameMenuController;
-import com.example.balatro.controller.menuController.ProfileMenuController;
+import com.example.balatro.controller.menuController.*;
 import com.example.balatro.models.GameModel;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
@@ -304,6 +301,18 @@ public class MenuManager {
     }
 
     public void openJokerCollection() {
+        if(jokerPane == null) {
+            Pair<JokerCollectionController, AnchorPane> jokerCollection = FxmlUtil.loadWithPane(("/com/example/balatro/menu/joker-collection.fxml"));
+            setJokerPane(jokerCollection.getValue());
+            System.out.println(root.getWidth());
+            System.out.println(jokerPane.getMaxWidth());
+            System.out.println(root.getHeight());
+            System.out.println(jokerPane.getMaxHeight());
+            jokerPane.setMaxSize(root.getWidth() * .49, root.getHeight() * .88);
+            System.out.println(jokerPane.getMaxHeight());
+            System.out.println(jokerPane.getMaxHeight());
+        }
+        openMenu(jokerPane);
     }
 
     public void openDeckCollection() {

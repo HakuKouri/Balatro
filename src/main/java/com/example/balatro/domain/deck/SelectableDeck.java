@@ -9,7 +9,6 @@ import javafx.scene.image.ImageView;
 
 public class SelectableDeck extends ImageView
 {
-    //TODO Make Deck -> SelectableDeck und erstelle Deck Klasse
     //region ATTRIBUTES
     private final IntegerProperty deckId = new SimpleIntegerProperty();
     private final StringProperty deckName = new SimpleStringProperty();

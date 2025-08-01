@@ -14,7 +14,6 @@ public class PlayingCard extends Card implements PurchasableCard {
 
     @Override
     public void onPurchase(GameModel model) {
-        //TODO zum Deck hinzufügen
         model.getRunState().getPlayingDeck().addCard(this);
     }
 

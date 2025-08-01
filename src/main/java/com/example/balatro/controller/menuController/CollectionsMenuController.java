@@ -23,10 +23,12 @@ public class CollectionsMenuController {
     }
 
     public void openCollectionsTypeMenu(ActionEvent actionEvent) {
-        String buttonText = ((Button)actionEvent.getSource()).getText();
+        System.out.println("Button Pressed");
+        String buttonId = ((Button)actionEvent.getSource()).getId();
 
-        switch(buttonText) {
+        switch(buttonId) {
             case "jokerCollection_Button":
+                System.out.println("jokerCollection_Button pressed");
                 MenuManager.getInstance().openJokerCollection();
                 break;
             case "deckCollection_Button":

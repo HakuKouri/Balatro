@@ -11,6 +11,8 @@ import com.example.balatro.domain.effects.JokerEffectTrigger;
 import com.example.balatro.domain.rules.Blind;
 import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.enums.JokerTrigger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 import java.sql.*;
