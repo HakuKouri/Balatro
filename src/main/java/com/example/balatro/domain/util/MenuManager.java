@@ -304,13 +304,7 @@ public class MenuManager {
         if(jokerPane == null) {
             Pair<JokerCollectionController, AnchorPane> jokerCollection = FxmlUtil.loadWithPane(("/com/example/balatro/menu/joker-collection.fxml"));
             setJokerPane(jokerCollection.getValue());
-            System.out.println(root.getWidth());
-            System.out.println(jokerPane.getMaxWidth());
-            System.out.println(root.getHeight());
-            System.out.println(jokerPane.getMaxHeight());
             jokerPane.setMaxSize(root.getWidth() * .49, root.getHeight() * .88);
-            System.out.println(jokerPane.getMaxHeight());
-            System.out.println(jokerPane.getMaxHeight());
         }
         openMenu(jokerPane);
     }
@@ -338,6 +332,12 @@ public class MenuManager {
     }
 
     public void openBlindCollection() {
+        if(blindPane == null ) {
+            Pair<BlindCollectionController, AnchorPane> blindCollection = FxmlUtil.loadWithPane("/com/example/balatro/menu/blind-collection.fxml");
+            setBlindPane(blindCollection.getValue());
+            blindPane.setMaxSize(root.getWidth() * .51, root.getHeight() * .67);
+        }
+        openMenu(blindPane);
     }
 
     public void openTarotCollection() {

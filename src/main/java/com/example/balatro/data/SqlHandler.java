@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SqlHandler {
+
+    //region Attributes
     private static final SqlHandler sqlHandler = new SqlHandler();
     private static Connection connection;
 
@@ -41,6 +43,8 @@ public class SqlHandler {
     private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
     private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect, cardDrawn, cardsToChoose)";
     private static final String StickerTableColumns = " (id, stickerImage, stickerName, stickerEffect)";
+    private static final String profileTableColumns = " (id, profilName, bestHand, highestRound, highestAnte, bestWinStreak)";
+//endregion
 
     static {
         try {

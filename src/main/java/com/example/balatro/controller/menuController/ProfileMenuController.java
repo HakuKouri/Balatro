@@ -1,6 +1,6 @@
 package com.example.balatro.controller.menuController;
 
-import com.example.balatro.domain.game.Profile;
+import com.example.balatro.models.ProfileModel;
 import com.example.balatro.domain.util.MenuManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
 import javafx.scene.shape.Polygon;
 
 public class ProfileMenuController {
@@ -18,25 +19,27 @@ public class ProfileMenuController {
     @FXML
     private ProgressBar totalProgress_Progressbar, collections_Progressbar, challenges_Progressbar, jokerSticker_Progressbar, deckStake_Progressbar;
     @FXML
-    private Label totalProgress_Label, collections_Label, challenges_Label, jokerSticker_Label, deckStake_Label, profileName_Label, winCount_Label;
+    private Label totalProgress_Label, collections_Label, challenges_Label, jokerSticker_Label, deckStake_Label, winCount_Label;
     @FXML
     private Button currentProfile_Button;
+    @FXML
+    private TextField profileName_TextField;
     //endregion
 
     //region Attributes
-    private ObjectProperty<Profile> currentProfile = new SimpleObjectProperty<>(new Profile());
+    private ObjectProperty<ProfileModel> currentProfile = new SimpleObjectProperty<>(new ProfileModel());
     //endregion
 
     //region Getter Setter
-    public Profile getCurrentProfile() {
+    public ProfileModel getCurrentProfile() {
         return currentProfile.get();
     }
 
-    public ObjectProperty<Profile> currentProfileProperty() {
+    public ObjectProperty<ProfileModel> currentProfileProperty() {
         return currentProfile;
     }
 
-    public void setCurrentProfile(Profile currentProfile) {
+    public void setCurrentProfile(ProfileModel currentProfile) {
         this.currentProfile.set(currentProfile);
     }
 
