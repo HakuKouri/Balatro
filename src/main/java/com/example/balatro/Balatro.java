@@ -53,6 +53,11 @@ public class Balatro extends Application
         initSql();
         initGameModel();
 
+        gameModel.getProfiles().setAll(SqlHandler.getAllProfileModels());
+
+        if(gameModel.getProfiles().stream().noneMatch(profileModel -> profileModel.getProfileName() != null))
+            gameModel.changeActiveProfile(gameModel.getProfiles().getFirst());
+
         loadTitlePane();
     }
 

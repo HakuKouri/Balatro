@@ -1,28 +1,33 @@
 package com.example.balatro.models;
 
+import com.example.balatro.Balatro;
+import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.deck.SelectableDeck;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rules.Blind;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.math.BigInteger;
 
+
 public class ProfileModel {
     //TODO Finish and DB
 
     //region Attributes
-    private int id;
-    private String profileName;
+    private IntegerProperty id =  new SimpleIntegerProperty();
+    private StringProperty profileName =  new SimpleStringProperty();
     private BigInteger bestHand;
     private int highestRound;
     private int highestAnte;
     private String mostPlayedHand;
     private int mostPlayedHandCount;
     private int mostMoney;
-    private String bestWinStreak;
+    private int bestWinStreak;
+    private BooleanProperty activeProfile = new SimpleBooleanProperty(false);
 
     private double progress;
     private double collection;
@@ -47,19 +52,27 @@ public class ProfileModel {
 
     //region Getter & Setter
     public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
         return id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     public String getProfileName() {
+        return profileName.get();
+    }
+
+    public StringProperty profileNameProperty() {
         return profileName;
     }
 
     public void setProfileName(String profileName) {
-        this.profileName = profileName;
+        this.profileName.set(profileName);
     }
 
     public BigInteger getBestHand() {
@@ -110,12 +123,24 @@ public class ProfileModel {
         this.mostMoney = mostMoney;
     }
 
-    public String getBestWinStreak() {
+    public int getBestWinStreak() {
         return bestWinStreak;
     }
 
-    public void setBestWinStreak(String bestWinStreak) {
+    public void setBestWinStreak(int bestWinStreak) {
         this.bestWinStreak = bestWinStreak;
+    }
+
+    public boolean isActiveProfile() {
+        return activeProfile.get();
+    }
+
+    public BooleanProperty activeProfileProperty() {
+        return activeProfile;
+    }
+
+    public void setActiveProfile(boolean activeProfile) {
+        this.activeProfile.set(activeProfile);
     }
 
     public double getProgress() {
@@ -210,13 +235,20 @@ public class ProfileModel {
 
     //region Constructor
     public  ProfileModel() {
+        setId(0);
         getJokers().addListener((ListChangeListener<? super Joker>)  change -> {
             while (change.next()) {
                 if(change.wasUpdated()) {
+
                     System.out.println("Joker Changed");
                 }
             }
         });
+    }
+
+    public ProfileModel(int id) {
+        jokers.setAll(Balatro.getGameModel().getAllJokerList().stream().filter(j -> SqlHandler.getJokerIdsOfProfile(this.getId()).contains(j.getCardId())).toList());
+        planets.setAll(Balatro.getGameModel().getAllPlanetList().stream().filter(p -> SqlHandler.getPlanetIdsOfProfile(this.getId()).contains( p.getCardId())).toList());
     }
     //endregion
 
@@ -236,6 +268,7 @@ public class ProfileModel {
         setChallenges(profile.getChallenges());
         setJokerStickers(profile.getJokerStickers());
         setDeckStakeWins(profile.getDeckStakeWins());
+        setActiveProfile(profile.isActiveProfile());
 
         getDecks().setAll(profile.getDecks());
         getJokers().setAll(profile.getJokers());

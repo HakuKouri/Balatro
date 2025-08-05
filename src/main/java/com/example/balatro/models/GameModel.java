@@ -36,6 +36,18 @@ public class GameModel {
     //endregion
 
     //region Models
+    private final ObjectProperty<ProfileModel> activeProfile = new SimpleObjectProperty<>(new ProfileModel());
+    public ProfileModel getActiveProfile() {
+        return activeProfile.get();
+    }
+    public ObjectProperty<ProfileModel> activeProfileProperty() {
+        return activeProfile;
+    }
+    public void changeActiveProfile(ProfileModel activeProfile) {
+        getActiveProfile().setProfile(activeProfile);
+    }
+
+
     private final JokerState jokerState = new JokerState();
     public JokerState getJokerState() {
         return jokerState;
@@ -68,9 +80,19 @@ public class GameModel {
 
     private final RewardModel rewardModel = new RewardModel();
     public RewardModel getRewardModel() {return rewardModel;}
+
+
     //endregion
 
+    //region Manager
+    private final CardViewManager playedCardsViewManager = new CardViewManager(true, false,false);
+
+    //endregion
+
+
+
     //region Run Lists
+    private final ObservableList<ProfileModel> profiles = FXCollections.observableArrayList(SqlHandler.getAllProfileModels());
     private final ObservableList<Tag> tagQueue = FXCollections.observableArrayList();
     private final CardViewManager holdingHandViewManager = new CardViewManager(false, true, false);
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
@@ -102,10 +124,6 @@ public class GameModel {
 
     //region Collected Consumables
     private final CardViewManager consumableManager = new CardViewManager(true, true, true);
-    //endregion
-
-    //region
-    private final CardViewManager playedCardsViewManager = new CardViewManager(true, false,false);
     //endregion
 
     //region RUN INFO VAR
@@ -150,6 +168,10 @@ public class GameModel {
     //region GETTER SETTER
 
     //region All Data Lists
+    public ObservableList<ProfileModel> getProfiles() {
+        return profiles;
+    }
+
     public List<PokerHand> getAllPokerHandList() {
         return allPokerHandList;
     }
@@ -368,8 +390,6 @@ public class GameModel {
     //endregion
 
     //region Background Run Variables
-
-
     public int getBeanValue() {
         return beanValue.get();
     }
@@ -389,7 +409,6 @@ public class GameModel {
     public void setLastConsumableUsed(Card lastConsumableUsed) {
         this.lastConsumableUsed = lastConsumableUsed;
     }
-
     //endregion
 
     //region UI VAR
@@ -465,7 +484,6 @@ public class GameModel {
     public void setBoosterOpeningVisibility(Boolean value) {
         boosterOpeningVisibility.set(value);
     }
-
     //endregion
 
     //region Scored Points

@@ -2,6 +2,7 @@ package com.example.balatro.data;
 
 import com.example.balatro.enums.SpectralEffect;
 import com.example.balatro.enums.TarotEffect;
+import com.example.balatro.models.ProfileModel;
 import com.example.balatro.models.settings.Language;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.rewards.Tag;
@@ -11,10 +12,9 @@ import com.example.balatro.domain.effects.JokerEffectTrigger;
 import com.example.balatro.domain.rules.Blind;
 import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.enums.JokerTrigger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
+import java.math.BigInteger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +54,7 @@ public class SqlHandler {
             e.printStackTrace();
         }
     }
+
 
     public static SqlHandler getInstance() {
         return sqlHandler;
@@ -122,6 +123,7 @@ public class SqlHandler {
         dbc.handleDB();
     }
 
+    //List to Sql
     public static <T> void ListToSql(ArrayList<T> list, String tableName) {
         System.out.println("Im Sql Handler!");
         try {
@@ -282,6 +284,7 @@ public class SqlHandler {
         }
     }
 
+    //region Getter
     public static String getDeckName(int id) {
         try {
             Statement stmt = connection.createStatement();
@@ -743,6 +746,99 @@ public class SqlHandler {
         return stickers;
     }
 
+    public static List<ProfileModel> getAllProfileModels() {
+        List<ProfileModel> profileModels = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Profiles";
+            //(id, profilName, bestHand, highestRound, highestAnte, bestWinStreak)
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                ProfileModel profileModel = new ProfileModel();
+
+                profileModel.setId(rs.getInt(1));
+                profileModel.setProfileName(rs.getString(2));
+                profileModel.setBestHand(BigInteger.valueOf(rs.getInt(3)));
+                profileModel.setHighestRound(rs.getInt(4));
+                profileModel.setHighestAnte(rs.getInt(5));
+                profileModel.setBestWinStreak(rs.getInt(6));
+                profileModel.setActiveProfile(rs.getBoolean(7));
+                profileModels.add(profileModel);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return profileModels;
+    }
+
+    public static List<Integer> getJokerIdsOfProfile(int profileId) {
+        List<Integer> jokerIds = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT jokerId FROM ProfileJokerDiscoveryDetails WHERE profileId = " + profileId;
+
+            ResultSet rs = statement.executeQuery(statementString);
+            while (rs.next()) {
+                jokerIds.add(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return jokerIds;
+    }
+
+    public static List<Integer> getPlanetIdsOfProfile(int profileId) {
+        List<Integer> planetIds = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT planetId FROM ProfilePlanetDiscoveryDetails WHERE profileId = " + profileId;
+
+            ResultSet rs = statement.executeQuery(statementString);
+            while (rs.next()) {
+                planetIds.add(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return planetIds;
+    }
+
+    public static void createProfile(ProfileModel profile) {
+        try {
+            String statementString = "UPDATE Profiles " +
+                    "SET profileName = ?, bestHand = ?, highestRound = ?, highestAnte = ?, bestWinStreak = ? " +
+                    "WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(statementString);
+            preparedStatement.setString(1, profile.getProfileName());
+            preparedStatement.setInt(2, profile.getBestHand().intValue());
+            preparedStatement.setInt(3,profile.getHighestRound());
+            preparedStatement.setInt(4,profile.getHighestAnte());
+            preparedStatement.setInt(5,profile.getBestWinStreak());
+            preparedStatement.setInt(6,profile.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void resetProfile(ProfileModel profile) {
+        try {
+            String updateStatement = "UPDATE Profile SET profileName = NULL, bestHand = 0, highestRound = 0, highestAnte = 0, bestWinStreak = 0 WHERE id = " + profile.getId();
+            connection.createStatement().executeUpdate(updateStatement);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 
     private static List<JokerEffectTrigger> getTrigger(String triggers, String effect_keys) {
@@ -767,6 +863,7 @@ public class SqlHandler {
 
         return jokerTriggers;
     }
+
 }
 
 
