@@ -1,5 +1,6 @@
 package com.example.balatro.data.web;
 
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
@@ -35,25 +36,25 @@ public class WebHandler
     }
 
     private static void getJokerWithWebHandler() {
-        ArrayList<Joker> arrayList = new ArrayList<Joker>();
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
         try
         {
             Elements rows = Jsoup.connect(urlMain + "Jokers").get().select("table").get(1).select("tbody > tr");
             for (Element row : rows)
             {
-                Joker joker = new Joker();
+                Integer joker = new Integer();
 
                 Elements cells = row.select("td");
                 if(cells.size() == 0) continue;
                 try
                 {
-                    joker.setCardId(Integer.parseInt(cells.get(0).text()));
+                    joker.setCardId(java.lang.Integer.parseInt(cells.get(0).text()));
                     joker.setCardName(cells.get(1).childNode(0).attr("title"));
                     joker.setCardImageUrl("src\\main\\resources\\com\\images\\Jokers\\joker_" + joker.getCardId() + ".png");
                     if(joker.getCardId()== 70) joker.setCardImageUrl(joker.getCardImageUrl().replace(".png", ".gif"));
                     joker.setCardDescription(cells.get(2).text());
                     try {
-                        joker.setCardCost(Integer.parseInt(cells.get(3).text().substring(1)));
+                        joker.setCardCost(java.lang.Integer.parseInt(cells.get(3).text().substring(1)));
                     } catch (Exception e) {
                         joker.setCardCost(20);
                     }
@@ -155,7 +156,7 @@ public class WebHandler
                     blind.setBlindDescription(cells.get(2).text());
                     blind.setBlindMinimumAnte(cells.get(3).text().indexOf(1));
                     blind.setBlindScoreMultiplier(Double.parseDouble(cells.get(4).text().replace("x base", "")));
-                    blind.setBlindReward(Integer.parseInt(cells.get(5).text().substring(0,1)));
+                    blind.setBlindReward(java.lang.Integer.parseInt(cells.get(5).text().substring(0,1)));
                 }
                 catch (Exception e) {
                     System.out.println("Fehler aufgetreten!! Blinds: ");

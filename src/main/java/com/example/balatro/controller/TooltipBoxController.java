@@ -1,6 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.card.Integer;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -73,7 +74,7 @@ public class TooltipBoxController {
 
         if(card instanceof PlayingCard playingCard)
             showForPlayingCard(anchor, playingCard);
-        else if (card instanceof Joker joker) {
+        else if (card instanceof Integer joker) {
             showForJoker(anchor, joker);
         } else
             showForConsumable(anchor, card);
@@ -106,7 +107,7 @@ public class TooltipBoxController {
         show();
     }
 
-    public void showForJoker(Node anchor, Joker joker) {
+    public void showForJoker(Node anchor, Integer joker) {
         cardName_Label.setText(joker.getCardName());
         show(name_AnchorPane);
         cardEffect_Label.setText(joker.getCardDescription());

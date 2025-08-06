@@ -1,5 +1,7 @@
 package com.example.balatro.data;
 
+import com.example.balatro.Balatro;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.enums.SpectralEffect;
 import com.example.balatro.enums.TarotEffect;
 import com.example.balatro.models.ProfileModel;
@@ -43,7 +45,7 @@ public class SqlHandler {
     private static final String LangNameDetailsTableColumns = " (idLanguage, targetTable, targetId)";
     private static final String BoostersTableColumns = " (id, boosterImage, boosterName, boosterCost, boosterSize, boosterEffect, cardDrawn, cardsToChoose)";
     private static final String StickerTableColumns = " (id, stickerImage, stickerName, stickerEffect)";
-    private static final String profileTableColumns = " (id, profilName, bestHand, highestRound, highestAnte, bestWinStreak)";
+    private static final String profileTableColumns = " (id, profilName, bestHand, highestRound, highestAnte, bestWinStreak, activeProfile)";
 //endregion
 
     static {
@@ -55,11 +57,11 @@ public class SqlHandler {
         }
     }
 
-
     public static SqlHandler getInstance() {
         return sqlHandler;
     }
 
+    //region Setup
     private static void initDBConnection() {
         try {
             if (connection != null)
@@ -122,6 +124,7 @@ public class SqlHandler {
         dbc.initDBConnection();
         dbc.handleDB();
     }
+    //endregion
 
     //List to Sql
     public static <T> void ListToSql(ArrayList<T> list, String tableName) {
@@ -131,19 +134,19 @@ public class SqlHandler {
             for (T listItem : list) {
                 String query = "INSERT OR REPLACE INTO " + tableName + " ";
 
-                if (listItem.getClass() == Joker.class) {
+                if (listItem.getClass() == Integer.class) {
                     //(id, jokerImage, jokerName, jokerEffect, cost, rarity, unlockRequirement, jokerType, act)
                     query += JokerCardsTableColumns + " VALUES (?,?,?,?,?,?,?,?,?);";
                     PreparedStatement ps = connection.prepareStatement(query);
-                    ps.setInt(1, ((Joker) listItem).getCardId());
-                    ps.setString(2, ((Joker) listItem).getCardImageUrl());
-                    ps.setString(3, ((Joker) listItem).getCardName());
-                    ps.setString(4, ((Joker) listItem).getCardDescription());
-                    ps.setInt(5, ((Joker) listItem).getCardCost());
-                    ps.setString(6, ((Joker) listItem).getRarity());
-                    ps.setString(7, ((Joker) listItem).getUnlockRequirement());
-                    ps.setString(8, ((Joker) listItem).getJokerType());
-                    ps.setString(9, ((Joker) listItem).getActTiming());
+                    ps.setInt(1, ((Integer) listItem).getCardId());
+                    ps.setString(2, ((Integer) listItem).getCardImageUrl());
+                    ps.setString(3, ((Integer) listItem).getCardName());
+                    ps.setString(4, ((Integer) listItem).getCardDescription());
+                    ps.setInt(5, ((Integer) listItem).getCardCost());
+                    ps.setString(6, ((Integer) listItem).getRarity());
+                    ps.setString(7, ((Integer) listItem).getUnlockRequirement());
+                    ps.setString(8, ((Integer) listItem).getJokerType());
+                    ps.setString(9, ((Integer) listItem).getActTiming());
                     ps.executeUpdate();
                 } else if (listItem.getClass() == SelectableDeck.class) {
                     query += DecksTableColumns + " VALUES (?,?,?,?,?,?);";
@@ -284,7 +287,7 @@ public class SqlHandler {
         }
     }
 
-    //region Getter
+    //region Getter Game Data
     public static String getDeckName(int id) {
         try {
             Statement stmt = connection.createStatement();
@@ -384,7 +387,7 @@ public class SqlHandler {
                 blind.setBlindDescription(rs.getString(4));
                 blind.setBlindMinimumAnte(rs.getInt(5));
                 blind.setBlindScoreMultiplier(rs.getDouble(6));
-                blind.setBlindReward(Integer.parseInt(rs.getString(7).substring(1)));
+                blind.setBlindReward(java.lang.Integer.parseInt(rs.getString(7).substring(1)));
                 blind.setColorScheme(Color.valueOf(rs.getString(8)));
 
                 blinds.add(blind);
@@ -427,8 +430,8 @@ public class SqlHandler {
         return boosters;
     }
 
-    public static List<Joker> getAllJokers() {
-        List<Joker> jokers = new ArrayList<>();
+    public static List<Integer> getAllJokers() {
+        List<Integer> jokers = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
@@ -437,7 +440,7 @@ public class SqlHandler {
             ResultSet rs = statement.executeQuery(statementString);
 
             while (rs.next()) {
-                Joker joker = new Joker();
+                Integer joker = new Integer();
 
                 joker.setCardType("Joker");
                 joker.setCardId(rs.getInt(1));
@@ -745,6 +748,7 @@ public class SqlHandler {
 
         return stickers;
     }
+    //endregion
 
     public static List<ProfileModel> getAllProfileModels() {
         List<ProfileModel> profileModels = new ArrayList<>();
@@ -774,8 +778,34 @@ public class SqlHandler {
         return profileModels;
     }
 
-    public static List<Integer> getJokerIdsOfProfile(int profileId) {
-        List<Integer> jokerIds = new ArrayList<>();
+    public static ProfileModel getProfileModelById(int id) {
+        ProfileModel profileModel = new ProfileModel();
+
+        try {
+            Statement statement = connection.createStatement();
+            String statementString = "SELECT * FROM Profiles WHERE id = " + id;
+            //(id, profilName, bestHand, highestRound, highestAnte, bestWinStreak)
+            ResultSet rs = statement.executeQuery(statementString);
+
+            while (rs.next()) {
+                profileModel.setId(rs.getInt(1));
+                profileModel.setProfileName(rs.getString(2));
+                profileModel.setBestHand(BigInteger.valueOf(rs.getInt(3)));
+                profileModel.setHighestRound(rs.getInt(4));
+                profileModel.setHighestAnte(rs.getInt(5));
+                profileModel.setBestWinStreak(rs.getInt(6));
+                profileModel.setActiveProfile(rs.getBoolean(7));
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return profileModel;
+    }
+
+    public static List<java.lang.Integer> getJokerIdsOfProfile(int profileId) {
+        List<java.lang.Integer> jokerIds = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
@@ -792,8 +822,8 @@ public class SqlHandler {
         return jokerIds;
     }
 
-    public static List<Integer> getPlanetIdsOfProfile(int profileId) {
-        List<Integer> planetIds = new ArrayList<>();
+    public static List<java.lang.Integer> getPlanetIdsOfProfile(int profileId) {
+        List<java.lang.Integer> planetIds = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
@@ -812,17 +842,13 @@ public class SqlHandler {
 
     public static void createProfile(ProfileModel profile) {
         try {
-            String statementString = "UPDATE Profiles " +
-                    "SET profileName = ?, bestHand = ?, highestRound = ?, highestAnte = ?, bestWinStreak = ? " +
-                    "WHERE id = ?";
+            String statementString = "UPDATE Profiles SET profileName = ?, activeProfile = 1 WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(statementString);
             preparedStatement.setString(1, profile.getProfileName());
-            preparedStatement.setInt(2, profile.getBestHand().intValue());
-            preparedStatement.setInt(3,profile.getHighestRound());
-            preparedStatement.setInt(4,profile.getHighestAnte());
-            preparedStatement.setInt(5,profile.getBestWinStreak());
-            preparedStatement.setInt(6,profile.getId());
+            preparedStatement.setInt(2,profile.getId());
             preparedStatement.executeUpdate();
+
+            Balatro.getGameModel().getProfiles().get(profile.getId() - 1).setProfile(getProfileModelById(profile.getId()));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -830,16 +856,68 @@ public class SqlHandler {
 
     public static void resetProfile(ProfileModel profile) {
         try {
-            String updateStatement = "UPDATE Profile SET profileName = NULL, bestHand = 0, highestRound = 0, highestAnte = 0, bestWinStreak = 0 WHERE id = " + profile.getId();
-            connection.createStatement().executeUpdate(updateStatement);
+            String resetProfileStatement = "UPDATE Profile SET profileName = NULL, bestHand = 0, highestRound = 0, highestAnte = 0, bestWinStreak = 0 WHERE id = " + profile.getId();
+            connection.createStatement().executeUpdate(resetProfileStatement);
 
+            String resetBlindDetails = "DELETE ProfileBlindDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetBlindDetails);
+
+            String resetBoosterDetails = "DELETE ProfileBoosterDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetBoosterDetails);
+
+            String resetDeckDetails = "DELETE ProfileDeckDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetDeckDetails);
+
+            String resetEditionDetails = "DELETE ProfileEditorDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetEditionDetails);
+
+            String resetJokerDetails = "DELETE ProfileJokerDiscoveryDetails WHERE profileId = " + profile.getId() + "AND jokerId != 1";
+            connection.createStatement().executeUpdate(resetJokerDetails);
+
+            String resetJokerUnlockedDetails = "DELETE ProfileJokerUnlockedDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetJokerUnlockedDetails);
+
+            String resetPlanetDetails = "DELETE ProfilePlanetDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetPlanetDetails);
+
+            String resetSpectralDetails = "DELETE ProfileSpectralDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetSpectralDetails);
+
+            String resetTagDetails = "DELETE ProfileTagDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetTagDetails);
+
+            String resetVoucherDetails = "DELETE ProfileVoucherDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetVoucherDetails);
+
+            String resetVoucherUnlockDetails = "DELETE ProfileVoucherUnlockDiscoveryDetails WHERE profileId = " + profile.getId();
+            connection.createStatement().executeUpdate(resetVoucherUnlockDetails);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static void deleteProfile(ProfileModel profile) {
+        resetProfile(profile);
 
+        try {
+            String statementString = "UPDATE Profiles SET activeProfile = 0 WHERE id = " + profile.getId();
+            connection.createStatement().executeUpdate(statementString);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public static void discoverForProfile(String table, ProfileModel profile, int id) {
+        try {
+            String statement = "INSERT INTO ? VALUES (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+            preparedStatement.setString(1, table);
+            preparedStatement.setInt(2, profile.getId());
+            preparedStatement.setInt(3, id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static List<JokerEffectTrigger> getTrigger(String triggers, String effect_keys) {
         String[] triggerParts = triggers.split(",");

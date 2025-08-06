@@ -1,6 +1,6 @@
 package com.example.balatro.models;
 
-import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.Integer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -9,17 +9,17 @@ import java.util.Map;
 
 public class RewardModel {
 
-    private final Map<Joker, Integer> rocketList = new HashMap<>();
+    private final Map<Integer, java.lang.Integer> rocketList = new HashMap<>();
     private final IntegerProperty cloud9 = new SimpleIntegerProperty();
     private final int goldJokerReward = 4;
     private final IntegerProperty interestReward = new SimpleIntegerProperty();
     private final IntegerProperty maxInterest = new SimpleIntegerProperty(5);
 
-    public Map<Joker, Integer> getRocketList() {
+    public Map<Integer, java.lang.Integer> getRocketList() {
         return rocketList;
     }
 
-    public void addRocketToList(Joker rocket) {
+    public void addRocketToList(Integer rocket) {
         this.rocketList.put(rocket, 1);
     }
 

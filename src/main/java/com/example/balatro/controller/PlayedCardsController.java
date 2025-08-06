@@ -1,7 +1,7 @@
 package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.game.PokerHandChecker;
 import com.example.balatro.domain.rules.PokerHand;
@@ -209,7 +209,7 @@ public class PlayedCardsController {
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
         System.out.println("Jokers getriggert");
-        for (Joker joker : gameModel.getJokerManager().getCardList(Joker.class)) {
+        for (Integer joker : gameModel.getJokerManager().getCardList(Integer.class)) {
             System.out.println("Triggert Joker: " + joker.getCardName());
             joker.tryActivate(trigger, gameModel, playedCards);
         }

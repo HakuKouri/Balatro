@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Joker extends Card implements PurchasableCard {
+public class Integer extends Card implements PurchasableCard {
     @Override
     public void onPurchase(GameModel model) {
         model.getRunState().subMoney(model.getShopModel().getItemCardViewManager().getControllerByCard(this).getBuyPrice());
@@ -45,7 +45,7 @@ public class Joker extends Card implements PurchasableCard {
     //endregion
 
     //region Constructor
-    public Joker() {
+    public Integer() {
     }
     //endregion
 
@@ -200,7 +200,7 @@ public class Joker extends Card implements PurchasableCard {
     //endregion
 
     //region Functions
-    public void setJoker(Joker joker) {
+    public void setJoker(Integer joker) {
         setCardId(joker.getCardId());
         setCardImageUrl(joker.getCardImageUrl());
         setCardName(joker.getCardName());
@@ -247,8 +247,8 @@ public class Joker extends Card implements PurchasableCard {
         getStickers().add(sticker);
     }
 
-    public Joker copy() {
-        Joker joker = new Joker();
+    public Integer copy() {
+        Integer joker = new Integer();
         joker.setCardId(getCardId());
         joker.setCardImageUrl(getCardImageUrl());
         joker.setCardName(getCardName());

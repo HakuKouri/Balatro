@@ -4,7 +4,7 @@ import com.example.balatro.Balatro;
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.controller.UIController;
 import com.example.balatro.domain.card.Card;
-import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.Suit;
@@ -136,13 +136,13 @@ public class JokerEffectRegistry {
             if ((boolean) params.get("contains") && gameModel.getPossiblePokerHand().contains(context.getPokerHand(params.get("hand").toString()))) {
                 System.out.println("Contains true");
                 timeline.setOnFinished(event -> {
-                    gameModel.getBestHand().addChips((Integer) params.get("chips"));
+                    gameModel.getBestHand().addChips((java.lang.Integer) params.get("chips"));
                 });
                 UIController.addToAnimationList(timeline);
             } else if (Objects.equals(params.get("hand").toString(), gameModel.getBestHand().getName())) {
                 System.out.println("Contains false");
                 timeline.setOnFinished(event -> {
-                    gameModel.getBestHand().addChips((Integer) params.get("chips"));
+                    gameModel.getBestHand().addChips((java.lang.Integer) params.get("chips"));
                 });
                 UIController.addToAnimationList(timeline);
             }
@@ -216,7 +216,7 @@ public class JokerEffectRegistry {
             Timeline timeline = UIController.cardWiggleTimeline(anchorPane);
 
             timeline.setOnFinished(event -> {
-                context.getBestHand().multMult(Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
+                context.getBestHand().multMult(java.lang.Integer.parseInt(((String)params.get("multiplier")).split(" ")[0].substring(1)));
             });
 
             UIController.addToAnimationList(timeline);
@@ -297,7 +297,7 @@ public class JokerEffectRegistry {
 
                 timeline.setOnFinished(event -> {
                     String rawMultiplier = (String) params.get("multiplier");
-                    int value = Integer.parseInt(rawMultiplier.replace(" Mult", ""));
+                    int value = java.lang.Integer.parseInt(rawMultiplier.replace(" Mult", ""));
                     context.getBestHand().addMult(value);
                 });
 
@@ -366,7 +366,7 @@ public class JokerEffectRegistry {
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
             //TODO Einzel Trigger Animation pro Joker
-            int uncommonCount = (int) context.getJokerManager().getCardList().stream().filter(card -> "Uncommon".equals(((Joker)card).getRarity())).count();
+            int uncommonCount = (int) context.getJokerManager().getCardList().stream().filter(card -> "Uncommon".equals(((Integer)card).getRarity())).count();
             for (int i = 0; i < uncommonCount; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -502,7 +502,7 @@ public class JokerEffectRegistry {
             System.out.println("Trigger: FLOWERPOT_EFFECT");
             //TODO Joker Trigger Animation
             int wildCards = 0;
-            Map<Suit, Integer> suitCount = new HashMap<>();
+            Map<Suit, java.lang.Integer> suitCount = new HashMap<>();
             for (PlayingCard c : cards) {
                 suitCount.put(c.getSuit(), 0);
                 if(c.getEnhancement().getEnhancementName() == "Wild Card") {
@@ -702,7 +702,7 @@ public class JokerEffectRegistry {
         effectMap.put("RIFF_RAFF_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
-            List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
+            List<Integer> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
             for (int i = 0; i < 2 && context.getJokerManager().getSize() < context.getRunState().getMaxJokers(); i++) {
                 context.getJokerManager().create(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())));
             }
@@ -726,7 +726,7 @@ public class JokerEffectRegistry {
         effectMap.put("SEEING_DOUBLE_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: SEEING_DOUBLE_EFFECT");
             //TODO Joker Trigger Effekt
-            Map<Suit, Integer> suitCount = new HashMap<>();
+            Map<Suit, java.lang.Integer> suitCount = new HashMap<>();
             for (PlayingCard c : cards) {
                 suitCount.put(c.getSuit(), 0);
             }
@@ -946,7 +946,7 @@ public class JokerEffectRegistry {
     }
 
     private static int getIntegerFromParam(String param) {
-        return Integer.parseInt(param.split(" ")[0].substring(1));
+        return java.lang.Integer.parseInt(param.split(" ")[0].substring(1));
     }
 
     private static double getDoubleFromParam(String param) {

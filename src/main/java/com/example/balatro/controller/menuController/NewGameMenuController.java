@@ -168,6 +168,7 @@ public class NewGameMenuController
 
     //UI
     private void bindUi() {
+        //TODO Unlocked Decks
         deckCover_ImageView.imageProperty().bind(getActiveDeck().imageProperty());
         deckName_Label.textProperty().bind(getActiveDeck().deckNameProperty());
         deckEffect_Label.textProperty().bind(getActiveDeck().deckDescriptionProperty());

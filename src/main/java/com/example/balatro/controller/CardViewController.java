@@ -2,24 +2,20 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 
 public class CardViewController {
     //region FXML
@@ -176,7 +172,7 @@ public class CardViewController {
                 GameController.getInstance().useCardFromBooster(spectral);
             } else if(getCard() instanceof PlayingCard playingCard) {
                 GameController.getInstance().selectCardFromBooster(playingCard);
-            } else if(getCard() instanceof Joker joker) {
+            } else if(getCard() instanceof Integer joker) {
                 GameController.getInstance().selectCardFromBooster(joker);
             }
         });
@@ -227,7 +223,7 @@ public class CardViewController {
             if(getCard() instanceof Spectral spectral) return !(spectral.canPlay(Balatro.getGameModel()));
             if(getCard() instanceof Planet) return false;
             if(getCard() instanceof PlayingCard) return false;
-            if(getCard() instanceof Joker joker) return Balatro.getGameModel().getJokerManager().getSize() >= Balatro.getGameModel().getRunState().getMaxJokers();
+            if(getCard() instanceof Integer joker) return Balatro.getGameModel().getJokerManager().getSize() >= Balatro.getGameModel().getRunState().getMaxJokers();
             return true;
         }, cardProperty(),
                 Balatro.getGameModel().getSelectedCards(),// wichtig für Kartenlogik
@@ -286,7 +282,7 @@ public class CardViewController {
         }
         image_StackPane.getChildren().removeIf(child -> !"cardImage".equals(child.getId()));
 
-        if(getCard() instanceof Joker joker) {
+        if(getCard() instanceof Integer joker) {
             for(Sticker sticker : joker.getStickers()) {
                 image_StackPane.getChildren().add(sticker);
             }

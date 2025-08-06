@@ -3,6 +3,7 @@ package com.example.balatro.models;
 import com.example.balatro.Balatro;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.deck.SelectableDeck;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rules.Blind;
@@ -36,8 +37,8 @@ public class ProfileModel {
     private double deckStakeWins;
 
     private final ObservableList<SelectableDeck> decks = FXCollections.observableArrayList();
-    private final ObservableList<Joker> jokers = FXCollections.observableArrayList();
-    private final ObservableList<Joker> unlockedJokers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> jokers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> unlockedJokers = FXCollections.observableArrayList();
     private final ObservableList<Blind> blinds = FXCollections.observableArrayList();
     private final ObservableList<Tarot> tarots = FXCollections.observableArrayList();
     private final ObservableList<Planet> planets = FXCollections.observableArrayList();
@@ -187,11 +188,11 @@ public class ProfileModel {
         return decks;
     }
 
-    public ObservableList<Joker> getJokers() {
+    public ObservableList<Integer> getJokers() {
         return jokers;
     }
 
-    public ObservableList<Joker> getUnlockedJokers() {
+    public ObservableList<Integer> getUnlockedJokers() {
         return unlockedJokers;
     }
 
@@ -236,7 +237,7 @@ public class ProfileModel {
     //region Constructor
     public  ProfileModel() {
         setId(0);
-        getJokers().addListener((ListChangeListener<? super Joker>)  change -> {
+        getJokers().addListener((ListChangeListener<? super Integer>) change -> {
             while (change.next()) {
                 if(change.wasUpdated()) {
 

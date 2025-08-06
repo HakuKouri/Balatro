@@ -33,7 +33,7 @@
             <RowConstraints percentHeight="6.5" vgrow="SOMETIMES" />
         </rowConstraints>
         <ImageView fitHeight="1060.0" fitWidth="1228.0" pickOnBounds="true" preserveRatio="true" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowSpan="2147483647" GridPane.valignment="CENTER">
-            <Image url="@../../../images/balatro.png" />
+            <Image url="@../../../images/backgroundImage/balatro.png" />
         </ImageView>
         <GridPane hgap="20.0" styleClass="title-button-box" GridPane.columnIndex="3" GridPane.rowIndex="2">
             <columnConstraints>

@@ -1,7 +1,7 @@
 package com.example.balatro.controller.menuController;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.domain.card.Joker;
+import com.example.balatro.domain.card.Integer;
 import com.example.balatro.domain.util.MenuManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class JokerCollectionController {
     //endregion
 
     //region Attributes
-    private final ObservableList<Joker> jokers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> jokers = FXCollections.observableArrayList();
     private final IntegerProperty pageNumber = new SimpleIntegerProperty(0);
     private final String pageString = "Page %d/10";
     //endregion
@@ -39,7 +40,10 @@ public class JokerCollectionController {
 
         for (int index = 0; index < imageList.size(); index++) {
             int finalIndex = index;
-            imageList.get(index).imageProperty().bind(Bindings.createObjectBinding(() -> jokers.get(finalIndex).getImage(), jokers));
+            //TODO Profile model List to Integer
+            imageList.get(index).imageProperty().bind(Bindings.createObjectBinding(() -> {
+                return Balatro.getGameModel().getActiveProfile().getJokers().contains(jokers.get(finalIndex)) ? jokers.get(finalIndex).getImage() : jokers.get(finalIndex).isUnlocked() ? new Image("file:src/main/resources/com/images/placeholder/unknown_joker_background.png") : new Image("file:src/main/resources/com/images/placeholder/locked_Joker.png") ;
+            }, jokers));
         }
 
         pageNumber.addListener((observable, oldValue, newValue) -> {
