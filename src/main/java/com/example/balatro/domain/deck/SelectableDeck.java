@@ -52,8 +52,9 @@ public class SelectableDeck extends ImageView
     }
 
     public void setDeckCoverUrl(String url) {
-        setImage(new Image("file:" + url));
         deckCoverUrl.set(url);
+//        setImage(new Image("file:" + url));
+//        deckCoverUrl.set(url);
     }
 
     public String getDeckDescription() {

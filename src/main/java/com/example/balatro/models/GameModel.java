@@ -3,7 +3,7 @@ package com.example.balatro.models;
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.deck.SelectableDeck;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rules.Blind;
@@ -24,7 +24,7 @@ public class GameModel {
     //region Lists of All Data (Tag, Blind, Joker, Tarot. Planet, Booster, Voucher, PokerHand)
     private final List<Tag> allTagList = SqlHandler.getAllTags();
     private final List<Blind> allBlindsList = SqlHandler.getAllBlinds();
-    private final List<Integer> allJokerList = SqlHandler.getAllJokers();
+    private final List<Joker> allJokerList = SqlHandler.getAllJokers();
     private final List<Tarot> allTarotList = SqlHandler.getAllTarots();
     private final List<Planet> allPlanetList = SqlHandler.getAllPlanets();
     private final List<SelectableDeck> allDeckList = SqlHandler.getAllDecks();
@@ -103,7 +103,7 @@ public class GameModel {
     private final CardViewManager playCardsManager = new CardViewManager(false, false, false);
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
-    private final MapProperty<Integer, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
+    private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
     private final List<PokerHand> pokerHandList = getAllPokerHandList();
     //endregion
 
@@ -213,10 +213,10 @@ public class GameModel {
         return allPlanetList.get(rand.nextInt(allPlanetList.size())).copy();
     }
 
-    public List<Integer> getAllJokerList() {
+    public List<Joker> getAllJokerList() {
         return allJokerList;
     }
-    public Integer getRandomJoker() {
+    public Joker getRandomJoker() {
         return allJokerList.get(rand.nextInt(allJokerList.size())).copy();
     }
 
@@ -366,11 +366,11 @@ public class GameModel {
    //endregion
 
     //region ACTIVE JOKER GS
-    public ObservableMap<Integer, IntegerProperty> getRocketJokers() {
+    public ObservableMap<Joker, IntegerProperty> getRocketJokers() {
         return rocketJokers.get();
     }
 
-    public MapProperty<Integer, IntegerProperty> rocketJokersProperty() {
+    public MapProperty<Joker, IntegerProperty> rocketJokersProperty() {
         return rocketJokers;
     }
 
@@ -378,8 +378,8 @@ public class GameModel {
         return jokerManager;
     }
 
-    public List<Integer> getActiveJokerList() {
-    return jokerManager.getCardList(Integer.class);
+    public List<Joker> getActiveJokerList() {
+    return jokerManager.getCardList(Joker.class);
     }    //endregion
 
 

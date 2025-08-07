@@ -1,7 +1,7 @@
 package com.example.balatro.domain.util;
 
 import com.example.balatro.domain.card.*;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.models.GameModel;
 
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.Objects;
 
 public class CardGenerator {
 
-    public static Integer getRandomJoker(GameModel gameModel) {
-        Integer joker = new Integer();
+    public static Joker getRandomJoker(GameModel gameModel) {
+        Joker joker = new Joker();
 
         int jokerChance = gameModel.getRand().nextInt(100);
 
@@ -104,8 +104,8 @@ public class CardGenerator {
         return booster;
     }
 
-    private static Integer getJokerFilteredByRarity(GameModel gameModel, String rarity) {
-        List<Integer> jokerList = gameModel.getAllJokerList().stream().filter(x -> Objects.equals(x.getRarity(), rarity)).toList();
+    private static Joker getJokerFilteredByRarity(GameModel gameModel, String rarity) {
+        List<Joker> jokerList = gameModel.getAllJokerList().stream().filter(x -> Objects.equals(x.getRarity(), rarity)).toList();
         return jokerList.get(gameModel.getRand().nextInt(jokerList.size()));
     }
 

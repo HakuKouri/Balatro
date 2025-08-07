@@ -1,7 +1,7 @@
 package com.example.balatro.controller.menuController;
 
 import com.example.balatro.Balatro;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.util.MenuManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -27,7 +27,7 @@ public class JokerCollectionController {
     //endregion
 
     //region Attributes
-    private final ObservableList<Integer> jokers = FXCollections.observableArrayList();
+    private final ObservableList<Joker> jokers = FXCollections.observableArrayList();
     private final IntegerProperty pageNumber = new SimpleIntegerProperty(0);
     private final String pageString = "Page %d/10";
     //endregion

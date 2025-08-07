@@ -2,7 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
 import javafx.beans.binding.Bindings;
@@ -172,7 +172,7 @@ public class CardViewController {
                 GameController.getInstance().useCardFromBooster(spectral);
             } else if(getCard() instanceof PlayingCard playingCard) {
                 GameController.getInstance().selectCardFromBooster(playingCard);
-            } else if(getCard() instanceof Integer joker) {
+            } else if(getCard() instanceof Joker joker) {
                 GameController.getInstance().selectCardFromBooster(joker);
             }
         });
@@ -223,7 +223,7 @@ public class CardViewController {
             if(getCard() instanceof Spectral spectral) return !(spectral.canPlay(Balatro.getGameModel()));
             if(getCard() instanceof Planet) return false;
             if(getCard() instanceof PlayingCard) return false;
-            if(getCard() instanceof Integer joker) return Balatro.getGameModel().getJokerManager().getSize() >= Balatro.getGameModel().getRunState().getMaxJokers();
+            if(getCard() instanceof Joker joker) return Balatro.getGameModel().getJokerManager().getSize() >= Balatro.getGameModel().getRunState().getMaxJokers();
             return true;
         }, cardProperty(),
                 Balatro.getGameModel().getSelectedCards(),// wichtig für Kartenlogik
@@ -282,7 +282,7 @@ public class CardViewController {
         }
         image_StackPane.getChildren().removeIf(child -> !"cardImage".equals(child.getId()));
 
-        if(getCard() instanceof Integer joker) {
+        if(getCard() instanceof Joker joker) {
             for(Sticker sticker : joker.getStickers()) {
                 image_StackPane.getChildren().add(sticker);
             }

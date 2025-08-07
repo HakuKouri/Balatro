@@ -2,7 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.rules.Blind;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.Planet;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.models.GameModel;
@@ -88,7 +88,7 @@ public class RewardSummaryController {
         setReward(getReward() + value);
     }
 
-    private void setRewards(List<Integer> jokers ) {
+    private void setRewards(List<Joker> jokers ) {
         //clear Rewards
         while(rewardVBox.getChildren().size() > 2) {
             rewardVBox.getChildren().remove(2);
@@ -107,41 +107,41 @@ public class RewardSummaryController {
         }
 
         //Satellite Reward
-        List<Integer> satelliteJokers = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Satellite")).toList();
+        List<Joker> satelliteJokers = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Satellite")).toList();
         if(!satelliteJokers.isEmpty()) {
-            for(Integer joker : satelliteJokers) {
+            for(Joker joker : satelliteJokers) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), Planet.getUniquePlanetsPlayedCount(), false));
             }
         }
 
         //Rocker Reward
-        List<Integer> rocketList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Rocket")).toList();
+        List<Joker> rocketList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Rocket")).toList();
         if(!rocketList.isEmpty()) {
-            for(Integer joker : rocketList) {
+            for(Joker joker : rocketList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getRocketJokers().get(joker).get(), false));
             }
         }
 
         //Delayed Gratification Reward
-        List<Integer> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Delayed Gratification")).toList();
+        List<Joker> delayedGrafList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Delayed Gratification")).toList();
         if(!delayedGrafList.isEmpty() && gameModel.getCurrentRound().getDiscards() == gameModel.getRunState().getMaxDiscards()) {
-            for(Integer joker : delayedGrafList) {
+            for(Joker joker : delayedGrafList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), gameModel.getCurrentRound().getDiscards(), false));
             }
         }
 
         //Cloud 9 Reward
-        List<Integer> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).toList();
+        List<Joker> cloud9List = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Cloud 9")).toList();
         if(!cloud9List.isEmpty()) {
-            for(Integer joker : cloud9List) {
+            for(Joker joker : cloud9List) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), (int) gameModel.getRunState().getPlayingDeck().getFullDeck().stream().filter(x -> x.getValue() == 9).count(), false));
             }
         }
 
         //Golden Joker Reward
-        List<Integer> goldenJokerList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Golden Joker")).toList();
+        List<Joker> goldenJokerList = jokers.stream().filter(x -> Objects.equals(x.getCardName(), "Golden Joker")).toList();
         if(!goldenJokerList.isEmpty()) {
-            for(Integer joker : goldenJokerList) {
+            for(Joker joker : goldenJokerList) {
                 rewardVBox.getChildren().add(createRewardPane(0, joker.getCardDescription(), 4, false));
             }
         }

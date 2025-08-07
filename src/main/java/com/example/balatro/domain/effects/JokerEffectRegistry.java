@@ -4,7 +4,7 @@ import com.example.balatro.Balatro;
 import com.example.balatro.controller.CardViewController;
 import com.example.balatro.controller.UIController;
 import com.example.balatro.domain.card.Card;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.util.CardViewManager;
 import com.example.balatro.enums.Suit;
@@ -366,7 +366,7 @@ public class JokerEffectRegistry {
         effectMap.put("BASEBALL_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: BASEBALL_EFFECT");
             //TODO Einzel Trigger Animation pro Joker
-            int uncommonCount = (int) context.getJokerManager().getCardList().stream().filter(card -> "Uncommon".equals(((Integer)card).getRarity())).count();
+            int uncommonCount = (int) context.getJokerManager().getCardList().stream().filter(card -> "Uncommon".equals(((Joker)card).getRarity())).count();
             for (int i = 0; i < uncommonCount; i++) {
                 context.getBestHand().multMult(1.5);
             }
@@ -702,7 +702,7 @@ public class JokerEffectRegistry {
         effectMap.put("RIFF_RAFF_EFFECT", (context, self, cards, params) -> {
             System.out.println("Trigger: RIFF_RAFF_EFFECT");
             //TODO Joker Trigger Effekt
-            List<Integer> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
+            List<Joker> commonJokerList = context.getAllJokerList().stream().filter(j -> j.getRarity() == "Common").toList();
             for (int i = 0; i < 2 && context.getJokerManager().getSize() < context.getRunState().getMaxJokers(); i++) {
                 context.getJokerManager().create(commonJokerList.get(context.getRand().nextInt(commonJokerList.size())));
             }

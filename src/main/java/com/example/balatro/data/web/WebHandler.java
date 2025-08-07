@@ -1,6 +1,6 @@
 package com.example.balatro.data.web;
 
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
@@ -36,13 +36,13 @@ public class WebHandler
     }
 
     private static void getJokerWithWebHandler() {
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        ArrayList<Joker> arrayList = new ArrayList<Joker>();
         try
         {
             Elements rows = Jsoup.connect(urlMain + "Jokers").get().select("table").get(1).select("tbody > tr");
             for (Element row : rows)
             {
-                Integer joker = new Integer();
+                Joker joker = new Joker();
 
                 Elements cells = row.select("td");
                 if(cells.size() == 0) continue;

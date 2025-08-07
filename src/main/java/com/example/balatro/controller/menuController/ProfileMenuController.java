@@ -2,7 +2,6 @@ package com.example.balatro.controller.menuController;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.data.SqlHandler;
-import com.example.balatro.domain.rules.Blind;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.ProfileModel;
 import com.example.balatro.domain.util.MenuManager;
@@ -17,8 +16,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polygon;
-
-import java.util.List;
 
 public class ProfileMenuController {
     //region FXML
@@ -50,8 +47,8 @@ public class ProfileMenuController {
         return shownProfile;
     }
 
-    public void setShownProfile(ProfileModel shownProfile) {
-        getShownProfile().setProfile(shownProfile);
+    public void setShownProfile(ProfileModel newProfile) {
+        getShownProfile().setProfile(newProfile);
     }
 
     //endregion
@@ -79,7 +76,6 @@ public class ProfileMenuController {
             getShownProfile().setProfileName(newValue);
         });
 
-
     }
 
     //region Functions
@@ -91,54 +87,54 @@ public class ProfileMenuController {
     public void unlockAll(ActionEvent actionEvent) {
         GameModel model = Balatro.getGameModel();
         model.getAllBlindsList().stream()
-                .filter(blind -> !getShownProfile().getBlinds().contains(blind))
+                .filter(blind -> !getShownProfile().getBlinds().contains(blind.getBlindId()))
                 .toList()
-                .forEach(blind -> SqlHandler.discoverForProfile("ProfileBlindDiscoveryDetails", getShownProfile(), blind.getBlindId()));
+                .forEach(blind -> SqlHandler.discoverAllBlindsForProfile(getShownProfile(), blind.getBlindId()));
         model.getAllBoosterList().stream()
-                .filter(booster -> !getShownProfile().getBoosters().contains(booster))
+                .filter(booster -> !getShownProfile().getBoosters().contains(booster.getCardId()))
                 .toList()
-                .forEach(booster -> SqlHandler.discoverForProfile("ProfileBoosterDiscoveryDetails", getShownProfile(), booster.getCardId()));
+                .forEach(booster -> SqlHandler.discoverAllBoosterForProfile(getShownProfile(), booster.getCardId()));
         model.getAllDecksList().stream()
-                .filter(deck -> !getShownProfile().getDecks().contains(deck))
+                .filter(deck -> !getShownProfile().getDecks().contains(deck.getDeckId()))
                 .toList()
-                .forEach(deck -> SqlHandler.discoverForProfile("ProfileDeckUnlockedDetails", getShownProfile(), deck.getDeckId()));
+                .forEach(deck -> SqlHandler.discoverAllDeckForProfile(getShownProfile(), deck.getDeckId()));
         model.getAllEditionList().stream()
-                .filter(edition -> !getShownProfile().getEditions().contains(edition))
+                .filter(edition -> !getShownProfile().getEditions().contains(edition.getId()))
                 .toList()
-                .forEach(edition -> SqlHandler.discoverForProfile("ProfileEditionDiscoveryDetails", getShownProfile(), edition.getId()));
+                .forEach(edition -> SqlHandler.discoverAllEditionForProfile(getShownProfile(), edition.getId()));
         model.getAllJokerList().stream()
-                .filter(joker -> !getShownProfile().getJokers().contains(joker))
+                .filter(joker -> !getShownProfile().getJokers().contains(joker.getCardId()))
                 .toList()
-                .forEach(joker -> SqlHandler.discoverForProfile("ProfileJokerDiscoveryDetails", getShownProfile(), joker.getCardId()));
+                .forEach(joker -> SqlHandler.discoverAllJokersForProfile(getShownProfile(), joker.getCardId()));
         model.getAllJokerList().stream()
                 .filter(joker -> !joker.isUnlocked())
-                .filter(joker -> !getShownProfile().getUnlockedJokers().contains(joker))
+                .filter(joker -> !getShownProfile().getUnlockedJokers().contains(joker.getCardId()))
                 .toList()
-                .forEach(joker -> SqlHandler.discoverForProfile("ProfileJokerUnlockedDetails", getShownProfile(), joker.getCardId()));
+                .forEach(joker -> SqlHandler.unlockAllJokersForProfile(getShownProfile(), joker.getCardId()));
         model.getAllPlanetList().stream()
-                .filter(planet -> !getShownProfile().getPlanets().contains(planet))
+                .filter(planet -> !getShownProfile().getPlanets().contains(planet.getCardId()))
                 .toList()
-                .forEach(planet -> SqlHandler.discoverForProfile("ProfilePlanetDiscoveryDetails", getShownProfile(), planet.getCardId()));
+                .forEach(planet -> SqlHandler.discoverAllPlanetForProfile(getShownProfile(), planet.getCardId()));
         model.getAllSpectralList().stream()
-                .filter(spectral -> !getShownProfile().getSpectrals().contains(spectral))
+                .filter(spectral -> !getShownProfile().getSpectrals().contains(spectral.getCardId()))
                 .toList()
-                .forEach(spectral -> SqlHandler.discoverForProfile("ProfileSpectralDiscoveryDetails", getShownProfile(), spectral.getCardId()));
+                .forEach(spectral -> SqlHandler.discoverAllSpectralForProfile(getShownProfile(), spectral.getCardId()));
         model.getAllTagList().stream()
-                .filter(tag -> !getShownProfile().getTags().contains(tag))
+                .filter(tag -> !getShownProfile().getTags().contains(tag.getTagId()))
                 .toList()
-                .forEach(tag -> SqlHandler.discoverForProfile("ProfileTagDiscoveryDetails", getShownProfile(), tag.getTagId()));
+                .forEach(tag -> SqlHandler.discoverAllTagForProfile(getShownProfile(), tag.getTagId()));
         model.getAllTarotList().stream()
-                .filter(tarot -> !getShownProfile().getTarots().contains(tarot))
+                .filter(tarot -> !getShownProfile().getTarots().contains(tarot.getCardId()))
                 .toList()
-                .forEach(tarot -> SqlHandler.discoverForProfile("ProfileTarotDiscoveryDetails", getShownProfile(), tarot.getCardId()));
+                .forEach(tarot -> SqlHandler.discoverAllTagForProfile(getShownProfile(), tarot.getCardId()));
         model.getAllVoucherList().stream()
-                .filter(voucher -> !getShownProfile().getVouchers().contains(voucher))
+                .filter(voucher -> !getShownProfile().getVouchers().contains(voucher.getCardId()))
                 .toList()
-                .forEach(voucher -> SqlHandler.discoverForProfile("ProfileVoucherDiscoveryDetails", getShownProfile(), voucher.getCardId()));
+                .forEach(voucher -> SqlHandler.discoverAllVoucherForProfile(getShownProfile(), voucher.getCardId()));
         model.getAllVoucherList().stream()
                 .filter(voucher -> !voucher.isAvailable())
                 .toList()
-                .forEach(voucher -> SqlHandler.discoverForProfile("ProfileVoucherUnlockedDetails", getShownProfile(), voucher.getCardId()));
+                .forEach(voucher -> SqlHandler.unlockAllVoucherForProfile(getShownProfile(), voucher.getCardId()));
         model.getProfiles().get(getShownProfile().getId() - 1).setProfile(SqlHandler.getProfileModelById(getShownProfile().getId()));
     }
 
@@ -169,6 +165,7 @@ public class ProfileMenuController {
                 setShownProfile(gameModel.getProfiles().get(2));
                 break;
         }
+        System.out.println(shownProfile.get().isActiveProfile());
     }
     //endregion
 }

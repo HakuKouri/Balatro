@@ -2,7 +2,7 @@ package com.example.balatro.controller;
 
 import com.example.balatro.Balatro;
 import com.example.balatro.domain.card.*;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rewards.VoucherHandler;
@@ -153,13 +153,13 @@ public class GameController
         testButton.setOnAction(event -> {
 
             for (int i = 0; i < gameModel.getAllJokerList().size() && i < 6; i++) {
-                Integer joker = gameModel.getAllJokerList().get(i);
+                Joker joker = gameModel.getAllJokerList().get(i);
                 Sticker sticker = new Sticker();
                 joker.addSticker(new Sticker(gameModel.getStickerList().get(10)));
                 gameModel.getJokerManager().create(joker);
             }
 
-            for (Integer joker : gameModel.getActiveJokerList()) {
+            for (Joker joker : gameModel.getActiveJokerList()) {
                 System.out.println(joker.getCardName());
                 triggerJokers(JokerTrigger.ON_BUY,new ArrayList<>());
             }
@@ -407,7 +407,7 @@ public class GameController
     }
 
     public void selectCardFromBooster(Card card) {
-        if(card instanceof Integer joker) {
+        if(card instanceof Joker joker) {
             if (gameModel.getJokerManager().getSize() < gameModel.getRunState().getMaxJokers()) {
                 CardViewManager.transferCardTo(gameModel.getBoosterDrawModel().getBoosterDrawnManager(), gameModel.getJokerManager(), card);
             } else {
@@ -434,7 +434,7 @@ public class GameController
 
     public void sellItem(Card card) {
         addMoney((int) card.getSellValue());
-        if(card instanceof Integer joker) {
+        if(card instanceof Joker joker) {
             gameModel.getJokerManager().remove(joker);
         } else {
             gameModel.getConsumableManager().remove(card);
@@ -448,7 +448,7 @@ public class GameController
     }
 
     private void triggerJokers(JokerTrigger trigger, List<PlayingCard> playedCards) {
-        for (Integer joker : gameModel.getActiveJokerList()) {
+        for (Joker joker : gameModel.getActiveJokerList()) {
             joker.tryActivate(trigger, gameModel, playedCards);
         }
     }

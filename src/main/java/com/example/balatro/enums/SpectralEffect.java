@@ -2,7 +2,7 @@ package com.example.balatro.enums;
 
 import com.example.balatro.domain.card.Card;
 import com.example.balatro.domain.card.Edition;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.domain.rules.PokerHand;
 import com.example.balatro.models.GameModel;
@@ -94,7 +94,7 @@ public enum SpectralEffect {
         public void apply(GameModel model) {
             System.out.println("Spectral Effect WRAITH");
             if(canPlay(model)) {
-                List<Integer> rareList = model.getAllJokerList().stream().filter(joker -> "Rare".equals(joker.getRarity())).toList();
+                List<Joker> rareList = model.getAllJokerList().stream().filter(joker -> "Rare".equals(joker.getRarity())).toList();
                 model.getRunState().setMoney(0);
                 model.getJokerManager().create(rareList.get(model.getRand().nextInt(rareList.size())));
             }
@@ -312,7 +312,7 @@ public enum SpectralEffect {
         public void apply(GameModel model) {
             System.out.println("Spectral Effect THE_SOUL");
             if(canPlay(model)) {
-                List<Integer> legendaryJoker = model.getAllJokerList().stream().filter(j -> "Legendary".equals(j.getRarity())).toList();
+                List<Joker> legendaryJoker = model.getAllJokerList().stream().filter(j -> "Legendary".equals(j.getRarity())).toList();
                 model.getJokerManager().create(legendaryJoker.get(model.getRand().nextInt(legendaryJoker.size())));
             }
         }

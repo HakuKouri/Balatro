@@ -3,7 +3,7 @@ package com.example.balatro.models;
 import com.example.balatro.Balatro;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.card.*;
-import com.example.balatro.domain.card.Integer;
+import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.deck.SelectableDeck;
 import com.example.balatro.domain.rewards.Tag;
 import com.example.balatro.domain.rules.Blind;
@@ -28,7 +28,8 @@ public class ProfileModel {
     private int mostPlayedHandCount;
     private int mostMoney;
     private int bestWinStreak;
-    private BooleanProperty activeProfile = new SimpleBooleanProperty(false);
+    private int wins;
+    private final BooleanProperty activeProfile = new SimpleBooleanProperty(false);
 
     private double progress;
     private double collection;
@@ -36,18 +37,18 @@ public class ProfileModel {
     private double jokerStickers;
     private double deckStakeWins;
 
-    private final ObservableList<SelectableDeck> decks = FXCollections.observableArrayList();
+    private final ObservableList<Integer> decks = FXCollections.observableArrayList();
     private final ObservableList<Integer> jokers = FXCollections.observableArrayList();
     private final ObservableList<Integer> unlockedJokers = FXCollections.observableArrayList();
-    private final ObservableList<Blind> blinds = FXCollections.observableArrayList();
-    private final ObservableList<Tarot> tarots = FXCollections.observableArrayList();
-    private final ObservableList<Planet> planets = FXCollections.observableArrayList();
-    private final ObservableList<Spectral> spectrals = FXCollections.observableArrayList();
-    private final ObservableList<Tag> tags = FXCollections.observableArrayList();
-    private final ObservableList<Edition> editions = FXCollections.observableArrayList();
-    private final ObservableList<Booster> boosters = FXCollections.observableArrayList();
-    private final ObservableList<Voucher> vouchers = FXCollections.observableArrayList();
-    private final ObservableList<Voucher> unlockedVouchers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> blinds = FXCollections.observableArrayList();
+    private final ObservableList<Integer> tarots = FXCollections.observableArrayList();
+    private final ObservableList<Integer> planets = FXCollections.observableArrayList();
+    private final ObservableList<Integer> spectrals = FXCollections.observableArrayList();
+    private final ObservableList<Integer> tags = FXCollections.observableArrayList();
+    private final ObservableList<Integer> editions = FXCollections.observableArrayList();
+    private final ObservableList<Integer> boosters = FXCollections.observableArrayList();
+    private final ObservableList<Integer> vouchers = FXCollections.observableArrayList();
+    private final ObservableList<Integer> unlockedVouchers = FXCollections.observableArrayList();
 
     //endregion
 
@@ -132,6 +133,14 @@ public class ProfileModel {
         this.bestWinStreak = bestWinStreak;
     }
 
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
     public boolean isActiveProfile() {
         return activeProfile.get();
     }
@@ -184,7 +193,7 @@ public class ProfileModel {
         this.deckStakeWins = deckStakeWins;
     }
 
-    public ObservableList<SelectableDeck> getDecks() {
+    public ObservableList<Integer> getDecks() {
         return decks;
     }
 
@@ -196,39 +205,39 @@ public class ProfileModel {
         return unlockedJokers;
     }
 
-    public ObservableList<Blind> getBlinds() {
+    public ObservableList<Integer> getBlinds() {
         return blinds;
     }
 
-    public ObservableList<Tarot> getTarots() {
+    public ObservableList<Integer> getTarots() {
         return tarots;
     }
 
-    public ObservableList<Planet> getPlanets() {
+    public ObservableList<Integer> getPlanets() {
         return planets;
     }
 
-    public ObservableList<Spectral> getSpectrals() {
+    public ObservableList<Integer> getSpectrals() {
         return spectrals;
     }
 
-    public ObservableList<Tag> getTags() {
+    public ObservableList<Integer> getTags() {
         return tags;
     }
 
-    public ObservableList<Edition> getEditions() {
+    public ObservableList<Integer> getEditions() {
         return editions;
     }
 
-    public ObservableList<Booster> getBoosters() {
+    public ObservableList<Integer> getBoosters() {
         return boosters;
     }
 
-    public ObservableList<Voucher> getVouchers() {
+    public ObservableList<Integer> getVouchers() {
         return vouchers;
     }
 
-    public ObservableList<Voucher> getUnlockedVouchers() {
+    public ObservableList<Integer> getUnlockedVouchers() {
         return unlockedVouchers;
     }
 
@@ -248,8 +257,8 @@ public class ProfileModel {
     }
 
     public ProfileModel(int id) {
-        jokers.setAll(Balatro.getGameModel().getAllJokerList().stream().filter(j -> SqlHandler.getJokerIdsOfProfile(this.getId()).contains(j.getCardId())).toList());
-        planets.setAll(Balatro.getGameModel().getAllPlanetList().stream().filter(p -> SqlHandler.getPlanetIdsOfProfile(this.getId()).contains( p.getCardId())).toList());
+        //jokers.setAll(Balatro.getGameModel().getAllJokerList().stream().filter(j -> SqlHandler.getJokerIdsOfProfile(this.getId()).contains(j.getCardId())).toList());
+        //planets.setAll(Balatro.getGameModel().getAllPlanetList().stream().filter(p -> SqlHandler.getPlanetIdsOfProfile(this.getId()).contains( p.getCardId())).toList());
     }
     //endregion
 
