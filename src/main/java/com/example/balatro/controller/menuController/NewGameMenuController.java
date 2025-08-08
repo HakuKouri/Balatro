@@ -7,6 +7,7 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.util.MenuManager;
+import com.example.balatro.models.ProfileModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -124,7 +125,6 @@ public class NewGameMenuController
 
 
     public void initialize() {
-
         bindIndicatorVisibility();
         bindUi();
 
@@ -135,6 +135,10 @@ public class NewGameMenuController
         setActiveDeckIndex(0);
         setActiveStakeIndex(0);
 
+        Balatro.getGameModel().activeProfileProperty().addListener((observable, oldValue, newValue) -> {
+            updateDeckList(newValue);
+        });
+
         Platform.runLater(() -> {
             deckCover_ImageView.setFitWidth(deckImage_AnchorPane.getWidth());
             deckCover_ImageView.setFitHeight(deckImage_AnchorPane.getHeight());
@@ -143,6 +147,17 @@ public class NewGameMenuController
 
 
     //region Functions
+    private void updateDeckList(ProfileModel profileModel) {
+        for (SelectableDeck selectableDeck : selectableDeckList) {
+            selectableDeck.setStageCleared(profileModel.getDecks()
+                    .stream()
+                    .filter(deck -> deck.equals(selectableDeck.getDeckId()))
+                    .findFirst()
+                    .orElse(0));
+        }
+    }
+
+
     private void setListener() {
         activeDeckIndex.addListener((observable, oldValue, newValue) -> {
             getActiveDeck().setDeck(selectableDeckList.get((Integer) newValue));

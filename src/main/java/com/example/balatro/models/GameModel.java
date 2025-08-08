@@ -50,7 +50,6 @@ public class GameModel {
         getActiveProfile().setProfile(activeProfile);
     }
 
-
     private final JokerState jokerState = new JokerState();
     public JokerState getJokerState() {
         return jokerState;
@@ -83,16 +82,11 @@ public class GameModel {
 
     private final RewardModel rewardModel = new RewardModel();
     public RewardModel getRewardModel() {return rewardModel;}
-
-
     //endregion
 
     //region Manager
     private final CardViewManager playedCardsViewManager = new CardViewManager(true, false,false);
-
     //endregion
-
-
 
     //region Run Lists
     private final ObservableList<ProfileModel> profiles = FXCollections.observableArrayList(SqlHandler.getAllProfileModels());
@@ -100,7 +94,6 @@ public class GameModel {
     private final CardViewManager holdingHandViewManager = new CardViewManager(false, true, false);
     private final ObservableList<PlayingCard> selectedCards = FXCollections.observableArrayList();
 
-    private final CardViewManager playCardsManager = new CardViewManager(false, false, false);
     private final ObservableList<PlayingCard> playedCards = FXCollections.observableArrayList();
     private final ObservableList<PokerHand> possiblePokerHand = FXCollections.observableArrayList();
     private final MapProperty<Joker, IntegerProperty> rocketJokers = new SimpleMapProperty<>();
@@ -251,7 +244,6 @@ public class GameModel {
     public List<PokerHand> getPokerHandList() {
         return pokerHandList;
     }
-
     public PokerHand getPokerHand(String handName) {
         return getAllPokerHandList().stream().filter(pokerHand -> pokerHand.getName().equals(handName)).findFirst().orElse(null);
     }

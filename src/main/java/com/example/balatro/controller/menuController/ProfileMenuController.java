@@ -26,7 +26,7 @@ public class ProfileMenuController {
     @FXML
     private Label totalProgress_Label, collections_Label, challenges_Label, jokerSticker_Label, deckStake_Label, winCount_Label;
     @FXML
-    private Button currentProfile_Button, unlock_Button;
+    private Button currentProfile_Button, reset_delete_Button, unlock_Button;
     @FXML
     private TextField profileName_TextField;
     @FXML
@@ -36,6 +36,10 @@ public class ProfileMenuController {
     //region Attributes
     //TODO SHOWN PROFILE Change
     private final ObjectProperty<ProfileModel> shownProfile = new SimpleObjectProperty<>(new ProfileModel());
+
+    private boolean resetPressed = false;
+    private boolean deletePressed = false;
+    private boolean unlockPressed = false;
     //endregion
 
     //region Getter Setter
@@ -49,42 +53,99 @@ public class ProfileMenuController {
 
     public void setShownProfile(ProfileModel newProfile) {
         getShownProfile().setProfile(newProfile);
+
+        resetPressed = false;
+        deletePressed = false;
+        unlockPressed = false;
     }
 
     //endregion
 
     public void initialize() {
+        setBinds();
+
+        setShownProfile(Balatro.getGameModel().getProfiles().getFirst());
+    }
+
+    //region Functions
+    private void setBinds() {
         GameModel gameModel = Balatro.getGameModel();
-        if(gameModel.getActiveProfile().getId() > 0)
-            setShownProfile(gameModel.getActiveProfile());
-        else
-            setShownProfile(gameModel.getProfiles().getFirst());
 
-        progress_GridPane.visibleProperty().bind(getShownProfile().activeProfileProperty());
-        unlock_Button.visibleProperty().bind(getShownProfile().activeProfileProperty());
-        currentProfile_Button.textProperty().bind(Bindings.createStringBinding(() -> !getShownProfile().isActiveProfile() ? "Create Profile" : getShownProfile().equals(Balatro.getGameModel().getActiveProfile()) ? "Current Profile" : "Load Profile"));
-
+        //Indicator
         selectionIndicator_1.visibleProperty().bind(Bindings.createBooleanBinding(() -> getShownProfile().getId() == 1, getShownProfile().idProperty()));
         selectionIndicator_2.visibleProperty().bind(Bindings.createBooleanBinding(() -> getShownProfile().getId() == 2, getShownProfile().idProperty()));
         selectionIndicator_3.visibleProperty().bind(Bindings.createBooleanBinding(() -> getShownProfile().getId() == 3, getShownProfile().idProperty()));
 
+        //TextField
         getShownProfile().profileNameProperty().addListener((observable, oldValue, newValue) -> {
             profileName_TextField.setText(newValue);
         });
+
+
 
         profileName_TextField.textProperty().addListener((observable, oldValue, newValue) -> {
             getShownProfile().setProfileName(newValue);
         });
 
+        //Progress
+        progress_GridPane.visibleProperty().bind(getShownProfile().activeProfileProperty());
+
+        //Buttons
+        //TODO Buttons Texts Check Gamemodel Profiles and active Profile
+        getShownProfile().idProperty().addListener((observable, oldValue, newValue) -> {
+            currentProfile_Button.setText(!getShownProfile().isActiveProfile()
+                    ? "Create Profile"
+                    : getShownProfile().equals(gameModel.getActiveProfile())
+                    ? "Current Profile"
+                    : "Load Profile");
+        });
+//        currentProfile_Button.textProperty().bind(
+//                Bindings.createStringBinding((() -> {
+//                    System.out.println("Aktives Profil identisch zu gezeigtem Profil: " + getShownProfile().equals(gameModel.getActiveProfile()));
+//                    return !getShownProfile().isActiveProfile()
+//                            ? "Create Profile"
+//                            : getShownProfile().equals(gameModel.getActiveProfile())
+//                            ? "Current Profile"
+//                            : "Load Profile";
+//
+//                }), getShownProfile().activeProfileProperty(), gameModel.activeProfileProperty()));
+
+        currentProfile_Button.disableProperty().bind(
+                Bindings.createBooleanBinding(() ->
+                                getShownProfile().equals(gameModel.getActiveProfile())
+                        , shownProfileProperty(), gameModel.activeProfileProperty()));
+
+        reset_delete_Button.textProperty().bind(
+                Bindings.createStringBinding(() ->
+                                !getShownProfile().equals(gameModel.getActiveProfile())
+                                        ? "Reset Profile"
+                                        : "Delete Profile"
+                        , getShownProfile().activeProfileProperty(), gameModel.activeProfileProperty()));
+
+        unlock_Button.visibleProperty().bind(getShownProfile().activeProfileProperty());
+
     }
 
-    //region Functions
     public void resetProfile(ActionEvent actionEvent) {
         //TODO include second Click to active
-        SqlHandler.resetProfile(getShownProfile());
+        if (reset_delete_Button.getText().equals("Delete Profile")) {
+            if (deletePressed) {
+                SqlHandler.deleteProfile(getShownProfile());
+            } else
+                deletePressed = true;
+        } else {
+            if (resetPressed) {
+                SqlHandler.resetProfile(getShownProfile());
+            } else
+                resetPressed = true;
+        }
     }
 
     public void unlockAll(ActionEvent actionEvent) {
+        if (!unlockPressed) {
+            unlockPressed = true;
+            return;
+        }
         GameModel model = Balatro.getGameModel();
         model.getAllBlindsList().stream()
                 .filter(blind -> !getShownProfile().getBlinds().contains(blind.getBlindId()))
@@ -139,10 +200,11 @@ public class ProfileMenuController {
     }
 
     public void setProfile(ActionEvent actionEvent) {
-        if(((Button) actionEvent.getSource()).getText().equals("Create Profile")) {
+        if (currentProfile_Button.getText().equals("Create Profile")) {
             SqlHandler.createProfile(getShownProfile());
+            Balatro.getGameModel().getProfiles().get(getShownProfile().getId() - 1).setProfile(SqlHandler.getProfileModelById(getShownProfile().getId()));
             setShownProfile(SqlHandler.getProfileModelById(getShownProfile().getId()));
-        } else  if(((Button) actionEvent.getSource()).getText().equals("Load Profile")) {
+        } else if (currentProfile_Button.getText().equals("Load Profile")) {
             Balatro.getGameModel().changeActiveProfile(getShownProfile());
         }
     }
@@ -153,7 +215,8 @@ public class ProfileMenuController {
 
     public void openProfile(ActionEvent actionEvent) {
         GameModel gameModel = Balatro.getGameModel();
-        System.out.println("Opening Profile");;
+        System.out.println("Opening Profile");
+        ;
         switch (((Button) actionEvent.getSource()).getText()) {
             case "1":
                 setShownProfile(gameModel.getProfiles().get(0));

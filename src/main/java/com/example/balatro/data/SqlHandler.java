@@ -1021,7 +1021,7 @@ public class SqlHandler {
 
     public static void resetProfile(ProfileModel profile) {
         try {
-            String resetProfileStatement = "UPDATE Profiles SET profileName = NULL, bestHand = 0, highestRound = 0, highestAnte = 0, bestWinStreak = 0 WHERE id = " + profile.getId();
+            String resetProfileStatement = "UPDATE Profiles SET bestHand = 0, highestRound = 0, highestAnte = 0, bestWinStreak = 0 WHERE id = " + profile.getId();
             connection.createStatement().executeUpdate(resetProfileStatement);
 
             String resetBlindDetails = "DELETE FROM ProfileBlindDiscoveryDetails WHERE profileId = " + profile.getId();
@@ -1065,7 +1065,7 @@ public class SqlHandler {
         resetProfile(profile);
 
         try {
-            String statementString = "UPDATE Profiles SET activeProfile = 0 WHERE id = " + profile.getId();
+            String statementString = "UPDATE Profiles SET profileName = NULL, activeProfile = 0 WHERE id = " + profile.getId();
             connection.createStatement().executeUpdate(statementString);
         } catch (SQLException e) {
             throw new RuntimeException(e);

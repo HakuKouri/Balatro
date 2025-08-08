@@ -264,34 +264,67 @@ public class ProfileModel {
 
     //region Functions
     public void setProfile(ProfileModel profile) {
+//        id =  new SimpleIntegerProperty();
         setId(profile.getId());
+//        profileName =  new SimpleStringProperty();
         setProfileName(profile.getProfileName());
+//        bestHand;
         setBestHand(profile.getBestHand());
+//        highestRound;
         setHighestRound(profile.getHighestRound());
+//        highestAnte;
         setHighestAnte(profile.getHighestAnte());
+//        mostPlayedHand;
         setMostPlayedHand(profile.getMostPlayedHand());
+//        mostPlayedHandCount;
         setMostPlayedHandCount(profile.getMostPlayedHandCount());
+//        mostMoney;
         setMostMoney(profile.getMostMoney());
+//        bestWinStreak;
         setBestWinStreak(profile.getBestWinStreak());
-        setProgress(profile.getProgress());
-        setCollection(profile.getCollection());
-        setChallenges(profile.getChallenges());
-        setJokerStickers(profile.getJokerStickers());
-        setDeckStakeWins(profile.getDeckStakeWins());
+//        wins;
+        setWins(profile.getWins());
+//        activeProfile = new SimpleBooleanProperty(false);
         setActiveProfile(profile.isActiveProfile());
 
+//        progress;
+        setProgress(profile.getProgress());
+//        collection;
+        setCollection(profile.getCollection());
+//        challenges;
+        setChallenges(profile.getChallenges());
+//        jokerStickers;
+        setJokerStickers(profile.getJokerStickers());
+//        deckStakeWins;
+        setDeckStakeWins(profile.getDeckStakeWins());
+
+//
+//        decks = FXCollections.observableArrayList();
         getDecks().setAll(profile.getDecks());
+//        jokers = FXCollections.observableArrayList();
         getJokers().setAll(profile.getJokers());
+//        unlockedJokers = FXCollections.observableArrayList();
         getUnlockedJokers().setAll(profile.getUnlockedJokers());
+//        blinds = FXCollections.observableArrayList();
         getBlinds().setAll(profile.getBlinds());
+//        tarots = FXCollections.observableArrayList();
         getTarots().setAll(profile.getTarots());
+//        planets = FXCollections.observableArrayList();
         getPlanets().setAll(profile.getPlanets());
+//        spectrals = FXCollections.observableArrayList();
         getSpectrals().setAll(profile.getSpectrals());
+//        tags = FXCollections.observableArrayList();
         getTags().setAll(profile.getTags());
+//        editions = FXCollections.observableArrayList();
         getEditions().setAll(profile.getEditions());
+//        boosters = FXCollections.observableArrayList();
         getBoosters().setAll(profile.getBoosters());
+//        vouchers = FXCollections.observableArrayList();
         getVouchers().setAll(profile.getVouchers());
+//        unlockedVouchers = FXCollections.observableArrayList();
         getUnlockedVouchers().setAll(profile.getUnlockedVouchers());
+
+
     }
     //endregion
 }
