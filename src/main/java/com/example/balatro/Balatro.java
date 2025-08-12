@@ -6,6 +6,7 @@ import com.example.balatro.controller.GameController;
 import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.domain.util.MenuManager;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.ProfileModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -54,9 +55,10 @@ public class Balatro extends Application
         initGameModel();
 
         gameModel.getProfiles().setAll(SqlHandler.getAllProfileModels());
-
-        if(gameModel.getProfiles().stream().noneMatch(profileModel -> profileModel.getProfileName() != null))
-            gameModel.changeActiveProfile(gameModel.getProfiles().getFirst());
+        for (ProfileModel profileModel : gameModel.getProfiles()) {
+            System.out.println("Balatro | Profile Id: " + profileModel.getId());
+        }
+        gameModel.changeActiveProfile(gameModel.getProfiles().getFirst());
 
         loadTitlePane();
     }

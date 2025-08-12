@@ -11,6 +11,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.math.BigInteger;
 
@@ -37,7 +38,9 @@ public class ProfileModel {
     private double jokerStickers;
     private double deckStakeWins;
 
-    private final ObservableList<Integer> decks = FXCollections.observableArrayList();
+    private final ObservableMap<Integer, Integer> decks  = FXCollections.observableHashMap();
+
+    //private final ObservableList<Integer> decks = FXCollections.observableArrayList();
     private final ObservableList<Integer> jokers = FXCollections.observableArrayList();
     private final ObservableList<Integer> unlockedJokers = FXCollections.observableArrayList();
     private final ObservableList<Integer> blinds = FXCollections.observableArrayList();
@@ -193,9 +196,13 @@ public class ProfileModel {
         this.deckStakeWins = deckStakeWins;
     }
 
-    public ObservableList<Integer> getDecks() {
+    public ObservableMap<Integer, Integer> getDecks() {
         return decks;
     }
+
+    //    public ObservableList<Integer> getDecks() {
+//        return decks;
+//    }
 
     public ObservableList<Integer> getJokers() {
         return jokers;
@@ -300,7 +307,7 @@ public class ProfileModel {
 
 //
 //        decks = FXCollections.observableArrayList();
-        getDecks().setAll(profile.getDecks());
+        getDecks().putAll(profile.getDecks());
 //        jokers = FXCollections.observableArrayList();
         getJokers().setAll(profile.getJokers());
 //        unlockedJokers = FXCollections.observableArrayList();

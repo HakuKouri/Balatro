@@ -7,6 +7,7 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.domain.rules.Stake;
 import com.example.balatro.domain.util.MenuManager;
+import com.example.balatro.models.GameModel;
 import com.example.balatro.models.ProfileModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -66,11 +67,16 @@ public class NewGameMenuController
     private HBox seed_HBox;
     @FXML
     private CheckBox seed_CheckBox;
+
+
+    @FXML
+    private Button play_Button;
     //endregion
 
     //region Attributes
     private final IntegerProperty activeDeckIndex = new SimpleIntegerProperty(-1);
     private final ObjectProperty<SelectableDeck> activeDeck = new SimpleObjectProperty<>(new SelectableDeck());
+    private final IntegerProperty beatenStakeToActiveDeck =  new SimpleIntegerProperty(-1);
     private final IntegerProperty activeStakeIndex = new SimpleIntegerProperty(-1);
     private final ObjectProperty<Stake> activeStake = new SimpleObjectProperty<>(new Stake());
 
@@ -85,6 +91,14 @@ public class NewGameMenuController
 
     public ObjectProperty<SelectableDeck> activeDeckProperty() {
         return activeDeck;
+    }
+
+    public int getBeatenStakeToActiveDeck() {
+        return beatenStakeToActiveDeck.get();
+    }
+
+    public IntegerProperty beatenStakeToActiveDeckProperty() {
+        return beatenStakeToActiveDeck;
     }
 
     public Stake getActiveStake() {
@@ -122,12 +136,9 @@ public class NewGameMenuController
     //endregion
 
     //Initialize
-
-
     public void initialize() {
         bindIndicatorVisibility();
         bindUi();
-
         setListener();
 
         seed_HBox.visibleProperty().bind(seed_CheckBox.selectedProperty());
@@ -135,36 +146,26 @@ public class NewGameMenuController
         setActiveDeckIndex(0);
         setActiveStakeIndex(0);
 
-        Balatro.getGameModel().activeProfileProperty().addListener((observable, oldValue, newValue) -> {
-            updateDeckList(newValue);
-        });
 
         Platform.runLater(() -> {
-            deckCover_ImageView.setFitWidth(deckImage_AnchorPane.getWidth());
-            deckCover_ImageView.setFitHeight(deckImage_AnchorPane.getHeight());
+            deckCover_ImageView.setFitWidth(deckImage_AnchorPane.getWidth() - 5);
+            deckCover_ImageView.setFitHeight(deckImage_AnchorPane.getHeight() - 5);
         });
+
+        beatenStakeToActiveDeckProperty().bind(Bindings.createIntegerBinding(() -> Balatro.getGameModel().getActiveProfile().getDecks().getOrDefault(getActiveDeck().getDeckId(), 0), Balatro.getGameModel().getActiveProfile().getDecks(), getActiveDeck().deckIdProperty()));
     }
 
 
     //region Functions
-    private void updateDeckList(ProfileModel profileModel) {
-        for (SelectableDeck selectableDeck : selectableDeckList) {
-            selectableDeck.setStageCleared(profileModel.getDecks()
-                    .stream()
-                    .filter(deck -> deck.equals(selectableDeck.getDeckId()))
-                    .findFirst()
-                    .orElse(0));
-        }
-    }
 
 
     private void setListener() {
         activeDeckIndex.addListener((observable, oldValue, newValue) -> {
-            getActiveDeck().setDeck(selectableDeckList.get((Integer) newValue));
+            getActiveDeck().setDeck(selectableDeckList.get(newValue.intValue()));
             System.out.println("New Deck Id: " + getActiveDeck().getDeckId());
             displayActiveDeck();
             updateStakeDisplay(getActiveDeck());
-            setActiveStakeIndex(getActiveDeck().getStageCleared());
+            setActiveStakeIndex(getBeatenStakeToActiveDeck());
         });
 
         activeDeck.addListener((observable, oldValue, newValue) -> {
@@ -187,8 +188,8 @@ public class NewGameMenuController
 
     private void changeStake(boolean up) {
         setActiveStakeIndex(up
-                ? (getActiveStakeIndex() + 1 > getActiveDeck().getStageCleared() ? 0 : getActiveStakeIndex() + 1)
-                : (getActiveStakeIndex() - 1 < 0 ? getActiveDeck().getStageCleared() : getActiveStakeIndex() - 1));
+                ? (getActiveStakeIndex() + 1 > getBeatenStakeToActiveDeck() ? 0 : getActiveStakeIndex() + 1)
+                : (getActiveStakeIndex() - 1 < 0 ? getBeatenStakeToActiveDeck() : getActiveStakeIndex() - 1));
     }
 
 
@@ -200,26 +201,25 @@ public class NewGameMenuController
             System.out.println("Deck Name: " + getActiveDeck().getDeckName() + " Deck Id: " + getActiveDeck().getDeckId());
 
             deckCover_ImageView.setImage(
-                    Balatro.getGameModel().getActiveProfile().getDecks().contains(getActiveDeck().getDeckId())
+                    Balatro.getGameModel().getActiveProfile().getDecks().containsKey(getActiveDeck().getDeckId())
                     ? new Image("file:" + newValue)
                     : new Image("file:src/main/resources/com/images/DeckBacks/locked_deck.png"));
         });
-//        deckCover_ImageView.imageProperty().bind(
-//                Bindings.createObjectBinding(() -> {
-//                    System.out.println("Deck Name: " + getActiveDeck().getDeckName() + " Deck Id: " + getActiveDeck().getDeckId());
-//                        return Balatro.getGameModel().getActiveProfile().getDecks().contains(getActiveDeck().getDeckId())
-//                                ? getActiveDeck().getImage()
-//                                : new Image("file:src/main/resources/com/images/DeckBacks/locked_deck.png");
-//                 }, getActiveDeck().imageProperty()));
 
         deckName_Label.textProperty().bind(
                 Bindings.createStringBinding(() ->
-                        Balatro.getGameModel().getActiveProfile().getDecks().contains(getActiveDeck().getDeckId())
+                        Balatro.getGameModel().getActiveProfile().getDecks().containsKey(getActiveDeck().getDeckId())
                                 ? getActiveDeck().getDeckName()
                                 : "Locked"
                         , getActiveDeck().deckNameProperty()));
 
-        deckEffect_Label.textProperty().bind(getActiveDeck().deckDescriptionProperty());
+        deckEffect_Label.textProperty().bind(
+                Bindings.createStringBinding(() ->
+                        Balatro.getGameModel().getActiveProfile().getDecks().containsKey(getActiveDeck().getDeckId())
+                                ? getActiveDeck().getDeckDescription()
+                                : getActiveDeck().getUnlockCondition()
+                , getActiveDeck().deckDescriptionProperty(), getActiveDeck().unlockConditionProperty()));
+
         stakeSticker_ImageView.imageProperty().bind(Bindings.createObjectBinding(() ->
              getActiveDeck().getStageCleared() > 0 ? new Image("file:src/main/resources/com/images/Stickers_Seals/difficult_" + (activeDeck.get().getStageCleared()+1) + ".png") : null
         ));
@@ -227,6 +227,14 @@ public class NewGameMenuController
         stakeChip_ImageView.imageProperty().bind(getActiveStake().imageProperty());
         stakeName_Label.textProperty().bind(getActiveStake().stakeNameProperty());
         stakeEffect_Label.textProperty().bind(getActiveStake().stakeDescriptionProperty());
+
+        play_Button.disableProperty().bind(
+                Bindings.createBooleanBinding(() -> {
+                            System.out.println("Shown Deck: " + getActiveDeck().getDeckId() + " " + getActiveDeck().getDeckName());
+                return            !Balatro.getGameModel().getActiveProfile().getDecks().containsKey(getActiveDeck().getDeckId());
+                        }
+                        , getActiveDeck().deckIdProperty()
+                ));
     }
 
     public void openTab(ActionEvent actionEvent) {
@@ -280,23 +288,26 @@ public class NewGameMenuController
     }
 
     private void updateStakeDisplay(SelectableDeck newDeck) {
+        ProfileModel activeProfile = Balatro.getGameModel().getActiveProfile();
         List<Node> vBox = selectedStakeDisplay_VBox.getChildren();
         List<Node> hBox = selectedStakeDisplay_HBox.getChildren();
 
         hBox.forEach(node -> { node.setVisible(false); });
         vBox.forEach(node -> { node.setStyle(""); node.getStyleClass().setAll("stake-rect"); });
 
-        int stageClearedIndex = newDeck.getStageCleared();
-        int stakeListSize = stakeList.size();
-        for(int i = 0; i <= stageClearedIndex; i++) {
-            hBox.get(i).setVisible(true);
-        }
+        if(activeProfile.getDecks().containsKey(newDeck.getDeckId()) && getBeatenStakeToActiveDeck() > 1) {
+            int stageClearedIndex = getBeatenStakeToActiveDeck();
+            int stakeListSize = stakeList.size();
+            for(int i = 0; i <= stageClearedIndex; i++) {
+                hBox.get(i).setVisible(true);
+            }
 
-        for(int i = 0 ; i < stakeListSize; i++) {
-            if(i <= stageClearedIndex) {
-                vBox.get(stakeListSize - 1 - i).getStyleClass().add("available");
-                if(stageClearedIndex != i)
-                    vBox.get(stakeListSize - 1 - i).setStyle("-fx-background-color: " + stakeList.get(i).getStakeColorString() + " ;");
+            for(int i = 0 ; i < stakeListSize; i++) {
+                if(i <= stageClearedIndex) {
+                    vBox.get(stakeListSize - 1 - i).getStyleClass().add("available");
+                    if(stageClearedIndex != i)
+                        vBox.get(stakeListSize - 1 - i).setStyle("-fx-background-color: " + stakeList.get(i).getStakeColorString() + " ;");
+                }
             }
         }
     }

@@ -18,9 +18,7 @@ import javafx.scene.paint.Color;
 
 import java.math.BigInteger;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SqlHandler {
 
@@ -750,7 +748,7 @@ public class SqlHandler {
 
                 profileModel.getBlinds().setAll(getBlindIdsOfProfile(profileModel.getId()));
                 profileModel.getBoosters().setAll(getBoosterIdsOfProfile(profileModel.getId()));
-                profileModel.getDecks().setAll(getDeckIdsOfProfile(profileModel.getId()));
+                profileModel.getDecks().putAll(getDeckIdsOfProfile(profileModel.getId()));
                 profileModel.getEditions().setAll(getEditionIdsOfProfile(profileModel.getId()));
                 profileModel.getJokers().setAll(getJokerIdsOfProfile(profileModel.getId()));
                 profileModel.getUnlockedJokers().setAll(getUnlockedJokerIdsOfProfile(profileModel.getId()));
@@ -832,22 +830,22 @@ public class SqlHandler {
         return boosterIds;
     }
 
-    public static List<Integer> getDeckIdsOfProfile(int profileId) {
-        List<Integer> deckIds = new ArrayList<>();
+    public static Map<Integer, Integer> getDeckIdsOfProfile(int profileId) {
+        Map<Integer, Integer> decks = new HashMap<>() ;
 
         try {
             Statement statement = connection.createStatement();
-            String statementString = "SELECT deckId FROM ProfileDeckUnlockedDetails WHERE profileId = " + profileId;
+            String statementString = "SELECT deckId, beatenStake FROM ProfileDeckUnlockedDetails WHERE profileId = " + profileId;
 
             ResultSet rs = statement.executeQuery(statementString);
             while (rs.next()) {
-                deckIds.add(rs.getInt(1));
+                decks.put(rs.getInt(1), rs.getInt(2));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return deckIds;
+        return decks;
     }
 
     public static List<Integer> getEditionIdsOfProfile(int profileId) {
@@ -1030,7 +1028,7 @@ public class SqlHandler {
             String resetBoosterDetails = "DELETE FROM ProfileBoosterDiscoveryDetails WHERE profileId = " + profile.getId();
             connection.createStatement().executeUpdate(resetBoosterDetails);
 
-            String resetDeckDetails = "DELETE FROM ProfileDeckUnlockedDetails WHERE profileId = " + profile.getId();
+            String resetDeckDetails = "DELETE FROM ProfileDeckUnlockedDetails WHERE profileId = " + profile.getId() + " AND deckId != 1 ";
             connection.createStatement().executeUpdate(resetDeckDetails);
 
             String resetEditionDetails = "DELETE FROM ProfileEditionDiscoveryDetails WHERE profileId = " + profile.getId();
@@ -1066,6 +1064,16 @@ public class SqlHandler {
 
         try {
             String statementString = "UPDATE Profiles SET profileName = NULL, activeProfile = 0 WHERE id = " + profile.getId();
+            connection.createStatement().executeUpdate(statementString);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateProfileName(ProfileModel profile) {
+        resetProfile(profile);
+        try {
+            String statementString = "UPDATE Profiles SET profileName = ? WHERE id = " + profile.getId();
             connection.createStatement().executeUpdate(statementString);
         } catch (SQLException e) {
             throw new RuntimeException(e);

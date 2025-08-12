@@ -313,7 +313,7 @@
                                        <children>
                                           <Label styleClass="font-white" text="Seeded Run?" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
                                           <CheckBox fx:id="seed_CheckBox" mnemonicParsing="false" GridPane.columnIndex="1" />
-                                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startNewGame" styleClass="blue" text="Play" GridPane.columnIndex="2">
+                                          <Button fx:id="play_Button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startNewGame" styleClass="blue" text="Play" GridPane.columnIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </GridPane.margin>
