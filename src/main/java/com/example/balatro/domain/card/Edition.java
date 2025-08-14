@@ -55,4 +55,11 @@ public class Edition
         edition.setEditionEffect(editionEffect);
         return edition;
     }
+
+    public void setEdition(Edition edition) {
+        setId(edition.getId());
+        setEditionImageUrl(edition.getEditionImageUrl());
+        setEditionName(edition.getEditionName());
+        setEditionEffect(edition.getEditionEffect());
+    }
 }

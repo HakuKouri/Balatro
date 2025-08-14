@@ -5,16 +5,28 @@ import com.example.balatro.domain.card.*;
 import com.example.balatro.domain.card.Joker;
 import com.example.balatro.domain.util.FxmlUtil;
 import com.example.balatro.models.GameModel;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.Map;
 
 public class CardViewController {
@@ -138,10 +150,25 @@ public class CardViewController {
             if(getCard() instanceof Tarot tarot)
                 System.out.println("Tarot can play: " + tarot.canPlay(Balatro.getGameModel()));
         });
+
+        Platform.runLater(() -> {
+            card_AnchorPane.setPickOnBounds(true);
+            card_AnchorPane.setMouseTransparent(false);
+            applyFloatEffect();
+
+            //Shadow Effect on Cards (maybe with Css)
+//            DropShadow dropShadow = new DropShadow();
+//            dropShadow.setRadius(5.0);
+//            dropShadow.setOffsetX(3.0);
+//            dropShadow.setOffsetY(3.0);
+//            dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
+//
+//            cardImage.setEffect(dropShadow);
+        });
     }
 
     //region Funktionen
-
+    //region UI
     private void bindMouseClickEvent() {
         buyLabel.setOnMouseClicked(event -> {
             System.out.println("BuyLabel clicked");
@@ -294,6 +321,8 @@ public class CardViewController {
                 image_StackPane.getChildren().add(playingCard.getSeal());
         }
     }
+    //endregion
+
 
     private boolean isJoker() {
         return "Joker".equals(getCard().getCardType());
@@ -343,4 +372,38 @@ public class CardViewController {
     public void setMaxWidth(double width) {
         card_AnchorPane.setMaxWidth(width);
     }
+
+    //Animation
+    private void applyFloatEffect() {
+        System.out.println("Float effect");
+        Rotate rotateX = new Rotate(0, 100, 100, 0, Rotate.X_AXIS);
+        Rotate rotateY = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+        Rotate rotateZ = new Rotate(0, Rotate.Z_AXIS);
+
+        card_AnchorPane.setTranslateZ(-50);
+
+        card_AnchorPane.getTransforms().addAll(rotateX, rotateY, rotateZ);
+
+        Timeline tilt = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(rotateX.angleProperty(), getRandRotate(10)),
+                        new KeyValue(rotateY.angleProperty(), getRandRotate(10)),
+                        new KeyValue(rotateZ.angleProperty(), 0)
+                ),
+                new KeyFrame(Duration.seconds(2),
+                        new KeyValue(rotateX.angleProperty(), getRandRotate(10)),
+                        new KeyValue(rotateY.angleProperty(), getRandRotate(10)),
+                        new KeyValue(rotateZ.angleProperty(), -0)
+                )
+        );
+        tilt.setAutoReverse(true);
+        tilt.setCycleCount(Animation.INDEFINITE);
+        tilt.play();
+    }
+
+    private int getRandRotate(int value) {
+        return Balatro.getGameModel().getRand().nextInt(value * -1 , value);
+    }
+
+    //endregion
 }

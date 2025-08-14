@@ -195,8 +195,12 @@ public class UIController {
                 });
 
                 // (6) Karte der StackPane hinzufügen
-                if (!stackPane.getChildren().contains(anchorPane)) {
-                    stackPane.getChildren().add(anchorPane);
+//                if (!stackPane.getChildren().contains(anchorPane)) {
+//                    stackPane.getChildren().add(anchorPane);
+//                }
+                // (6) Karte der StackPane hinzufügen
+                if (!Balatro.getCard3DPane().getChildren().contains(anchorPane)) {
+                    Balatro.getCard3DPane().getChildren().add(anchorPane);
                 }
             }
 
@@ -245,6 +249,7 @@ public class UIController {
         moveCards(stackPane,new Card());
     }
 
+    //TODO MOVE CARDS RELATIVE TO THEIR POSITION AND CHILDREN IN LIST NOT STACK PANE
     public static void moveCards(StackPane stackPane, Node exclude) {
         int count = stackPane.getChildren().size();
         if (count == 0) return;

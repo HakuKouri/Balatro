@@ -1,7 +1,12 @@
 package com.example.balatro.enums;
 
+import com.example.balatro.domain.card.Card;
+import com.example.balatro.domain.card.Edition;
 import com.example.balatro.domain.card.PlayingCard;
 import com.example.balatro.models.GameModel;
+import com.example.balatro.models.JokerState;
+
+import java.util.List;
 
 public enum TarotEffect {
 
@@ -149,7 +154,19 @@ public enum TarotEffect {
     THE_WHEEL_OF_FORTUNE {
         @Override
         public void apply(GameModel model) {
-            //TODO WHEEL OF FORTUNE
+            int chance = model.getRand().nextInt(4);
+            if(chance <= model.getJokerState().jokerFlagProperty(JokerState.JokerType.DOUBLE_CHANCE_FLAG).intValue()) {
+                List<Card> cardList = model.getJokerManager().getCardList().stream().filter(j -> j.getEdition().getId() < 1 ).toList();
+                int editionChance = model.getRand().nextInt(100);
+
+                if(editionChance <50) {
+                    cardList.get(model.getRand().nextInt(cardList.size())).setEdition(model.getAllEditionList().get(1));
+                } else if(editionChance < 85) {
+                    cardList.get(model.getRand().nextInt(cardList.size())).setEdition(model.getAllEditionList().get(2));
+                } else {
+                    cardList.get(model.getRand().nextInt(cardList.size())).setEdition(model.getAllEditionList().get(3));
+                }
+            }
         }
 
         @Override

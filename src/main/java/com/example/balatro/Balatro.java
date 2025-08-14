@@ -10,8 +10,11 @@ import com.example.balatro.models.ProfileModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -45,6 +48,11 @@ public class Balatro extends Application
     public static AnchorPane mainPane;
     //endregion
 
+    private static AnchorPane card3DPane;
+    public static AnchorPane getCard3DPane() {
+        return card3DPane;
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException
     {
@@ -67,15 +75,54 @@ public class Balatro extends Application
         mainPane = new AnchorPane();
         mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
 
+// 2D UI z. B. Titelbildschirm laden
         Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
         AnchorPane titlePane = titleScreen.getValue();
         titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
-        mainPane.getChildren().add(titlePane);
 
-        Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight());
+// Optional: eigener 3D-Bereich für Karten
+        AnchorPane card3DPane = new AnchorPane(); // Hier landen Karten mit Float/3D-Effekten
+        card3DPane.setPickOnBounds(false); // WICHTIG: soll keine Clicks blockieren
+        Balatro.card3DPane = card3DPane;
+
+// SubScene mit 3D-Tiefe nur für Karten
+        SubScene cardScene = new SubScene(card3DPane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), true, javafx.scene.SceneAntialiasing.BALANCED);
+        PerspectiveCamera cardCamera = new PerspectiveCamera(true);
+        cardCamera.setTranslateZ(-2000); // Leicht zurückgesetzt, damit Rotation sichtbar ist
+        cardScene.setCamera(cardCamera);
+        cardScene.setFill(null); // transparent
+
+// Wichtig: Die SubScene darf keine Klicks blockieren
+        cardScene.setPickOnBounds(false);
+
+// cardScene über alles legen
+        mainPane.getChildren().addAll(titlePane, cardScene);
+
+// Hauptscene – KEIN 3D nötig
+        Scene scene = new Scene(mainPane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), false);
+
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.show();
+
+//        mainPane = new AnchorPane();
+//        mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+//
+//        Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
+//        AnchorPane titlePane = titleScreen.getValue();
+//        titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+//        mainPane.getChildren().add(titlePane);
+//
+//        Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight(), true);
+//
+//        PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
+////        perspectiveCamera.setTranslateZ(-1000);
+////        perspectiveCamera.setNearClip(0.1);
+////        perspectiveCamera.setFarClip(5000);
+//        scene.setCamera(perspectiveCamera);
+//        primaryStage.setScene(scene);
+//        primaryStage.sizeToScene();
+//        primaryStage.show();
     }
 
     private void initGameModel() {
@@ -126,7 +173,7 @@ public class Balatro extends Application
         AnchorPane gamePane = gameScreen.getValue();
 
         //add Game Pane to Main Pane
-        mainPane.getChildren().add(gamePane);
+        mainPane.getChildren().addAll(gamePane, card3DPane);
 
         //start new Game
         controller.startNewGame(gameSetup);
