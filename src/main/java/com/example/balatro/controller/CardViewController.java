@@ -161,7 +161,7 @@ public class CardViewController {
 //            dropShadow.setRadius(5.0);
 //            dropShadow.setOffsetX(3.0);
 //            dropShadow.setOffsetY(3.0);
-//            dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
+//            dropShadow.setColor(Color.color(0.1, 0.1, 0.1));
 //
 //            cardImage.setEffect(dropShadow);
         });
@@ -378,31 +378,49 @@ public class CardViewController {
         System.out.println("Float effect");
         Rotate rotateX = new Rotate(0, 100, 100, 0, Rotate.X_AXIS);
         Rotate rotateY = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-        Rotate rotateZ = new Rotate(0, Rotate.Z_AXIS);
+        Rotate rotateZ = new Rotate(0, 100, 100, 0, Rotate.Z_AXIS);
 
         card_AnchorPane.setTranslateZ(-50);
 
         card_AnchorPane.getTransforms().addAll(rotateX, rotateY, rotateZ);
 
+
+
         Timeline tilt = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        new KeyValue(rotateX.angleProperty(), getRandRotate(10)),
-                        new KeyValue(rotateY.angleProperty(), getRandRotate(10)),
-                        new KeyValue(rotateZ.angleProperty(), 0)
+                        new KeyValue(rotateX.angleProperty(), 10),
+                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateZ.angleProperty(), -3)
+                ),
+                new KeyFrame(Duration.seconds(1),
+                        new KeyValue(rotateX.angleProperty(), -10),
+                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateZ.angleProperty(), 3)
                 ),
                 new KeyFrame(Duration.seconds(2),
-                        new KeyValue(rotateX.angleProperty(), getRandRotate(10)),
-                        new KeyValue(rotateY.angleProperty(), getRandRotate(10)),
-                        new KeyValue(rotateZ.angleProperty(), -0)
+                        new KeyValue(rotateX.angleProperty(), -10),
+                        new KeyValue(rotateY.angleProperty(), -10),
+                        new KeyValue(rotateZ.angleProperty(), 3)
+                ),
+                new KeyFrame(Duration.seconds(3),
+                        new KeyValue(rotateX.angleProperty(), 10),
+                        new KeyValue(rotateY.angleProperty(), -10),
+                        new KeyValue(rotateZ.angleProperty(), -3)
+                ),
+                new KeyFrame(Duration.seconds(4),
+                        new KeyValue(rotateX.angleProperty(), 10),
+                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateZ.angleProperty(), -3)
                 )
         );
-        tilt.setAutoReverse(true);
+
         tilt.setCycleCount(Animation.INDEFINITE);
         tilt.play();
+        tilt.jumpTo(Duration.seconds(Balatro.getGameModel().getRand().nextInt(4)));
     }
 
     private int getRandRotate(int value) {
-        return Balatro.getGameModel().getRand().nextInt(value * -1 , value);
+        return Balatro.getGameModel().getRand().nextInt(5 , value);
     }
 
     //endregion

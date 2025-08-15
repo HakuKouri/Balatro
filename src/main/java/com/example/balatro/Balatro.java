@@ -14,48 +14,71 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import javax.management.AttributeChangeNotification;
 import java.io.File;
 import java.io.IOException;
 
-public class Balatro extends Application
-{
+public class Balatro extends Application {
     //region Primary Stage
     private static Stage primaryStage;
+
     public static Stage getPrimaryStage() {
         return primaryStage;
     }
     //endregion
 
-    //region Game & Settings Model
+    //region Game
     private static GameModel gameModel;
+
     public static GameModel getGameModel() {
         return gameModel;
     }
+    //endregion
 
-
+    //region Settings Model
     private static final SettingsModel settingsModel = new SettingsModel();
-    public static SettingsModel getSettings() { return settingsModel; }
+
+    public static SettingsModel getSettings() {
+        return settingsModel;
+    }
 
     private static final String rootPath = "settings.xml";
     //endregion
 
-    //region Title Screen
+    //region Panes
     public static AnchorPane mainPane;
-    //endregion
+    private static AnchorPane card3DPane_Back;
+    private static AnchorPane menuPane;
+    private static AnchorPane card3DPane_Front;
+    private static AnchorPane toolTipsPane;
 
-    private static AnchorPane card3DPane;
-    public static AnchorPane getCard3DPane() {
-        return card3DPane;
+    private static SubScene backSubScene;
+    private static SubScene frontSubScene;
+
+    public static AnchorPane getCard3DPane_Back() {
+        return card3DPane_Back;
     }
 
+    public static AnchorPane getMenuPane() {
+        return menuPane;
+    }
+
+    public static AnchorPane getCard3DPane_Front() {
+        return card3DPane_Front;
+    }
+
+    public static AnchorPane getToolTipsPane() {
+        return toolTipsPane;
+    }
+
+    //endregion
+
     @Override
-    public void start(Stage primaryStage) throws IOException
-    {
+    public void start(Stage primaryStage) throws IOException {
         initSettings();
         Balatro.primaryStage = primaryStage;
         setupStage();
@@ -75,54 +98,24 @@ public class Balatro extends Application
         mainPane = new AnchorPane();
         mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
 
-// 2D UI z. B. Titelbildschirm laden
+        // 2D UI z. B. Titelbildschirm laden
         Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
         AnchorPane titlePane = titleScreen.getValue();
         titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
 
-// Optional: eigener 3D-Bereich für Karten
-        AnchorPane card3DPane = new AnchorPane(); // Hier landen Karten mit Float/3D-Effekten
-        card3DPane.setPickOnBounds(false); // WICHTIG: soll keine Clicks blockieren
-        Balatro.card3DPane = card3DPane;
+        // cardScene_GameCards über alles legen
+        mainPane.getChildren().addAll(titlePane);
 
-// SubScene mit 3D-Tiefe nur für Karten
-        SubScene cardScene = new SubScene(card3DPane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), true, javafx.scene.SceneAntialiasing.BALANCED);
-        PerspectiveCamera cardCamera = new PerspectiveCamera(true);
-        cardCamera.setTranslateZ(-2000); // Leicht zurückgesetzt, damit Rotation sichtbar ist
-        cardScene.setCamera(cardCamera);
-        cardScene.setFill(null); // transparent
+        PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
+        //perspectiveCamera.setTranslateZ();
 
-// Wichtig: Die SubScene darf keine Klicks blockieren
-        cardScene.setPickOnBounds(false);
-
-// cardScene über alles legen
-        mainPane.getChildren().addAll(titlePane, cardScene);
-
-// Hauptscene – KEIN 3D nötig
+        // Hauptscene – KEIN 3D nötig
         Scene scene = new Scene(mainPane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), false);
+        scene.setCamera(perspectiveCamera);
 
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.show();
-
-//        mainPane = new AnchorPane();
-//        mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
-//
-//        Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
-//        AnchorPane titlePane = titleScreen.getValue();
-//        titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
-//        mainPane.getChildren().add(titlePane);
-//
-//        Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight(), true);
-//
-//        PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
-////        perspectiveCamera.setTranslateZ(-1000);
-////        perspectiveCamera.setNearClip(0.1);
-////        perspectiveCamera.setFarClip(5000);
-//        scene.setCamera(perspectiveCamera);
-//        primaryStage.setScene(scene);
-//        primaryStage.sizeToScene();
-//        primaryStage.show();
     }
 
     private void initGameModel() {
@@ -132,7 +125,7 @@ public class Balatro extends Application
 
     private void initSettings() {
         File settingsFile = new File(rootPath);
-        if(!settingsFile.exists()) {
+        if (!settingsFile.exists()) {
             SettingsModel.createSettingsFile(settingsFile.getPath());
         }
 
@@ -173,14 +166,32 @@ public class Balatro extends Application
         AnchorPane gamePane = gameScreen.getValue();
 
         //add Game Pane to Main Pane
-        mainPane.getChildren().addAll(gamePane, card3DPane);
+        mainPane.getChildren().addAll(gamePane);
 
         //start new Game
         controller.startNewGame(gameSetup);
     }
 
-    public static void main(String[] args)
-    {
+    private SubScene getSubScene(AnchorPane pane) {
+        SubScene cardScene = new SubScene(pane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), true, javafx.scene.SceneAntialiasing.BALANCED);
+        PerspectiveCamera cardCamera = new PerspectiveCamera(true);
+        cardCamera.setTranslateZ(-2000); // Leicht zurückgesetzt, damit Rotation sichtbar ist
+        cardScene.setCamera(cardCamera);
+        //cardScene.setFill(null); // transparent
+
+        return cardScene;
+    }
+
+    private AnchorPane getPane() {
+        AnchorPane pane = new AnchorPane();
+        pane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+        pane.setPickOnBounds(false);// WICHTIG: soll keine Clicks blockieren
+        pane.setBackground(null);
+
+        return pane;
+    }
+
+    public static void main(String[] args) {
         launch(args);
     }
 }

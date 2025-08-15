@@ -68,9 +68,9 @@ public class PlayingCard extends Card implements PurchasableCard {
             // Only if completed
 
             if (newValue)
-                this.setTranslateY(-20);
+                this.setTranslateY(this.getBoundsInLocal().getMinY() -20);
             else
-                this.setTranslateY(0);
+                this.setTranslateY(this.getBoundsInLocal().getMinY() + 20);
         });
 
         getStyleClass().add("card");

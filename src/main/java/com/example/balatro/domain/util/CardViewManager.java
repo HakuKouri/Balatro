@@ -63,6 +63,14 @@ public class CardViewManager {
         return draggable;
     }
 
+    public int getSize() {
+        return size.get();
+    }
+
+    public IntegerProperty sizeProperty() {
+        return size;
+    }
+
     //endregion
 
 
@@ -129,14 +137,6 @@ public class CardViewManager {
                 .filter(clazz::isInstance)
                 .map(clazz::cast)
                 .toList();
-    }
-
-    public int getSize() {
-        return size.get();
-    }
-
-    public IntegerProperty sizeProperty() {
-        return size;
     }
 
     public static void sortMapByX(ObservableMap<CardViewController, AnchorPane> map, StackPane root) {
