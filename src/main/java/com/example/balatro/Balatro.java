@@ -10,7 +10,6 @@ import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -18,7 +17,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import javax.swing.event.ChangeListener;
 import java.io.IOException;
 
 public class Balatro extends Application {
@@ -69,7 +67,6 @@ public class Balatro extends Application {
             }
         });
 
-
         //Scaling der mainPane im verhältnis
         primaryStage.widthProperty().addListener(e ->  updateScale());
         primaryStage.heightProperty().addListener( e -> updateScale());
@@ -85,10 +82,8 @@ public class Balatro extends Application {
         double scaleY = primaryStage.getHeight() / baseHeight;
         double scale = Math.min(scaleX, scaleY);
 
-
         mainPane.setScaleX(scale);
         mainPane.setScaleY(scale);
-
     }
 
     private void applyFontCss(AnchorPane pane, double width) {

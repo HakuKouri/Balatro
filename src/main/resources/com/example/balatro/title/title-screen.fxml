@@ -35,7 +35,7 @@
         <ImageView fitHeight="1060.0" fitWidth="1228.0" pickOnBounds="true" preserveRatio="true" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowSpan="2147483647" GridPane.valignment="CENTER">
             <Image url="@../../../images/backgroundImage/balatro.png" />
         </ImageView>
-        <GridPane hgap="20.0" styleClass="title-button-box" GridPane.columnIndex="3" GridPane.rowIndex="2">
+        <GridPane hgap="20.0" styleClass="title-button-box, font-white" GridPane.columnIndex="3" GridPane.rowIndex="2">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="25.0" />
@@ -78,13 +78,13 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
         </GridPane>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="title-button-box" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="title-button-box, font-white" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <Label styleClass="font-white" text="Profile" />
             <Button mnemonicParsing="false" onAction="#openProfileMenu" styleClass="grey" text="P.Name" />
          </children>
       </VBox>
-      <VBox alignment="CENTER" styleClass="title-button-box" GridPane.columnIndex="5" GridPane.rowIndex="2">
+      <VBox alignment="CENTER" styleClass="title-button-box, font-white" GridPane.columnIndex="5" GridPane.rowIndex="2">
          <children>
             <Button mnemonicParsing="false" onAction="#openLanguageMenu" styleClass="grey" text="English" />
          </children>
