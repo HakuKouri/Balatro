@@ -72,7 +72,7 @@
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="inner">
                      <children>
-                        <Label fx:id="selectedDeckName_Label" styleClass="font-white-shadow" text="Deck Name" />
+                        <Label fx:id="selectedDeckName_Label" styleClass="font-white, font-shadow" text="Deck Name" />
                         <Label fx:id="selectedDeckEffect_Label" text="Deck effekt" />
                      </children>
                   </VBox>
@@ -83,85 +83,85 @@
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="A">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="K">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="Q">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="J">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="10">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="9">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="8">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="7">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="6">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="5">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="4">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="3">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                               <Label alignment="CENTER" prefHeight="40.0" prefWidth="40.0" text="2">
                                  <styleClass>
                                     <String fx:value="inner" />
-                                    <String fx:value="font-white-shadow" />
+                                    <String fx:value="font-white, font-shadow" />
                                  </styleClass></Label>
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label fx:id="aceCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="kingCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="queenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="jackCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="tenthCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="nineCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="eightCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="sevenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="sixCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="fiveCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="fourCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="threeCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
-                              <Label fx:id="twoCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white-shadow" text="0" />
+                              <Label fx:id="aceCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="kingCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="queenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="jackCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="tenthCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="nineCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="eightCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="sevenCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="sixCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="fiveCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="fourCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="threeCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
+                              <Label fx:id="twoCount_Label" alignment="CENTER" prefHeight="40.0" prefWidth="40.0" styleClass="font-white, font-shadow" text="0" />
                            </children>
                         </VBox>
                      </children>

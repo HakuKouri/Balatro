@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<comment>update xml file</comment>
-<entry key="display monitor">0</entry>
-<entry key="crt">50</entry>
-<entry key="screen shake">50</entry>
-<entry key="vsync">true</entry>
-<entry key="crt bloom">false</entry>
-<entry key="music volume">50</entry>
-<entry key="game volume">50</entry>
-<entry key="game speed">1</entry>
-<entry key="display stake">false</entry>
-<entry key="reduced motion">false</entry>
-<entry key="resolution">1920.0x1080.0</entry>
-<entry key="master volume">50</entry>
-<entry key="hand button order">true</entry>
-<entry key="high contrast">false</entry>
-<entry key="window mode">fullscreen</entry>
-<entry key="pixel art smooting">true</entry>
-<entry key="shadows">true</entry>
+<comment>User settings</comment>
+<entry key="displayStakeDuringRun">false</entry>
+<entry key="shadow">true</entry>
+<entry key="masterVolume">100</entry>
+<entry key="highContrast">false</entry>
+<entry key="window height">1046.0</entry>
+<entry key="crtEffect">30</entry>
+<entry key="playDiscardOrder">true</entry>
+<entry key="reduceMotion">false</entry>
+<entry key="gameVolume">100</entry>
+<entry key="gameSpeed">1</entry>
+<entry key="pixelArtSmoothing">true</entry>
+<entry key="screenShake">50</entry>
+<entry key="window width">1521.0</entry>
+<entry key="musicVolume">100</entry>
+<entry key="crtBloom">true</entry>
 </properties>

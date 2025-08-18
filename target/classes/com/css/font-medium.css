@@ -1,0 +1,43 @@
+/* region Font */
+.font-white {
+    -fx-text-fill: white;
+}
+
+.title-button-box {
+    -fx-font-size: 40;
+    -fx-text-fill: white;
+}
+
+.font-red {
+    -fx-text-fill: red;
+}
+
+.font-money {
+    -fx-text-fill: -fx-money-color;
+}
+
+.menu-pane {
+    -fx-font-size: 15;
+}
+
+.menu-pane .button {
+    -fx-text-fill: white;
+}
+
+.planetCount {
+    -fx-font-size: 15;
+}
+
+.chip-label {
+    -fx-text-fill: white;
+}
+
+.mult-label {
+    -fx-text-fill: white;
+}
+
+.level-label {
+    -fx-text-fill: black;
+}
+
+/* endregion */

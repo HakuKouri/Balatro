@@ -375,41 +375,40 @@ public class CardViewController {
 
     //Animation
     private void applyFloatEffect() {
-        System.out.println("Float effect");
         Rotate rotateX = new Rotate(0, 100, 100, 0, Rotate.X_AXIS);
         Rotate rotateY = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
         Rotate rotateZ = new Rotate(0, 100, 100, 0, Rotate.Z_AXIS);
-
         card_AnchorPane.setTranslateZ(-50);
 
         card_AnchorPane.getTransforms().addAll(rotateX, rotateY, rotateZ);
 
-
+        double x = 5.5;
+        double y = 5.5;
 
         Timeline tilt = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        new KeyValue(rotateX.angleProperty(), 10),
-                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateX.angleProperty(), x),
+                        new KeyValue(rotateY.angleProperty(), y),
                         new KeyValue(rotateZ.angleProperty(), -3)
                 ),
                 new KeyFrame(Duration.seconds(1),
-                        new KeyValue(rotateX.angleProperty(), -10),
-                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateX.angleProperty(), -x),
+                        new KeyValue(rotateY.angleProperty(), y),
                         new KeyValue(rotateZ.angleProperty(), 3)
                 ),
                 new KeyFrame(Duration.seconds(2),
-                        new KeyValue(rotateX.angleProperty(), -10),
-                        new KeyValue(rotateY.angleProperty(), -10),
+                        new KeyValue(rotateX.angleProperty(), -x),
+                        new KeyValue(rotateY.angleProperty(), -y),
                         new KeyValue(rotateZ.angleProperty(), 3)
                 ),
                 new KeyFrame(Duration.seconds(3),
-                        new KeyValue(rotateX.angleProperty(), 10),
-                        new KeyValue(rotateY.angleProperty(), -10),
+                        new KeyValue(rotateX.angleProperty(), x),
+                        new KeyValue(rotateY.angleProperty(), -y),
                         new KeyValue(rotateZ.angleProperty(), -3)
                 ),
                 new KeyFrame(Duration.seconds(4),
-                        new KeyValue(rotateX.angleProperty(), 10),
-                        new KeyValue(rotateY.angleProperty(), 10),
+                        new KeyValue(rotateX.angleProperty(), x),
+                        new KeyValue(rotateY.angleProperty(), y),
                         new KeyValue(rotateZ.angleProperty(), -3)
                 )
         );

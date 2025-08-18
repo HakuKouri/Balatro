@@ -1,0 +1,250 @@
+#gameScreenAnchor {
+    -fx-background-image: url("../images/backgroundImage/pokerBackground.jpg");
+    -fx-background-size: cover;
+}
+
+/* region Background */
+.background-dark {
+    -fx-background-color: -fx-background-color-dark;
+}
+
+.background-light {
+    -fx-background-color: -fx-background-color-light;
+}
+
+.outer {
+    -fx-background-color: -fx-background-color-dark;
+    -fx-background-radius: 20;
+}
+
+.inner {
+    -fx-background-color: -fx-background-color-light;
+    -fx-background-radius: 10;
+}
+
+.info-label {
+    -fx-background-color: #333;
+    -fx-background-radius: 5;
+}
+
+.info-label label {
+    -fx-background-radius: 5;
+}
+
+.menu-pane {
+    -fx-background-color: -fx-menu-background-color;
+    -fx-background-radius: 20;
+}
+
+.menu-pane .button {
+    -fx-background-color: -fx-mult-color;
+}
+
+.planetCount {
+    -fx-background-color: -fx-menu-border-color;
+    -fx-background-radius: 24;
+}
+
+.chipMultLabel {
+    -fx-background-color: -fx-background-color-dark;
+    -fx-background-radius: 26;
+}
+
+.chipMultLabel > * {
+    -fx-background-radius: 250;
+}
+
+.chip-label {
+    -fx-background-color: -fx-chips-color;
+}
+
+.mult-label {
+    -fx-background-color: -fx-mult-color;
+}
+
+.level-label {
+    -fx-background-color: #F0F0F0;
+    -fx-background-radius: 24;
+}
+
+.check-box .box .mark {
+    -fx-background-radius: 50%;
+    -fx-background-color: transparent;
+}
+
+.check-box:selected .box .mark {
+    -fx-background-radius: 50%;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.stake-rect {
+    -fx-background-color: -fx-background-color-light;
+    -fx-background-radius: 10;
+}
+
+.stake-rect.available {
+    -fx-border-color: -fx-background-color-light;
+    -fx-border-radius: 10;
+    -fx-border-width: 3;
+}
+
+.title-button-box {
+    -fx-background-color: -fx-menu-background-color;
+    -fx-background-radius: 20;
+}
+
+.buy-background {
+    -fx-background-color: #ff9700;
+}
+
+.sell-background {
+    -fx-background-color: #34bd85;
+}
+/* endregion */
+
+/* region Labels */
+.label {
+    -fx-background-radius: 20;
+}
+.white-label {
+    -fx-background-color: white;
+}
+
+.rarity {
+    -fx-background-color: white;
+}
+
+.rarity .common {
+    -fx-background-color: -fx-common-color;
+}
+
+.rarity .uncommon {
+    -fx-background-color: -fx-uncommon-color;
+}
+
+.rarity .rare {
+    -fx-background-color: -fx-rare-color;
+}
+
+.rarity .legendary {
+    -fx-background-color: -fx-legendary-color;
+}
+
+.enhancement {
+    -fx-background-color: -fx-enhancement-color;
+}
+
+.edition {
+    -fx-background-color: -fx-edition-color;
+}
+
+.seal {
+    -fx-background-color: -fx-common-color;
+}
+
+.sticker {
+    -fx-background-color: -fx-sticker-color;
+}
+/* endregion */
+
+/* region Tool Tip */
+.tool-tip {
+
+}
+
+.tool-tip .box {
+    -fx-background-color: -fx-button-disabled-background-color;
+    -fx-background-radius: 20;
+    -fx-border-color: -fx-menu-border-color;
+    -fx-effect: dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,3);
+}
+/* endregion */
+
+.scroll-pane {
+    -fx-background-color: -fx-background-color-dark;
+}
+
+/* region Background Radius */
+.bgr-5 {
+    -fx-background-radius: 5;
+}
+
+.bgr-10 {
+    -fx-background-radius: 10;
+}
+
+.bgr-15 {
+    -fx-background-radius: 15;
+}
+
+.bgr-20 {
+    -fx-background-radius: 20;
+}
+
+.bgr-l-5 {
+    -fx-background-radius: 5 0 0 5;
+}
+
+.bgr-l-10 {
+    -fx-background-radius: 10 0 0 10;
+}
+
+.bgr-l-15 {
+    -fx-background-radius: 15 0 0 15;
+}
+
+.bgr-l-20 {
+    -fx-background-radius: 20 0 0 20;
+}
+
+.bgr-r-5 {
+    -fx-background-radius: 0 5 5 0;
+}
+
+.bgr-r-10 {
+    -fx-background-radius: 0 10 10 0;
+}
+
+.bgr-r-15 {
+    -fx-background-radius: 0 15 15 0;
+}
+
+.bgr-r-20 {
+    -fx-background-radius: 0 20 20 0;
+}
+
+.bgr-b-5 {
+    -fx-background-radius: 0 0 5 5;
+}
+
+.bgr-b-10 {
+    -fx-background-radius: 0 0 10 10;
+}
+
+.bgr-b-15 {
+    -fx-background-radius: 0 0 15 15;
+}
+
+.bgr-b-20 {
+    -fx-background-radius: 0 0 20 20;
+}
+
+.bgr-t-5 {
+    -fx-background-radius: 5 5 0 0;
+}
+
+.bgr-t-10 {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.bgr-t-15 {
+    -fx-background-radius: 15 15 0 0;
+}
+
+.bgr-t-20 {
+    -fx-background-radius: 20 20 0 0;
+}
+/* endregion */

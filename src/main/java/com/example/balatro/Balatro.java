@@ -4,85 +4,53 @@ import com.example.balatro.domain.game.GameSetup;
 import com.example.balatro.data.SqlHandler;
 import com.example.balatro.controller.GameController;
 import com.example.balatro.domain.util.FxmlUtil;
-import com.example.balatro.domain.util.MenuManager;
 import com.example.balatro.models.GameModel;
 import com.example.balatro.models.ProfileModel;
 import com.example.balatro.models.SettingsModel;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import javax.management.AttributeChangeNotification;
-import java.io.File;
+import javax.swing.event.ChangeListener;
 import java.io.IOException;
 
 public class Balatro extends Application {
-    //region Primary Stage
+
+    //region Singleton
     private static Stage primaryStage;
+    private static GameModel gameModel;
+    private static final SettingsModel settingsModel = new SettingsModel();
 
     public static Stage getPrimaryStage() {
         return primaryStage;
     }
-    //endregion
-
-    //region Game
-    private static GameModel gameModel;
-
     public static GameModel getGameModel() {
         return gameModel;
     }
-    //endregion
-
-    //region Settings Model
-    private static final SettingsModel settingsModel = new SettingsModel();
-
     public static SettingsModel getSettings() {
         return settingsModel;
     }
-
-    private static final String rootPath = "settings.xml";
     //endregion
 
-    //region Panes
     public static AnchorPane mainPane;
-    private static AnchorPane card3DPane_Back;
-    private static AnchorPane menuPane;
-    private static AnchorPane card3DPane_Front;
-    private static AnchorPane toolTipsPane;
-
-    private static SubScene backSubScene;
-    private static SubScene frontSubScene;
-
-    public static AnchorPane getCard3DPane_Back() {
-        return card3DPane_Back;
-    }
-
-    public static AnchorPane getMenuPane() {
-        return menuPane;
-    }
-
-    public static AnchorPane getCard3DPane_Front() {
-        return card3DPane_Front;
-    }
-
-    public static AnchorPane getToolTipsPane() {
-        return toolTipsPane;
-    }
-
-    //endregion
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        initSettings();
+
         Balatro.primaryStage = primaryStage;
-        setupStage();
         initSql();
+
+        gameModel = new GameModel();
+        settingsModel.initOrCreate();
+
+        setupStage();
         initGameModel();
 
         gameModel.getProfiles().setAll(SqlHandler.getAllProfileModels());
@@ -92,26 +60,73 @@ public class Balatro extends Application {
         gameModel.changeActiveProfile(gameModel.getProfiles().getFirst());
 
         loadTitlePane();
+
+        primaryStage.setOnCloseRequest(e -> {
+            if (settingsModel.getWindowMode().equals("windowed")) {
+                settingsModel.setStoredWindowWidth(primaryStage.getWidth());
+                settingsModel.setStoredWindowHeight(primaryStage.getHeight());
+                settingsModel.saveToFile("settings.xml"); // oder dein Pfad
+            }
+        });
+
+
+        //Scaling der mainPane im verhältnis
+        primaryStage.widthProperty().addListener(e ->  updateScale());
+        primaryStage.heightProperty().addListener( e -> updateScale());
+
+        Screen.getScreens().forEach(screen -> System.out.println(screen.getVisualBounds()));
+    }
+
+    private void updateScale() {
+        double baseWidth = 1600;
+        double baseHeight = 900;
+
+        double scaleX = primaryStage.getWidth() / baseWidth;
+        double scaleY = primaryStage.getHeight() / baseHeight;
+        double scale = Math.min(scaleX, scaleY);
+
+
+        mainPane.setScaleX(scale);
+        mainPane.setScaleY(scale);
+
+    }
+
+    private void applyFontCss(AnchorPane pane, double width) {
+        ObservableList<String> stylesheets = pane.getStylesheets();
+        stylesheets.removeIf(s -> s.contains("font-"));
+
+        if (width < 1200) {
+            stylesheets.add(getClass().getResource("/com/css/font-small.css").toExternalForm());
+        } else if (width < 1600) {
+            stylesheets.add(getClass().getResource("/com/css/font-medium.css").toExternalForm());
+        } else {
+            stylesheets.add(getClass().getResource("/com/css/font-large.css").toExternalForm());
+        }
     }
 
     private void loadTitlePane() {
         mainPane = new AnchorPane();
-        mainPane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+       // mainPane.setPrefSize(primaryStage.getWidth(), primaryStage.getHeight());
 
         // 2D UI z. B. Titelbildschirm laden
         Pair<Object, AnchorPane> titleScreen = FxmlUtil.loadWithPane("/com/example/balatro/title/title-screen.fxml");
         AnchorPane titlePane = titleScreen.getValue();
-        titlePane.setMaxSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+
+        titlePane.setMaxSize(primaryStage.getWidth(), primaryStage.getHeight());
 
         // cardScene_GameCards über alles legen
         mainPane.getChildren().addAll(titlePane);
 
         PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
-        //perspectiveCamera.setTranslateZ();
+        perspectiveCamera.setPickOnBounds(false);
 
         // Hauptscene – KEIN 3D nötig
-        Scene scene = new Scene(mainPane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), false);
+        Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight(), false);
         scene.setCamera(perspectiveCamera);
+        Platform.runLater(() -> {
+
+            titlePane.widthProperty().addListener(e -> applyFontCss(titlePane, primaryStage.getWidth()));
+        });
 
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
@@ -119,19 +134,10 @@ public class Balatro extends Application {
     }
 
     private void initGameModel() {
-        gameModel = new GameModel();
-        MenuManager.init(gameModel);
+        //gameModel = new GameModel();
+        //MenuManager.init(gameModel);
     }
 
-    private void initSettings() {
-        File settingsFile = new File(rootPath);
-        if (!settingsFile.exists()) {
-            SettingsModel.createSettingsFile(settingsFile.getPath());
-        }
-
-        settingsModel.setSettings(rootPath);
-        settingsModel.updateSettings(rootPath);
-    }
 
     private void initSql() {
         //region Sql
@@ -148,12 +154,25 @@ public class Balatro extends Application {
 
     private void setupStage() {
         primaryStage.setTitle("Balatro");
-        primaryStage.setMaximized(true);
-        primaryStage.setResizable(false);
+        String windowMode = settingsModel.getWindowMode();
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
+        if (windowMode.equalsIgnoreCase("fullscreen")) {
+            primaryStage.setFullScreen(true);
+        } else if (windowMode.equalsIgnoreCase("borderless")) {
+            primaryStage.setFullScreen(false);
+            primaryStage.setMaximized(true);
+            primaryStage.setResizable(false);
+        } else if (windowMode.equalsIgnoreCase("windowed")) {
+            primaryStage.setFullScreen(false);
+            primaryStage.setMaximized(false);
+            primaryStage.setResizable(true);
+
+            primaryStage.setWidth(settingsModel.getStoredWindowWidth());
+            primaryStage.setHeight(settingsModel.getStoredWindowHeight());
+        }
+
+        settingsModel.setWindowWidth(primaryStage.getWidth());
+        settingsModel.setWindowHeight(primaryStage.getHeight());
     }
 
     public static void newGame(GameSetup gameSetup) throws IOException {
@@ -172,26 +191,30 @@ public class Balatro extends Application {
         controller.startNewGame(gameSetup);
     }
 
-    private SubScene getSubScene(AnchorPane pane) {
-        SubScene cardScene = new SubScene(pane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), true, javafx.scene.SceneAntialiasing.BALANCED);
-        PerspectiveCamera cardCamera = new PerspectiveCamera(true);
-        cardCamera.setTranslateZ(-2000); // Leicht zurückgesetzt, damit Rotation sichtbar ist
-        cardScene.setCamera(cardCamera);
-        //cardScene.setFill(null); // transparent
-
-        return cardScene;
-    }
-
-    private AnchorPane getPane() {
-        AnchorPane pane = new AnchorPane();
-        pane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
-        pane.setPickOnBounds(false);// WICHTIG: soll keine Clicks blockieren
-        pane.setBackground(null);
-
-        return pane;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }
+
+
+    //SubScene for Layering
+//    private SubScene getSubScene(AnchorPane pane) {
+//        SubScene cardScene = new SubScene(pane, settingsModel.getWindowWidth(), settingsModel.getWindowHeight(), true, javafx.scene.SceneAntialiasing.BALANCED);
+//        PerspectiveCamera cardCamera = new PerspectiveCamera(true);
+//        cardCamera.setTranslateZ(-2000); // Leicht zurückgesetzt, damit Rotation sichtbar ist
+//        cardScene.setCamera(cardCamera);
+//        //cardScene.setFill(null); // transparent
+//
+//        return cardScene;
+//    }
+//
+//    private AnchorPane getPane() {
+//        AnchorPane pane = new AnchorPane();
+//        pane.setPrefSize(settingsModel.getWindowWidth(), settingsModel.getWindowHeight());
+//        pane.setPickOnBounds(false);// WICHTIG: soll keine Clicks blockieren
+//        pane.setBackground(null);
+//
+//        return pane;
+//    }
+
+
 }

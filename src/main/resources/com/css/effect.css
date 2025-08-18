@@ -1,0 +1,29 @@
+/* region Shadow */
+.shadow-b {
+    -fx-effect: dropshadow(gaussian, #000, 0.0, 0.0, 0.0, 5.0);
+}
+
+.shadow-b-l {
+    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, -5.0, 5.0);
+}
+
+.shadow-b-r {
+    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, 5.0, 5.0);
+}
+
+.info-label {
+    -fx-effect:  dropshadow(three-pass-box,black,0,0,0,5);
+}
+
+.menu-pane {
+    -fx-effect: dropshadow(three-pass-box, -fx-menu-shadow, 0, 0, 0, 5);
+}
+
+.planetCount {
+    -fx-effect: dropshadow(three-pass-box, -fx-menu-shadow, 0, 0, 0, 2);
+}
+
+.font-shadow {
+    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,1);
+}
+/* endregion */

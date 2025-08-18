@@ -11,6 +11,7 @@ module com.example.balatro {
     requires javafx.media;
     requires com.fasterxml.jackson.databind;
     requires java.management;
+    requires org.xerial.sqlitejdbc;
 
     exports com.example.balatro;
     exports com.example.balatro.controller;

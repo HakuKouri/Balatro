@@ -1,217 +1,18 @@
+@import "variable.css";
+@import "button.css";
+@import "background.css";
+@import "border.css";
+@import "font-large.css";
+@import "effect.css";
+
 @font-face {
     font-family: Balatro;
     src: url("../font/balatro.ttf");
 }
 
-* {
-    -fx-font-family: Balatro;
-    -fx-common-color: #0093ff;
-    -fx-uncommon-color: #35bd86;
-    -fx-rare-color: #ff4c40;
-    -fx-legendary-color: #ab5bb5;
-    -fx-background-color-dark: #152023;
-    -fx-background-color-light: #2B3639;
-    -fx-shop-color: #CF4B3F;
-    -fx-chips-color: #0093ff;
-    -fx-mult-color: #ff4c40;
-    -fx-tarot-color: #7B559C;
-    -fx-planet-color: #00A8CA;
-    -fx-spectral-color: #2E76FD;
-    -fx-money-color: #f5b244;
-    -fx-menu-border-color: #B9C2D3;
-    -fx-menu-background-color: #3B5055;
-    -fx-menu-shadow: #777D89;
-    -fx-button-shadow: #1E3032;
-    -fx-button-disabled-background-color: #545454;
-    -fx-enhancement-color: #777BDA;
-    -fx-edition-color: #5F61EF;
-    -fx-sticker-color: #E54982;
-}
-
-/* region Background */
-.background-dark {
-    -fx-background-color: -fx-background-color-dark;
-}
-
-.background-light {
-    -fx-background-color: -fx-background-color-light;
-}
-
-.outer {
-    -fx-background-color: -fx-background-color-dark;
-    -fx-background-radius: 20;
-}
-
-.inner {
-    -fx-background-color: -fx-background-color-light;
-    -fx-background-radius: 10;
-}
-/* endregion */
-
-/* region Background Radius */
-.bgr-5 {
-    -fx-background-radius: 5;
-}
-
-.bgr-10 {
-    -fx-background-radius: 10;
-}
-
-.bgr-15 {
-    -fx-background-radius: 15;
-}
-
-.bgr-20 {
-    -fx-background-radius: 20;
-}
-
-.bgr-l-5 {
-    -fx-background-radius: 5 0 0 5;
-}
-
-.bgr-l-10 {
-    -fx-background-radius: 10 0 0 10;
-}
-
-.bgr-l-15 {
-    -fx-background-radius: 15 0 0 15;
-}
-
-.bgr-l-20 {
-    -fx-background-radius: 20 0 0 20;
-}
-
-.bgr-r-5 {
-    -fx-background-radius: 0 5 5 0;
-}
-
-.bgr-r-10 {
-    -fx-background-radius: 0 10 10 0;
-}
-
-.bgr-r-15 {
-    -fx-background-radius: 0 15 15 0;
-}
-
-.bgr-r-20 {
-    -fx-background-radius: 0 20 20 0;
-}
-
-.bgr-b-5 {
-    -fx-background-radius: 0 0 5 5;
-}
-
-.bgr-b-10 {
-    -fx-background-radius: 0 0 10 10;
-}
-
-.bgr-b-15 {
-    -fx-background-radius: 0 0 15 15;
-}
-
-.bgr-b-20 {
-    -fx-background-radius: 0 0 20 20;
-}
-
-.bgr-t-5 {
-    -fx-background-radius: 5 5 0 0;
-}
-
-.bgr-t-10 {
-    -fx-background-radius: 10 10 0 0;
-}
-
-.bgr-t-15 {
-    -fx-background-radius: 15 15 0 0;
-}
-
-.bgr-t-20 {
-    -fx-background-radius: 20 20 0 0;
-}
-/* endregion */
-
-/* region Border Radius */
-.br-5 {
-    -fx-border-radius: 5;
-}
-
-.br-10 {
-    -fx-border-radius: 10;
-}
-
-.br-15 {
-    -fx-border-radius: 15;
-}
-
-.br-20 {
-    -fx-border-radius: 20;
-}
-/* endregion */
-
-/*region Buttons  */
-.button {
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,3);
-}
-
-.menu-pane .button:disabled {
-    -fx-background-color: -fx-button-disabled-background-color;
-}
-
-.button.yellow {
-    -fx-background-color: #ff8c00;
-    -fx-text-fill: white;
-}
-
-.button.red {
-    -fx-background-color: #f9443a;
-    -fx-text-fill: white;
-}
-
-.button.blue {
-    -fx-background-color: #0087f0;
-    -fx-text-fill: white;
-}
-
-.button.green {
-    -fx-background-color: #41926f;
-    -fx-text-fill: white;
-}
-
-.button.grey {
-    -fx-background-color: -fx-menu-shadow;
-}
-
-.button.yellow:hover {
-    -fx-background-color: #935d00;
-}
-
-.button.red:hover {
-    -fx-background-color: #93241c;
-}
-
-.button.blue:hover {
-    -fx-background-color: #004f94;
-}
-
-.button.green:hover {
-    -fx-background-color: #1e563f;
-}
-
-/*endregion*/
-
-/* region Card */
-.deck {
-
-}
-
 .deck:hover {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
-}
-
-.card {
-
 }
 
 .card:hover {
@@ -227,138 +28,48 @@
     -fx-translate-y: -50;
 }
 
-.playingCard {
-
-}
-
-.playingCard:hover {
-
-}
-
-.buy-background {
-    -fx-background-color: #ff9700;
-}
-
-.sell-background {
-    -fx-background-color: #34bd85;
+/* region TabPane */
+.hiddenTabHeader .tab-header-area {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
 }
 /* endregion */
 
-/* region Debug */
-.spot {
-    -fx-border-style: solid;
-    -fx-border-radius: 5;
-    -fx-border-color: #444;
-    -fx-border-width: 1;
+
+/* region Poker Hand Overview */
+.planetCount {
+    -fx-pref-height: 66;
+    -fx-padding: 6;
 }
 
-.debug-Border * {
-    -fx-border-color: red;
+.chipMultLabel {
+    -fx-padding: 6;
+}
 
+.chip-label {
+    -fx-padding: 0 10 0 0;
+}
+
+.mult-label {
+    -fx-padding: 0 0 0 10;
 }
 /* endregion */
 
-/* region Font */
-.font-white {
-    -fx-text-fill: white;
+/* region Seed */
+.check-box .box .mark {
+    -fx-shape: ""; /* oder: hidden */
 }
 
-.font-white-shadow {
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,1);
-}
-
-.font-red {
-    -fx-text-fill: red;
-}
-
-.font-money {
-    -fx-text-fill: -fx-money-color;
+.check-box:selected .box .mark {
+    -fx-shape: ""; /* oder: hidden */
 }
 /* endregion */
 
-/* region Game Screen */
-#gameScreenAnchor {
-    -fx-background-image: url("../images/backgroundImage/pokerBackground.jpg");
-    -fx-background-size: cover;
-}
+/*----------------------------------------------------------*/
 
-.shopSign {
-    -fx-border-color: red;
-    -fx-border-width: 5;
-    -fx-border-radius: 20;
-}
-/* endregion */
 
-/* region info Label */
-.info-label {
-    -fx-background-color: #333;
-    -fx-background-radius: 5;
-    -fx-effect:  dropshadow(three-pass-box,black,0,0,0,5);
-}
-
-.info-label label {
-    -fx-background-radius: 5;
-}
-/* endregion */
-
-/* region Labels* */
-.label {
-    -fx-background-radius: 20;
-}
-.white-label {
-    -fx-background-color: white;
-}
-
-.rarity {
-    -fx-background-color: white;
-}
-
-.rarity .common {
-    -fx-background-color: -fx-common-color;
-}
-
-.rarity .uncommon {
-    -fx-background-color: -fx-uncommon-color;
-}
-
-.rarity .rare {
-    -fx-background-color: -fx-rare-color;
-}
-
-.rarity .legendary {
-    -fx-background-color: -fx-legendary-color;
-}
-
-.enhancement {
-    -fx-background-color: -fx-enhancement-color;
-}
-
-.edition {
-    -fx-background-color: -fx-edition-color;
-}
-
-.seal {
-    -fx-background-color: -fx-common-color;
-}
-
-.sticker {
-    -fx-background-color: -fx-sticker-color;
-}
-/* endregion */
 /* region  Menu */
-.menu-pane {
-    -fx-background-color: -fx-menu-background-color;
-    -fx-background-radius: 20;
-    -fx-border-color: -fx-menu-border-color;
-    -fx-border-radius: 20;
-    -fx-effect:  dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,5);
-    -fx-font-size: 20;
-}
-
 .menu-pane .button {
-    -fx-background-color: -fx-mult-color;
-    -fx-text-fill: white;
     -fx-padding: 10;
 }
 
@@ -381,12 +92,6 @@
 }
 
 .stake-rect {
-    -fx-background-color: -fx-background-color-light;
-    -fx-background-radius: 10;
-    -fx-border-color: -fx-background-color-dark;
-    -fx-border-radius: 10;
-    -fx-border-width: 3;
-
     -fx-width: 15;
     -fx-max-width: -fx-width;
     -fx-min-width: -fx-width;
@@ -397,10 +102,6 @@
 }
 
 .stake-rect.available {
-    -fx-border-color: -fx-background-color-light;
-    -fx-border-radius: 10;
-    -fx-border-width: 3;
-
     -fx-width: 32;
     -fx-min-width: -fx-width;
     -fx-max-width: -fx-width;
@@ -410,136 +111,8 @@
     -fx-max-height: -fx-height;
 }
 
-.stake-rect.available.active {
-    -fx-border-color: white;
-}
 /* endregion */
 
-/* region Poker Hand Overview */
-.planetCount {
-    -fx-background-color: -fx-menu-border-color;
-    -fx-background-radius: 24;
-    -fx-pref-height: 66;
-    -fx-padding: 6;
-    -fx-font-size: 20;
-    -fx-effect: dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,2);
-}
 
-.chipMultLabel {
-    -fx-background-color: -fx-background-color-dark;
-    -fx-background-radius: 26;
-    -fx-padding: 6;
-}
 
-.chipMultLabel > * {
-    -fx-background-radius: 250;
 
-}
-
-.chip-label {
-    -fx-text-fill: white;
-    -fx-background-color: -fx-chips-color;
-    -fx-padding: 0 10 0 0;
-}
-
-.mult-label {
-    -fx-text-fill: white;
-    -fx-background-color: -fx-mult-color;
-    -fx-padding: 0 0 0 10;
-}
-
-.level-label {
-    -fx-text-fill: black;
-    -fx-background-color: #F0F0F0;
-    -fx-background-radius: 24;
-    -fx-border-color: #FFFFFA;
-    -fx-border-radius: 24;
-}
-/* endregion */
-
-/* region Seed */
-.check-box {
-
-}
-
-.check-box .box {
-
-}
-
-.check-box .box .mark {
-    -fx-background-radius: 50%;
-    -fx-background-color: transparent;
-    -fx-border-radius: 50%;
-    -fx-border-color: -fx-menu-border-color;
-    -fx-border-width: 3;
-    -fx-shape: ""; /* oder: hidden */
-}
-
-.check-box:selected .box .mark {
-    -fx-background-radius: 50%;
-    -fx-border-radius: 50%;
-    -fx-shape: ""; /* oder: hidden */
-}
-/* endregion */
-
-/* region Scroll Pane */
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-pane {
-    -fx-background-color: -fx-background-color-dark;
-}
-/* endregion */
-
-/* region Shadow */
-.shadow-b {
-    -fx-effect: dropshadow(gaussian, #000, 0.0, 0.0, 0.0, 5.0);
-}
-
-.shadow-b-l {
-    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, -5.0, 5.0);
-}
-.shadow-b-r {
-    -fx-effect: dropshadow(three-pass-box, #000, 0.0, 0.0, 5.0, 5.0);
-}
-/* endregion */
-
-/* region TabPane */
-.hiddenTabHeader .tab-header-area {
-    -fx-opacity: 0;
-    -fx-pref-height: 0;
-}
-
-/*.tab {
-    -fx-background-color: transparent, tab-border-color , tab-color;
-    tab-color: linear-gradient(light-tab-color, dark-tab-color) ;
-    tab-border-color : dark-tab-color ;
-    dark-tab-color: #721b1b ;
-    light-tab-color: #9b2626 ;
-    -fx-background-insets: 0, 0 5 0 0, 1 6 0 0 ;
-    -fx-padding: 4 10 4 4 ;
-}*/
-/* endregion */
-
-/* region Title Screen */
-.title-button-box {
-    -fx-background-color: -fx-menu-background-color;
-    -fx-background-radius: 20;
-    -fx-font-size: 60;
-    -fx-text-fill: white;
-}
-/* endregion */
-
-/* region Tool Tip */
-.tool-tip {
-
-}
-
-.tool-tip .box {
-    -fx-background-color: -fx-button-disabled-background-color;
-    -fx-background-radius: 20;
-    -fx-border-color: -fx-menu-border-color;
-    -fx-effect: dropshadow(three-pass-box,-fx-menu-shadow,0,0,0,3);
-}
-/* endregion */

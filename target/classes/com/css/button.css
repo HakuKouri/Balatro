@@ -1,0 +1,51 @@
+/*region Buttons  */
+.button {
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box,-fx-button-shadow,0,0,0,3);
+}
+
+.menu-pane .button:disabled {
+    -fx-background-color: -fx-button-disabled-background-color;
+}
+
+.button.yellow {
+    -fx-background-color: #ff8c00;
+    -fx-text-fill: white;
+}
+
+.button.red {
+    -fx-background-color: #f9443a;
+    -fx-text-fill: white;
+}
+
+.button.blue {
+    -fx-background-color: #0087f0;
+    -fx-text-fill: white;
+}
+
+.button.green {
+    -fx-background-color: #41926f;
+    -fx-text-fill: white;
+}
+
+.button.grey {
+    -fx-background-color: -fx-menu-shadow;
+}
+
+.button.yellow:hover {
+    -fx-background-color: #935d00;
+}
+
+.button.red:hover {
+    -fx-background-color: #93241c;
+}
+
+.button.blue:hover {
+    -fx-background-color: #004f94;
+}
+
+.button.green:hover {
+    -fx-background-color: #1e563f;
+}
+
+/*endregion*/

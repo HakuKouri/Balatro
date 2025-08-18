@@ -27,7 +27,7 @@ public class MenuManager {
 
 
     //Gamemodel
-    private static GameModel gameModel;
+    private static GameModel gameModel = Balatro.getGameModel();
 
     //endregion
 

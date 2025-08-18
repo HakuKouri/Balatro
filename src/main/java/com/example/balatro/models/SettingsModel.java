@@ -7,12 +7,15 @@ import javafx.stage.Screen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class SettingsModel {
+
+    private static final String SETTINGS_PATH = "settings.xml";
 
     private Screen screen;
     private final DoubleProperty windowWidth = new SimpleDoubleProperty();
@@ -32,11 +35,16 @@ public class SettingsModel {
     private final ObservableList<Screen> screens = FXCollections.observableArrayList();
     private final IntegerProperty screenIndex = new SimpleIntegerProperty();
     private enum ScreenState {fullscreen, borderless, windowed, none};
-    private final StringProperty windowMode = new SimpleStringProperty();
+    private final StringProperty windowMode = new SimpleStringProperty("windowed");
     private final StringProperty resolution = new SimpleStringProperty();
     //TODO Screen Resolution
     //private final List<Rectangle2D> resolutions = new List(){new Rectangle2D()}
     private final BooleanProperty vsync = new SimpleBooleanProperty(true);
+
+
+    private final DoubleProperty storedWindowWidth = new SimpleDoubleProperty(1280);
+    private final DoubleProperty storedWindowHeight = new SimpleDoubleProperty(720);
+
     //endregion
 
     //region Graphics
@@ -188,6 +196,15 @@ public class SettingsModel {
         return shadow.get();
     }
 
+
+    public double getStoredWindowWidth() { return storedWindowWidth.get(); }
+    public DoubleProperty storedWindowWidthProperty() { return storedWindowWidth; }
+    public void setStoredWindowWidth(double width) { this.storedWindowWidth.set(width); }
+
+    public double getStoredWindowHeight() { return storedWindowHeight.get(); }
+    public DoubleProperty storedWindowHeightProperty() { return storedWindowHeight; }
+    public void setStoredWindowHeight(double height) { this.storedWindowHeight.set(height); }
+
     public BooleanProperty shadowProperty() {
         return shadow;
     }
@@ -243,43 +260,73 @@ public class SettingsModel {
     //endregion
 
     //region Function
-    public void setSettings(String rootPath) {
-        Properties properties = new Properties();
-        try {
-            properties.loadFromXML(new FileInputStream(rootPath));
+    public void loadFromFile(String path) {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(path) ) {
+            props.loadFromXML(in);
 
             //Game
-            System.out.println("Settings Gamespeed: " + Integer.parseInt(properties.getProperty("game speed")));
-            gameSpeedProperty().set(Integer.parseInt(properties.getProperty("game speed")));
-            playDiscardOrderProperty().set(Boolean.parseBoolean(properties.getProperty("hand button order")));
-            screenShakeProperty().set(Integer.parseInt(properties.getProperty("screen shake")));
-            displayStakeDuringRunProperty().set(Boolean.parseBoolean(properties.getProperty("display stake")));
-            highContrastProperty().set(Boolean.parseBoolean(properties.getProperty("high contrast")));
-            reduceMotionProperty().set(Boolean.parseBoolean(properties.getProperty("reduced motion")));
-            //Video
-            screenProperty().set(Integer.parseInt(properties.getProperty("display monitor")));
-            windowModeProperty().set(properties.getProperty("window mode"));
-            resolutionProperty().set(properties.getProperty("resolution"));
-            vsyncProperty().set(Boolean.parseBoolean(properties.getProperty("vsync")));
+            gameSpeed.set(Integer.parseInt(props.getProperty("gameSpeed", "1")));
+            playDiscardOrder.set(Boolean.parseBoolean(props.getProperty("playDiscardOrder", "true")));
+            screenShake.set(Integer.parseInt(props.getProperty("screenShake", "50")));
+            displayStakeDuringRun.set(Boolean.parseBoolean(props.getProperty("displayStakeDuringRun", "false")));
+            highContrast.set(Boolean.parseBoolean(props.getProperty("highContrast", "false")));
+            reduceMotion.set(Boolean.parseBoolean(props.getProperty("reduceMotion", "false")));
+            //Screen
+            storedWindowWidth.set(Double.parseDouble(props.getProperty("window width", "1280")));
+            storedWindowHeight.set(Double.parseDouble(props.getProperty("window height", "720")));
             //Graphics
-            shadowProperty().set(Boolean.parseBoolean(properties.getProperty("shadows")));
-            pixelArtSmoothingProperty().set(Boolean.parseBoolean(properties.getProperty("pixel art smooting")));
-            crtEffectProperty().set(Integer.parseInt(properties.getProperty("crt")));
-            crtBloomProperty().set(Boolean.parseBoolean(properties.getProperty("crt bloom")));
+            shadow.set(Boolean.parseBoolean(props.getProperty("shadow", "true")));
+            pixelArtSmoothing.set(Boolean.parseBoolean(props.getProperty("pixelArtSmoothing", "true")));
+            crtBloom.set(Boolean.parseBoolean(props.getProperty("crtBloom", "true")));
+            crtEffect.set(Integer.parseInt(props.getProperty("crtEffect", "30")));
             //Audio
-            masterVolumeProperty().set(Integer.parseInt(properties.getProperty("master volume")));
-            musicVolumeProperty().set(Integer.parseInt(properties.getProperty("music volume")));
-            gameVolumeProperty().set(Integer.parseInt(properties.getProperty("game volume")));
-
-            System.out.printf("Resolution: " + getResolution());
-            setWindowWidth(Double.parseDouble(getResolution().split("x")[0]));
-            setWindowHeight(Double.parseDouble(getResolution().split("x")[1]));
-
-            System.out.println("Width: " + getWindowWidth() + " Height: " + getWindowHeight());
+            masterVolume.set(Integer.parseInt(props.getProperty("masterVolume", "100")));
+            musicVolume.set(Integer.parseInt(props.getProperty("musicVolume", "100")));
+            gameVolume.set(Integer.parseInt(props.getProperty("gameVolume", "100")));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error loading file: " + e.getMessage());
+            System.out.println("Default used!");
         }
     }
+
+    public void saveToFile(String path) {
+        Properties props = new Properties();
+        //Game
+        props.setProperty("gameSpeed", String.valueOf(gameSpeed.get()));
+        props.setProperty("playDiscardOrder", String.valueOf(playDiscardOrder.get()));
+        props.setProperty("screenShake", String.valueOf(screenShake.get()));
+        props.setProperty("displayStakeDuringRun", String.valueOf(displayStakeDuringRun.get()));
+        props.setProperty("highContrast", String.valueOf(highContrast.get()));
+        props.setProperty("reduceMotion", String.valueOf(reduceMotion.get()));
+        //Screen
+        props.setProperty("window width", String.valueOf(getStoredWindowWidth()));
+        props.setProperty("window height", String.valueOf(getStoredWindowHeight()));
+        //Graphics
+        props.setProperty("shadow", String.valueOf(shadow.get()));
+        props.setProperty("pixelArtSmoothing", String.valueOf(pixelArtSmoothing.get()));
+        props.setProperty("crtBloom", String.valueOf(crtBloom.get()));
+        props.setProperty("crtEffect", String.valueOf(crtEffect.get()));
+        //Audio
+        props.setProperty("masterVolume", String.valueOf(masterVolume.get()));
+        props.setProperty("musicVolume", String.valueOf(musicVolume.get()));
+        props.setProperty("gameVolume", String.valueOf(gameVolume.get()));
+
+        try (FileOutputStream out = new FileOutputStream(path)) {
+            props.storeToXML(out, "User settings");
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
+    }
+
+    public void initOrCreate() {
+        File file = new File(SETTINGS_PATH);
+        if (!file.exists()) {
+            saveToFile(SETTINGS_PATH); // Erstellt Default
+        }
+        loadFromFile(SETTINGS_PATH);
+    }
+
 
     public static void createSettingsFile(String rootPath) {
         Properties props = new Properties();
@@ -308,58 +355,6 @@ public class SettingsModel {
 
         try {
             props.storeToXML(new FileOutputStream(rootPath), "store to xml file");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Properties getSettings() {
-        Properties props = new Properties();
-        //Game
-        props.setProperty("game speed", String.valueOf(getGameSpeed()));
-        props.setProperty("hand button order", String.valueOf(isPlayDiscardOrder()));
-        props.setProperty("screen shake", String.valueOf(getScreenShake()));
-        props.setProperty("display stake", String.valueOf(isDisplayStakeDuringRun()));
-        props.setProperty("high contrast", String.valueOf(isHighContrast()));
-        props.setProperty("reduced motion", String.valueOf(isReduceMotion()));
-        //Video
-        props.setProperty("display monitor", String.valueOf(getScreen()));
-        props.setProperty("window mode", getWindowMode());
-        props.setProperty("resolution", getResolution());
-        props.setProperty("vsync", String.valueOf(isVsync()));
-        //Graphics
-        props.setProperty("shadows", String.valueOf(isShadow()));
-        props.setProperty("pixel art smooting", String.valueOf(isPixelArtSmoothing()));
-        props.setProperty("crt", String.valueOf(getCrtEffect()));
-        props.setProperty("crt bloom", String.valueOf(isCrtBloom()));
-        //Audio
-        props.setProperty("master volume", String.valueOf(getMasterVolume()));
-        props.setProperty("music volume", String.valueOf(getMusicVolume()));
-        props.setProperty("game volume", String.valueOf(getGameVolume()));
-
-        return props;
-    }
-
-    public void updateSettings(String rootPath) {
-        Properties props = getSettings();
-
-        //Video
-        props.setProperty("display monitor", String.valueOf(Screen.getScreens().indexOf(Screen.getPrimary())));
-        props.setProperty("window mode", getSettings().getProperty("window mode"));
-        props.setProperty("resolution", Screen.getPrimary().getVisualBounds().getWidth() + "x" +  Screen.getPrimary().getVisualBounds().getHeight());
-        props.setProperty("vsync", getSettings().getProperty("vsync"));
-        //Graphics
-        props.setProperty("shadows", getSettings().getProperty("shadows"));
-        props.setProperty("pixel art smooting", getSettings().getProperty("pixel art smooting"));
-        props.setProperty("crt", getSettings().getProperty("crt"));
-        props.setProperty("crt bloom", getSettings().getProperty("crt bloom"));
-        //Audio
-        props.setProperty("master volume", getSettings().getProperty("master volume"));
-        props.setProperty("music volume", getSettings().getProperty("music volume"));
-        props.setProperty("game volume", getSettings().getProperty("game volume"));
-
-        try {
-            props.storeToXML(new FileOutputStream(rootPath), "update xml file");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

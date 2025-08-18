@@ -1,0 +1,54 @@
+.shopSign {
+    -fx-border-color: red;
+    -fx-border-width: 5;
+    -fx-border-radius: 20;
+}
+
+.menu-pane {
+    -fx-border-color: -fx-menu-border-color;
+    -fx-border-radius: 20;
+}
+
+.stake-rect.available.active {
+    -fx-border-color: white;
+}
+
+.level-label {
+    -fx-border-color: #FFFFFA;
+    -fx-border-radius: 24;
+}
+
+.check-box .box .mark {
+    -fx-border-radius: 50%;
+    -fx-border-color: -fx-menu-border-color;
+    -fx-border-width: 3;
+}
+
+.check-box:selected .box .mark {
+    -fx-border-radius: 50%;
+}
+
+.stake-rect {
+    -fx-border-color: -fx-background-color-dark;
+    -fx-border-radius: 10;
+    -fx-border-width: 3;
+}
+
+
+/* region Border Radius */
+.br-5 {
+    -fx-border-radius: 5;
+}
+
+.br-10 {
+    -fx-border-radius: 10;
+}
+
+.br-15 {
+    -fx-border-radius: 15;
+}
+
+.br-20 {
+    -fx-border-radius: 20;
+}
+/* endregion */
