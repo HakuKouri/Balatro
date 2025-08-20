@@ -6,7 +6,7 @@
 <entry key="shadow">true</entry>
 <entry key="masterVolume">100</entry>
 <entry key="highContrast">false</entry>
-<entry key="window height">703.0</entry>
+<entry key="window height">1096.0</entry>
 <entry key="crtEffect">30</entry>
 <entry key="playDiscardOrder">true</entry>
 <entry key="reduceMotion">false</entry>
@@ -14,7 +14,7 @@
 <entry key="gameSpeed">1</entry>
 <entry key="pixelArtSmoothing">true</entry>
 <entry key="screenShake">50</entry>
-<entry key="window width">1572.0</entry>
+<entry key="window width">1936.0</entry>
 <entry key="musicVolume">100</entry>
 <entry key="crtBloom">true</entry>
 </properties>

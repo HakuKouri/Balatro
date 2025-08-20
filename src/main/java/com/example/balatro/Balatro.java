@@ -72,11 +72,13 @@ public class Balatro extends Application {
         primaryStage.heightProperty().addListener( e -> updateScale());
 
         Screen.getScreens().forEach(screen -> System.out.println(screen.getVisualBounds()));
+
+        Platform.runLater(this::updateScale);
     }
 
     private void updateScale() {
-        double baseWidth = 1600;
-        double baseHeight = 900;
+        double baseWidth = 1920;
+        double baseHeight = 1080;
 
         double scaleX = primaryStage.getWidth() / baseWidth;
         double scaleY = primaryStage.getHeight() / baseHeight;
@@ -119,8 +121,8 @@ public class Balatro extends Application {
         Scene scene = new Scene(mainPane, primaryStage.getWidth(), primaryStage.getHeight(), false);
         scene.setCamera(perspectiveCamera);
         Platform.runLater(() -> {
-
             titlePane.widthProperty().addListener(e -> applyFontCss(titlePane, primaryStage.getWidth()));
+            applyFontCss(titlePane, primaryStage.getWidth());
         });
 
         primaryStage.setScene(scene);
